@@ -12,7 +12,7 @@
       <h2 class="text-black font-bold text-2xl mb-6 text-center">
         Iniciar Sesión
       </h2>
-      <form class="w-full">
+      <form (submit)="login()" class="w-full">
         <div class="w-full mb-6">
           <p-floatlabel variant="on">
             <input
@@ -47,7 +47,8 @@
         </div>
 
         <div class="w-full mb-6">
-          <p-button label="Iniciar Sesión" routerLink="/management-tools" fluid="true" rounded="true" styleClass="w-full" />
+          <p-button label="Iniciar Sesión" type="submit" fluid="true" rounded="true" styleClass="w-full" />
+          <p class="text-red-600" *ngIf="errorMessage">{{ errorMessage }}</p>
         </div>
         <p class="text-sm text-center font-size text-gray-600">
           ¿Olvidaste tu contraseña?

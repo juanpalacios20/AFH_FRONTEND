@@ -17,7 +17,7 @@
                   height="100%"
                 />
               </svg>
-              <span class="font-semibold text-2xl text-primary">AFH</span>
+              <span class="font-semibold text-2xl text-primary-950">AFH</span>
             </span>
             <span>
               <p-button
@@ -26,7 +26,8 @@
                 icon="pi pi-times"
                 rounded="true"
                 outlined="true"
-                styleClass="h-8 w-8"
+                styleClass="h-8 w-8 text-primary-950"
+
               ></p-button>
             </span>
           </div>
@@ -40,7 +41,7 @@
                   enterActiveClass="animate-slidedown"
                   leaveToClass="hidden"
                   leaveActiveClass="animate-slideup"
-                  class="p-4 flex items-center justify-between text-primary cursor-pointer p-ripple"
+                  class="p-4 flex items-center justify-between text-primary-950 cursor-pointer p-ripple"
                 >
                   <span class="font-medium">SECCIONES</span>
                   <i class="pi pi-chevron-down"></i>
@@ -49,7 +50,7 @@
                   <li>
                     <a
                       pRipple
-                      class="flex items-center cursor-pointer p-4 rounded-border text-primary hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
+                      class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
                     >
                       <i class="pi pi-hammer mr-2"></i>
                       <span class="font-medium">Herramientas</span>
@@ -58,7 +59,7 @@
                   <li>
                     <a
                       pRipple
-                      class="flex items-center cursor-pointer p-4 rounded-border text-primary hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
+                      class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
                     >
                       <i class="pi pi-users mr-2"></i>
                       <span class="font-medium">Usuarios</span>
@@ -67,7 +68,7 @@
                   <li>
                       <a
                         pRipple
-                        class="flex items-center cursor-pointer p-4 rounded-border text-primary hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
+                        class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
                       >
                         <i class="pi pi-clipboard mr-2"></i>
                         <span class="font-medium">Vales</span>
@@ -82,7 +83,7 @@
                 enterActiveClass="animate-slidedown"
                 leaveToClass="hidden"
                 leaveActiveClass="animate-slideup"
-                class="p-4 flex items-center justify-between text-primary cursor-pointer p-ripple"
+                class="p-4 flex items-center justify-between text-primary-950 cursor-pointer p-ripple"
               >
                 <span class="font-medium">MÁS</span>
                 <i class="pi pi-chevron-down"></i>
@@ -91,7 +92,7 @@
                 <li>
                   <a
                     pRipple
-                    class="flex items-center cursor-pointer p-4 rounded-border text-primary hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
+                    class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
                   >
                     <i class="pi pi-cog mr-2"></i>
                     <span class="font-medium">Ajustes</span>
@@ -100,10 +101,10 @@
                 <li>
                   <a
                     pRipple
-                    class="flex items-center cursor-pointer p-4 rounded-border text-primary hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
+                    class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
                   >
-                    <i class="pi pi-cog mr-2"></i>
-                    <span class="font-medium" routerLink="/login" >Cerrar Sesión</span>
+                    <i class="pi pi-sign-out mr-2"></i>
+                    <span class="font-medium" (click)="logout()" >Cerrar Sesión</span>
                   </a>
                 </li>
                 <li>
