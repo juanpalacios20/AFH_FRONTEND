@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputOtp } from 'primeng/inputotp';
@@ -8,7 +8,7 @@ import { AuthService } from '../../../shared/auth/data_access/auth.service';
 
 @Component({
   selector: 'app-validation-code',
-  imports: [ButtonModule, RouterLink, FormsModule, InputTextModule, InputOtp],
+  imports: [ButtonModule, FormsModule, InputTextModule, InputOtp],
   templateUrl: './validation-code.component.html',
   styleUrl: './validation-code.component.css'
 })

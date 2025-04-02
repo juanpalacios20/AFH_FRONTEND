@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -11,7 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-change-password',
-  imports: [FloatLabel, ButtonModule, RouterLink, FormsModule, InputTextModule, PasswordModule, CommonModule],
+  imports: [FloatLabel, ButtonModule, FormsModule, InputTextModule, PasswordModule, CommonModule],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.css'
 })
