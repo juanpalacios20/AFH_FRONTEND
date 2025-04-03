@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
@@ -21,11 +14,6 @@ import { Image } from 'primeng/image';
 
 interface State {
   name: string;
-}
-
-interface UploadEvent {
-  originalEvent: Event;
-  files: File[];
 }
 
 @Component({
@@ -45,23 +33,25 @@ interface UploadEvent {
   templateUrl: './edit-tools.component.html',
   styleUrl: './edit-tools.component.css',
 })
-export class EditToolsComponent implements OnInit {
-  states: State[] | undefined;
-  selectedState: State | undefined;
-  selectedFile!: File;
-  previewImage: string | ArrayBuffer | null = null;
-  errorMessage: string = '';
-  isUpdating = false;
 
-  constructor(
-    private messageService: MessageService,
-    private toolService: ToolService
-  ) {}
+export class EditToolsComponent implements OnInit {
 
   @Input() visible: boolean = false;
   @Input() tool: any = {};
   @Input() state: string = '';
   @Output() closeDialog = new EventEmitter<void>();
+
+  states: State[] | undefined;
+  selectedState: State | undefined;
+  selectedFile!: File;
+  previewImage: string | ArrayBuffer | null = null;
+  errorMessage: string = '';
+  
+
+  constructor(
+    private messageService: MessageService,
+    private toolService: ToolService
+  ) {}
 
   showSuccess() {
     if (this.selectedState?.name === 'ACTIVO') {
@@ -102,11 +92,9 @@ export class EditToolsComponent implements OnInit {
   onFileSelected(event: any) {
     if (event.files.length > 0) {
       this.selectedFile = event.files[0];
-
-      // Crear vista previa de la imagen seleccionada
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.previewImage = reader.result; // Guardar la vista previa
+        this.previewImage = reader.result;
       };
       reader.readAsDataURL(this.selectedFile);
     }

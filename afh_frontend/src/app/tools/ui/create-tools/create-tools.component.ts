@@ -11,6 +11,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ToolService } from '../../services/tool.service';
 import { Router } from '@angular/router';
+import { Image } from 'primeng/image';
 
 interface State {
   name: string;
@@ -32,18 +33,28 @@ interface UploadEvent {
     CommonModule,
     FileUpload,
     ToastModule,
+    Image
   ],
   templateUrl: './create-tools.component.html',
-  styleUrl: './create-tools.component.css',
-  providers: [MessageService],
+  styleUrl: './create-tools.component.css'
 })
+
 export class CreateToolsComponent {
+
+  @Input() visible: boolean = false;
+  @Input() tool: any = {}; // Herramienta a editar
+  @Output() closeDialog = new EventEmitter<void>();
+
   states: State[] | undefined;
   selectedFile!: File;
   name = '';
   brand = '';
   selectedState: undefined;
   errorMessage: string = '';
+  previewImage: string | ArrayBuffer | null = null;
+  errorNameMessage: string = '';
+  errorBrandMessage: string = '';
+  errorImageMessage: string = '';
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -52,13 +63,10 @@ export class CreateToolsComponent {
     private toolService: ToolService
   ) {}
 
-  @Input() visible: boolean = false;
-  @Input() tool: any = {}; // Herramienta a editar
-  @Output() closeDialog = new EventEmitter<void>();
-
   close() {
     this.visible = false;
     this.closeDialog.emit();
+    this.resetForm();
   }
 
   resetForm() {
@@ -66,18 +74,27 @@ export class CreateToolsComponent {
     this.brand = '';
     this.selectedState = undefined;
     this.errorMessage = '';
+    this.previewImage = null;
+    this.errorNameMessage = '';
+    this.errorBrandMessage = '';
+    this.errorImageMessage = '';
+    this.selectedFile = new File([], '');
   }
 
   onFileSelected(event: any) {
     if (event.files.length > 0) {
       this.selectedFile = event.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewImage = reader.result;
+      };
+      reader.readAsDataURL(this.selectedFile);
     }
   }
 
   showSuccess() {
-    if (!this.name || !this.selectedFile) {
-      this.errorMessage =
-        'Por favor, ingrese un nombre y seleccione una imagen.';
+    if (this.errorNameMessage == '' || this.errorBrandMessage == '' || this.errorImageMessage == '') {
+      this.verifyForm();
       return;
     }
 
@@ -101,4 +118,16 @@ export class CreateToolsComponent {
       },
     });
   }
+
+  verifyForm() {
+    if (this.name == "") {
+      this.errorNameMessage = 'Por favor, ingrese un nombre.';
+    }
+    if (this.brand == "")
+      this.errorBrandMessage = 'Por favor, ingrese una marca.';
+
+    if (!this.selectedFile) {
+      this.errorImageMessage = 'Por favor, seleccione una imagen.';
+  }
+}
 }

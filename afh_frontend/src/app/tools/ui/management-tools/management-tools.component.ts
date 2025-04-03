@@ -5,7 +5,7 @@ import { MenuComponent } from '../../../shared/ui/menu/menu.component';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputTextModule } from 'primeng/inputtext';
@@ -45,6 +45,7 @@ import { ViewToolComponent } from '../view-tool/view-tool.component';
   styleUrl: './management-tools.component.css',
   providers: [ConfirmationService, MessageService],
 })
+
 export default class ManagementToolsComponent implements OnInit {
   value3: string = '';
   tools: any[] = [];
@@ -59,19 +60,15 @@ export default class ManagementToolsComponent implements OnInit {
     private messageService: MessageService,
     private toolService: ToolService
   ) {}
+
   ngOnInit(): void {
     this.loadTools();
   }
 
   loadTools() {
-    this.toolService.getTools().subscribe(
-      (response: any) => {
-        this.tools = response;
-      },
-      (error: any) => {
-        console.error('Error al cargar las herramientas:', error);
-      }
-    );
+    this.toolService.getTools().subscribe((tools: any[]) => {
+      this.tools = tools;
+    });
   }
 
   getSeverity(
@@ -166,13 +163,6 @@ export default class ManagementToolsComponent implements OnInit {
           severity: 'info',
           summary: 'Acción confirmada',
           detail: 'Herramienta eliminada con éxito',
-        });
-      },
-      reject: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Acción cancelada',
-          detail: 'La herramienta no ha sido eliminada',
         });
       },
     });

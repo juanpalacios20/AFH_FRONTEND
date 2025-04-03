@@ -8,21 +8,27 @@
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
 >
   <span class="p-text-secondary block mb-8"
-    >Llene los campos para crear una nueva herramienta.</span
+    >El codigo se creara automaticamente a partir del nombre</span
   >
 
-  <div class="justify-center mb-4">
+  <div class="justify-center mb-4 mt-2">
     <p-floatlabel variant="on">
       <input
         pInputText
         id="nombre"
         [(ngModel)]="name"
         [ngModelOptions]="{ standalone: true }"
+        [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorNameMessage }"
         class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         autocomplete="on"
+        required="true"
       />
       <label for="nombre">Nombre</label>
     </p-floatlabel>
+    <small id="email-help" class="text-red-600" *ngIf="errorNameMessage">
+      {{ errorNameMessage }}
+    </small>
+    
   </div>
   <div class="justify-center mb-4">
     <p-floatlabel variant="on">
@@ -31,15 +37,23 @@
         id="marca"
         [(ngModel)]="brand"
         [ngModelOptions]="{ standalone: true }"
+        [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorNameMessage }"
         class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         autocomplete="on"
+        required="true"
       />
       <label for="marca">Marca</label>
     </p-floatlabel>
+    <small id="email-help" class="text-red-600" *ngIf="errorBrandMessage">
+      {{ errorBrandMessage }}
+    </small>
+    
+    
   </div>
-
+  <div class="card flex justify-center mb-2">
+    <p-image [src]="previewImage ?? ''" alt="" width="250" />
+  </div>
   <div class="justify-center mb-4">
-    <p-toast />
     <p-fileupload
       #fu
       mode="basic"
@@ -50,12 +64,17 @@
       maxFileSize="1000000"
       (onSelect)="onFileSelected($event)"
       auto="false"
+      customUpload="true"
     />
+    <small id="email-help" class="text-red-600 text-center" *ngIf="errorImageMessage">
+      {{ errorImageMessage }}
+    </small>
+    
   </div>
 
   <div class="flex justify-end gap-2">
     <button
-      (click)="closeDialog.emit()"
+      (click)="close()"
       class="w-32 bg-gray-300 text-black font-medium py-2 rounded-lg transition hover:bg-gray-400 cursor-pointer"
     >
       Cancelar

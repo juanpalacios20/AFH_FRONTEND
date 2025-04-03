@@ -7,11 +7,7 @@
   (onHide)="close()"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
 >
-  <span class="p-text-secondary block mb-8"
-    >Reemplace los datos que desea actualizar</span
-  >
-
-  <div class="justify-center mb-4">
+  <div class="justify-center mb-4 mt-2">
     <p-floatlabel variant="on">
       <input
         pInputText
@@ -28,11 +24,12 @@
   <div class="justify-center mb-4">
     <p-floatlabel variant="on">
       <input
+        [disabled]="true"
         pInputText
         id="codigo"
         [(ngModel)]="tool.code"
         [ngModelOptions]="{ standalone: true }"
-        class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        class="w-full bg-white text-gray font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         autocomplete="on"
       />
       <label for="codigo">Código</label>
@@ -53,8 +50,8 @@
     </p-floatlabel>
   </div>
 
-  <div class="justify-center mb-4">
-    <p-floatlabel class="w-full md:w-56" variant="on">
+  <div class="flex items-center justify-center gap-4 mb-6">
+    <p-floatlabel class="w-1/2 md:w-56" variant="on">
       <p-select
         [options]="states"
         [(ngModel)]="selectedState"
@@ -63,8 +60,16 @@
         class="w-full md:w-56"
       />
       <label for="on_label">Cambiar Estado</label>
-    </p-floatlabel>    
-    <label class="mb-4 font-bold">Estado actual: {{ state }}</label>
+    </p-floatlabel>
+    <label
+      class="font-bold"
+      [ngClass]="{
+        'text-green-500': state === 'ACTIVO',
+        'text-red-500': state === 'INACTIVO',
+        'text-yellow-500': state === 'EN USO'
+      }"
+      >Estado actual: {{ state }}</label
+    >
   </div>
 
   <!-- Mostrar la imagen de la herramienta -->
@@ -75,12 +80,11 @@
       width="250"
     />
   </div>
-  <div class="justify-center mb-4">
-    <p-toast />
+  <div class="justify-center mb-6">
     <p-fileupload
       #fu
       mode="basic"
-      chooseLabel="Actualizar"
+      chooseLabel="Actualizar imagen"
       chooseIcon="pi pi-upload"
       name="image"
       accept="image/*"
