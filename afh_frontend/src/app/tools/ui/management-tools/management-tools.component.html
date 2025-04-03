@@ -1,0 +1,116 @@
+<div class="relative h-screen">
+  <app-menu class="absolute top-0 left-0 p-4"></app-menu>
+  <p-toast position="top-right"></p-toast>
+  <div class="w-full p-5 pt-20">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">AFH: Administración de Herramientas</h1>
+      <p class="rounded-border text-primary-950 font-semibold">
+        Total herramientas: {{ tools.length }}
+      </p>
+    </div>
+
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <p-floatlabel variant="on">
+          <p-iconfield>
+            <p-inputicon class="pi pi-search" rounded="true" />
+            <input
+              pInputText
+              id="on_label"
+              [(ngModel)]="value3"
+              (input)="tt?.filterGlobal(value3, 'contains')"
+              autocomplete="off"
+            />
+          </p-iconfield>
+          <label for="on_label">Buscar herramienta</label>
+        </p-floatlabel>
+      </div>
+      <button
+        pButton
+        icon="pi pi-plus"
+        (click)="showCreateDialog()"
+        label="Agregar herramienta"
+        rounded="true"
+        styleClass="w-full"
+      ></button>
+    </div>
+
+    <!-- Confirmación de eliminación (solo una instancia) -->
+    <p-confirmdialog></p-confirmdialog>
+
+    <p-table
+      #tt
+      [value]="tools"
+      [paginator]="true"
+      [rows]="5"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      [globalFilterFields]="['name', 'code']"
+    >
+      <ng-template #header>
+        <tr>
+          <th class="rounded-border text-primary-950 text-center">Código</th>
+          <th class="rounded-border text-primary-950 text-center">Marca</th>
+          <th class="rounded-border text-primary-950 text-center">Imagen</th>
+          <th class="rounded-border text-primary-950 text-center">Estado</th>
+          <th class="rounded-border text-primary-950 text-center">Opciones</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-tool>
+        <tr>
+          <td (click)="showViewDialog(tool.id)" class="cursor-pointer">
+            <p class="text-center">{{ tool.code }}</p>
+          </td>
+          <td (click)="showViewDialog(tool.id)" class="cursor-pointer">
+            <p class="text-center">{{ tool.marca }}</p>
+          </td>
+          <td
+            class="flex justify-center cursor-pointer"
+            (click)="showViewDialog(tool.id)"
+          >
+            <img
+              [src]="tool.image"
+              [alt]="tool.name"
+              class="w-16 h-16 rounded"
+            />
+          </td>
+          <td (click)="showViewDialog(tool.id)" class="cursor-pointer">
+            <div class="flex justify-center">
+              <p-tag
+                class="justify-center"
+                [value]="getStateString(tool.state)"
+                [severity]="getSeverity(tool.state)"
+              ></p-tag>
+            </div>
+          </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button (click)="showEditDialog(tool.id)" icon="pi pi-pencil" />
+              <p-button
+                (click)="confirm2(tool.id)"
+                icon="pi pi-trash"
+                severity="danger"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <app-edit-tools
+    [visible]="editDialogVisible"
+    [tool]="this.tool"
+    [state]="this.state"
+    (closeDialog)="editDialogVisible = false"
+  ></app-edit-tools>
+  <app-create-tools
+    [visible]="createDialogVisible"
+    (closeDialog)="createDialogVisible = false"
+  ></app-create-tools>
+  <app-view-tool
+    [visible]="viewDialogVisible"
+    [tool]="this.tool"
+    [state]="this.state"
+    (closeDialog)="viewDialogVisible = false"
+  ></app-view-tool>
+</div>

@@ -1,0 +1,62 @@
+<div class="flex h-screen">
+  <div class="w-1/2 bg-gray-200 flex items-center justify-center">
+    <img
+      src="resource/imagebg.png"
+      alt="Imagen de fondo"
+      class="w-full h-full object-cover"
+    />
+  </div>
+
+  <div class="w-1/2 flex items-center justify-center bg-white">
+    <div class="w-3/4">
+      <h2 class="text-black font-bold text-2xl mb-6 text-center">
+        Iniciar Sesión
+      </h2>
+      <form (submit)="login()" class="w-full">
+        <div class="w-full mb-6">
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              [(ngModel)]="email"
+              [ngModelOptions]="{ standalone: true }"
+              required="true"
+              id="on_label"
+              autocomplete="on"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition"
+            />
+            <label for="on_label">Correo Electronico</label>
+          </p-floatlabel>
+          <small id="email-help" class="text-gray-600"
+            >Correo valido como ejemplo&#64;dominio.com</small
+          >
+        </div>
+
+        <div class="w-full mb-6">
+          <p-floatlabel variant="on">
+            <p-password
+              [(ngModel)]="password"
+              [feedback]="false"
+              [toggleMask]="true"
+              fluid="true"
+              class="w-full font-medium"
+              required="true"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <label for="password">Contraseña</label>
+          </p-floatlabel>
+        </div>
+
+        <div class="w-full mb-6">
+          <p-button label="Iniciar Sesión" type="submit" fluid="true" rounded="true" styleClass="w-full" />
+          <p class="text-red-600" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </div>
+        <p class="text-sm text-center font-size text-gray-600">
+          ¿Olvidaste tu contraseña?
+          <a routerLink="/send-code" class="text-blue-600"
+            >Reestablecela aqui</a
+          >
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

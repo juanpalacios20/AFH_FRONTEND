@@ -1,0 +1,56 @@
+<div class="flex h-screen">
+  <div class="w-1/2 bg-gray-200 flex items-center justify-center">
+    <img
+      src="resource/imagebg.png"
+      alt="Imagen de fondo"
+      class="w-full h-full object-cover"
+    />
+  </div>
+
+  <div class="w-1/2 flex items-center justify-center bg-white">
+    <div class="w-3/4">
+      <div class="w-full mb-6 flex items-center">
+        <p-button
+          icon="pi pi-arrow-left"
+          routerLink="/login"
+          size="small"
+          class="mr-4"
+        />
+        <div class="w-full text-center">
+          <h2 class="text-black font-bold text-2xl">Recuperar Contraseña</h2>
+        </div>
+      </div>
+
+      <form class="w-full" (submit)="sendCode()">
+        <div class="w-full mb-6">
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              [(ngModel)]="email"
+              [ngModelOptions]="{ standalone: true }"
+              required="true"
+              id="on_label"
+              autocomplete="on"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition"
+            />
+            <label for="on_label">Correo Electronico</label>
+          </p-floatlabel>
+          <small id="email-help" class="text-gray-600"
+            >Confirme su corre electronico</small
+          >
+        </div>
+        <div class="w-full mb-6">
+          <p-button
+            label="Enviar Codigo"
+            styleClass="w-full"
+            type="submit"
+            fluid="true"
+            rounded="true"
+            styleClass="w-full"
+          />
+          <p class="text-red-600" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
