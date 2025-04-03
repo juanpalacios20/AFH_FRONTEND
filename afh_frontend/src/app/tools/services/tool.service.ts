@@ -19,6 +19,14 @@ export class ToolService extends BaseHttpService {
     );
   }
 
+  getTool(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}tool/gettool/${id}`).pipe(
+      tap((response: any) => {
+        console.log('Herramienta obtenida:', response);
+      }
+    ));
+    }
+
   getTools(): Observable<any> {
     return this.http.get(`${this.apiUrl}tool/gettools`).pipe(
       tap((response: any) => {
@@ -31,6 +39,15 @@ export class ToolService extends BaseHttpService {
     this.getTools();
   }
 
+  updateTool(id: number, name: string, marca: string, image: File, state: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}tool/updatetool/`, { name, image, state, id, marca }).pipe(
+      tap((response: any) => {
+        console.log('Herramienta actualizada:', response);
+      })
+    )
+}
+
+
   deleteTool(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}tool/delete/${id}`).pipe(
       tap((response: any) => {
@@ -38,4 +55,5 @@ export class ToolService extends BaseHttpService {
       })
     );
   }
+
 }

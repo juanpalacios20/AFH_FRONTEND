@@ -46,6 +46,8 @@ import { ToolService } from '../../services/tool.service';
 export default class ManagementToolsComponent implements OnInit {
   value3: string = '';
   tools: any[] = [];
+  tool: any = {};
+  state: string = '';
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
@@ -79,10 +81,10 @@ export default class ManagementToolsComponent implements OnInit {
     switch (state) {
       case 1:
         return 'success';
-      case 3:
-        return 'warn';
       case 2:
         return 'danger';
+      case 3:
+        return 'secondary';
       default:
         return 'secondary'; // Map "unknown" to a valid type
     }
@@ -93,23 +95,37 @@ export default class ManagementToolsComponent implements OnInit {
       case 1:
         return 'ACTIVO';
       case 2:
-        return 'EN USO';
-      case 3:
         return 'INACTIVO';
+      case 3:
+        return 'EN USO';
       default:
-        return 'Estado desconocido'; // Manejo de estado desconocido
+        return 'Estado desconocido';
     }
 
   }
 
-  selectedTool: any = {};
   editDialogVisible = false;
   createDialogVisible = false;
 
-  showEditDialog() {
-    //this.selectedTool = { ...tool }; // Clonamos para no modificar directamente
-    this.editDialogVisible = true;
+  getTool(toolId: number) {
+    this.toolService.getTool(toolId).subscribe((response: any) => {
+      this.tool = response;
+      console.log('Herramienta obt:', this.tool);
+      this.state = this.getStateString(this.tool.state);
+      console.log('Estado de la herramienta2:', this.state, this.tool.state, this.tool.name, this.tool.code);
+    });
+    
   }
+
+  showEditDialog(toolId: number) {
+    this.getTool(toolId);
+    
+    setTimeout(() => {
+      console.log('Estado que se enviará al modal:', this.state);
+      this.editDialogVisible = true;
+    }, 200); // Esperamos a que `state` se actualice
+  }
+  
 
   showCreateDialog() {
     this.createDialogVisible = true;
@@ -125,40 +141,6 @@ export default class ManagementToolsComponent implements OnInit {
         console.error('Error al eliminar la herramienta:', error);
       }
     );
-  }
-
-  confirm1(event: Event) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Are you sure that you want to proceed?',
-      header: 'Confirmation',
-      closable: true,
-      closeOnEscape: true,
-      icon: 'pi pi-exclamation-triangle',
-      rejectButtonProps: {
-        label: 'Cancel',
-        severity: 'secondary',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: 'Save',
-      },
-      accept: () => {
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Confirmed',
-          detail: 'You have accepted',
-        });
-      },
-      reject: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Rejected',
-          detail: 'You have rejected',
-          life: 3000,
-        });
-      },
-    });
   }
 
   confirm2(event: Event, id: number) {

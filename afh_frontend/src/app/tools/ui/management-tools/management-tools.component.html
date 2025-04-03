@@ -42,7 +42,7 @@
       [rows]="5"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[5, 10, 20]"
-      [globalFilterFields]="['name', 'code', 'marca']"
+      [globalFilterFields]="['name', 'code']"
     >
       <ng-template #header>
         <tr>
@@ -81,7 +81,7 @@
             <div class="card flex justify-center gap-2">
               <p-toast />
               <p-confirmdialog />
-              <p-button (click)="showEditDialog()" icon="pi pi-pencil" />
+              <p-button (click)="showEditDialog(tool.id)" icon="pi pi-pencil" />
               <p-button
                 (click)="confirm2($event, tool.id)"
                 icon="pi pi-trash"
@@ -95,12 +95,12 @@
   </div>
   <app-edit-tools
     [visible]="editDialogVisible"
-    [tool]="selectedTool"
+    [tool]="this.tool"
+    [state]="this.state"
     (closeDialog)="editDialogVisible = false"
   ></app-edit-tools>
   <app-create-tools
     [visible]="createDialogVisible"
-    [tool]="selectedTool"
     (closeDialog)="createDialogVisible = false"
   ></app-create-tools>
 </div>

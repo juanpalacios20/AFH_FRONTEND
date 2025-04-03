@@ -13,7 +13,7 @@ export const routes: Routes = [
     { path: 'send-code', component: SendCodeComponent },
     { path: 'validation-code', component: ValidationCodeComponent, canActivate: [TokenGuard] },
     { path: 'change-password', component: ChangePasswordComponent, canActivate: [TokenGuard] },
-    { path: 'management-tools', component: ManagementToolsComponent },
+    { path: 'management-tools', component: ManagementToolsComponent, canActivate: [AuthGuard] },
     { path: 'menu', component: MenuComponent },
     { path: 'change-password', component: ChangePasswordComponent },
     { path: '**', redirectTo: 'login' }

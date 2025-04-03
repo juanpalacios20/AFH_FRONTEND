@@ -13,7 +13,8 @@
       <input
         pInputText
         id="nombre"
-        [(ngModel)]="tool.nombre"
+        [(ngModel)]="tool.name"
+        [ngModelOptions]="{ standalone: true }"
         class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         autocomplete="on"
       />
@@ -26,7 +27,8 @@
       <input
         pInputText
         id="codigo"
-        [(ngModel)]="tool.codigo"
+        [(ngModel)]="tool.code"
+        [ngModelOptions]="{ standalone: true }"
         class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         autocomplete="on"
       />
@@ -40,6 +42,7 @@
         pInputText
         id="marca"
         [(ngModel)]="tool.marca"
+        [ngModelOptions]="{ standalone: true }"
         class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         autocomplete="on"
       />
@@ -49,14 +52,39 @@
 
   <div class="justify-center mb-4">
     <p-floatlabel class="w-full md:w-56" variant="on">
-        <p-select [options]="states" [(ngModel)]="selectedState" optionLabel="name"class="w-full md:w-56" />
-      <label for="on_label">Estado</label>
-    </p-floatlabel>
+      <p-select
+        [options]="states"
+        [(ngModel)]="selectedState"
+        [ngModelOptions]="{ standalone: true }"
+        optionLabel="name"
+        class="w-full md:w-56"
+      />
+      <label for="on_label">Cambiar Estado</label>
+    </p-floatlabel>    
+    <label class="mb-4 font-bold">Estado actual: {{ state }}</label>
   </div>
 
+  <!-- Mostrar la imagen de la herramienta -->
+  <div class="card flex justify-center mb-2">
+    <p-image
+      [src]="previewImage ? previewImage : tool.image"
+      alt="Image"
+      width="250"
+    />
+  </div>
   <div class="justify-center mb-4">
     <p-toast />
-    <p-fileupload #fu mode="basic" chooseLabel="Suba una imagen" chooseIcon="pi pi-upload" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onUpload($event)" />
+    <p-fileupload
+      #fu
+      mode="basic"
+      chooseLabel="Actualizar"
+      chooseIcon="pi pi-upload"
+      name="image"
+      accept="image/*"
+      maxFileSize="1000000"
+      (onSelect)="onFileSelected($event)"
+      auto="false"
+    />
   </div>
 
   <div class="flex justify-end gap-2">
@@ -67,7 +95,7 @@
       Cancelar
     </button>
     <button
-      (click)="saveChanges()"
+      (click)="updateTool()"
       class="w-32 bg-blue-600 text-white font-medium py-2 rounded-lg transition hover:bg-blue-700 cursor-pointer"
     >
       Guardar

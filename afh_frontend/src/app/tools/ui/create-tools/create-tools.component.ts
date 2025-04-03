@@ -116,7 +116,7 @@ export class CreateToolsComponent implements OnInit {
         setTimeout(() => {
           this.closeDialog.emit();
           this.resetForm();
-          this.refreshComponent();
+          window.location.reload();
         }, 2000);
       },
       error: (err) => {
