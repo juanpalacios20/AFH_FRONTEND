@@ -5,13 +5,13 @@ import { Ripple } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
 import { StyleClass } from 'primeng/styleclass';
 import { Drawer } from 'primeng/drawer';
-import { Router} from '@angular/router';
+import { Router, RouterLink} from '@angular/router';
 import { AuthService } from '../../auth/data_access/auth.service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [DrawerModule, ButtonModule, Ripple, AvatarModule, StyleClass],
+  imports: [DrawerModule, ButtonModule, Ripple, AvatarModule, StyleClass, RouterLink],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
