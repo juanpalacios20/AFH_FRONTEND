@@ -50,6 +50,8 @@ export class EditToolsComponent implements OnInit {
   selectedState: State | undefined;
   selectedFile!: File;
   previewImage: string | ArrayBuffer | null = null;
+  errorMessage: string = '';
+  isUpdating = false;
 
   constructor(
     private messageService: MessageService,
@@ -61,9 +63,7 @@ export class EditToolsComponent implements OnInit {
   @Input() state: string = '';
   @Output() closeDialog = new EventEmitter<void>();
 
-  updateTool() {
-    console.log('Selected State:', this.selectedState?.name); // Debugging
-  
+  showSuccess() {
     if (this.selectedState?.name === 'ACTIVO') {
       this.tool.state = 1;
     } else if (this.selectedState?.name === 'INACTIVO') {
@@ -71,40 +71,33 @@ export class EditToolsComponent implements OnInit {
     } else if (this.selectedState?.name === 'EN USO') {
       this.tool.state = 3;
     }
-  
-    console.log('Tool State after assignment:', this.tool.state); // Debugging
-  
+
     this.toolService
       .updateTool(
         this.tool.id,
         this.tool.name,
         this.tool.marca,
-        this.selectedFile, 
+        this.selectedFile,
         this.tool.state
       )
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response: any) => {
           this.messageService.add({
             severity: 'success',
-            summary: 'Éxito',
-            detail: 'Herramienta actualizada',
+            summary: 'Actualizado',
+            detail: 'La herramienta ha sido actualizada con éxito',
           });
           setTimeout(() => {
             this.closeDialog.emit();
             window.location.reload();
           }, 2000);
         },
-        (error) => {
-          console.error('Error al actualizar herramienta:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'No se pudo actualizar la herramienta',
-          });
-        }
-      );
+        error: (err) => {
+          this.errorMessage = 'Error al crear la herramienta.';
+          console.error(err);
+        },
+      });
   }
-  
 
   onFileSelected(event: any) {
     if (event.files.length > 0) {
@@ -120,19 +113,15 @@ export class EditToolsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Estado inicial recibido:', this.state); // Debugging
-  
     this.states = [
       { name: 'ACTIVO' },
       { name: 'INACTIVO' },
       { name: 'EN USO' },
     ];
   }
-  
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['state']) {
-      console.log('ngOnChanges - Estado cambiado:', this.state);
-    }
+  close() {
+    this.visible = false;
+    this.closeDialog.emit();
   }
 }

@@ -37,7 +37,7 @@ interface UploadEvent {
   styleUrl: './create-tools.component.css',
   providers: [MessageService],
 })
-export class CreateToolsComponent implements OnInit {
+export class CreateToolsComponent {
   states: State[] | undefined;
   selectedFile!: File;
   name = '';
@@ -56,27 +56,9 @@ export class CreateToolsComponent implements OnInit {
   @Input() tool: any = {}; // Herramienta a editar
   @Output() closeDialog = new EventEmitter<void>();
 
-  saveChanges() {
-    // Aquí puedes manejar la actualización de la herramienta
-    console.log('Herramienta actualizada:', this.tool);
-    this.closeDialog.emit(); // Cierra el diálogo después de guardar
-  }
-
-  onUpload(event: any): void {
-    const uploadEvent = event as UploadEvent;
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Success',
-      detail: 'File Uploaded with Basic Mode',
-    });
-  }
-
-  ngOnInit() {
-    this.states = [
-      { name: 'ACTIVO' },
-      { name: 'INACTIVO' },
-      { name: 'EN USO' },
-    ];
+  close() {
+    this.visible = false;
+    this.closeDialog.emit();
   }
 
   resetForm() {
@@ -84,12 +66,6 @@ export class CreateToolsComponent implements OnInit {
     this.brand = '';
     this.selectedState = undefined;
     this.errorMessage = '';
-  }
-
-  refreshComponent() {
-    this.router.navigateByUrl('/management-tools', { skipLocationChange: true }).then(() => {
-      this.router.navigate([this.router.url]); // Vuelve a la misma ruta
-    });
   }
 
   onFileSelected(event: any) {

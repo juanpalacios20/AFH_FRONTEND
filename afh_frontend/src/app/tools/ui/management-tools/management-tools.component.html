@@ -35,6 +35,9 @@
       ></button>
     </div>
 
+    <!-- Confirmación de eliminación (solo una instancia) -->
+    <p-confirmdialog></p-confirmdialog>
+
     <p-table
       #tt
       [value]="tools"
@@ -55,20 +58,23 @@
       </ng-template>
       <ng-template #body let-tool>
         <tr>
-          <td>
+          <td (click)="showViewDialog(tool.id)" class="cursor-pointer">
             <p class="text-center">{{ tool.code }}</p>
           </td>
-          <td>
+          <td (click)="showViewDialog(tool.id)" class="cursor-pointer">
             <p class="text-center">{{ tool.marca }}</p>
           </td>
-          <td class="flex justify-center">
+          <td
+            class="flex justify-center cursor-pointer"
+            (click)="showViewDialog(tool.id)"
+          >
             <img
               [src]="tool.image"
               [alt]="tool.name"
               class="w-16 h-16 rounded"
             />
           </td>
-          <td>
+          <td (click)="showViewDialog(tool.id)" class="cursor-pointer">
             <div class="flex justify-center">
               <p-tag
                 class="justify-center"
@@ -79,11 +85,9 @@
           </td>
           <td>
             <div class="card flex justify-center gap-2">
-              <p-toast />
-              <p-confirmdialog />
               <p-button (click)="showEditDialog(tool.id)" icon="pi pi-pencil" />
               <p-button
-                (click)="confirm2($event, tool.id)"
+                (click)="confirm2(tool.id)"
                 icon="pi pi-trash"
                 severity="danger"
               />
@@ -103,4 +107,10 @@
     [visible]="createDialogVisible"
     (closeDialog)="createDialogVisible = false"
   ></app-create-tools>
+  <app-view-tool
+    [visible]="viewDialogVisible"
+    [tool]="this.tool"
+    [state]="this.state"
+    (closeDialog)="viewDialogVisible = false"
+  ></app-view-tool>
 </div>

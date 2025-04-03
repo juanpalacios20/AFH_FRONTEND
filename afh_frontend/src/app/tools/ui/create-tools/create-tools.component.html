@@ -3,6 +3,9 @@
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '30rem' }"
+  [closable]="true"
+  (onHide)="close()"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
 >
   <span class="p-text-secondary block mb-8"
     >Llene los campos para crear una nueva herramienta.</span

@@ -3,6 +3,9 @@
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '30rem' }"
+  [closable]="true"
+  (onHide)="close()"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
 >
   <span class="p-text-secondary block mb-8"
     >Reemplace los datos que desea actualizar</span
@@ -95,7 +98,7 @@
       Cancelar
     </button>
     <button
-      (click)="updateTool()"
+      (click)="showSuccess()"
       class="w-32 bg-blue-600 text-white font-medium py-2 rounded-lg transition hover:bg-blue-700 cursor-pointer"
     >
       Guardar

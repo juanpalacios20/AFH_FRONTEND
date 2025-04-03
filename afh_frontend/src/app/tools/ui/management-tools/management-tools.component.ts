@@ -17,6 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import { EditToolsComponent } from '../edit-tools/edit-tools.component';
 import { CreateToolsComponent } from '../create-tools/create-tools.component';
 import { ToolService } from '../../services/tool.service';
+import { ViewToolComponent } from '../view-tool/view-tool.component';
 
 @Component({
   selector: 'app-management-tools',
@@ -38,6 +39,7 @@ import { ToolService } from '../../services/tool.service';
     ToastModule,
     EditToolsComponent,
     CreateToolsComponent,
+    ViewToolComponent,
   ],
   templateUrl: './management-tools.component.html',
   styleUrl: './management-tools.component.css',
@@ -48,6 +50,10 @@ export default class ManagementToolsComponent implements OnInit {
   tools: any[] = [];
   tool: any = {};
   state: string = '';
+  editDialogVisible = false;
+  createDialogVisible = false;
+  viewDialogVisible = false;
+
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
@@ -101,34 +107,30 @@ export default class ManagementToolsComponent implements OnInit {
       default:
         return 'Estado desconocido';
     }
-
   }
-
-  editDialogVisible = false;
-  createDialogVisible = false;
 
   getTool(toolId: number) {
     this.toolService.getTool(toolId).subscribe((response: any) => {
       this.tool = response;
-      console.log('Herramienta obt:', this.tool);
       this.state = this.getStateString(this.tool.state);
-      console.log('Estado de la herramienta2:', this.state, this.tool.state, this.tool.name, this.tool.code);
     });
-    
   }
 
   showEditDialog(toolId: number) {
     this.getTool(toolId);
-    
-    setTimeout(() => {
-      console.log('Estado que se enviará al modal:', this.state);
-      this.editDialogVisible = true;
-    }, 200); // Esperamos a que `state` se actualice
+    this.editDialogVisible = true;
   }
-  
 
   showCreateDialog() {
     this.createDialogVisible = true;
+  }
+
+  showViewDialog(toolId: number) {
+    this.getTool(toolId);
+
+    setTimeout(() => {
+      this.viewDialogVisible = true;
+    }, 200);
   }
 
   deleteTask(id: number) {
@@ -143,14 +145,12 @@ export default class ManagementToolsComponent implements OnInit {
     );
   }
 
-  confirm2(event: Event, id: number) {
+  confirm2(id: number) {
     this.confirmationService.confirm({
-      target: event.target as EventTarget,
       message: '¿Está seguro que desea eliminar esta herramienta?',
-      header: '!Advertencia!',
+      header: '¡Advertencia!',
       icon: 'pi pi-info-circle',
-      rejectLabel: 'Cancel',
-
+      rejectLabel: 'Cancelar',
       rejectButtonProps: {
         label: 'Cancelar',
         severity: 'secondary',
@@ -160,14 +160,12 @@ export default class ManagementToolsComponent implements OnInit {
         label: 'Eliminar',
         severity: 'danger',
       },
-
       accept: () => {
         this.deleteTask(id);
-        console.log('Herramienta eliminada:', id);
         this.messageService.add({
           severity: 'info',
           summary: 'Acción confirmada',
-          detail: 'Herramienta eliminada con exito',
+          detail: 'Herramienta eliminada con éxito',
         });
       },
       reject: () => {
@@ -179,4 +177,5 @@ export default class ManagementToolsComponent implements OnInit {
       },
     });
   }
+  
 }
