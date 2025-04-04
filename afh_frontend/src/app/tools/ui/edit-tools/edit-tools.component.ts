@@ -79,7 +79,6 @@ export class EditToolsComponent implements OnInit {
           });
           setTimeout(() => {
             this.closeDialog.emit();
-            window.location.reload();
           }, 2000);
         },
         error: (err) => {

@@ -43,6 +43,7 @@ export class ToolService extends BaseHttpService {
     return this.http.patch(`${this.apiUrl}tool/updatetool/`, { name, image, state, id, marca }).pipe(
       tap((response: any) => {
         console.log('Herramienta actualizada:', response);
+        console.log('imagen', image);
       })
     )
 }
