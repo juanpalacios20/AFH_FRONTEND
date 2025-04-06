@@ -42,7 +42,6 @@ interface UploadEvent {
 export class CreateToolsComponent {
 
   @Input() visible: boolean = false;
-  @Input() tool: any = {}; // Herramienta a editar
   @Output() closeDialog = new EventEmitter<void>();
 
   states: State[] | undefined;
