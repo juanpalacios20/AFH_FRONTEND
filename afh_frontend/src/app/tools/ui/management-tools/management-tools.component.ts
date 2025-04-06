@@ -54,6 +54,8 @@ export default class ManagementToolsComponent implements OnInit {
   editDialogVisible = false;
   createDialogVisible = false;
   viewDialogVisible = false;
+  timestamp = Date.now();
+
 
   constructor(
     private confirmationService: ConfirmationService,

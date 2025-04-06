@@ -93,8 +93,9 @@ export class CreateToolsComponent {
   }
 
   showSuccess() {
-    if (this.errorNameMessage == '' || this.errorBrandMessage == '' || this.errorImageMessage == '') {
-      this.verifyForm();
+    this.verifyForm();
+    if (this.errorNameMessage == 'Por favor, ingrese un nombre.' || this.errorBrandMessage == 'Por favor, ingrese una marca.' || this.errorImageMessage == 'Por favor, seleccione una imagen.') {
+      console.log('Error en el formulario');
       return;
     }
 
