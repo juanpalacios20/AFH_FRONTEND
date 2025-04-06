@@ -61,7 +61,7 @@ export class EditToolsComponent implements OnInit {
     } else if (this.selectedState?.name === 'EN USO') {
       this.tool.state = 3;
     }
-
+    
     this.toolService
       .updateTool(
         this.tool.id,
@@ -79,6 +79,7 @@ export class EditToolsComponent implements OnInit {
           });
           setTimeout(() => {
             this.closeDialog.emit();
+            window.location.reload();
           }, 2000);
         },
         error: (err) => {
