@@ -1,18 +1,24 @@
 import { Injectable } from '@angular/core';
 import { BaseHttpService } from '../../shared/data_access/base_http.service';
 import { Observable, tap } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToolService extends BaseHttpService {
+
+  headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
+
   addTool(name: string, marca: string, image: File): Observable<any> {
     const formData = new FormData();
     formData.append('name', name);
     formData.append('image', image);
     formData.append('marca', marca);
 
-    return this.http.post(`${this.apiUrl}tool/addtool/`, formData).pipe(
+    return this.http.post(`${this.apiUrl}tool/addtool/`, formData, { headers: this.headers }).pipe(
       tap((response: any) => {
         console.log('Herramienta creada:', response);
       })
@@ -28,7 +34,7 @@ export class ToolService extends BaseHttpService {
     }
 
   getTools(): Observable<any> {
-    return this.http.get(`${this.apiUrl}tool/gettools`).pipe(
+    return this.http.get(`${this.apiUrl}tool/gettools`, { headers: this.headers }).pipe(
       tap((response: any) => {
         console.log('Herramientas obtenidas:', response);
       })

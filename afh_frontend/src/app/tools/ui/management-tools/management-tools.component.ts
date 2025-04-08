@@ -18,6 +18,7 @@ import { EditToolsComponent } from '../edit-tools/edit-tools.component';
 import { CreateToolsComponent } from '../create-tools/create-tools.component';
 import { ToolService } from '../../services/tool.service';
 import { ViewToolComponent } from '../view-tool/view-tool.component';
+import { FooterComponent } from '../../../shared/ui/footer/footer.component';
 
 @Component({
   selector: 'app-management-tools',
@@ -39,7 +40,7 @@ import { ViewToolComponent } from '../view-tool/view-tool.component';
     ToastModule,
     EditToolsComponent,
     CreateToolsComponent,
-    ViewToolComponent,
+    ViewToolComponent
   ],
   templateUrl: './management-tools.component.html',
   styleUrl: './management-tools.component.css',

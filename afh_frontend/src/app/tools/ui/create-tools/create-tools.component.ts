@@ -33,14 +33,12 @@ interface UploadEvent {
     CommonModule,
     FileUpload,
     ToastModule,
-    Image
+    Image,
   ],
   templateUrl: './create-tools.component.html',
-  styleUrl: './create-tools.component.css'
+  styleUrl: './create-tools.component.css',
 })
-
 export class CreateToolsComponent {
-
   @Input() visible: boolean = false;
   @Output() closeDialog = new EventEmitter<void>();
 
@@ -93,41 +91,44 @@ export class CreateToolsComponent {
 
   showSuccess() {
     this.verifyForm();
-    if (this.errorNameMessage == 'Por favor, ingrese un nombre.' || this.errorBrandMessage == 'Por favor, ingrese una marca.' || this.errorImageMessage == 'Por favor, seleccione una imagen.') {
+    if (
+      this.errorNameMessage == 'Por favor, ingrese un nombre.' ||
+      this.errorBrandMessage == 'Por favor, ingrese una marca.' ||
+      this.errorImageMessage == 'Por favor, seleccione una imagen.'
+    ) {
       console.log('Error en el formulario');
       return;
     }
 
-    this.toolService.addTool(this.name, this.brand, this.selectedFile).subscribe({
-      next: (response) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Creada',
-          detail: 'La herramienta ha sido creada con éxito',
-        });
-
-        setTimeout(() => {
+    this.toolService
+      .addTool(this.name, this.brand, this.selectedFile)
+      .subscribe({
+        next: (response) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Creada',
+            detail: 'La herramienta ha sido creada con éxito',
+          });
           this.closeDialog.emit();
           this.resetForm();
           window.location.reload();
-        }, 2000);
-      },
-      error: (err) => {
-        this.errorMessage = 'Error al crear la herramienta.';
-        console.error(err);
-      },
-    });
+        },
+        error: (err) => {
+          this.errorMessage = 'Error al crear la herramienta.';
+          console.error(err);
+        },
+      });
   }
 
   verifyForm() {
-    if (this.name == "") {
+    if (this.name == '') {
       this.errorNameMessage = 'Por favor, ingrese un nombre.';
     }
-    if (this.brand == "")
+    if (this.brand == '')
       this.errorBrandMessage = 'Por favor, ingrese una marca.';
 
     if (!this.selectedFile) {
       this.errorImageMessage = 'Por favor, seleccione una imagen.';
+    }
   }
-}
 }

@@ -50,7 +50,7 @@
       <ng-template #header>
         <tr>
           <th class="rounded-border text-primary-950 text-center">Código</th>
-          <th class="rounded-border text-primary-950 text-center">Marca</th>
+          <th class="rounded-border text-primary-950 text-center">Nombre</th>
           <th class="rounded-border text-primary-950 text-center">Imagen</th>
           <th class="rounded-border text-primary-950 text-center">Estado</th>
           <th class="rounded-border text-primary-950 text-center">Opciones</th>
@@ -62,7 +62,7 @@
             <p class="text-center">{{ tool.code }}</p>
           </td>
           <td (click)="showViewDialog(tool.id)" class="cursor-pointer">
-            <p class="text-center">{{ tool.marca }}</p>
+            <p class="text-center">{{ tool.name }}</p>
           </td>
           <td
             class="flex justify-center cursor-pointer"
