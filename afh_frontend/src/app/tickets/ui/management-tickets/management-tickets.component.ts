@@ -104,6 +104,7 @@ export class ManagementTicketsComponent implements OnInit {
     this.ticketService.getTickets().subscribe({
       next: (data) => {
         this.tickets = data;
+        console.log('tickets', this.tickets);
       },
       error: (error) => {
         console.error('Error al obtener tickets', error);
