@@ -60,105 +60,120 @@ interface Ticket {
 
 @Component({
   selector: 'app-history-tickets',
-  imports: [ButtonModule,
-      RippleModule,
-      MenuComponent,
-      TableModule,
-      TagModule,
-      RatingModule,
-      CommonModule,
-      InputIconModule,
-      IconFieldModule,
-      InputTextModule,
-      FloatLabelModule,
-      FormsModule,
-      ConfirmDialog,
-      ToastModule,
-      ViewTicketComponent,
-      NgIf
-      ],
+  imports: [
+    ButtonModule,
+    RippleModule,
+    MenuComponent,
+    TableModule,
+    TagModule,
+    RatingModule,
+    CommonModule,
+    InputIconModule,
+    IconFieldModule,
+    InputTextModule,
+    FloatLabelModule,
+    FormsModule,
+    ConfirmDialog,
+    ToastModule,
+    ViewTicketComponent,
+    NgIf,
+  ],
   templateUrl: './history-tickets.component.html',
   styleUrl: './history-tickets.component.css',
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, MessageService],
 })
 export class HistoryTicketsComponent {
-  code: string = "";
-    createTicketDialogVisible: boolean = false;
-    tickets: Ticket[] = [];
-    viewTicketDialogVisible: boolean = false;
-    Ticket?: Ticket;
-  
-    constructor (private ticketService: TicketsService){}
-  
-    showCreateTicketDialog() {
-      this.createTicketDialogVisible = true;
-    }
-  
-    getTickets() {
-      this.ticketService.getTickets().subscribe({
-        next: (data) => {
-          this.tickets = data;
-        },
-        error: (error) => {
-          console.error('Error al obtener tickets', error);
-        },
-      });
-    }
-  
-    ngOnInit() {
-      this.getTickets();
-    }
-  
-    showViewTicketDialog(ticketId: number) {
-      this.ticketService.getTicket(ticketId).subscribe({
-        next: (data) => {
-          this.Ticket = data;
-          console.log("state", this.Ticket!.state);
-        },
-        error: (error) => {
-          console.error('Error al obtener ticket', error);
-        },
-      });
-      this.viewTicketDialogVisible = true;
-    }
-  
-    getSeverity(
-      state: number
-    ):
-      | 'success'
-      | 'warn'
-      | 'danger'
-      | 'secondary'
-      | 'info'
-      | 'contrast'
-      | undefined {
-      switch (state) {
-        case 1:
-          return 'success';
-        case 2:
-          return 'danger';
-        case 3:
-          return 'warn';
-        case 4:
-          return 'secondary';
-        default:
-          return 'secondary'; // Map "unknown" to a valid type
-      }
-    }
-  
-    getStateString(state: number): string {
-      switch (state) {
-        case 1:
-          return 'ACEPTADO';
-        case 2:
-          return 'RECHAZADO';
-        case 3:
-          return 'EN ESPERA';
-        case 4:
-          return 'FINALIZADO';
-        default:
-          return 'Estado desconocido';
-      }
-    }
+  ticketsFinalizados: Ticket[] = [];
+  code: string = '';
+  createTicketDialogVisible: boolean = false;
+  tickets: Ticket[] = [];
+  viewTicketDialogVisible: boolean = false;
+  Ticket?: Ticket;
 
+  constructor(
+    private ticketService: TicketsService,
+    private authService: AuthService
+  ) {}
+
+  showCreateTicketDialog() {
+    this.createTicketDialogVisible = true;
+  }
+
+  getTickets() {
+    this.ticketService.getTickets().subscribe({
+      next: (data) => {
+        this.tickets = data;
+
+        this.ticketsFinalizados = data.filter(
+          (ticket: Ticket) =>
+            ticket.state === 4
+        );
+
+        console.log('tickets finalizados:', this.ticketsFinalizados);
+      },
+      error: (error) => {
+        console.error('Error al obtener tickets', error);
+      },
+    });
+  }
+
+  ngOnInit() {
+    this.getTickets();
+  }
+
+  showViewTicketDialog(ticketId: number) {
+    this.ticketService.getTicket(ticketId).subscribe({
+      next: (data) => {
+        this.Ticket = data;
+        console.log('state', this.Ticket!.state);
+      },
+      error: (error) => {
+        console.error('Error al obtener ticket', error);
+      },
+    });
+    this.viewTicketDialogVisible = true;
+  }
+
+  getSeverity(
+    state: number
+  ):
+    | 'success'
+    | 'warn'
+    | 'danger'
+    | 'secondary'
+    | 'info'
+    | 'contrast'
+    | undefined {
+    switch (state) {
+      case 1:
+        return 'success';
+      case 2:
+        return 'danger';
+      case 3:
+        return 'warn';
+      case 4:
+        return 'secondary';
+      default:
+        return 'secondary'; // Map "unknown" to a valid type
+    }
+  }
+
+  getStateString(state: number): string {
+    switch (state) {
+      case 1:
+        return 'ACEPTADO';
+      case 2:
+        return 'RECHAZADO';
+      case 3:
+        return 'EN ESPERA';
+      case 4:
+        return 'FINALIZADO';
+      default:
+        return 'Estado desconocido';
+    }
+  }
+
+  isAdmin(): boolean {
+    return this.authService.whoIs();
+  }
 }

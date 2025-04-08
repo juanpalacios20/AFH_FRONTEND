@@ -61,10 +61,10 @@ interface Ticket {
   departure_date_formatted: string;
 }
 
-
 @Component({
   selector: 'app-management-tickets',
-  imports: [ButtonModule,
+  imports: [
+    ButtonModule,
     RippleModule,
     MenuComponent,
     TableModule,
@@ -80,21 +80,26 @@ interface Ticket {
     ToastModule,
     CreateTicketComponent,
     ViewTicketComponent,
-    NgIf
-    ],
+    NgIf,
+  ],
   templateUrl: './management-tickets.component.html',
   styleUrl: './management-tickets.component.css',
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, MessageService],
 })
 export class ManagementTicketsComponent implements OnInit {
-  code: string = "";
+  code: string = '';
   createTicketDialogVisible: boolean = false;
   tickets: Ticket[] = [];
   viewTicketDialogVisible: boolean = false;
   Ticket?: Ticket;
-  currentUrl : string = '';
+  currentUrl: string = '';
+  ticketsActivos: Ticket[] = []; 
 
-  constructor (private ticketService: TicketsService, private authService: AuthService, private router: Router){}
+  constructor(
+    private ticketService: TicketsService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   showCreateTicketDialog() {
     this.createTicketDialogVisible = true;
@@ -104,13 +109,19 @@ export class ManagementTicketsComponent implements OnInit {
     this.ticketService.getTickets().subscribe({
       next: (data) => {
         this.tickets = data;
-        console.log('tickets', this.tickets);
+
+        this.ticketsActivos = data.filter(
+          (ticket: Ticket) => ticket.state === 1 || ticket.state === 2 || ticket.state === 3
+        );
+  
+        console.log('tickets activos:', this.ticketsActivos);
       },
       error: (error) => {
         console.error('Error al obtener tickets', error);
       },
     });
   }
+  
 
   ngOnInit() {
     this.getTickets();
@@ -121,7 +132,7 @@ export class ManagementTicketsComponent implements OnInit {
     this.ticketService.getTicket(ticketId).subscribe({
       next: (data) => {
         this.Ticket = data;
-        console.log("state", this.Ticket!.state);
+        console.log('state', this.Ticket!.state);
       },
       error: (error) => {
         console.error('Error al obtener ticket', error);
@@ -169,7 +180,7 @@ export class ManagementTicketsComponent implements OnInit {
     }
   }
 
-isAdmin(): boolean {
-  return this.authService.whoIs();
-}
+  isAdmin(): boolean {
+    return this.authService.whoIs();
+  }
 }
