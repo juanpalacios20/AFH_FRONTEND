@@ -20,7 +20,7 @@ import { MessageService } from 'primeng/api';
   styleUrl: './view-ticket.component.css',
 })
 export class ViewTicketComponent {
-  @Input() ticket: any;
+  @Input() ticket: any = {};
   @Input() visible: boolean = false;
   @Output() closeDialog = new EventEmitter<void>();
   @ViewChild('herramientasPopover') herramientasPopover: any;
