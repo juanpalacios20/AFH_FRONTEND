@@ -10,27 +10,42 @@ import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-send-code',
-  imports: [FloatLabel, ButtonModule, RouterLink, FormsModule, InputTextModule, CommonModule],
+  imports: [
+    FloatLabel,
+    ButtonModule,
+    RouterLink,
+    FormsModule,
+    InputTextModule,
+    CommonModule,
+  ],
   templateUrl: './send-code.component.html',
-  styleUrl: './send-code.component.css'
+  styleUrl: './send-code.component.css',
 })
 export class SendCodeComponent {
   email: string = '';
   errorMessage: string = '';
+  loading: boolean = false;
 
-   constructor(private authService: AuthService, private router: Router, private cookieService: CookieService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private cookieService: CookieService
+  ) {}
 
-   sendCode() {
-    console.log('Email:', this.email);
+  sendCode() {
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 5000);
     this.authService.sendCode(this.email).subscribe({
       next: (response) => {
         this.cookieService.set('resetEmail', this.email, 1, '/');
         this.cookieService.set('resetToken', response.Token, 1, '/');
         this.router.navigate(['/validation-code']);
       },
-      error: (err) => this.errorMessage = "Error de inicio de sesión. Por favor, verifica tu correo.",
+      error: (err) =>
+        (this.errorMessage =
+          'Error de inicio de sesión. Por favor, verifica tu correo.'),
     });
-}
-
-
+  }
 }

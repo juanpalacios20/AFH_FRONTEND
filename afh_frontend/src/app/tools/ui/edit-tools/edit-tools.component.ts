@@ -33,9 +33,7 @@ interface State {
   templateUrl: './edit-tools.component.html',
   styleUrl: './edit-tools.component.css',
 })
-
 export class EditToolsComponent implements OnInit {
-
   @Input() visible: boolean = false;
   @Input() tool: any = {};
   @Input() state: string = '';
@@ -46,7 +44,6 @@ export class EditToolsComponent implements OnInit {
   selectedFile!: File;
   previewImage: string | ArrayBuffer | null = null;
   errorMessage: string = '';
-  
 
   constructor(
     private messageService: MessageService,
@@ -61,7 +58,7 @@ export class EditToolsComponent implements OnInit {
     } else if (this.selectedState?.name === 'EN USO') {
       this.tool.state = 3;
     }
-    
+
     this.toolService
       .updateTool(
         this.tool.id,
@@ -77,10 +74,8 @@ export class EditToolsComponent implements OnInit {
             summary: 'Actualizado',
             detail: 'La herramienta ha sido actualizada con éxito',
           });
-          setTimeout(() => {
-            this.closeDialog.emit();
-            window.location.reload();
-          }, 2000);
+          this.closeDialog.emit();
+          window.location.reload();
         },
         error: (err) => {
           this.errorMessage = 'Error al crear la herramienta.';
