@@ -45,14 +45,14 @@
     />
     <div class="flex justify-end gap-4 mt-2">
       <p-button
-        *ngIf="this.state === 3"
+        *ngIf="this.state === 3 && isAdmin()"
         type="button"
         label="Rechazar"
         (onClick)="confirm2(this.id)"
         styleClass="p-button-secondary"
       ></p-button>
       <p-button
-        *ngIf="this.state === 3"
+        *ngIf="this.state === 3 && isAdmin()"
         type="button"
         label="Aceptar"
         (onClick)="confirm(this.id)"

@@ -95,6 +95,7 @@ export class ManagementTicketsComponent implements OnInit {
   currentUrl: string = '';
   ticketsActivos: Ticket[] = [];
   loading: boolean = false;
+  loadingInfo: boolean = false;
 
   id: number = 0;
   state: number = 0;
@@ -160,9 +161,6 @@ export class ManagementTicketsComponent implements OnInit {
 
   getPDF(ticketId: number, place: string): void {
     this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-    }, 5000);
 
     this.ticketService.getPDF(ticketId).subscribe({
       next: (response) => {
@@ -186,18 +184,17 @@ export class ManagementTicketsComponent implements OnInit {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+        this.loading = false;
       },
       error: (error) => {
+        this.loading = false;
         console.error('Error al obtener PDF', error);
       },
     });
   }
 
   getInfo(): void {
-    this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-    }, 5000);
+    this.loadingInfo = true;
 
     this.ticketService.getInfo().subscribe({
       next: (response) => {
@@ -221,9 +218,11 @@ export class ManagementTicketsComponent implements OnInit {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+        this.loadingInfo = false;
       },
       error: (error) => {
         console.error('Error al obtener PDF', error);
+        this.loadingInfo = false;
       },
     });
   }

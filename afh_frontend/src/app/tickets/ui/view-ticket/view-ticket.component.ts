@@ -13,6 +13,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Popover } from 'primeng/popover';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { AuthService } from '../../../shared/auth/data_access/auth.service';
 
 @Component({
   selector: 'app-view-ticket',
@@ -36,7 +37,8 @@ export class ViewTicketComponent {
   constructor(
     private ticketService: TicketsService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private authService: AuthService
   ) {}
 
   close() {
@@ -204,11 +206,15 @@ export class ViewTicketComponent {
         severity: 'primary',
       },
       accept: () => {
+        this.getPDF(id)
         this.changeState(id, 4);
-        this.getPDF(id);
-        setTimeout(() => this.closeDialog.emit(), 2000);
+        setTimeout(() => this.closeDialog.emit(), 5000);
         this.change = true;
       },
     });
+  }
+
+  isAdmin(): boolean {
+    return this.authService.whoIs();
   }
 }
