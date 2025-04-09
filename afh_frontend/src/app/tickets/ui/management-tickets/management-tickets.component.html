@@ -76,7 +76,7 @@
             </div>
           </td>
           <td>
-            <div class="card flex justify-center" >
+            <div class="card flex justify-center gap-2">
               <p-button icon="pi pi-download" severity="primary" />
             </div>
           </td>
@@ -89,7 +89,11 @@
     (closeDialog)="createTicketDialogVisible = false"
   ></app-create-ticket>
   <app-view-ticket
-    [ticket]="Ticket"
+    [state] = "state"
+    [date] = "date"
+    [description] = "description"
+    [place] = "place"
+    [id] = "id"
     [visible]="viewTicketDialogVisible"
     (closeDialog)="viewTicketDialogVisible = false"
   ></app-view-ticket>

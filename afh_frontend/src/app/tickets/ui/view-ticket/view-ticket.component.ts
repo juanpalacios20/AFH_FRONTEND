@@ -15,15 +15,18 @@ import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-view-ticket',
-  imports: [Dialog, ButtonModule, TagModule, NgFor, Popover, NgIf],
+  imports: [Dialog, ButtonModule, TagModule, NgIf],
   templateUrl: './view-ticket.component.html',
   styleUrl: './view-ticket.component.css',
 })
 export class ViewTicketComponent {
-  @Input() ticket: any = {};
   @Input() visible: boolean = false;
+  @Input() id: number = 0;
+  @Input() state: number = 3;
+  @Input() date: string = '';
+  @Input() description: string = '';
+  @Input() place: string = '';
   @Output() closeDialog = new EventEmitter<void>();
-  @ViewChild('herramientasPopover') herramientasPopover: any;
 
   constructor(
     private ticketService: TicketsService,
@@ -75,10 +78,6 @@ export class ViewTicketComponent {
     }
   }
 
-  togglePopover(event: Event) {
-    this.herramientasPopover.toggle(event);
-  }
-
   changeState(id: number, state: number) {
     console.log(id, state);
     this.ticketService.changeState(id, state).subscribe({
@@ -88,7 +87,6 @@ export class ViewTicketComponent {
           summary: 'Estado cambiado',
           detail: 'El estado ha sido cambiado con exito',
         });
-        this.ticket.state = state;
       },
       error: (error) => {
         console.error('Error al cambiar el estado', error);

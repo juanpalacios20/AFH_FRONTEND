@@ -18,7 +18,7 @@ export class ToolService extends BaseHttpService {
     formData.append('image', image);
     formData.append('marca', marca);
 
-    return this.http.post(`${this.apiUrl}tool/addtool/`, formData, { headers: this.headers }).pipe(
+    return this.http.post(`${this.apiUrl}tool/addtool/`, formData).pipe(
       tap((response: any) => {
         console.log('Herramienta creada:', response);
       })

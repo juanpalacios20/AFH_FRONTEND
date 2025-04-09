@@ -79,8 +79,7 @@ interface Ticket {
     ConfirmDialog,
     ToastModule,
     CreateTicketComponent,
-    ViewTicketComponent,
-    NgIf,
+    ViewTicketComponent
   ],
   templateUrl: './management-tickets.component.html',
   styleUrl: './management-tickets.component.css',
@@ -94,6 +93,13 @@ export class ManagementTicketsComponent implements OnInit {
   Ticket?: Ticket;
   currentUrl: string = '';
   ticketsActivos: Ticket[] = []; 
+
+  id: number = 0;
+  state: number = 0;
+  place: string = '';
+  date: string = '';
+  description: string = '';
+
 
   constructor(
     private ticketService: TicketsService,
@@ -131,8 +137,12 @@ export class ManagementTicketsComponent implements OnInit {
   showViewTicketDialog(ticketId: number) {
     this.ticketService.getTicket(ticketId).subscribe({
       next: (data) => {
-        this.Ticket = data;
-        console.log('state', this.Ticket!.state);
+        this.id = data.id;
+        this.date = data.entry_date_formatted;
+        this.place = data.place;
+        this.description = data.description;
+        this.state = data.state;
+        console.log(this.id, this.date, this.place, this.description, this.state);
       },
       error: (error) => {
         console.error('Error al obtener ticket', error);
