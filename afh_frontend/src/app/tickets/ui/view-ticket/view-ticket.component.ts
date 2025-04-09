@@ -152,6 +152,7 @@ export class ViewTicketComponent {
       },
       accept: () => {
         this.changeState(id, 1);
+        this.closeDialog.emit();
       },
     });
   }
@@ -173,6 +174,7 @@ export class ViewTicketComponent {
       },
       accept: () => {
         this.changeState(id, 2);
+        this.closeDialog.emit();
       },
     });
   }
@@ -195,6 +197,7 @@ export class ViewTicketComponent {
       accept: () => {
         this.changeState(id, 4);
         this.getPDF(id);
+        this.closeDialog.emit();
       },
     });
   }
