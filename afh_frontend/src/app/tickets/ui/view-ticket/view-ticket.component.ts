@@ -31,6 +31,7 @@ export class ViewTicketComponent {
   @Output() closeDialog = new EventEmitter<void>();
 
   loading: boolean = false;
+  change: boolean = false;
 
   constructor(
     private ticketService: TicketsService,
@@ -41,7 +42,9 @@ export class ViewTicketComponent {
   close() {
     this.visible = false;
     this.closeDialog.emit();
-    window.location.reload();
+    if (this.change) {
+      window.location.reload();
+    }
   }
 
   getSeverity(
@@ -137,8 +140,10 @@ export class ViewTicketComponent {
 
   confirm(id: number) {
     this.confirmationService.confirm({
-      message: 'Recuerde haber descargado y llenado la solicitud de herramienta',
-      header: '¡Advertencia! Está por cambiar el estado de esta solicitud a aceptado',
+      message:
+        'Recuerde haber descargado y llenado la solicitud de herramienta',
+      header:
+        '¡Advertencia! Está por cambiar el estado de esta solicitud a aceptado',
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancelar',
       rejectButtonProps: {
@@ -153,6 +158,7 @@ export class ViewTicketComponent {
       accept: () => {
         this.changeState(id, 1);
         this.closeDialog.emit();
+        this.change = true;
       },
     });
   }
@@ -160,7 +166,8 @@ export class ViewTicketComponent {
   confirm2(id: number) {
     this.confirmationService.confirm({
       message: '¿Está seguro de completar está accion?',
-      header: '¡Advertencia! Está por cambiar el estado de esta solicitud a rechazado',
+      header:
+        '¡Advertencia! Está por cambiar el estado de esta solicitud a rechazado',
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancelar',
       rejectButtonProps: {
@@ -175,6 +182,7 @@ export class ViewTicketComponent {
       accept: () => {
         this.changeState(id, 2);
         this.closeDialog.emit();
+        this.change = true;
       },
     });
   }
@@ -182,7 +190,8 @@ export class ViewTicketComponent {
   confirm3(id: number) {
     this.confirmationService.confirm({
       message: '¿Está seguro de completar está accion?',
-      header: '¡Advertencia! Está por cambiar el estado de esta solicitud a finalizada',
+      header:
+        '¡Advertencia! Está por cambiar el estado de esta solicitud a finalizada',
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancelar',
       rejectButtonProps: {
@@ -197,10 +206,9 @@ export class ViewTicketComponent {
       accept: () => {
         this.changeState(id, 4);
         this.getPDF(id);
-        this.closeDialog.emit();
+        setTimeout(() => this.closeDialog.emit(), 2000);
+        this.change = true;
       },
     });
   }
-
-
 }
