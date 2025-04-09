@@ -79,7 +79,8 @@ interface Ticket {
     ConfirmDialog,
     ToastModule,
     CreateTicketComponent,
-    ViewTicketComponent
+    ViewTicketComponent,
+    NgIf
   ],
   templateUrl: './management-tickets.component.html',
   styleUrl: './management-tickets.component.css',
@@ -92,14 +93,14 @@ export class ManagementTicketsComponent implements OnInit {
   viewTicketDialogVisible: boolean = false;
   Ticket?: Ticket;
   currentUrl: string = '';
-  ticketsActivos: Ticket[] = []; 
+  ticketsActivos: Ticket[] = [];
+  loading: boolean = false;
 
   id: number = 0;
   state: number = 0;
   place: string = '';
   date: string = '';
   description: string = '';
-
 
   constructor(
     private ticketService: TicketsService,
@@ -117,9 +118,10 @@ export class ManagementTicketsComponent implements OnInit {
         this.tickets = data;
 
         this.ticketsActivos = data.filter(
-          (ticket: Ticket) => ticket.state === 1 || ticket.state === 2 || ticket.state === 3
+          (ticket: Ticket) =>
+            ticket.state === 1 || ticket.state === 2 || ticket.state === 3
         );
-  
+
         console.log('tickets activos:', this.ticketsActivos);
       },
       error: (error) => {
@@ -127,7 +129,6 @@ export class ManagementTicketsComponent implements OnInit {
       },
     });
   }
-  
 
   ngOnInit() {
     this.getTickets();
@@ -142,13 +143,55 @@ export class ManagementTicketsComponent implements OnInit {
         this.place = data.place;
         this.description = data.description;
         this.state = data.state;
-        console.log(this.id, this.date, this.place, this.description, this.state);
+        console.log(
+          this.id,
+          this.date,
+          this.place,
+          this.description,
+          this.state
+        );
       },
       error: (error) => {
         console.error('Error al obtener ticket', error);
       },
     });
     this.viewTicketDialogVisible = true;
+  }
+
+  getPDF(ticketId: number): void {
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 5000);
+
+    this.ticketService.getPDF(ticketId).subscribe({
+      next: (response) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = 'solicitud.pdf';
+
+        if (contentDisposition) {
+          const matches = /filename="(.+)"/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            filename = matches[1];
+          }
+        }
+
+        const blob = new Blob([response.body!], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error al obtener PDF', error);
+      },
+    });
   }
 
   getSeverity(

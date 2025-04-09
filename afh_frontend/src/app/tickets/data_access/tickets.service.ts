@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseHttpService } from '../../shared/data_access/base_http.service';
 import { Observable, tap } from 'rxjs';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -59,5 +59,13 @@ export class TicketsService extends BaseHttpService {
           console.log('Estado cambiado:', response);
         })
       );
+  }
+
+  getPDF(ticketId: number): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.apiUrl}ticket/getpdf/${ticketId}`, {
+      headers: this.headers,
+      observe: 'response',
+      responseType: 'blob',
+    });
   }
 }
