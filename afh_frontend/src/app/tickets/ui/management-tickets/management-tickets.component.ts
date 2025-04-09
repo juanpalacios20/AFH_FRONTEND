@@ -87,7 +87,7 @@ interface Ticket {
   providers: [ConfirmationService, MessageService],
 })
 export class ManagementTicketsComponent implements OnInit {
-  code: string = '';
+  filter: string = '';
   createTicketDialogVisible: boolean = false;
   tickets: Ticket[] = [];
   viewTicketDialogVisible: boolean = false;
@@ -168,6 +168,41 @@ export class ManagementTicketsComponent implements OnInit {
       next: (response) => {
         const contentDisposition = response.headers.get('Content-Disposition');
         let filename = `solicitud ${place}.pdf`;
+
+        if (contentDisposition) {
+          const matches = /filename="(.+)"/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            filename = matches[1];
+          }
+        }
+
+        const blob = new Blob([response.body!], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error al obtener PDF', error);
+      },
+    });
+  }
+
+  getInfo(): void {
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 5000);
+
+    this.ticketService.getInfo().subscribe({
+      next: (response) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = `informe.pdf`;
 
         if (contentDisposition) {
           const matches = /filename="(.+)"/.exec(contentDisposition);

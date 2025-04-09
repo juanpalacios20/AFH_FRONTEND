@@ -68,4 +68,12 @@ export class TicketsService extends BaseHttpService {
       responseType: 'blob',
     });
   }
+
+  getInfo(): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.apiUrl}ticket/getinforme/`, {
+      headers: this.headers,
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
 }
