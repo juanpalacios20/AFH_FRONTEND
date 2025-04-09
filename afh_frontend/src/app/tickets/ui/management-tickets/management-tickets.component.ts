@@ -158,7 +158,7 @@ export class ManagementTicketsComponent implements OnInit {
     this.viewTicketDialogVisible = true;
   }
 
-  getPDF(ticketId: number): void {
+  getPDF(ticketId: number, place: string): void {
     this.loading = true;
     setTimeout(() => {
       this.loading = false;
@@ -167,7 +167,7 @@ export class ManagementTicketsComponent implements OnInit {
     this.ticketService.getPDF(ticketId).subscribe({
       next: (response) => {
         const contentDisposition = response.headers.get('Content-Disposition');
-        let filename = 'solicitud.pdf';
+        let filename = `solicitud ${place}.pdf`;
 
         if (contentDisposition) {
           const matches = /filename="(.+)"/.exec(contentDisposition);
@@ -184,7 +184,6 @@ export class ManagementTicketsComponent implements OnInit {
         a.download = filename;
         document.body.appendChild(a);
         a.click();
-
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       },

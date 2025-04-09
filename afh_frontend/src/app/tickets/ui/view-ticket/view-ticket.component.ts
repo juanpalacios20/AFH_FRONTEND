@@ -108,7 +108,7 @@ export class ViewTicketComponent {
     this.ticketService.getPDF(ticketId).subscribe({
       next: (response) => {
         const contentDisposition = response.headers.get('Content-Disposition');
-        let filename = 'solicitud.pdf';
+        let filename = `solicitud ${this.place}.pdf`;
 
         if (contentDisposition) {
           const matches = /filename="(.+)"/.exec(contentDisposition);
@@ -194,6 +194,7 @@ export class ViewTicketComponent {
       },
       accept: () => {
         this.changeState(id, 4);
+        this.getPDF(id);
       },
     });
   }
