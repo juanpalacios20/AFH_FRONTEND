@@ -218,8 +218,8 @@ export class ViewTicketComponent {
         severity: 'primary',
       },
       accept: () => {
-        this.getPDF(id)
         this.changeState(id, 4);
+        this.getPDF(id)
         setTimeout(() => this.closeDialog.emit(), 5000);
         this.change = true;
       },
