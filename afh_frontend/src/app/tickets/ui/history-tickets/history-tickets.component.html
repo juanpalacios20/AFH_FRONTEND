@@ -31,7 +31,7 @@
       #tti
       [value]="ticketsFinalizados"
       [rows]="20"
-      ngClass="[paginator]=true: ticketsFinalizados.length > 0"
+      [paginator]="true"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
       [globalFilterFields]="['name', 'code']"
