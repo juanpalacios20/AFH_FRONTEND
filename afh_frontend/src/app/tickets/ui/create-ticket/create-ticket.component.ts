@@ -79,6 +79,14 @@ export class CreateTicketComponent {
     this.email = this.cookieService.get('email');
   }
 
+  error() {
+    this.messageService.add({
+      severity: 'danger',
+      summary: 'Ha ocurrido un error',
+      detail: 'Ha ocurrido un error, intente nuevamente',
+    });
+  }
+
   addTicket() {
     this.verify();
     if (
@@ -114,6 +122,7 @@ export class CreateTicketComponent {
         error: (err) => {
           console.error('Error al crear el ticket:', err);
           this.loading = false;
+          this.error()
         },
       });
   }

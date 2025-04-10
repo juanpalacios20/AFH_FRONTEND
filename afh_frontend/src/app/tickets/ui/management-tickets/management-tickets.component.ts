@@ -106,7 +106,8 @@ export class ManagementTicketsComponent implements OnInit {
   constructor(
     private ticketService: TicketsService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   showCreateTicketDialog() {
@@ -126,7 +127,7 @@ export class ManagementTicketsComponent implements OnInit {
         console.log('tickets activos:', this.ticketsActivos);
       },
       error: (error) => {
-        console.error('Error al obtener tickets', error);
+        this.error()
       },
     });
   }
@@ -153,7 +154,7 @@ export class ManagementTicketsComponent implements OnInit {
         );
       },
       error: (error) => {
-        console.error('Error al obtener ticket', error);
+        this.error()
       },
     });
     this.viewTicketDialogVisible = true;
@@ -188,7 +189,7 @@ export class ManagementTicketsComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        console.error('Error al obtener PDF', error);
+        this.error()
       },
     });
   }
@@ -221,7 +222,7 @@ export class ManagementTicketsComponent implements OnInit {
         this.loadingInfo = false;
       },
       error: (error) => {
-        console.error('Error al obtener PDF', error);
+        this.error()
         this.loadingInfo = false;
       },
     });
@@ -268,5 +269,13 @@ export class ManagementTicketsComponent implements OnInit {
 
   isAdmin(): boolean {
     return this.authService.whoIs();
+  }
+
+  error() {
+    this.messageService.add({
+      severity: 'danger',
+      summary: 'Ha ocurrido un error',
+      detail: 'Ha ocurrido un error, intente nuevamente',
+    });
   }
 }

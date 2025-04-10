@@ -78,8 +78,7 @@ export class EditToolsComponent implements OnInit {
           window.location.reload();
         },
         error: (err) => {
-          this.errorMessage = 'Error al crear la herramienta.';
-          console.error(err);
+          this.error()
         },
       });
   }
@@ -106,5 +105,13 @@ export class EditToolsComponent implements OnInit {
   close() {
     this.visible = false;
     this.closeDialog.emit();
+  }
+
+  error() {
+    this.messageService.add({
+      severity: 'danger',
+      summary: 'Ha ocurrido un error',
+      detail: 'Ha ocurrido un error, intente nuevamente',
+    });
   }
 }

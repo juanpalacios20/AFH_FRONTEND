@@ -15,9 +15,18 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { AuthService } from '../../../shared/auth/data_access/auth.service';
 
+interface Tool {
+  id: number;
+  name: string;
+  code: string;
+  state: number;
+  image: string;
+  marca: string;
+}
+
 @Component({
   selector: 'app-view-ticket',
-  imports: [Dialog, ButtonModule, TagModule, NgIf, ConfirmDialog],
+  imports: [Dialog, ButtonModule, TagModule, NgIf, ConfirmDialog, NgFor, Popover],
   templateUrl: './view-ticket.component.html',
   styleUrl: './view-ticket.component.css',
   providers: [ConfirmationService],
@@ -29,7 +38,10 @@ export class ViewTicketComponent {
   @Input() date: string = '';
   @Input() description: string = '';
   @Input() place: string = '';
+  @Input() tools: Tool[] = [];
   @Output() closeDialog = new EventEmitter<void>();
+
+  @ViewChild('herramientasPopover') herramientasPopover: any;
 
   loading: boolean = false;
   change: boolean = false;
@@ -99,7 +111,7 @@ export class ViewTicketComponent {
         });
       },
       error: (error) => {
-        console.error('Error al cambiar el estado', error);
+        this.error()
       },
     });
   }
@@ -135,7 +147,7 @@ export class ViewTicketComponent {
         window.URL.revokeObjectURL(url);
       },
       error: (error) => {
-        console.error('Error al obtener PDF', error);
+        this.error()
       },
     });
   }
@@ -216,5 +228,17 @@ export class ViewTicketComponent {
 
   isAdmin(): boolean {
     return this.authService.whoIs();
+  }
+
+  togglePopover(event: Event) {
+    this.herramientasPopover.toggle(event);
+  }
+  
+  error() {
+    this.messageService.add({
+      severity: 'danger',
+      summary: 'Ha ocurrido un error',
+      detail: 'Ha ocurrido un error, intente nuevamente',
+    });
   }
 }

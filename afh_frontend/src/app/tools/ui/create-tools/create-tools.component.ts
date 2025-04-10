@@ -114,8 +114,7 @@ export class CreateToolsComponent {
           window.location.reload();
         },
         error: (err) => {
-          this.errorMessage = 'Error al crear la herramienta.';
-          console.error(err);
+          this.error()
         },
       });
   }
@@ -130,5 +129,13 @@ export class CreateToolsComponent {
     if (!this.selectedFile) {
       this.errorImageMessage = 'Por favor, seleccione una imagen.';
     }
+  }
+
+  error() {
+    this.messageService.add({
+      severity: 'danger',
+      summary: 'Ha ocurrido un error',
+      detail: 'Ha ocurrido un error, intente nuevamente',
+    });
   }
 }

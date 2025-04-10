@@ -1,5 +1,5 @@
 <p-dialog
-  header="Informacion del ticket"
+  header="Información del ticket"
   [(visible)]="visible"
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
@@ -11,6 +11,7 @@
 >
   <div class="card flex flex-col items-startS mb-4">
     <p-confirmdialog></p-confirmdialog>
+
     <p class="text-gray-700 font-semibold text-lg mb-1">
       <span class="text-black font-bold">Código:</span> {{ this.id }}
     </p>
@@ -34,6 +35,35 @@
       <span class="text-black font-bold">Descripción:</span>
       {{ this.description }}
     </p>
+    <p-button
+      type="button"
+      label="Ver herramientas"
+      (onClick)="togglePopover($event)"
+      styleClass="min-w-48 mt-2"
+      rounded="true"
+      *ngIf="this.state === 4"
+    />
+
+    <p-popover #herramientasPopover>
+      <div class="flex flex-col gap-4 w-64">
+        <div>
+          <span class="font-medium block mb-2">Herramientas usadas</span>
+          <ul class="list-none p-0 m-0 flex flex-col">
+            <li
+              *ngFor="let tool of tools"
+              class="flex items-center gap-3 px-2 py-2 hover:bg-emphasis cursor-pointer rounded-border"
+            >
+              <img
+                [src]="tool.image"
+                alt="{{ tool.name }}"
+                class="w-8 h-8 object-cover rounded"
+              />
+              <span class="font-medium">{{ tool.name }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </p-popover>
     <p-button
       icon="pi pi-download"
       severity="primary"
