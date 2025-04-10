@@ -55,6 +55,7 @@ export default class ManagementToolsComponent implements OnInit {
   createDialogVisible = false;
   viewDialogVisible = false;
   timestamp = Date.now();
+  loadingTools = false;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -66,10 +67,18 @@ export default class ManagementToolsComponent implements OnInit {
     this.loadTools();
   }
 
+
   loadTools() {
-    this.toolService.getTools().subscribe((tools: any[]) => {
-      this.tools = tools;
-    });
+    this.loadingTools = true;
+    this.toolService.getTools().subscribe({
+      next: (data) => {
+        this.tools = data;
+        this.loadingTools = false;
+      },
+      error: (error) => {
+        this.loadingTools = false;
+      }
+    })
   }
 
   getSeverity(
@@ -171,7 +180,7 @@ export default class ManagementToolsComponent implements OnInit {
 
   error() {
     this.messageService.add({
-      severity: 'danger',
+      severity: 'error',
       summary: 'Ha ocurrido un error',
       detail: 'Ha ocurrido un error, intente nuevamente',
     });

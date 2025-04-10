@@ -88,6 +88,7 @@ export class HistoryTicketsComponent {
   tickets: Ticket[] = [];
   viewTicketDialogVisible: boolean = false;
   Ticket?: Ticket;
+  loadingTickets : boolean = false;
 
   id: number = 0;
   state: number = 0;
@@ -98,7 +99,8 @@ export class HistoryTicketsComponent {
 
   constructor(
     private ticketService: TicketsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private messageService: MessageService
   ) {}
 
   showCreateTicketDialog() {
@@ -106,6 +108,7 @@ export class HistoryTicketsComponent {
   }
 
   getTickets() {
+    this.loadingTickets = true
     this.ticketService.getTickets().subscribe({
       next: (data) => {
         this.tickets = data;
@@ -115,10 +118,10 @@ export class HistoryTicketsComponent {
             ticket.state === 4
         );
 
-        console.log('tickets finalizados:', this.ticketsFinalizados);
+        this.loadingTickets = false
       },
       error: (error) => {
-        console.error('Error al obtener tickets', error);
+        this.error()
       },
     });
   }
@@ -186,5 +189,13 @@ export class HistoryTicketsComponent {
 
   isAdmin(): boolean {
     return this.authService.whoIs();
+  }
+
+  error(){
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Ha ocurrido un error',
+    })
   }
 }

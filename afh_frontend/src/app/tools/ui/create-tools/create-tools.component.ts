@@ -52,6 +52,7 @@ export class CreateToolsComponent {
   errorNameMessage: string = '';
   errorBrandMessage: string = '';
   errorImageMessage: string = '';
+  loadingTool: boolean = false;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -100,6 +101,7 @@ export class CreateToolsComponent {
       return;
     }
 
+    this.loadingTool = true
     this.toolService
       .addTool(this.name, this.brand, this.selectedFile)
       .subscribe({
@@ -112,8 +114,10 @@ export class CreateToolsComponent {
           this.closeDialog.emit();
           this.resetForm();
           window.location.reload();
+          this.loadingTool = false
         },
         error: (err) => {
+          this.loadingTool = false
           this.error()
         },
       });
@@ -129,11 +133,20 @@ export class CreateToolsComponent {
     if (!this.selectedFile) {
       this.errorImageMessage = 'Por favor, seleccione una imagen.';
     }
+    if (this.name !== '') {
+      this.errorNameMessage = '';
+    }
+    if (this.brand !== '')
+      this.errorBrandMessage = '';
+
+    if (this.selectedFile) {
+      this.errorImageMessage = '';
+    }
   }
 
   error() {
     this.messageService.add({
-      severity: 'danger',
+      severity: 'error',
       summary: 'Ha ocurrido un error',
       detail: 'Ha ocurrido un error, intente nuevamente',
     });
