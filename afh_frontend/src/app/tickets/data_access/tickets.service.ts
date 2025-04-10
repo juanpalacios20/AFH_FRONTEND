@@ -76,4 +76,5 @@ export class TicketsService extends BaseHttpService {
       responseType: 'blob',
     });
   }
+  
 }

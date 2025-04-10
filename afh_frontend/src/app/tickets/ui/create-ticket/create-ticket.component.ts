@@ -63,7 +63,11 @@ export class CreateTicketComponent {
     this.getEmail();
     this.toolService.getTools().subscribe({
       next: (data) => {
-        this.tools = data;
+        this.tools = data.filter(
+          (tool: Tool) =>
+            tool.state === 1
+        );
+
       },
       error: (error) => {
         console.error('Error al obtener herramientas', error);
@@ -73,6 +77,14 @@ export class CreateTicketComponent {
 
   getEmail() {
     this.email = this.cookieService.get('email');
+  }
+
+  error() {
+    this.messageService.add({
+      severity: 'danger',
+      summary: 'Ha ocurrido un error',
+      detail: 'Ha ocurrido un error, intente nuevamente',
+    });
   }
 
   addTicket() {
@@ -85,9 +97,6 @@ export class CreateTicketComponent {
       return;
     }
     this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-    }, 5000);
     for (let i = 0; i < this.selectedTools.length; i++) {
       this.selectedToolsIds.push(this.selectedTools[i].id);
     }
@@ -108,10 +117,12 @@ export class CreateTicketComponent {
           this.closeDialog.emit();
           window.location.reload();
           this.resetForm();
+          this.loading = false;
         },
         error: (err) => {
           console.error('Error al crear el ticket:', err);
-          alert('Error al crear el ticket. Por favor, inténtalo de nuevo.');
+          this.loading = false;
+          this.error()
         },
       });
   }

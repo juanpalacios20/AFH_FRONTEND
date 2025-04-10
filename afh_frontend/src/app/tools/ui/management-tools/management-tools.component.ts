@@ -40,13 +40,12 @@ import { FooterComponent } from '../../../shared/ui/footer/footer.component';
     ToastModule,
     EditToolsComponent,
     CreateToolsComponent,
-    ViewToolComponent
+    ViewToolComponent,
   ],
   templateUrl: './management-tools.component.html',
   styleUrl: './management-tools.component.css',
   providers: [ConfirmationService, MessageService],
 })
-
 export default class ManagementToolsComponent implements OnInit {
   value3: string = '';
   tools: any[] = [];
@@ -56,7 +55,6 @@ export default class ManagementToolsComponent implements OnInit {
   createDialogVisible = false;
   viewDialogVisible = false;
   timestamp = Date.now();
-
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -140,7 +138,7 @@ export default class ManagementToolsComponent implements OnInit {
         this.loadTools();
       },
       (error) => {
-        console.error('Error al eliminar la herramienta:', error);
+        this.error()
       }
     );
   }
@@ -170,5 +168,12 @@ export default class ManagementToolsComponent implements OnInit {
       },
     });
   }
-  
+
+  error() {
+    this.messageService.add({
+      severity: 'danger',
+      summary: 'Ha ocurrido un error',
+      detail: 'Ha ocurrido un error, intente nuevamente',
+    });
+  }
 }

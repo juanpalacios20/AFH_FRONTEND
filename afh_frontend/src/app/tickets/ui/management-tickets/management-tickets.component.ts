@@ -95,6 +95,7 @@ export class ManagementTicketsComponent implements OnInit {
   currentUrl: string = '';
   ticketsActivos: Ticket[] = [];
   loading: boolean = false;
+  loadingInfo: boolean = false;
 
   id: number = 0;
   state: number = 0;
@@ -105,7 +106,8 @@ export class ManagementTicketsComponent implements OnInit {
   constructor(
     private ticketService: TicketsService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   showCreateTicketDialog() {
@@ -125,7 +127,7 @@ export class ManagementTicketsComponent implements OnInit {
         console.log('tickets activos:', this.ticketsActivos);
       },
       error: (error) => {
-        console.error('Error al obtener tickets', error);
+        this.error()
       },
     });
   }
@@ -152,7 +154,7 @@ export class ManagementTicketsComponent implements OnInit {
         );
       },
       error: (error) => {
-        console.error('Error al obtener ticket', error);
+        this.error()
       },
     });
     this.viewTicketDialogVisible = true;
@@ -160,9 +162,6 @@ export class ManagementTicketsComponent implements OnInit {
 
   getPDF(ticketId: number, place: string): void {
     this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-    }, 5000);
 
     this.ticketService.getPDF(ticketId).subscribe({
       next: (response) => {
@@ -186,18 +185,17 @@ export class ManagementTicketsComponent implements OnInit {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+        this.loading = false;
       },
       error: (error) => {
-        console.error('Error al obtener PDF', error);
+        this.loading = false;
+        this.error()
       },
     });
   }
 
   getInfo(): void {
-    this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-    }, 5000);
+    this.loadingInfo = true;
 
     this.ticketService.getInfo().subscribe({
       next: (response) => {
@@ -221,9 +219,11 @@ export class ManagementTicketsComponent implements OnInit {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+        this.loadingInfo = false;
       },
       error: (error) => {
-        console.error('Error al obtener PDF', error);
+        this.error()
+        this.loadingInfo = false;
       },
     });
   }
@@ -269,5 +269,13 @@ export class ManagementTicketsComponent implements OnInit {
 
   isAdmin(): boolean {
     return this.authService.whoIs();
+  }
+
+  error() {
+    this.messageService.add({
+      severity: 'danger',
+      summary: 'Ha ocurrido un error',
+      detail: 'Ha ocurrido un error, intente nuevamente',
+    });
   }
 }

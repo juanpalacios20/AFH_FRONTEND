@@ -94,6 +94,7 @@ export class HistoryTicketsComponent {
   place: string = '';
   date: string = '';
   description: string = '';
+  tools: Tool[] = [];
 
   constructor(
     private ticketService: TicketsService,
@@ -134,7 +135,8 @@ export class HistoryTicketsComponent {
         this.place = data.place;
         this.description = data.description;
         this.state = data.state;
-        console.log(this.id, this.date, this.place, this.description, this.state);
+        this.tools = data.tools;
+        console.log(this.id, this.date, this.place, this.description, this.state, this.tools);
       },
       error: (error) => {
         console.error('Error al obtener ticket', error);
