@@ -26,7 +26,15 @@ interface Tool {
 
 @Component({
   selector: 'app-view-ticket',
-  imports: [Dialog, ButtonModule, TagModule, NgIf, ConfirmDialog, NgFor, Popover],
+  imports: [
+    Dialog,
+    ButtonModule,
+    TagModule,
+    NgIf,
+    ConfirmDialog,
+    NgFor,
+    Popover,
+  ],
   templateUrl: './view-ticket.component.html',
   styleUrl: './view-ticket.component.css',
   providers: [ConfirmationService],
@@ -109,9 +117,14 @@ export class ViewTicketComponent {
           summary: 'Estado cambiado',
           detail: 'El estado ha sido cambiado con exito',
         });
+        this.change = true;
+        if (state == 4) {
+          this.getPDF(id);
+          console.log('PDF obtenido');
+        }
       },
       error: (error) => {
-        this.error()
+        this.error();
       },
     });
   }
@@ -147,7 +160,7 @@ export class ViewTicketComponent {
         window.URL.revokeObjectURL(url);
       },
       error: (error) => {
-        this.error()
+        this.error();
       },
     });
   }
@@ -219,8 +232,8 @@ export class ViewTicketComponent {
       },
       accept: () => {
         this.changeState(id, 4);
-        this.getPDF(id)
-        setTimeout(() => this.closeDialog.emit(), 5000);
+        console.log('estado cambiado');
+        setTimeout(() => this.closeDialog.emit(), 3000);
         this.change = true;
       },
     });
@@ -233,7 +246,7 @@ export class ViewTicketComponent {
   togglePopover(event: Event) {
     this.herramientasPopover.toggle(event);
   }
-  
+
   error() {
     this.messageService.add({
       severity: 'error',
