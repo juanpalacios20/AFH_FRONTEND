@@ -9,7 +9,6 @@ import { TokenGuard } from './shared/auth/data_access/token.guard';
 import { ChangePasswordComponent } from './auth/ui/change-password/change-password.component';
 import { ManagementTicketsComponent } from './tickets/ui/management-tickets/management-tickets.component';
 import { HistoryTicketsComponent } from './tickets/ui/history-tickets/history-tickets.component';
-import { CreateTicketNoAdminComponent } from './tickets/ui/create-ticket-no-admin/create-ticket-no-admin.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -19,7 +18,6 @@ export const routes: Routes = [
     { path: 'management-tools', component: ManagementToolsComponent, canActivate: [AuthGuard] },
     { path: 'management-tickets', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
     { path: 'history-tickets', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
-    { path: 'create-tickets', component: CreateTicketNoAdminComponent, canActivate: [AuthGuard] },
     { path: 'management-vales', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
     { path: 'history-vales', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
     { path: 'menu', component: MenuComponent },

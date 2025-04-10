@@ -236,7 +236,7 @@ export class ViewTicketComponent {
   
   error() {
     this.messageService.add({
-      severity: 'danger',
+      severity: 'error',
       summary: 'Ha ocurrido un error',
       detail: 'Ha ocurrido un error, intente nuevamente',
     });

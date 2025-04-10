@@ -96,6 +96,7 @@ export class ManagementTicketsComponent implements OnInit {
   ticketsActivos: Ticket[] = [];
   loading: boolean = false;
   loadingInfo: boolean = false;
+  loadingTickets: boolean = false;
 
   id: number = 0;
   state: number = 0;
@@ -115,6 +116,7 @@ export class ManagementTicketsComponent implements OnInit {
   }
 
   getTickets() {
+    this.loadingTickets = true
     this.ticketService.getTickets().subscribe({
       next: (data) => {
         this.tickets = data;
@@ -124,10 +126,11 @@ export class ManagementTicketsComponent implements OnInit {
             ticket.state === 1 || ticket.state === 2 || ticket.state === 3
         );
 
-        console.log('tickets activos:', this.ticketsActivos);
+        this.loadingTickets = false
       },
       error: (error) => {
         this.error()
+        this.loadingTickets = false
       },
     });
   }
@@ -273,7 +276,7 @@ export class ManagementTicketsComponent implements OnInit {
 
   error() {
     this.messageService.add({
-      severity: 'danger',
+      severity: 'error',
       summary: 'Ha ocurrido un error',
       detail: 'Ha ocurrido un error, intente nuevamente',
     });

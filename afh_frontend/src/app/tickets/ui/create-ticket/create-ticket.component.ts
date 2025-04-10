@@ -81,7 +81,7 @@ export class CreateTicketComponent {
 
   error() {
     this.messageService.add({
-      severity: 'danger',
+      severity: 'error',
       summary: 'Ha ocurrido un error',
       detail: 'Ha ocurrido un error, intente nuevamente',
     });
@@ -152,6 +152,15 @@ export class CreateTicketComponent {
     }
     if (this.description == '') {
       this.descriptionErrorMessage = 'Debes ingresar una descripcion';
+    }
+    if (this.selectedTools.length > 0) {
+      this.toolErrorMessage = '';
+    }
+    if (this.place !== '') {
+      this.placeErrorMessage = '';
+    }
+    if (this.description !== '') {
+      this.descriptionErrorMessage = '';
     }
   }
 }
