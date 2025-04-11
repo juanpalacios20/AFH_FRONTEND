@@ -47,6 +47,7 @@ export class ViewTicketComponent {
   @Input() description: string = '';
   @Input() place: string = '';
   @Input() tools: Tool[] = [];
+  @Input() dateEnd: string = '';
   @Output() closeDialog = new EventEmitter<void>();
 
   @ViewChild('herramientasPopover') herramientasPopover: any;
@@ -109,7 +110,6 @@ export class ViewTicketComponent {
   }
 
   changeState(id: number, state: number) {
-    console.log(id, state);
     this.ticketService.changeState(id, state).subscribe({
       next: (data) => {
         this.messageService.add({

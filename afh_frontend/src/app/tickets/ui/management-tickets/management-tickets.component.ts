@@ -148,13 +148,7 @@ export class ManagementTicketsComponent implements OnInit {
         this.place = data.place;
         this.description = data.description;
         this.state = data.state;
-        console.log(
-          this.id,
-          this.date,
-          this.place,
-          this.description,
-          this.state
-        );
+        
       },
       error: (error) => {
         this.error()
