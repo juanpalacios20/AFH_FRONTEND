@@ -13,14 +13,15 @@
             <p-inputicon class="pi pi-search" rounded="true" />
             <input
               pInputText
-              id="on_label"
+              id="search"
               [(ngModel)]="code"
               (input)="tti?.filterGlobal(code, 'contains')"
               autocomplete="off"
             />
           </p-iconfield>
-          <label for="on_label">Buscar vale</label>
+          <label for="search">Buscar vale</label>
         </p-floatlabel>
+        <small id="search-help" class="text-gray-500 text-center"> Busca por código y lugar destino</small>
       </div>
     </div>
 
@@ -34,7 +35,7 @@
       [paginator]="true"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
-      [globalFilterFields]="['name', 'code']"
+      [globalFilterFields]="['id', 'place']"
     >
       <ng-template #header *ngIf="ticketsFinalizados.length > 0">
         <tr>

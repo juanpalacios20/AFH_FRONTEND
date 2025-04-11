@@ -9,10 +9,11 @@ import { TokenGuard } from './shared/auth/data_access/token.guard';
 import { ChangePasswordComponent } from './auth/ui/change-password/change-password.component';
 import { ManagementTicketsComponent } from './tickets/ui/management-tickets/management-tickets.component';
 import { HistoryTicketsComponent } from './tickets/ui/history-tickets/history-tickets.component';
+import { AdminGuard } from './shared/auth/data_access/admin.guard';
 
 export const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'send-code', component: SendCodeComponent },
+    { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
+    { path: 'send-code', component: SendCodeComponent, canActivate: [AdminGuard] },
     { path: 'validation-code', component: ValidationCodeComponent, canActivate: [TokenGuard] },
     { path: 'change-password', component: ChangePasswordComponent, canActivate: [TokenGuard] },
     { path: 'management-tools', component: ManagementToolsComponent, canActivate: [AuthGuard] },

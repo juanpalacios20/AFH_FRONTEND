@@ -47,7 +47,7 @@
         </div>
 
         <div class="w-full mb-6">
-          <p-button label="Iniciar Sesión" type="submit" fluid="true" rounded="true" styleClass="w-full" />
+          <p-button label="Iniciar Sesión" type="submit" fluid="true" [loading]="loading" rounded="true" styleClass="w-full" />
           <p class="text-red-600" *ngIf="errorMessage">{{ errorMessage }}</p>
         </div>
         <p class="text-sm text-center font-size text-gray-600">

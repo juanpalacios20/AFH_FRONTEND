@@ -28,6 +28,7 @@ export class LoginComponent {
   password = '';
   errorMessage = '';
   navigateTo = '';
+  loading: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -36,14 +37,12 @@ export class LoginComponent {
   ) {}
 
   login() {
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
+
+    this.loading = true;
   
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
         const role = this.cookiesService.get('role');
-        console.log('Role:', role);
-        console.log('Token:', this.cookiesService.get('token'));
   
         if (role === '1') {
           this.navigateTo = '/management-tools';
@@ -51,14 +50,14 @@ export class LoginComponent {
           this.navigateTo = '/management-vales';
         }
   
-        console.log('Navigate to:', this.navigateTo);
-  
         this.router.navigate([this.navigateTo]).then(() => {
           this.navigateTo = '';
+          this.loading = false;
         });
       },
       error: (err) => {
         this.errorMessage = "Error de inicio de sesión. Por favor, verifica tus credenciales.";
+        this.loading = false;
       },
     });
   }
