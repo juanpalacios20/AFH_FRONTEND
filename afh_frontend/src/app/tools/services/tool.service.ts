@@ -45,23 +45,14 @@ export class ToolService extends BaseHttpService {
     this.getTools();
   }
 
-  updateTool(id: number, name: string, marca: string, image: File, state: number): Observable<any> {
-    const formData = new FormData();
-    formData.append('id', id.toString());
-    formData.append('name', name);
-    formData.append('marca', marca);
-    formData.append('state', state.toString());
-    if (image) {
-      formData.append('image', image);
-    }
-  
+  updateTool(id: number, formData: FormData): Observable<any> {
     return this.http.patch(`${this.apiUrl}tool/updatetool/`, formData).pipe(
       tap((response: any) => {
         console.log('Herramienta actualizada:', response);
-        console.log('imagen', image);
       })
     );
   }
+  
   
 
 

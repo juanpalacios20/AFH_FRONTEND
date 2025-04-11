@@ -119,6 +119,7 @@ export class CreateToolsComponent {
         error: (err) => {
           this.loadingTool = false
           this.error()
+          console.log(err)
         },
       });
   }
