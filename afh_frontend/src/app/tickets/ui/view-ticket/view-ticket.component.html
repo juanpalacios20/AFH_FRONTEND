@@ -98,6 +98,7 @@
         *ngIf="this.state === 1"
         type="button"
         label="Completar"
+        [loading]="loadingComplete"
         (onClick)="confirm3(this.id)"
         styleClass="p-button-primary"
       ></p-button>

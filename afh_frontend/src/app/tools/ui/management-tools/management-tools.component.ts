@@ -147,7 +147,6 @@ export default class ManagementToolsComponent implements OnInit {
   deleteTool(id: number) {
     this.toolService.deleteTool(id).subscribe(
       (response) => {
-        console.log('Herramienta eliminada:', response);
         this.loadTools();
       },
       (error) => {

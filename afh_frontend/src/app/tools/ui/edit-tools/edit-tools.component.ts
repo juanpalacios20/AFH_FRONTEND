@@ -71,12 +71,6 @@ export class EditToolsComponent implements OnInit {
     const formData = new FormData();
     formData.append('id', this.tool.id.toString());
 
-    console.log(this.tool.marca, this.originalTool.marca);
-    console.log(this.tool.marca, this.originalTool.marca);
-    console.log(this.tool.marca, this.originalTool.marca);
-    console.log(this.tool.marca, this.originalTool.marca);
-    
-
     if (this.tool.name !== this.originalTool.name) {
       formData.append('name', this.tool.name);
     }
@@ -105,7 +99,6 @@ export class EditToolsComponent implements OnInit {
       },
       error: (error) => {
         this.error();
-        console.log(error)
       },
     });
   }

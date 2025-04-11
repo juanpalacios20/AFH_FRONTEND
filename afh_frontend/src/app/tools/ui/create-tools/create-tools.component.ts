@@ -97,7 +97,6 @@ export class CreateToolsComponent {
       this.errorBrandMessage == 'Por favor, ingrese una marca.' ||
       this.errorImageMessage == 'Por favor, seleccione una imagen.'
     ) {
-      console.log('Error en el formulario');
       return;
     }
 
@@ -119,7 +118,6 @@ export class CreateToolsComponent {
         error: (err) => {
           this.loadingTool = false
           this.error()
-          console.log(err)
         },
       });
   }

@@ -26,11 +26,7 @@ export class TicketsService extends BaseHttpService {
 
     return this.http
       .post(`${this.apiUrl}ticket/addticket/`, body, { headers: this.headers })
-      .pipe(
-        tap((response: any) => {
-          console.log('Ticket creado:', response);
-        })
-      );
+      .pipe(tap((response: any) => {}));
   }
 
   getTickets(): Observable<any> {
@@ -54,11 +50,7 @@ export class TicketsService extends BaseHttpService {
       .patch(`${this.apiUrl}ticket/changestate/`, body, {
         headers: this.headers,
       })
-      .pipe(
-        tap((response: any) => {
-          console.log('Estado cambiado:', response);
-        })
-      );
+      .pipe(tap((response: any) => {}));
   }
 
   getPDF(ticketId: number): Observable<HttpResponse<Blob>> {
@@ -76,5 +68,4 @@ export class TicketsService extends BaseHttpService {
       responseType: 'blob',
     });
   }
-  
 }
