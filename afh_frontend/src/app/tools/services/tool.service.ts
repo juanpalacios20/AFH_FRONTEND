@@ -2,15 +2,22 @@ import { Injectable } from '@angular/core';
 import { BaseHttpService } from '../../shared/data_access/base_http.service';
 import { Observable, tap } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToolService extends BaseHttpService {
 
-  headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-  });
+  headers: HttpHeaders;
+  
+    constructor(private cookieService: CookieService) {
+      super();
+      this.headers = new HttpHeaders({
+        'Authorization': `Token ${this.cookieService.get('token')}`,
+        'Content-Type': 'application/json'
+      });
+    }
 
   addTool(name: string, marca: string, image: File): Observable<any> {
     const formData = new FormData();
@@ -18,7 +25,7 @@ export class ToolService extends BaseHttpService {
     formData.append('image', image);
     formData.append('marca', marca);
 
-    return this.http.post(`${this.apiUrl}tool/addtool/`, formData).pipe(
+    return this.http.post(`${this.apiUrl}tool/addtool/`, formData, { headers: this.headers }).pipe(
       tap((response: any) => {
       })
     );
@@ -32,7 +39,7 @@ export class ToolService extends BaseHttpService {
     }
 
   getTools(): Observable<any> {
-    return this.http.get(`${this.apiUrl}tool/gettools`, { headers: this.headers }).pipe(
+    return this.http.get(`${this.apiUrl}tool/gettools`).pipe(
       tap((response: any) => {
       })
     );
@@ -43,7 +50,7 @@ export class ToolService extends BaseHttpService {
   }
 
   updateTool(id: number, formData: FormData): Observable<any> {
-    return this.http.patch(`${this.apiUrl}tool/updatetool/`, formData).pipe(
+    return this.http.patch(`${this.apiUrl}tool/updatetool/`, formData, { headers: this.headers }).pipe(
       tap((response: any) => {
       })
     );
