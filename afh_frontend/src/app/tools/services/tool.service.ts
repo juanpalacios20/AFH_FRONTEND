@@ -14,8 +14,7 @@ export class ToolService extends BaseHttpService {
     constructor(private cookieService: CookieService) {
       super();
       this.headers = new HttpHeaders({
-        'Authorization': `Token ${this.cookieService.get('token')}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Token ${this.cookieService.get('token')}`
       });
     }
 
