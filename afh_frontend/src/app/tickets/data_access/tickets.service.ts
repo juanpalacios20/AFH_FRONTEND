@@ -2,14 +2,22 @@ import { Injectable } from '@angular/core';
 import { BaseHttpService } from '../../shared/data_access/base_http.service';
 import { Observable, tap } from 'rxjs';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TicketsService extends BaseHttpService {
-  headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-  });
+
+  headers: HttpHeaders;
+
+  constructor(private cookieService: CookieService) {
+    super();
+    this.headers = new HttpHeaders({
+      'Authorization': `Token ${this.cookieService.get('token')}`,
+      'Content-Type': 'application/json'
+    });
+  }
 
   addTicket(
     tools: Number[],
