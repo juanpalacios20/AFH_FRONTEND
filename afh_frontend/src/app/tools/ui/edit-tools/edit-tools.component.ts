@@ -66,6 +66,8 @@ export class EditToolsComponent implements OnInit {
       this.tool.state = 2;
     } else if (this.selectedState?.name === 'EN USO') {
       this.tool.state = 3;
+    }  else if (this.selectedState?.name === 'EN RESERVA') {
+      this.tool.state = 4;
     }
 
     const formData = new FormData();
@@ -119,6 +121,7 @@ export class EditToolsComponent implements OnInit {
       { name: 'ACTIVO' },
       { name: 'INACTIVO' },
       { name: 'EN USO' },
+      { name: 'EN RESERVA' },
     ];
   }
 
