@@ -18,7 +18,6 @@ import { EditToolsComponent } from '../edit-tools/edit-tools.component';
 import { CreateToolsComponent } from '../create-tools/create-tools.component';
 import { ToolService } from '../../services/tool.service';
 import { ViewToolComponent } from '../view-tool/view-tool.component';
-import { FooterComponent } from '../../../shared/ui/footer/footer.component';
 
 @Component({
   selector: 'app-management-tools',
@@ -56,6 +55,7 @@ export default class ManagementToolsComponent implements OnInit {
   viewDialogVisible = false;
   timestamp = Date.now();
   loadingTools = false;
+  errorDelete: boolean = false;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -97,6 +97,8 @@ export default class ManagementToolsComponent implements OnInit {
       case 2:
         return 'danger';
       case 3:
+        return 'warn';
+      case 4:
         return 'secondary';
       default:
         return 'secondary'; // Map "unknown" to a valid type
@@ -111,6 +113,8 @@ export default class ManagementToolsComponent implements OnInit {
         return 'INACTIVO';
       case 3:
         return 'EN USO';
+      case 4:
+        return 'EN RESERVA';
       default:
         return 'Estado desconocido';
     }
@@ -140,10 +144,9 @@ export default class ManagementToolsComponent implements OnInit {
     }, 200);
   }
 
-  deleteTask(id: number) {
+  deleteTool(id: number) {
     this.toolService.deleteTool(id).subscribe(
       (response) => {
-        console.log('Herramienta eliminada:', response);
         this.loadTools();
       },
       (error) => {
@@ -168,7 +171,7 @@ export default class ManagementToolsComponent implements OnInit {
         severity: 'danger',
       },
       accept: () => {
-        this.deleteTask(id);
+        this.deleteTool(id);
         this.messageService.add({
           severity: 'info',
           summary: 'Acción confirmada',

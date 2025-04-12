@@ -20,7 +20,6 @@ export class ToolService extends BaseHttpService {
 
     return this.http.post(`${this.apiUrl}tool/addtool/`, formData).pipe(
       tap((response: any) => {
-        console.log('Herramienta creada:', response);
       })
     );
   }
@@ -28,7 +27,6 @@ export class ToolService extends BaseHttpService {
   getTool(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}tool/gettool/${id}`).pipe(
       tap((response: any) => {
-        console.log('Herramienta obtenida:', response);
       }
     ));
     }
@@ -36,7 +34,6 @@ export class ToolService extends BaseHttpService {
   getTools(): Observable<any> {
     return this.http.get(`${this.apiUrl}tool/gettools`, { headers: this.headers }).pipe(
       tap((response: any) => {
-        console.log('Herramientas obtenidas:', response);
       })
     );
   }
@@ -45,30 +42,19 @@ export class ToolService extends BaseHttpService {
     this.getTools();
   }
 
-  updateTool(id: number, name: string, marca: string, image: File, state: number): Observable<any> {
-    const formData = new FormData();
-    formData.append('id', id.toString());
-    formData.append('name', name);
-    formData.append('marca', marca);
-    formData.append('state', state.toString());
-    if (image) {
-      formData.append('image', image);
-    }
-  
+  updateTool(id: number, formData: FormData): Observable<any> {
     return this.http.patch(`${this.apiUrl}tool/updatetool/`, formData).pipe(
       tap((response: any) => {
-        console.log('Herramienta actualizada:', response);
-        console.log('imagen', image);
       })
     );
   }
+  
   
 
 
   deleteTool(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}tool/delete/${id}`).pipe(
       tap((response: any) => {
-        console.log('Herramienta eliminada:', response);
       })
     );
   }

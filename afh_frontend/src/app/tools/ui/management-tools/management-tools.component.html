@@ -90,19 +90,30 @@
                 (click)="confirm2(tool.id)"
                 icon="pi pi-trash"
                 severity="danger"
+                [disabled]="tool.state === 3 || tool.state === 4"
               />
             </div>
           </td>
         </tr>
       </ng-template>
-      <ng-template #emptymessage *ngIf="tools.length === 0 && loadingTools === false">
+      <ng-template
+        #emptymessage
+        *ngIf="tools.length === 0 && loadingTools === false"
+      >
         <tr>
-          <td colspan="5" class="text-center text-gray-600">No hay herramientas para mostrar</td>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay herramientas para mostrar
+          </td>
         </tr>
       </ng-template>
-      <ng-template #emptymessage *ngIf="tools.length === 0 && loadingTools === true">
+      <ng-template
+        #emptymessage
+        *ngIf="tools.length === 0 && loadingTools === true"
+      >
         <tr>
-          <td colspan="5" class="text-center text-gray-600">Cargando información...</td>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
         </tr>
       </ng-template>
     </p-table>

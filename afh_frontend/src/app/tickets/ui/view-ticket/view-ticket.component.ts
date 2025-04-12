@@ -47,11 +47,13 @@ export class ViewTicketComponent {
   @Input() description: string = '';
   @Input() place: string = '';
   @Input() tools: Tool[] = [];
+  @Input() dateEnd: string = '';
   @Output() closeDialog = new EventEmitter<void>();
 
   @ViewChild('herramientasPopover') herramientasPopover: any;
 
   loading: boolean = false;
+  loadingComplete: boolean = false;
   change: boolean = false;
 
   constructor(
@@ -109,7 +111,6 @@ export class ViewTicketComponent {
   }
 
   changeState(id: number, state: number) {
-    console.log(id, state);
     this.ticketService.changeState(id, state).subscribe({
       next: (data) => {
         this.messageService.add({
@@ -120,7 +121,6 @@ export class ViewTicketComponent {
         this.change = true;
         if (state == 4) {
           this.getPDF(id);
-          console.log('PDF obtenido');
         }
       },
       error: (error) => {
@@ -158,6 +158,8 @@ export class ViewTicketComponent {
 
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+        this.loadingComplete = false;
+        this.closeDialog.emit();
       },
       error: (error) => {
         this.error();
@@ -204,7 +206,7 @@ export class ViewTicketComponent {
       },
       acceptButtonProps: {
         label: 'Aceptar',
-        severity: 'primary',
+        severity: 'primary'
       },
       accept: () => {
         this.changeState(id, 2);
@@ -215,6 +217,7 @@ export class ViewTicketComponent {
   }
 
   confirm3(id: number) {
+    this.loadingComplete = true;
     this.confirmationService.confirm({
       message: '¿Está seguro de completar está accion?',
       header:
@@ -232,9 +235,8 @@ export class ViewTicketComponent {
       },
       accept: () => {
         this.changeState(id, 4);
-        console.log('estado cambiado');
-        setTimeout(() => this.closeDialog.emit(), 3000);
         this.change = true;
+        
       },
     });
   }

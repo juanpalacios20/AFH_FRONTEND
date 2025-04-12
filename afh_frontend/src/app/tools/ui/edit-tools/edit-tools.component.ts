@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
@@ -44,11 +44,20 @@ export class EditToolsComponent implements OnInit {
   selectedFile!: File;
   previewImage: string | ArrayBuffer | null = null;
   errorMessage: string = '';
+  
+
+  originalTool = this.tool;
 
   constructor(
     private messageService: MessageService,
     private toolService: ToolService
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tool'] && changes['tool'].currentValue) {
+      this.originalTool = { ...changes['tool'].currentValue }; // Clonamos el objeto
+    }
+  }
 
   showSuccess() {
     if (this.selectedState?.name === 'ACTIVO') {
@@ -59,28 +68,39 @@ export class EditToolsComponent implements OnInit {
       this.tool.state = 3;
     }
 
-    this.toolService
-      .updateTool(
-        this.tool.id,
-        this.tool.name,
-        this.tool.marca,
-        this.selectedFile,
-        this.tool.state
-      )
-      .subscribe({
-        next: (response: any) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Actualizado',
-            detail: 'La herramienta ha sido actualizada con éxito',
-          });
-          this.closeDialog.emit();
-          window.location.reload();
-        },
-        error: (err) => {
-          this.error()
-        },
-      });
+    const formData = new FormData();
+    formData.append('id', this.tool.id.toString());
+
+    if (this.tool.name !== this.originalTool.name) {
+      formData.append('name', this.tool.name);
+    }
+
+    if (this.tool.marca !== this.originalTool.marca) {
+      formData.append('marca', this.tool.marca);
+    }
+
+    if (this.selectedState !== this.originalTool.state) {
+      formData.append('state', this.tool.state.toString());
+    }
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+
+    this.toolService.updateTool(this.tool.id, formData).subscribe({
+      next: (response: any) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Actualizado',
+          detail: 'La herramienta ha sido actualizada con éxito',
+        });
+        this.closeDialog.emit();
+        window.location.reload();
+      },
+      error: (error) => {
+        this.error();
+      },
+    });
   }
 
   onFileSelected(event: any) {

@@ -48,7 +48,6 @@ export class AuthService extends BaseHttpService {
     const body = { email };
     return this.http.post(`${this.apiUrl}reset/request/`, body).pipe(
       tap((response: any) => {
-        console.log('Código de verificación enviado:', response);
         if (response.Token) {
           this.cookieService.set('resetToken', response.Token); 
         }
@@ -61,13 +60,11 @@ export class AuthService extends BaseHttpService {
     const body = { code };
     return this.http.post(`${this.apiUrl}reset/validate/`, body).pipe(
       tap((response: any) => {
-        console.log('Código de verificación verificado:', response);
       })
     );
   } 
 
   changePassword(email: string, newPassword: string, token: string): Observable<any> {
-    console.log(token, email, newPassword);
     if (!token) {
       throw new Error('Token no encontrado en las cookies');
     }

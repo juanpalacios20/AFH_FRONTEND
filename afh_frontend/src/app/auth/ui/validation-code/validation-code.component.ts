@@ -19,7 +19,6 @@ export class ValidationCodeComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   verifyCode() {
-    console.log('Email:', this.code);
     this.authService.verifyCode(this.code).subscribe({
       next: () => this.router.navigate(['/change-password']),
       error: (err) => this.errorMessage = "Error de inicio de sesión. Por favor, verifica tu correo.",
