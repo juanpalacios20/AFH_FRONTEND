@@ -59,7 +59,7 @@ export class ToolService extends BaseHttpService {
 
 
   deleteTool(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}tool/delete/${id}`).pipe(
+    return this.http.delete(`${this.apiUrl}tool/delete/${id}`, { headers: this.headers }).pipe(
       tap((response: any) => {
       })
     );
