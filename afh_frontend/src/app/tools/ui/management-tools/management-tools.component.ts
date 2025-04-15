@@ -18,6 +18,7 @@ import { EditToolsComponent } from '../edit-tools/edit-tools.component';
 import { CreateToolsComponent } from '../create-tools/create-tools.component';
 import { ToolService } from '../../services/tool.service';
 import { ViewToolComponent } from '../view-tool/view-tool.component';
+import { AuthService } from '../../../shared/auth/data_access/auth.service';
 
 @Component({
   selector: 'app-management-tools',
@@ -60,11 +61,13 @@ export default class ManagementToolsComponent implements OnInit {
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private toolService: ToolService
+    private toolService: ToolService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadTools();
+    this.authService.isLoggedIn()
   }
 
 

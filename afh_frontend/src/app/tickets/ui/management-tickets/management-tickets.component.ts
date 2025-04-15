@@ -138,6 +138,7 @@ export class ManagementTicketsComponent implements OnInit {
   ngOnInit() {
     this.getTickets();
     this.currentUrl = this.router.url;
+    this.authService.isLoggedIn()
   }
 
   showViewTicketDialog(ticketId: number) {

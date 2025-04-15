@@ -14,8 +14,7 @@ export class ToolService extends BaseHttpService {
     constructor(private cookieService: CookieService) {
       super();
       this.headers = new HttpHeaders({
-        'Authorization': `Token ${this.cookieService.get('token')}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Token ${this.cookieService.get('token')}`
       });
     }
 
@@ -60,7 +59,7 @@ export class ToolService extends BaseHttpService {
 
 
   deleteTool(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}tool/delete/${id}`).pipe(
+    return this.http.delete(`${this.apiUrl}tool/delete/${id}`, { headers: this.headers }).pipe(
       tap((response: any) => {
       })
     );
