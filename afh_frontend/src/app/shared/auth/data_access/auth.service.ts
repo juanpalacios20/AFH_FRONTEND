@@ -92,4 +92,14 @@ export class AuthService extends BaseHttpService {
   getAuthStatus(): Observable<boolean> {
     return this.authStatus.asObservable();
   }
+
+  isLoggedIn(): boolean {
+    const token = this.cookieService.get('token');
+    if (token) {
+      return true;
+    }
+    this.router.navigate(['/login']);
+    return false;
+}
+
 }
