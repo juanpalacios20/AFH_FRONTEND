@@ -14,7 +14,7 @@ export class TicketsService extends BaseHttpService {
   constructor(private cookieService: CookieService) {
     super();
     this.headers = new HttpHeaders({
-      'Authorization': `Token ${this.cookieService.get('token')}`,
+      'Authorization': `Token ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'
     });
   }

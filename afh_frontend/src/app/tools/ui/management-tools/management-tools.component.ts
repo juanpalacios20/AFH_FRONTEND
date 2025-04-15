@@ -67,6 +67,17 @@ export default class ManagementToolsComponent implements OnInit {
     this.loadTools();
   }
 
+  handleToolCreated() {
+    this.loadTools();
+    this.createDialogVisible = false; 
+  }
+
+  handleToolEdited() {
+    this.loadTools();
+    this.editDialogVisible = false; 
+  }
+  
+
 
   loadTools() {
     this.loadingTools = true;

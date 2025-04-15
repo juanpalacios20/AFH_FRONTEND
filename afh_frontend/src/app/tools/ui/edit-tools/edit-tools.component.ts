@@ -38,6 +38,7 @@ export class EditToolsComponent implements OnInit {
   @Input() tool: any = {};
   @Input() state: string = '';
   @Output() closeDialog = new EventEmitter<void>();
+  @Output() onToolEdited = new EventEmitter<void>();
 
   states: State[] | undefined;
   selectedState: State | undefined;
@@ -95,7 +96,7 @@ export class EditToolsComponent implements OnInit {
           detail: 'La herramienta ha sido actualizada con éxito',
         });
         this.closeDialog.emit();
-        window.location.reload();
+        this.onToolEdited.emit();
       },
       error: (error) => {
         this.error();

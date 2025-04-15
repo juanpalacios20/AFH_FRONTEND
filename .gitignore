@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.env
+electromecanicosApp-win32-x64/
+electromecanicosaap/node_modules/

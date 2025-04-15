@@ -41,6 +41,7 @@ interface UploadEvent {
 export class CreateToolsComponent {
   @Input() visible: boolean = false;
   @Output() closeDialog = new EventEmitter<void>();
+  @Output() onToolCreated = new EventEmitter<void>();
 
   states: State[] | undefined;
   selectedFile!: File;
@@ -112,7 +113,7 @@ export class CreateToolsComponent {
           });
           this.closeDialog.emit();
           this.resetForm();
-          window.location.reload();
+          this.onToolCreated.emit();
           this.loadingTool = false
         },
         error: (err) => {

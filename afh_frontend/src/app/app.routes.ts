@@ -12,7 +12,7 @@ import { HistoryTicketsComponent } from './tickets/ui/history-tickets/history-ti
 import { AdminGuard } from './shared/auth/data_access/admin.guard';
 
 export const routes: Routes = [
-    { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
+    { path: 'login', component: LoginComponent },
     { path: 'send-code', component: SendCodeComponent, canActivate: [AdminGuard] },
     { path: 'validation-code', component: ValidationCodeComponent, canActivate: [TokenGuard] },
     { path: 'change-password', component: ChangePasswordComponent, canActivate: [TokenGuard] },

@@ -10,7 +10,7 @@ export class AdminGuard implements CanActivate {
   constructor(private router: Router, private cookieService: CookieService) {}
 
   canActivate(): boolean {
-    const role = this.cookieService.get('role');
+    const role = localStorage.getItem('role');
 
     if (role === '1') {
       this.router.navigate(['/management-tools']);

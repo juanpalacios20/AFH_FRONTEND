@@ -39,8 +39,8 @@ export class SendCodeComponent {
     }, 5000);
     this.authService.sendCode(this.email).subscribe({
       next: (response) => {
-        this.cookieService.set('resetEmail', this.email, 1, '/');
-        this.cookieService.set('resetToken', response.Token, 1, '/');
+        localStorage.setItem('resetEmail', this.email);
+        localStorage.setItem('resetToken', response.Token);
         this.router.navigate(['/validation-code']);
       },
       error: (err) =>

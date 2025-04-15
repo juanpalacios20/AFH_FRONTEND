@@ -24,8 +24,8 @@ export class ChangePasswordComponent {
   constructor(private authService: AuthService, private router: Router,  private cookieService: CookieService) {}
 
   changePassword() {
-    this.email = this.cookieService.get('resetEmail');
-    const token = this.cookieService.get('resetToken');
+    this.email = localStorage.getItem('resetEmail') || '';
+    const token = localStorage.getItem('resetToken') || '';
     if (!this.email) {
       this.errorMessage = "No se encontró el correo. Por favor, vuelve a enviar el código.";
       return;
@@ -34,8 +34,8 @@ export class ChangePasswordComponent {
     this.authService.changePassword(this.email, this.newPassword, token).subscribe({
       next: (res) => {
         this.mensaje = res.message;
-        this.cookieService.delete('resetEmail');
-        this.cookieService.delete('resetToken');
+        localStorage.removeItem('resetEmail');
+        localStorage.removeItem('resetToken');
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (err) => {

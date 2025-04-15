@@ -20,26 +20,27 @@ export class AuthService extends BaseHttpService {
     const body = { email, password };
     return this.http.post(`${this.apiUrl}auth/login/`, body).pipe(
       tap((response: any) => {
-        this.cookieService.set('token', response.token, 1, '/');
-        this.cookieService.set('csrf_token', response.csrf_token, 1, '/');
-        this.cookieService.set('role', response.role, 1, '/');
-        this.cookieService.set('email', email, 1, '/');
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('csrf_token', response.csrf_token);
+        localStorage.setItem('role', response.role);
+        localStorage.setItem('email', email);
         this.authStatus.next(true);
-      })
+      })      
     );
   }
+
   logout(): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Token ${this.cookieService.get('token')}`,
+      'Authorization': `Token ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'
     });
   
     return this.http.post(`${this.apiUrl}auth/logout/`, {}, { headers }).pipe(
       tap(() => {
-        this.cookieService.delete('token', '/');
-        this.cookieService.delete('csrf_token', '/');
-        this.cookieService.delete('role', '/');
-        this.cookieService.delete('email', '/');
+        localStorage.removeItem('token');
+        localStorage.removeItem('csrf_token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('email');
         this.authStatus.next(false);
       }));
   }
@@ -49,7 +50,7 @@ export class AuthService extends BaseHttpService {
     return this.http.post(`${this.apiUrl}reset/request/`, body).pipe(
       tap((response: any) => {
         if (response.Token) {
-          this.cookieService.set('resetToken', response.Token); 
+          localStorage.setItem('resetToken', response.Token); 
         }
       })
     );
@@ -79,11 +80,11 @@ export class AuthService extends BaseHttpService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.cookieService.get('token');
+    return !!localStorage.getItem('token');
   }  
 
   whoIs(): boolean {
-    if (this.cookieService.get('role') === "1") {
+    if (localStorage.getItem('role') === "1") {
       return true;
     }
     return false;

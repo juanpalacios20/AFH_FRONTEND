@@ -49,6 +49,7 @@ export class ViewTicketComponent {
   @Input() tools: Tool[] = [];
   @Input() dateEnd: string = '';
   @Output() closeDialog = new EventEmitter<void>();
+  @Output() stateChange = new EventEmitter<void>();
 
   @ViewChild('herramientasPopover') herramientasPopover: any;
 
@@ -67,7 +68,7 @@ export class ViewTicketComponent {
     this.visible = false;
     this.closeDialog.emit();
     if (this.change) {
-      window.location.reload();
+      this.stateChange.emit();
     }
   }
 

@@ -42,7 +42,7 @@ export class LoginComponent {
   
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
-        const role = this.cookiesService.get('role');
+        const role = localStorage.getItem('role');
   
         if (role === '1') {
           this.navigateTo = '/management-tools';

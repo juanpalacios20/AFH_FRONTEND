@@ -114,6 +114,7 @@
   <app-create-ticket
     [visible]="createTicketDialogVisible"
     (closeDialog)="createTicketDialogVisible = false"
+    (onTicketCreated)="handleTicketCreated()"
   ></app-create-ticket>
   <app-view-ticket
     [state]="state"
@@ -123,5 +124,6 @@
     [id]="id"
     [visible]="viewTicketDialogVisible"
     (closeDialog)="viewTicketDialogVisible = false"
+    (stateChange)="handleStateChange()"
   ></app-view-ticket>
 </div>

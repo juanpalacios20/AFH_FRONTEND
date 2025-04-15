@@ -10,7 +10,7 @@ export class TokenGuard implements CanActivate {
   constructor(private router: Router, private cookieService: CookieService) {}
 
   canActivate(): boolean {
-    const token = this.cookieService.get('resetToken'); 
+    const token = localStorage.getItem('resetToken'); 
 
     if (!token) {
       this.router.navigate(['/login']);

@@ -123,10 +123,12 @@
     [tool]="this.tool"
     [state]="this.state"
     (closeDialog)="editDialogVisible = false"
+    (onToolEdited)="handleToolEdited()"
   ></app-edit-tools>
   <app-create-tools
     [visible]="createDialogVisible"
     (closeDialog)="createDialogVisible = false"
+    (onToolCreated)="handleToolCreated()"
   ></app-create-tools>
   <app-view-tool
     [visible]="viewDialogVisible"

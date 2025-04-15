@@ -140,6 +140,15 @@ export class ManagementTicketsComponent implements OnInit {
     this.currentUrl = this.router.url;
   }
 
+  handleTicketCreated() {
+    this.getTickets();
+    this.createTicketDialogVisible = false; 
+  }
+
+  handleStateChange() {
+    this.getTickets();
+  }
+
   showViewTicketDialog(ticketId: number) {
     this.ticketService.getTicket(ticketId).subscribe({
       next: (data) => {

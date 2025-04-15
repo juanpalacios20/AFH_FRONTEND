@@ -51,6 +51,7 @@ export class CreateTicketComponent {
 
   @Input() visible: boolean = false;
   @Output() closeDialog = new EventEmitter<void>();
+  @Output() onTicketCreated = new EventEmitter<void>();
 
   constructor(
     private cookieService: CookieService,
@@ -76,7 +77,7 @@ export class CreateTicketComponent {
   }
 
   getEmail() {
-    this.email = this.cookieService.get('email');
+    this.email = localStorage.getItem('email') || '';
   }
 
   error() {
@@ -115,7 +116,7 @@ export class CreateTicketComponent {
             detail: 'La herramienta ha sido creada con éxito',
           });
           this.closeDialog.emit();
-          window.location.reload();
+          this.onTicketCreated.emit();
           this.resetForm();
           this.loading = false;
         },
