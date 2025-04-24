@@ -115,6 +115,15 @@ export class ManagementTicketsComponent implements OnInit {
     this.createTicketDialogVisible = true;
   }
 
+  handleTicketCreated() {
+    this.getTickets();
+    this.createTicketDialogVisible = false; 
+  }
+
+  handleStateChange() {
+    this.getTickets();
+  }
+
   getTickets() {
     this.loadingTickets = true
     this.ticketService.getTickets().subscribe({
