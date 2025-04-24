@@ -49,7 +49,7 @@ export class ViewTicketComponent {
   @Input() tools: Tool[] = [];
   @Input() dateEnd: string = '';
   @Output() closeDialog = new EventEmitter<void>();
-
+  @Output() stateChange = new EventEmitter<void>();
   @ViewChild('herramientasPopover') herramientasPopover: any;
 
   loading: boolean = false;
@@ -66,9 +66,6 @@ export class ViewTicketComponent {
   close() {
     this.visible = false;
     this.closeDialog.emit();
-    if (this.change) {
-      window.location.reload();
-    }
   }
 
   getSeverity(
@@ -91,7 +88,7 @@ export class ViewTicketComponent {
       case 4:
         return 'secondary';
       default:
-        return 'secondary'; // Map "unknown" to a valid type
+        return 'secondary';
     }
   }
 
@@ -119,6 +116,7 @@ export class ViewTicketComponent {
           detail: 'El estado ha sido cambiado con exito',
         });
         this.change = true;
+        this.stateChange.emit();
         if (state == 4) {
           this.getPDF(id);
         }

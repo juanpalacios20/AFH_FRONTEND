@@ -101,11 +101,12 @@
     >
       Cancelar
     </button>
-    <button
+    <p-button
+      [loading]="loadingEdit"
       (click)="showSuccess()"
-      class="w-32 bg-blue-600 text-white font-medium py-2 rounded-lg transition hover:bg-blue-700 cursor-pointer"
+      styleClass="w-32 bg-primary-500 text-white font-medium py-2 rounded-lg transition hover:bg-primary-600 cursor-pointer"
     >
       Guardar
-    </button>
+    </p-button>
   </div>
 </p-dialog>

@@ -8,14 +8,13 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root',
 })
 export class TicketsService extends BaseHttpService {
-
-  headers: HttpHeaders;
-
   constructor(private cookieService: CookieService) {
     super();
-    this.headers = new HttpHeaders({
-      'Authorization': `Token ${this.cookieService.get('token')}`,
-      'Content-Type': 'application/json'
+  }
+
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Token ${this.cookieService.get('token')}`,
     });
   }
 
@@ -32,19 +31,23 @@ export class TicketsService extends BaseHttpService {
       place,
     };
 
+    const headers = this.getHeaders();
+
     return this.http
-      .post(`${this.apiUrl}ticket/addticket/`, body, { headers: this.headers })
+      .post(`${this.apiUrl}ticket/addticket/`, body, { headers: headers })
       .pipe(tap((response: any) => {}));
   }
 
   getTickets(): Observable<any> {
+    const headers = this.getHeaders();
     return this.http.get(`${this.apiUrl}ticket/tickets/`, {
-      headers: this.headers,
+      headers: headers,
     });
   }
   getTicket(id: number): Observable<any> {
+    const headers = this.getHeaders();
     return this.http.get(`${this.apiUrl}ticket/ticket/${id}`, {
-      headers: this.headers,
+      headers: headers,
     });
   }
 
@@ -54,24 +57,28 @@ export class TicketsService extends BaseHttpService {
       status,
     };
 
+    const headers = this.getHeaders();
+
     return this.http
       .patch(`${this.apiUrl}ticket/changestate/`, body, {
-        headers: this.headers,
+        headers: headers,
       })
       .pipe(tap((response: any) => {}));
   }
 
   getPDF(ticketId: number): Observable<HttpResponse<Blob>> {
+    const headers = this.getHeaders();
     return this.http.get(`${this.apiUrl}ticket/getpdf/${ticketId}`, {
-      headers: this.headers,
+      headers: headers,
       observe: 'response',
       responseType: 'blob',
     });
   }
 
   getInfo(): Observable<HttpResponse<Blob>> {
+    const headers = this.getHeaders();
     return this.http.get(`${this.apiUrl}ticket/getinforme/`, {
-      headers: this.headers,
+      headers: headers,
       observe: 'response',
       responseType: 'blob',
     });

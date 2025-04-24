@@ -8,6 +8,7 @@ import { Drawer } from 'primeng/drawer';
 import { Router, RouterLink} from '@angular/router';
 import { AuthService } from '../../auth/data_access/auth.service';
 import { NgIf } from '@angular/common';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-menu',
@@ -21,10 +22,10 @@ export class MenuComponent implements OnInit {
   @ViewChild('drawerRef') drawerRef!: Drawer;
   @Input() visible: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private cookieService: CookieService) {}
 
   ngOnInit() {
-    this.isAdmin = this.authService.whoIs(); // Verifica si el usuario es admin
+    this.isAdmin = this.authService.whoIs();
   }
 
   closeCallback(e: Event): void {
@@ -42,9 +43,9 @@ export class MenuComponent implements OnInit {
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-        localStorage.removeItem('token'); // Eliminar el token del localStorage
-        localStorage.removeItem('csrf_token'); // Eliminar CSRF token si es necesario
-        this.router.navigate(['/login']); // Redirigir al login
+        this.cookieService.delete('token');
+        this.cookieService.delete('csrf_token'); 
+        this.router.navigate(['/login']); 
       },
       error: (err) => console.error('Error al cerrar sesión', err)
     });
