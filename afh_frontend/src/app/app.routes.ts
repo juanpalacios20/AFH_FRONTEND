@@ -10,19 +10,36 @@ import { ChangePasswordComponent } from './auth/ui/change-password/change-passwo
 import { ManagementTicketsComponent } from './tickets/ui/management-tickets/management-tickets.component';
 import { HistoryTicketsComponent } from './tickets/ui/history-tickets/history-tickets.component';
 import { AdminGuard } from './shared/auth/data_access/admin.guard';
+import QuotesComponent from './quotes_works/ui/quotes/quotes.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
     { path: 'send-code', component: SendCodeComponent, canActivate: [AdminGuard] },
     { path: 'validation-code', component: ValidationCodeComponent, canActivate: [TokenGuard] },
     { path: 'change-password', component: ChangePasswordComponent, canActivate: [TokenGuard] },
-    { path: 'management-tools', component: ManagementToolsComponent, canActivate: [AuthGuard] },
+    { path: 'management-tools', component: ManagementToolsComponent },
     { path: 'management-tickets', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
     { path: 'history-tickets', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
     { path: 'management-vales', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
     { path: 'history-vales', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
     { path: 'menu', component: MenuComponent },
     { path: 'change-password', component: ChangePasswordComponent },
+    { path: 'quotes', component: QuotesComponent},
     { path: '**', redirectTo: 'login' }
 
 ];
+// export const routes: Routes = [
+//     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
+//     { path: 'send-code', component: SendCodeComponent, canActivate: [AdminGuard] },
+//     { path: 'validation-code', component: ValidationCodeComponent, canActivate: [TokenGuard] },
+//     { path: 'change-password', component: ChangePasswordComponent, canActivate: [TokenGuard] },
+//     { path: 'management-tools', component: ManagementToolsComponent, canActivate: [AuthGuard] },
+//     { path: 'management-tickets', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
+//     { path: 'history-tickets', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
+//     { path: 'management-vales', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
+//     { path: 'history-vales', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
+//     { path: 'menu', component: MenuComponent },
+//     { path: 'change-password', component: ChangePasswordComponent },
+//     { path: '**', redirectTo: 'login' }
+
+// ];
