@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import CreateQuoteComponent from '../create-quote/create-quote.component';
 import { TagModule } from 'primeng/tag';
+import ViewQuotesComponent from '../view-quotes/view-quotes.component';
 
 interface Quote {
   code: string;
@@ -35,7 +36,8 @@ interface Quote {
     ToastModule,
     TableModule,
     CreateQuoteComponent,
-    TagModule
+    TagModule,
+    ViewQuotesComponent
   ],
   templateUrl: './quotes.component.html',
   styleUrl: './quotes.component.css',
@@ -44,11 +46,14 @@ interface Quote {
 export default class QuotesComponent {
   value3: string = '';
   quoteCreateDialogVisible: boolean = false;
+  quoteEditDialogVisible: boolean = false;
+  viewQuoteDialogVisible: boolean = false;
   quoteAction: number = 0; // 0: Create, 1: Edit
   quotes: Quote[] = [{code: '01-2025', name: 'Samuel', description: 'Description 1', status: 3, date: '03/06/25', observations: 'Observation 1'},];
 
   showCreateQuoteDialog() {
     this.quoteCreateDialogVisible = true;
+    this.quoteAction = 0;
   }
 
   closeCreateQuoteDialog() {
@@ -57,6 +62,23 @@ export default class QuotesComponent {
 
   handleQuoteCreated() {
     this.closeCreateQuoteDialog();
+  }
+
+  showEditQuoteDialog() {
+    this.quoteEditDialogVisible = true;
+    this.quoteAction = 1;
+  }
+
+  closeEditQuoteDialog() {
+    this.quoteEditDialogVisible = false;
+  }
+
+  handleQuoteEdited() {
+    this.closeEditQuoteDialog();
+  }
+
+  showViewComponent() {
+    this.viewQuoteDialogVisible = true;
   }
 
   getSeverity(
