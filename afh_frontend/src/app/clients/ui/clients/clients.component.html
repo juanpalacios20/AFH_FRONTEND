@@ -38,7 +38,6 @@
       ></button>
     </div>
 
-    <!-- Confirmación de eliminación (solo una instancia) -->
     <p-confirmdialog></p-confirmdialog>
 
     <p-table
@@ -52,6 +51,7 @@
     >
       <ng-template #header>
         <tr>
+          <th class="rounded-border text-primary-950 text-center"></th>
           <th class="rounded-border text-primary-950 text-center">Nombre</th>
           <th class="rounded-border text-primary-950 text-center">
             Correo electrónico
@@ -62,8 +62,11 @@
           <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
       </ng-template>
-      <ng-template #body let-client>
+      <ng-template #body let-client let-i="rowIndex">
         <tr>
+          <td class="text-center">
+            {{ i + 1 }}
+          </td>
           <td>
             <p class="text-center">{{ client.name }}</p>
           </td>
@@ -86,10 +89,13 @@
                   )
                 "
               />
-              <p-button icon="pi pi-trash" severity="danger" (click)="confirmationDelete(client.id)" />
+              <p-button
+                icon="pi pi-trash"
+                severity="danger"
+                (click)="confirmationDelete(client.id)"
+              />
             </div>
           </td>
-          <td></td>
         </tr>
       </ng-template>
       <ng-template #emptymessage>
