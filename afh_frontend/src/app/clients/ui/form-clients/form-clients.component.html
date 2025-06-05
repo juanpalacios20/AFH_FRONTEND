@@ -1,0 +1,67 @@
+<p-dialog
+  header="{{ this.actionTittle }}"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '30rem' }"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <div class="max-w-xl mx-auto rounded-xl justify-center mt-2">
+    <div class="mt-4">
+      <p-floatlabel class="mb-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="name"
+          [ngModelOptions]="{ standalone: true }"
+          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessageName }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Nombre del cliente </label>
+      </p-floatlabel>
+      <small id="email-help" class="text-red-600" *ngIf="errorMessageName">
+        {{ errorMessageName }}
+      </small>
+    </div>
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="phone"
+          [ngModelOptions]="{ standalone: true }"
+          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessagePhone }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Numero del cliente </label>
+      </p-floatlabel>
+      <small id="email-help" class="text-red-600" *ngIf="errorMessageEmail">
+        {{ errorMessageEmail }}
+      </small>
+    </div>
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="email"
+          [ngModelOptions]="{ standalone: true }"
+          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessagePhone }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Correo electronico del cliente</label>
+      </p-floatlabel>
+      <small id="email-help" class="text-red-600" *ngIf="errorMessagePhone">
+        {{ errorMessagePhone }}
+      </small>
+    </div>
+    <div class="flex justify-end gap-2 mt-10">
+      <p-button styleClass="p-button-secondary" (click)="close()">
+        Cancelar
+      </p-button>
+      <p-button styleClass="p-button-primary" (click)="handleAction()">
+        {{ this.actionTittle }}
+      </p-button>
+    </div>
+  </div>
+</p-dialog>
