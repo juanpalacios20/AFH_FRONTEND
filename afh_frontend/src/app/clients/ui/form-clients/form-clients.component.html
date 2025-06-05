@@ -27,7 +27,7 @@
       <p-floatlabel class="mt-2" variant="on" required="true">
         <input
           pInputText
-          type="text"
+          type="number"
           [(ngModel)]="phone"
           [ngModelOptions]="{ standalone: true }"
           [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessagePhone }"
@@ -35,8 +35,8 @@
         />
         <label>Numero del cliente </label>
       </p-floatlabel>
-      <small id="email-help" class="text-red-600" *ngIf="errorMessageEmail">
-        {{ errorMessageEmail }}
+      <small id="email-help" class="text-red-600" *ngIf="errorMessagePhone">
+        {{ errorMessagePhone }}
       </small>
     </div>
     <div class="mb-4">
@@ -51,8 +51,8 @@
         />
         <label>Correo electronico del cliente</label>
       </p-floatlabel>
-      <small id="email-help" class="text-red-600" *ngIf="errorMessagePhone">
-        {{ errorMessagePhone }}
+      <small id="email-help" class="text-red-600" *ngIf="errorMessageEmail">
+        {{ errorMessageEmail }}
       </small>
     </div>
     <div class="flex justify-end gap-2 mt-10">

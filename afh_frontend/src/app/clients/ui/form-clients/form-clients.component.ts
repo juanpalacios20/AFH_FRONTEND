@@ -79,6 +79,10 @@ export default class FormClientsComponent implements OnChanges {
     if (this.phone === '') {
       this.errorMessagePhone = 'El teléfono es obligatorio';
     }
+    if (!(this.email.includes('@') && this.email.includes('.com'))) {
+      this.errorMessageEmail =
+        'El correo electrónico es inválido, ejemplo@dominio.com';
+    }
   }
 
   createClient() {
@@ -86,8 +90,11 @@ export default class FormClientsComponent implements OnChanges {
     if (
       this.errorMessageName === 'El nombre es obligatorio' ||
       this.errorMessageEmail === 'El email es obligatorio' ||
-      this.errorMessagePhone === 'El teléfono es obligatorio'
-    ) { return;
+      this.errorMessagePhone === 'El teléfono es obligatorio' ||
+      this.errorMessageEmail ===
+        'El correo electrónico es inválido, ejemplo@dominio.com'
+    ) {
+      return;
     }
     this.clientService
       .createClient(this.name, this.email, this.phone)
@@ -113,6 +120,16 @@ export default class FormClientsComponent implements OnChanges {
   }
 
   UpdateClient() {
+    this.verifyFields();
+    if (
+      this.errorMessageName === 'El nombre es obligatorio' ||
+      this.errorMessageEmail === 'El email es obligatorio' ||
+      this.errorMessagePhone === 'El teléfono es obligatorio' ||
+      this.errorMessageEmail ===
+        'El correo electrónico es inválido, ejemplo@dominio.com'
+    ) {
+      return;
+    }
     const formData = new FormData();
     if (this.name !== this.nameClient) {
       formData.append('name', this.name);
