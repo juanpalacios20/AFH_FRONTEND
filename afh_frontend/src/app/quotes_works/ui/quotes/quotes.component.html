@@ -66,20 +66,20 @@
             <p class="text-center">{{ quote.code }}</p>
           </td>
           <td class="cursor-pointer">
-            <p class="text-center">{{ quote.name }}</p>
+            <p class="text-center">{{ quote.customer.name }}</p>
           </td>
           <td class="cursor-pointer">
             <p class="text-center">{{ quote.description }}</p>
           </td>
           <td class="cursor-pointer">
-            <p class="text-center">{{ quote.date }}</p>
+            <p class="text-center">{{ quote.issue_date }}</p>
           </td>
           <td class="cursor-pointer">
             <div class="flex justify-center">
               <p-tag
                 class="justify-center"
-                [value]="getStateString(quote.status)"
-                [severity]="getSeverity(quote.status)"
+                [value]="getStateString(quote.state)"
+                [severity]="getSeverity(quote.state)"
               ></p-tag>
             </div>
           </td>

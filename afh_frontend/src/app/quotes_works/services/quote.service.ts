@@ -17,7 +17,10 @@ export class QuoteService extends BaseHttpService {
     });
   }
 
-  
+  getQuotes() {
+    const headers = this.getHeaders();
+    return this.http.get<any>(`${this.apiUrl}/quote/getquotes/`, { headers });
+  }
 
   createItem(item: any) {
     const headers = this.getHeaders();
