@@ -52,9 +52,16 @@
                     class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
                   >
                     <i class="pi pi-hammer mr-2"></i>
-                    <span class="font-medium" 
-                      >Herramientas</span
-                    >
+                    <span class="font-medium">Herramientas</span>
+                  </a>
+                </li>
+                <li *ngIf="isAdmin" routerLink="/clients">
+                  <a
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
+                  >
+                    <i class="pi pi-users mr-2"></i>
+                    <span class="font-medium">Clientes</span>
                   </a>
                 </li>
               </ul>
@@ -79,9 +86,7 @@
                     class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
                   >
                     <i class="pi pi-clipboard mr-2"></i>
-                    <span class="font-medium" 
-                      >Vales</span
-                    >
+                    <span class="font-medium">Vales</span>
                   </a>
                 </li>
                 <li routerLink="/history-tickets">
@@ -90,9 +95,7 @@
                     class="flex items-center cursor-pointer p-4 rounded-border text-primary-950 hover:bg-primary-50 dark:hover:bg-primary-100 duration-150 transition-colors p-ripple"
                   >
                     <i class="pi pi-clipboard mr-2"></i>
-                    <span class="font-medium" 
-                      >Historial Vales</span
-                    >
+                    <span class="font-medium">Historial Vales</span>
                   </a>
                 </li>
               </ul>
