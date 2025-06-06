@@ -11,6 +11,7 @@ import { ManagementTicketsComponent } from './tickets/ui/management-tickets/mana
 import { HistoryTicketsComponent } from './tickets/ui/history-tickets/history-tickets.component';
 import { AdminGuard } from './shared/auth/data_access/admin.guard';
 import  ClientsComponent  from './clients/ui/clients/clients.component';
+import QuotesComponent from './quotes_works/ui/quotes/quotes.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -25,6 +26,7 @@ export const routes: Routes = [
     { path: 'history-vales', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
     { path: 'menu', component: MenuComponent },
     { path: 'change-password', component: ChangePasswordComponent },
+    { path: 'quotes', component: QuotesComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'login' }
 
 ];

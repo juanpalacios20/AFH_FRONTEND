@@ -1,0 +1,194 @@
+<p-dialog
+  header="{{ this.actionTittle }}"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '30rem' }"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <div class="max-w-xl mx-auto rounded-xl justify-center">
+    <h1 class="mb-4">Seleccione un cliente existente.</h1>
+    <div class="mb-4">
+      <p-multiselect
+        optionLabel="name"
+        placeholder="Cliente"
+        [maxSelectedLabels]="3"
+        styleClass="w-full bg-white text-black font-medium rounded-lg"
+      ></p-multiselect>
+    </div>
+
+    <div class="mb-4">
+      <h1 class="mb-4">Ingrese la descripción del trabajo.</h1>
+      <p-floatlabel variant="on" required="true">
+        <textarea
+          pTextarea
+          id="description"
+          rows="5"
+          cols="30"
+          style="resize: none"
+          fluid="true"
+          class="h-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        ></textarea>
+        <label for="description">Descripción</label>
+      </p-floatlabel>
+    </div>
+    <div class="mb-4">
+      <h1 class="mb-4">Tareas del trabajo</h1>
+
+      <div
+        *ngFor="let task of tasks; let i = index"
+        class="flex items-center gap-2 mb-3"
+      >
+        <div class="flex-1">
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
+              type="text"
+              [(ngModel)]="task.descripcion"
+              [ngModelOptions]="{ standalone: true }"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="desc-{{ i }}"
+              >Descripción de la tarea {{ i + 1 }}</label
+            >
+          </p-floatlabel>
+        </div>
+
+        <button
+          *ngIf="tasks.length > 1"
+          type="button"
+          (click)="removeTask(i)"
+          class="text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
+          title="Eliminar"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="flex justify-end">
+        <p-button
+          label="Agregar tarea"
+          icon="pi pi-plus"
+          styleClass="p-button-outlined"
+          (onClick)="addTask()"
+        ></p-button>
+      </div>
+    </div>
+    <div class="mb-4">
+      <h1 class="mb-4">Opciones para el trabajo</h1>
+      <p-float-label class="mb-2" variant="on" required="true">
+        <input
+          pInputText
+          type="number"
+          [(ngModel)]="this.optionsSelected"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        /><label>Digite la cantidad de opciones</label>
+      </p-float-label>
+      <p-button
+        class="flex justify-end"
+        label="Continuar"
+        icon="pi pi-arrow-right"
+        styleClass="p-button-outlined"
+        (onClick)="updateOptionsSelected()"
+      />
+    </div>
+    <div class="mb-4" *ngFor="let opcion of itemsPorOpcion; let i = index">
+      <h1 class="mb-4">Opción {{ i + 1 }}</h1>
+
+      <div
+        *ngFor="let item of opcion; let j = index"
+        class="flex items-center gap-2 mb-3"
+      >
+        <div class="flex-1">
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
+              type="text"
+              [(ngModel)]="item.descripcion"
+              [ngModelOptions]="{ standalone: true }"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="desc-{{ i }}-{{ j }}"
+              >Descripción ítem {{ j + 1 }}</label
+            >
+          </p-floatlabel>
+
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
+              type="text"
+              [(ngModel)]="item.unidad"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="precio-{{ i }}-{{ j }}">Unidad {{ j + 1 }}</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
+              type="number"
+              [(ngModel)]="item.cantidad"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="precio-{{ i }}-{{ j }}">Cantidad {{ j + 1 }}</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
+              type="number"
+              [(ngModel)]="item.valorUnitario"
+              (ngModelChange)="updatePrice()"
+              [ngModelOptions]="{ standalone: true }"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="precio-{{ i }}-{{ j }}">Valor unitario {{ j + 1 }}</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
+              type="number"
+              [disabled]="true"
+              [(ngModel)]="item.precio"
+              (ngModelChange)="updateTotalPrice()"
+              [ngModelOptions]="{ standalone: true }"
+              class="w-full bg-white text-gray-600 font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="precio-{{ i }}-{{ j }}">Precio {{ j + 1 }}</label>
+          </p-floatlabel>
+        </div>
+
+        <button
+          *ngIf="opcion.length > 1"
+          type="button"
+          (click)="removeItem(i, j)"
+          class="text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
+          title="Eliminar"
+        >
+          &times;
+        </button>
+      </div>
+
+      <div>
+        <h1>Total opción {{ i + 1 }}: {{ getTotalPrice(i) }}</h1>
+      </div>
+
+      <div class="flex justify-end">
+        <p-button
+          label="Agregar ítem"
+          icon="pi pi-plus"
+          styleClass="p-button-outlined"
+          (onClick)="addItem(i)"
+        ></p-button>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-10">
+      <p-button styleClass="p-button-secondary" (onClick)="close()">
+        Cancelar
+      </p-button>
+      <p-button styleClass="p-button-primary" (onClick)="submitQuote()"> {{this.actionTittle}} </p-button>
+    </div>
+  </div>
+</p-dialog>
