@@ -17,29 +17,14 @@ export const routes: Routes = [
     { path: 'send-code', component: SendCodeComponent, canActivate: [AdminGuard] },
     { path: 'validation-code', component: ValidationCodeComponent, canActivate: [TokenGuard] },
     { path: 'change-password', component: ChangePasswordComponent, canActivate: [TokenGuard] },
-    { path: 'management-tools', component: ManagementToolsComponent },
+    { path: 'management-tools', component: ManagementToolsComponent, canActivate: [AuthGuard] },
     { path: 'management-tickets', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
     { path: 'history-tickets', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
     { path: 'management-vales', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
     { path: 'history-vales', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
     { path: 'menu', component: MenuComponent },
     { path: 'change-password', component: ChangePasswordComponent },
-    { path: 'quotes', component: QuotesComponent},
+    { path: 'quotes', component: QuotesComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'login' }
 
 ];
-// export const routes: Routes = [
-//     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
-//     { path: 'send-code', component: SendCodeComponent, canActivate: [AdminGuard] },
-//     { path: 'validation-code', component: ValidationCodeComponent, canActivate: [TokenGuard] },
-//     { path: 'change-password', component: ChangePasswordComponent, canActivate: [TokenGuard] },
-//     { path: 'management-tools', component: ManagementToolsComponent, canActivate: [AuthGuard] },
-//     { path: 'management-tickets', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
-//     { path: 'history-tickets', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
-//     { path: 'management-vales', component: ManagementTicketsComponent, canActivate: [AuthGuard] },
-//     { path: 'history-vales', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
-//     { path: 'menu', component: MenuComponent },
-//     { path: 'change-password', component: ChangePasswordComponent },
-//     { path: '**', redirectTo: 'login' }
-
-// ];

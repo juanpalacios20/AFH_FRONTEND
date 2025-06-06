@@ -116,11 +116,44 @@
           <p-floatlabel class="mb-2" variant="on" required="true">
             <input
               pInputText
+              type="text"
+              [(ngModel)]="item.unidad"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="precio-{{ i }}-{{ j }}">Unidad {{ j + 1 }}</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
               type="number"
+              [(ngModel)]="item.cantidad"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="precio-{{ i }}-{{ j }}">Cantidad {{ j + 1 }}</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
+              type="number"
+              [(ngModel)]="item.valorUnitario"
+              (ngModelChange)="updatePrice()"
+              [ngModelOptions]="{ standalone: true }"
+              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            />
+            <label for="precio-{{ i }}-{{ j }}">Valor unitario {{ j + 1 }}</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="mb-2" variant="on" required="true">
+            <input
+              pInputText
+              type="number"
+              [disabled]="true"
               [(ngModel)]="item.precio"
               (ngModelChange)="updateTotalPrice()"
               [ngModelOptions]="{ standalone: true }"
-              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="w-full bg-white text-gray-600 font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
             <label for="precio-{{ i }}-{{ j }}">Precio {{ j + 1 }}</label>
           </p-floatlabel>
@@ -155,7 +188,7 @@
       <p-button styleClass="p-button-secondary" (onClick)="close()">
         Cancelar
       </p-button>
-      <p-button styleClass="p-button-primary"> Crear </p-button>
+      <p-button styleClass="p-button-primary" (onClick)="submitQuote()"> {{this.actionTittle}} </p-button>
     </div>
   </div>
 </p-dialog>
