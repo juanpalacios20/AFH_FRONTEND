@@ -7,14 +7,15 @@
   (onHide)="close()"
 >
   <div class="max-w-xl mx-auto rounded-xl justify-center">
-    <h1 class="mb-4">Seleccione un cliente existente.</h1>
+    <h1 class="mb-4">Digite el nombre del cliente.</h1>
     <div class="mb-4">
-      <p-multiselect
+      <p-autocomplete
+        [(ngModel)]="selectedCustomer"
+        [suggestions]="filteredCustomers ?? []"
+        (completeMethod)="filterCustomer($event)"
         optionLabel="name"
-        placeholder="Cliente"
-        [maxSelectedLabels]="3"
-        styleClass="w-full bg-white text-black font-medium rounded-lg"
-      ></p-multiselect>
+        fluid="true"
+      />
     </div>
 
     <div class="mb-4">
@@ -25,6 +26,8 @@
           id="description"
           rows="5"
           cols="30"
+          [(ngModel)]="description"
+          [ngModelOptions]="{ standalone: true }"
           style="resize: none"
           fluid="true"
           class="h-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -142,7 +145,9 @@
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
-            <label for="precio-{{ i }}-{{ j }}">Valor unitario {{ j + 1 }}</label>
+            <label for="precio-{{ i }}-{{ j }}"
+              >Valor unitario {{ j + 1 }}</label
+            >
           </p-floatlabel>
 
           <p-floatlabel class="mb-2" variant="on" required="true">
@@ -188,7 +193,9 @@
       <p-button styleClass="p-button-secondary" (onClick)="close()">
         Cancelar
       </p-button>
-      <p-button styleClass="p-button-primary" (onClick)="submitQuote()"> {{this.actionTittle}} </p-button>
+      <p-button styleClass="p-button-primary" (onClick)="submitQuote()">
+        {{ this.actionTittle }}
+      </p-button>
     </div>
   </div>
 </p-dialog>

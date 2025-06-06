@@ -98,6 +98,12 @@ export default class QuotesComponent {
 
   handleQuoteCreated() {
     this.closeCreateQuoteDialog();
+    this.loadQuotes();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Cotización creada exitosamente.',
+    });
   }
 
   showEditQuoteDialog() {
@@ -151,4 +157,52 @@ export default class QuotesComponent {
         return 'Estado desconocido';
     }
   }
+
+  deleteQuote(id: number) {
+    this.quoteService.deleteQuote(id).subscribe({
+      next: (response: any) => {
+        this.loadQuotes();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Cotización eliminada correctamente',
+        });
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al eliminar la cotización, intentelo nuevamente',
+        });
+      },
+    });
+  }
+
+  confirmationDelete(id: number) {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea eliminar este cliente? Esta acción no se puede deshacer.',
+      header: '¡Advertencia!',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Eliminar',
+        severity: 'danger',
+      },
+      accept: () => {
+        this.deleteQuote(id);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'Cliente eliminado con éxito',
+        });
+      },
+    });
+  }
+
 }

@@ -36,4 +36,9 @@ export class QuoteService extends BaseHttpService {
     const headers = this.getHeaders();
     return this.http.post<any>(`${this.apiUrl}/quote/addquote/`, quote, { headers });
   }
+
+  deleteQuote(quoteId: number) {
+    const headers = this.getHeaders();
+    return this.http.delete<any>(`${this.apiUrl}/quote/delete/${quoteId}`, { headers });
+  }
 }

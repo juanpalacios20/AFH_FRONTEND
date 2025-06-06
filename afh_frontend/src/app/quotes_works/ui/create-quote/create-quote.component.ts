@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -17,9 +18,33 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { QuoteService } from '../../services/quote.service';
+import { ClientService } from '../../../clients/services/client.service';
+import { AutoComplete } from 'primeng/autocomplete';
+
+
+interface Customer {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+}
+
+interface Items {
+  descripcion: string;
+  precio: number;
+  unidad: string;
+  cantidad: number;
+  valorUnitario: number;
+}
+
+interface AutoCompleteCompleteEvent {
+  originalEvent: Event;
+  query: string;
+}
 
 @Component({
   selector: 'app-create-quote',
+  standalone: true,
   imports: [
     Dialog,
     ButtonModule,
@@ -31,12 +56,13 @@ import { QuoteService } from '../../services/quote.service';
     MultiSelectModule,
     TextareaModule,
     NgIf,
+    AutoComplete
   ],
   templateUrl: './create-quote.component.html',
-  styleUrl: './create-quote.component.css',
+  styleUrls: ['./create-quote.component.css'],
   providers: [MessageService],
 })
-export default class CreateQuoteComponent implements OnChanges {
+export default class CreateQuoteComponent implements OnChanges, OnInit {
   actionTittle: string = 'Crear';
   itemsPorOpcion: {
     descripcion: string;
@@ -46,8 +72,14 @@ export default class CreateQuoteComponent implements OnChanges {
     valorUnitario: number;
   }[][] = [];
   tasks: { descripcion: string }[] = [{ descripcion: '' }];
+  description: string = '';
+  tasksQuote: String[] = [];
+  items: Items[] = [];
   totalPrice: number = 0;
   optionsSelected: number = 0;
+  customers: Customer[] = [];
+  selectedCustomer: Customer | null = null;
+  filteredCustomers: any[] | undefined;
   @Input() visible: boolean = false;
   @Input() action: number = 0; // 0: Create, 1: Edit
   @Output() closeDialog = new EventEmitter<void>();
@@ -55,10 +87,42 @@ export default class CreateQuoteComponent implements OnChanges {
 
   constructor(
     private quoteService: QuoteService,
-    private toast: MessageService
+    private toast: MessageService,
+    private clientService: ClientService
   ) {}
 
+  filterCustomer(event: AutoCompleteCompleteEvent) {
+        let filtered: any[] = [];
+        let query = event.query;
+        for (let i = 0; i < this.customers.length; i++) {
+            let customer = this.customers[i];
+            if (customer.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(customer);
+            }
+        }
+
+        this.filteredCustomers = filtered;
+    }
+
+  loadCustomers() {
+    this.clientService.getClients().subscribe({
+      next: (response: any) => {
+        this.customers = response.map((client: any) => ({
+          id: client.id,
+          name: client.name,
+          email: client.email,
+          phone: client.phone,
+        }));
+      },
+    });
+  }
+
+  ngOnInit() {
+    this.loadCustomers();
+  }
+
   submitQuote() {
+    console.log(this.selectedCustomer, this.selectedCustomer?.id);
     const optionsToSend: number[] = [];
 
     const createAllItems = async () => {
@@ -111,29 +175,18 @@ export default class CreateQuoteComponent implements OnChanges {
 
     const createFinalQuote = async () => {
       const quoteData = {
-        description: this.itemsPorOpcion
-          .map((items) => items.map((item) => item.descripcion).join(', ')),
-        customer_id: 1,
+        description: this.description,
+        customer_id: this.selectedCustomer?.id,
         options: optionsToSend,
         tasks: this.tasks.map((t) => t.descripcion),
       };
 
       try {
         await this.quoteService.createQuote(quoteData).toPromise();
-        this.toast.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Cotización creada correctamente',
-        });
         this.onQuoteCreated.emit();
         this.close();
       } catch (error) {
         console.error('Error al crear cotización', error);
-        this.toast.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudo crear la cotización',
-        });
       }
     };
 
@@ -159,6 +212,7 @@ export default class CreateQuoteComponent implements OnChanges {
     });
     this.updateTotalPrice();
   }
+  
 
   updateOptionsSelected() {
     this.itemsPorOpcion = [];

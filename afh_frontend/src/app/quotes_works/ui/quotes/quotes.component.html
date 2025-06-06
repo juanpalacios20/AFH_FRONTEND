@@ -86,7 +86,7 @@
           <td>
             <div class="card flex justify-center gap-2">
               <p-button icon="pi pi-pencil" (click)="showEditQuoteDialog()"/>
-              <p-button icon="pi pi-trash" severity="danger" />
+              <p-button icon="pi pi-trash" (click)="confirmationDelete(quote.id)" severity="danger" />
             </div>
           </td>
         </tr>
