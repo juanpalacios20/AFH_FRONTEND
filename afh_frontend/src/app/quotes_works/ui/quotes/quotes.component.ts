@@ -15,7 +15,23 @@ import { TagModule } from 'primeng/tag';
 import ViewQuotesComponent from '../view-quotes/view-quotes.component';
 import { QuoteService } from '../../services/quote.service';
 
-interface Client {
+interface Item {
+  id: number;
+  description: string;
+  units: string;
+  total_value: number;
+  amount: number;
+  unit_value: number;
+}
+
+interface Option {
+  id: number;
+  name: string;
+  total_value: number;
+  items: Item[];
+}
+
+interface Customer {
   id: number;
   name: string;
   email: string;
@@ -23,13 +39,16 @@ interface Client {
 }
 
 interface Quote {
+  id: number;
+  customer: Customer;
   code: string;
-  customer: Client;
   description: string;
   issue_date: number;
-  date: string;
+  options: Option[];
   state: number;
+  tasks: string[];
 }
+
 @Component({
   selector: 'app-quotes',
   imports: [
@@ -52,13 +71,15 @@ interface Quote {
   providers: [ConfirmationService, MessageService],
 })
 export default class QuotesComponent {
-  value3: string = '';
+  quoteToFind: string = '';
   quoteCreateDialogVisible: boolean = false;
   quoteEditDialogVisible: boolean = false;
   viewQuoteDialogVisible: boolean = false;
   quoteAction: number = 0; // 0: Create, 1: Edit
-  // quotes: Quote[] = [{code: '01-2025', name: 'Samuel', description: 'Description 1', status: 3, date: '03/06/25', observations: 'Observation 1'},];
+  viewQuote: Quote | null = null;
   quotes: Quote[] = [];
+  state: string = '';
+  severity: 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast' | undefined = 'info';
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -119,8 +140,12 @@ export default class QuotesComponent {
     this.closeEditQuoteDialog();
   }
 
-  showViewComponent() {
+  showViewComponent(quote: Quote) {
+    this.viewQuote = quote;
+    this.state = this.getStateString(quote.state);
+    this.severity = this.getSeverity(quote.state);
     this.viewQuoteDialogVisible = true;
+    console.log('Quote to view:', quote, this.viewQuote);
   }
 
   getSeverity(

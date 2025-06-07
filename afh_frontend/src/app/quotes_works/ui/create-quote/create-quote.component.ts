@@ -19,8 +19,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { QuoteService } from '../../services/quote.service';
 import { ClientService } from '../../../clients/services/client.service';
-import { AutoComplete } from 'primeng/autocomplete';
-
+import { AutoComplete, AutoCompleteModule } from 'primeng/autocomplete';
 
 interface Customer {
   id: number;
@@ -56,11 +55,11 @@ interface AutoCompleteCompleteEvent {
     MultiSelectModule,
     TextareaModule,
     NgIf,
-    AutoComplete
+    AutoComplete,
   ],
   templateUrl: './create-quote.component.html',
   styleUrls: ['./create-quote.component.css'],
-  providers: [MessageService],
+  providers: [MessageService, AutoCompleteModule],
 })
 export default class CreateQuoteComponent implements OnChanges, OnInit {
   actionTittle: string = 'Crear';
@@ -80,6 +79,28 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   customers: Customer[] = [];
   selectedCustomer: Customer | null = null;
   filteredCustomers: any[] | undefined;
+  units: string[] = [
+    'Metros',
+    'Centímetros',
+    'Milímetros',
+    'Kilómetros',
+    'Pulgadas',
+    'Pies',
+    'Kilogramos',
+    'Gramos',
+    'Miligramos',
+    'Libras',
+    'Toneladas',
+    'Litros',
+    'Mililitros',
+    'Galones',
+    'Unidades',
+    'Docenas',
+    'Cajas',
+    'Pares',
+  ];
+  valueUnits: string = '';
+  filteredUnits: string[] = [];
   @Input() visible: boolean = false;
   @Input() action: number = 0; // 0: Create, 1: Edit
   @Output() closeDialog = new EventEmitter<void>();
@@ -87,22 +108,29 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   constructor(
     private quoteService: QuoteService,
-    private toast: MessageService,
     private clientService: ClientService
   ) {}
 
-  filterCustomer(event: AutoCompleteCompleteEvent) {
-        let filtered: any[] = [];
-        let query = event.query;
-        for (let i = 0; i < this.customers.length; i++) {
-            let customer = this.customers[i];
-            if (customer.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(customer);
-            }
-        }
+  search(event: AutoCompleteCompleteEvent) {
+    const query = event.query.toLowerCase();
 
-        this.filteredCustomers = filtered;
+    this.filteredUnits = this.units.filter((unit) =>
+      unit.toLowerCase().includes(query)
+    );
+  }
+
+  filterCustomer(event: AutoCompleteCompleteEvent) {
+    let filtered: any[] = [];
+    let query = event.query;
+    for (let i = 0; i < this.customers.length; i++) {
+      let customer = this.customers[i];
+      if (customer.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(customer);
+      }
     }
+
+    this.filteredCustomers = filtered;
+  }
 
   loadCustomers() {
     this.clientService.getClients().subscribe({
@@ -134,7 +162,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         for (const item of optionItems) {
           const itemData = {
             description: item.descripcion,
-            units: item.unidad,
+            units: this.valueUnits,
             amount: item.cantidad,
             unit_value: item.valorUnitario,
           };
@@ -212,7 +240,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     });
     this.updateTotalPrice();
   }
-  
 
   updateOptionsSelected() {
     this.itemsPorOpcion = [];
@@ -265,6 +292,9 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.tasks = [{ descripcion: '' }];
     this.totalPrice = 0;
     this.optionsSelected = 0;
+    this.description = '';
+    this.selectedCustomer = null;
+    this.valueUnits = '';
     this.closeDialog.emit();
   }
 

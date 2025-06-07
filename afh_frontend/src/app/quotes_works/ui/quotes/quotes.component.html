@@ -14,7 +14,8 @@
             <input
               pInputText
               id="on_label"
-              [(ngModel)]="value3"
+              [(ngModel)]="quoteToFind"
+              (input)="tq?.filterGlobal(quoteToFind, 'contains')"
               autocomplete="off"
             />
           </p-iconfield>
@@ -44,7 +45,7 @@
       [paginator]="true"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
-      [globalFilterFields]="['name', 'code']"
+      [globalFilterFields]="['code']"
     >
       <ng-template #header>
         <tr>
@@ -62,19 +63,19 @@
       </ng-template>
       <ng-template #body let-quote>
         <tr>
-          <td class="cursor-pointer" (click)="showViewComponent()">
+          <td class="cursor-pointer" (click)="showViewComponent(quote)">
             <p class="text-center">{{ quote.code }}</p>
           </td>
-          <td class="cursor-pointer">
+          <td class="cursor-pointer" (click)="showViewComponent(quote)">
             <p class="text-center">{{ quote.customer.name }}</p>
           </td>
-          <td class="cursor-pointer">
+          <td class="cursor-pointer" (click)="showViewComponent(quote)">
             <p class="text-center">{{ quote.description }}</p>
           </td>
-          <td class="cursor-pointer">
+          <td class="cursor-pointer" (click)="showViewComponent(quote)">
             <p class="text-center">{{ quote.issue_date }}</p>
           </td>
-          <td class="cursor-pointer">
+          <td class="cursor-pointer" (click)="showViewComponent(quote)">
             <div class="flex justify-center">
               <p-tag
                 class="justify-center"
@@ -109,5 +110,8 @@
   </app-create-quote>
   <app-view-quotes
     [visible]="viewQuoteDialogVisible"
+    [quote]="viewQuote"
+    [state]="state"
+    [severity]="severity"
     (closeDialog)="viewQuoteDialogVisible = false"></app-view-quotes>
 </div>

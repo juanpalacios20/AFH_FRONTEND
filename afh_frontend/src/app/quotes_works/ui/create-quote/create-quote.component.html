@@ -2,11 +2,11 @@
   header="{{ this.actionTittle }}"
   [modal]="true"
   [(visible)]="visible"
-  [style]="{ width: '40rem' }"
+  [style]="{ width: '60rem' }"
   [closable]="true"
   (onHide)="close()"
 >
-  <div class="max-w-xl mx-auto rounded-xl justify-center">
+  <div class="w-full mx-auto rounded-xl justify-center">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
       <div class="mb-4">
         <h1 class="mb-4">Digite el nombre del cliente.</h1>
@@ -23,44 +23,46 @@
       <div class="mb-2">
         <h1 class="mb-2">Ingrese la descripción del trabajo.</h1>
         <p-floatlabel variant="on" required="true">
-          <textarea
-            pTextarea
+          <input
+            pInputText
             id="description"
-            rows="5"
-            cols="30"
+            type="text"
             [(ngModel)]="description"
             [ngModelOptions]="{ standalone: true }"
-            style="resize: none"
             fluid="true"
-            class="h-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-          ></textarea>
+            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
           <label for="description">Descripción</label>
         </p-floatlabel>
       </div>
     </div>
 
-    <div class="mb-2">
+    <div class="w-full mb-2">
       <h1 class="mb-2">Tareas del trabajo</h1>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
         <div
           *ngFor="let task of tasks; let i = index"
           [ngClass]="{
-            'col-span-2': tasks.length % 2 !== 0 && i === tasks.length - 1
+            'col-span-3':
+              tasks.length === 1 ||
+              (tasks.length % 3 === 1 && i === tasks.length - 1)
           }"
+          class="relative"
         >
-          <div class="relative">
+          <div class="w-full">
             <p-floatlabel class="mb-2 block" variant="on" required="true">
               <input
                 pInputText
                 type="text"
                 [(ngModel)]="task.descripcion"
                 [ngModelOptions]="{ standalone: true }"
+                fluid="true"
                 class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
               />
-              <label for="desc-{{ i }}"
-                >Descripción de la tarea {{ i + 1 }}</label
-              >
+              <label for="desc-{{ i }}">
+                Descripción de la tarea {{ i + 1 }}
+              </label>
             </p-floatlabel>
             <button
               *ngIf="tasks.length > 1"
@@ -101,7 +103,7 @@
         class="flex justify-end"
         label="Continuar"
         icon="pi pi-arrow-right"
-        styleClass="p-button-outlined"
+        styleClass="p-button-outlined mt-2"
         (onClick)="updateOptionsSelected()"
       />
     </div>
@@ -109,39 +111,41 @@
     <div class="mb-2" *ngFor="let opcion of itemsPorOpcion; let i = index">
       <h1 class="mb-2">Opción {{ i + 1 }}</h1>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
           *ngFor="let item of opcion; let j = index"
           [ngClass]="{
-            'col-span-2': opcion.length % 2 !== 0 && j === opcion.length - 1
+            'col-span-3':
+              opcion.length === 1 ||
+              (opcion.length % 3 === 1 && j === opcion.length - 1)
           }"
           class="relative"
         >
-          <!-- Formulario de un ítem -->
           <p-floatlabel class="mb-2 block" variant="on" required="true">
-            <input
-              pInputText
+            <textarea
+              pTextarea
               type="text"
               [(ngModel)]="item.descripcion"
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-            />
+            ></textarea>
             <label for="desc-{{ i }}-{{ j }}"
               >Descripción ítem {{ j + 1 }}</label
             >
           </p-floatlabel>
-
-          <p-floatlabel class="mb-2 block" variant="on" required="true">
-            <input
-              pInputText
-              type="text"
-              [(ngModel)]="item.unidad"
-              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          <p-float-label class="mb-2 mt-2 block" variant="on" required="true"
+            ><p-autocomplete
+              [(ngModel)]="valueUnits"
+              [dropdown]="true"
+              [suggestions]="filteredUnits"
+              (completeMethod)="search($event)"
+              class="mb-2 bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              fluid="true"
             />
-            <label for="unidad-{{ i }}-{{ j }}">Unidad {{ j + 1 }}</label>
-          </p-floatlabel>
+            <label>Unidad de medida</label></p-float-label
+          >
 
-          <p-floatlabel class="mb-2 block" variant="on" required="true">
+          <p-floatlabel class="mb-2 mt-2 block" variant="on" required="true">
             <input
               pInputText
               type="number"
