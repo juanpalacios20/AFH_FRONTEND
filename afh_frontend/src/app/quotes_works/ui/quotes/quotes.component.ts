@@ -78,6 +78,7 @@ export default class QuotesComponent {
   quoteAction: number = 0; // 0: Create, 1: Edit
   viewQuote: Quote | null = null;
   quotes: Quote[] = [];
+  quoteToEdit: Quote | null = null;
   state: string = '';
   severity: 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast' | undefined = 'info';
 
@@ -91,7 +92,6 @@ export default class QuotesComponent {
     this.quoteService.getQuotes().subscribe({
       next: (response) => {
         this.quotes = response;
-        console.log('Quotes loaded successfully:', this.quotes);
       },
       error: (error) => {
         console.error('Error loading quotes:', error);
@@ -127,17 +127,25 @@ export default class QuotesComponent {
     });
   }
 
-  showEditQuoteDialog() {
+  showEditQuoteDialog(quote: Quote) {
     this.quoteEditDialogVisible = true;
     this.quoteAction = 1;
+    this.quoteToEdit = quote;
   }
 
   closeEditQuoteDialog() {
     this.quoteEditDialogVisible = false;
+    
   }
 
   handleQuoteEdited() {
     this.closeEditQuoteDialog();
+    this.loadQuotes();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Cotización editada exitosamente.',
+    });
   }
 
   showViewComponent(quote: Quote) {

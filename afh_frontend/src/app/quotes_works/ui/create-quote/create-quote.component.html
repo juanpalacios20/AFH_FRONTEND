@@ -125,7 +125,7 @@
             <textarea
               pTextarea
               type="text"
-              [(ngModel)]="item.descripcion"
+              [(ngModel)]="item.description"
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             ></textarea>
@@ -135,7 +135,7 @@
           </p-floatlabel>
           <p-float-label class="mb-2 mt-2 block" variant="on" required="true"
             ><p-autocomplete
-              [(ngModel)]="valueUnits"
+              [(ngModel)]="item.units"
               [dropdown]="true"
               [suggestions]="filteredUnits"
               (completeMethod)="search($event)"
@@ -149,7 +149,7 @@
             <input
               pInputText
               type="number"
-              [(ngModel)]="item.cantidad"
+              [(ngModel)]="item.amount"
               class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
             <label for="cantidad-{{ i }}-{{ j }}">Cantidad {{ j + 1 }}</label>
@@ -159,7 +159,7 @@
             <input
               pInputText
               type="number"
-              [(ngModel)]="item.valorUnitario"
+              [(ngModel)]="item.unit_value"
               (ngModelChange)="updatePrice()"
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -174,7 +174,7 @@
               pInputText
               type="number"
               [disabled]="true"
-              [(ngModel)]="item.precio"
+              [(ngModel)]="item.total_value"
               (ngModelChange)="updateTotalPrice()"
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-gray-600 font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -214,7 +214,7 @@
       <p-button styleClass="p-button-secondary" (onClick)="close()">
         Cancelar
       </p-button>
-      <p-button styleClass="p-button-primary" (onClick)="submitQuote()">
+      <p-button styleClass="p-button-primary" (onClick)="submit()">
         {{ this.actionTittle }}
       </p-button>
     </div>
