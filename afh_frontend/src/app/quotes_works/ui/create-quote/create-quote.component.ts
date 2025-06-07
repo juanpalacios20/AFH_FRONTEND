@@ -215,7 +215,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     const createAllOptions = async (optionItemIds: number[][]) => {
       for (const itemIds of optionItemIds) {
         const optionData = {
-          description: 'Opción generada automáticamente',
+          description:
+            'Opción ' + (optionsToSend.length + 1) + 'para' + this.description,
           items: itemIds,
         };
 
@@ -259,11 +260,9 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     let quoteData = {};
 
     if (this.description !== this.quoteToEdit?.description) {
-      console.log('Descripción editada:', this.description);
       quoteData = {
         description: this.description,
       };
-      console.log('quoteData enviado al backend:', quoteData);
     }
     if (this.selectedCustomer?.id !== this.quoteToEdit?.customer.id) {
       quoteData = {
@@ -279,7 +278,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
 
     for (let i = 0; i < this.itemsPorOpcion.length; i++) {
-      console.log("entrando a editar items de la opción", i);
       const option = this.quoteToEdit!.options;
       for (let j = 0; j < option[i].items.length; j++) {
         const editedItem = this.itemsPorOpcion[i][j];
@@ -290,31 +288,87 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             ...itemData,
             description: editedItem.description,
           };
-        } if (editedItem.units !== item.units) {
+        }
+        if (editedItem.units !== item.units) {
           itemData = {
             ...itemData,
             units: editedItem.units,
           };
-        } if (editedItem.amount !== item.amount) {
+        }
+        if (editedItem.amount !== item.amount) {
           itemData = {
             ...itemData,
             amount: editedItem.amount,
           };
-        } if (editedItem.unit_value !== item.unit_value) {
+        }
+        if (editedItem.unit_value !== item.unit_value) {
           itemData = {
             ...itemData,
             unit_value: editedItem.unit_value,
           };
         }
-        console.log('itemData editado:', itemData);
         this.quoteService.updateItem(item.id, itemData).subscribe({
-            next: (response) => {
-              console.log('Item actualizado:', response);
-            },
-            error: (error) => {
-              console.error('Error al actualizar item', error);
-            },
-          });
+          error: (error) => {
+            console.error('Error al actualizar item', error);
+          },
+        });
+
+        //si se agregan mas items
+        if (this.itemsPorOpcion[i].length > option[i].items.length) {
+          const newItems = this.itemsPorOpcion[i].slice(option[i].items.length);
+          const currentOption = this.quoteToEdit!.options[i]; // Captura de referencia confiable
+
+          for (const newItem of newItems) {
+            const itemData = {
+              description: newItem.description,
+              units: newItem.units,
+              amount: newItem.amount,
+              unit_value: newItem.unit_value,
+            };
+
+            this.quoteService.createItem(itemData).subscribe({
+              next: (response) => {
+                console.log('options:', currentOption);
+
+                // Asegura que currentOption todavía existe
+                if (currentOption && currentOption.items) {
+                  currentOption.items.push({
+                    id: response.item_id,
+                    description: newItem.description,
+                    units: newItem.units,
+                    total_value: newItem.total_value,
+                    amount: newItem.amount,
+                    unit_value: newItem.unit_value,
+                  });
+                  let optionData = {
+                    name: currentOption.name,
+                    items: currentOption.items.map((item) => item.id),
+                  };
+                  console.log('optionData enviado al backend:', optionData);
+                  this.quoteService
+                    .updateOption(currentOption.id, optionData)
+                    .subscribe({
+                      next: (response) => {
+                        console.log('Opción actualizada:', response);
+                      },
+                      error: (error) => {
+                        console.error('Error al actualizar opción', error);
+                      },
+                    });
+                } else {
+                  console.error(
+                    'currentOption o currentOption.items está vacío en el momento del push'
+                  );
+                }
+
+                console.log('Nuevo item creado fin:', response);
+              },
+              error: (error) => {
+                console.error('Error al crear nuevo item', error);
+              },
+            });
+          }
+        }
       }
     }
 
@@ -480,24 +534,44 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.tasks.splice(index, 1);
   }
 
-  close() {
-    this.visible = false;
-    this.itemsPorOpcion = [];
-    this.tasks = [{ descripcion: '' }];
-    this.totalPrice = 0;
-    this.optionsSelected = 0;
+  resetForm() {
+    this.actionTittle = 'Crear';
     this.description = '';
     this.selectedCustomer = null;
+    this.tasks = [{ descripcion: '' }];
+    this.tasksQuote = [];
+    this.itemsPorOpcion = [];
     this.valueUnits = '';
-    this.quoteToEdit = null;
+    this.totalPrice = 0;
+    this.optionsSelected = 0;
+    // Cualquier otro campo que debas limpiar
+  }
+
+  loadEditData() {
+    this.actionTittle = 'Editar';
+    if (this.quoteToEdit) {
+      this.description = this.quoteToEdit.description;
+      this.selectedCustomer = this.quoteToEdit.customer;
+      this.tasks = this.quoteToEdit.tasks.map((t) => ({ descripcion: t }));
+      this.itemsPorOpcion = this.quoteToEdit.options.map((option) =>
+        option.items.map((item) => ({
+          ...item,
+        }))
+      );
+    }
+  }
+
+  close() {
+    this.resetForm();
     this.closeDialog.emit();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['visible'] && this.visible) {
+    if (changes['visible']) {
       if (this.action === 0) {
         this.actionTittle = 'Crear cotización';
       } else if (this.action === 1) {
+        this.loadEditData()
         this.actionTittle = 'Editar cotización';
       }
     }

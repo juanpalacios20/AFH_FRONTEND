@@ -141,6 +141,7 @@ export default class QuotesComponent {
   handleQuoteEdited() {
     this.closeEditQuoteDialog();
     this.loadQuotes();
+    this.quoteAction = 0;
     this.messageService.add({
       severity: 'success',
       summary: 'Éxito',
