@@ -183,9 +183,18 @@
           </p-floatlabel>
 
           <button
-            *ngIf="opcion.length > 1"
+            *ngIf="opcion.length > 1 && this.action === 0"
             type="button"
-            (click)="removeItem(i, j)"
+            (click)="removeItem(i, j, 0)"
+            class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
+            title="Eliminar"
+          >
+            &times;
+          </button>
+          <button
+            *ngIf="opcion.length > 1 && this.action === 1"
+            type="button"
+            (click)="removeItem(i, j, item.id)"
             class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
             title="Eliminar"
           >
