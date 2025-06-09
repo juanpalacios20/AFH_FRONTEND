@@ -57,6 +57,13 @@ export class QuoteService extends BaseHttpService {
     });
   }
 
+  getItemById(itemId: number) {
+    const headers = this.getHeaders();
+    return this.http.get<any>(`${this.apiUrl}/item/getitem/${itemId}`, {
+      headers
+    });
+  }
+
   updateQuote(quoteId: number, quoteData: any) {
     const headers = this.getHeaders();
     return this.http.put<any>(
