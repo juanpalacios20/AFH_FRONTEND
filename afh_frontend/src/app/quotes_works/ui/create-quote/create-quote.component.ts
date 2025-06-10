@@ -199,7 +199,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         for (const item of optionItems.items) {
           const itemData = {
             description: item.description,
-            units: this.valueUnits,
+            units: item.units,
             amount: item.amount,
             unit_value: item.unit_value,
           };
@@ -224,7 +224,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       for (const itemIds of optionItemIds) {
         const optionData = {
           description:
-            'Opción ' + (optionsToSend.length + 1) + 'para' + this.description,
+            'Opción ' + (optionsToSend.length + 1) + ' para ' + this.description,
           items: itemIds,
         };
 
@@ -289,20 +289,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         this.itemsPorOpcion[i].items.length - this.itemsDelete;
         j++
       ) {
-        console.log(
-          'se lee',
-          this.itemsPorOpcion[i].items.length +
-            this.itemsAdd -
-            this.itemsDelete,
-          'veces'
-        );
-        console.log(
-          this.itemsPorOpcion[i].items.length,
-          '+',
-          this.itemsAdd,
-          '-',
-          this.itemsDelete
-        );
         if (this.itemsPorOpcion[i].items[j].id !== undefined) {
           console.log('informacion', this.itemsPorOpcion[i].items[j].id);
           if (this.itemsPorOpcion[i].items[j].id === 0) {
