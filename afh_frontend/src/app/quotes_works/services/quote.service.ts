@@ -84,13 +84,13 @@ export class QuoteService extends BaseHttpService {
     const headers = this.getHeaders();
     return this.http.put<any>(
       `${this.apiUrl}/option/updateoption/${optionId}`,
-      optionData,
-      { headers }
+      optionData
     );
   }
 
   updateItem(itemId: number, itemData: any) {
     const headers = this.getHeaders();
+    console.log('id del item a actualizar', itemId);
     return this.http.put<any>(
       `${this.apiUrl}/item/updateitem/${itemId}`,
       itemData,
@@ -112,15 +112,17 @@ export class QuoteService extends BaseHttpService {
   }
 
   deleteOption(optionId: number) {
-    console.log(optionId)
-    return this.http.delete<any>(`${this.apiUrl}/option/delete/${optionId}`).subscribe({
-      next: (response) => {
-        console.log("opcion eliminada")
-      }, 
-      error: (err) => {
-        console.log(err)
-      }
-    });
+    console.log(optionId);
+    return this.http
+      .delete<any>(`${this.apiUrl}/option/delete/${optionId}`)
+      .subscribe({
+        next: (response) => {
+          console.log('opcion eliminada');
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 
   deleteOptions(listOptions: number[]) {
@@ -129,5 +131,21 @@ export class QuoteService extends BaseHttpService {
       this.deleteOption(option);
     }
     console.log(listOptions);
+  }
+
+  itemToOption(optionId: number, itemsData: any) {
+    const headers = this.getHeaders();
+    return this.http.patch<any>(
+      `${this.apiUrl}/option/additemtooption/${optionId}`,
+      itemsData,
+      { headers }
+    ).subscribe({
+      next: (response) => {
+        console.log("epa, funciono", response);
+      },
+      error: (err) => {
+        console.log("error al crear nuevo item",err);
+      }
+    });
   }
 }

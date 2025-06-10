@@ -125,6 +125,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   valueUnits: string = '';
   filteredUnits: string[] = [];
   itemsToDelete: number[] = [];
+  itemsAdd: number = 0;
   optionsToDelete: number[] = [];
   itemsDelete: number = 0;
   newItemsIds: number[] = [];
@@ -284,10 +285,49 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     for (let i = 0; i < this.itemsPorOpcion.length; i++) {
       for (
         let j = 0;
-        j < this.itemsPorOpcion[i].items.length - this.itemsDelete;
+        j <
+        this.itemsPorOpcion[i].items.length - this.itemsDelete;
         j++
       ) {
+        console.log(
+          'se lee',
+          this.itemsPorOpcion[i].items.length +
+            this.itemsAdd -
+            this.itemsDelete,
+          'veces'
+        );
+        console.log(
+          this.itemsPorOpcion[i].items.length,
+          '+',
+          this.itemsAdd,
+          '-',
+          this.itemsDelete
+        );
+        if (this.itemsPorOpcion[i].items[j].id !== undefined) {
+          console.log('informacion', this.itemsPorOpcion[i].items[j].id);
+          if (this.itemsPorOpcion[i].items[j].id === 0) {
+            const itemToCreateData = {
+              description: this.itemsPorOpcion[i].items[j].description,
+              units: this.itemsPorOpcion[i].items[j].units,
+              amount: this.itemsPorOpcion[i].items[j].amount,
+              unit_value: this.itemsPorOpcion[i].items[j].unit_value,
+            };
+
+            const payload = {
+              items: [itemToCreateData],
+            };
+
+            console.log('para crear un nuevo item', payload);
+
+            this.quoteService.itemToOption(
+              this.itemsPorOpcion[i].optionId,
+              payload
+            );
+          }
+        }
         const editedItem = this.itemsPorOpcion[i].items[j];
+        console.log('items', this.itemsPorOpcion, i, j);
+        console.log('id del item', this.itemsPorOpcion[i].items[j].id);
         const item = this.itemsPorOpcion[i].items[j]; // Suponiendo que el orden se mantiene
         let itemData = {};
         if (item !== undefined) {
@@ -324,51 +364,53 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             };
           }
 
-          console.log('informacion del item', itemData);
-          this.quoteService.updateItem(item.id, itemData).subscribe({
-            next: (response) => {
-              console.log('item creado', response);
-            },
-            error: (error) => {
-              console.error('Error al actualizar item', error);
-            },
-          });
+          if (editedItem.id !== 0) {
+            console.log('informacion del item', itemData, editedItem.id);
+            this.quoteService.updateItem(editedItem.id, itemData).subscribe({
+              next: (response) => {
+                console.log('item actualizado', response);
+              },
+              error: (error) => {
+                console.error('Error al actualizar item', error);
+              },
+            });
+          }
         }
       }
-
-      //eliminar los items
-      if (this.itemsToDelete.length > 0) {
-        console.log('entrando para editar');
-        for (let index = 0; index < this.itemsToDelete.length; index++) {
-          console.log('continuando para editar');
-          const item = this.itemsToDelete[index];
-          this.quoteService.deleteItem(item).subscribe({
-            next: () => {
-              console.log('item eliminado');
-            },
-            error: (error) => {
-              console.error('Error al eliminar item', error);
-            },
-          });
-        }
-      }
-      this.quoteService.updateQuote(this.quoteToEdit!.id, quoteData).subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
-      //eliminar las opciones
-      this.quoteService.deleteOptions(this.optionsToDelete);
-      //cerrar el form
-      setTimeout(() => {
-        this.onQuoteCreated.emit();
-        this.close();
-        this.loadingEdit = false;
-      }, 5000);
     }
+
+    //eliminar los items
+    if (this.itemsToDelete.length > 0) {
+      console.log('entrando para editar');
+      for (let index = 0; index < this.itemsToDelete.length; index++) {
+        console.log('continuando para editar');
+        const item = this.itemsToDelete[index];
+        this.quoteService.deleteItem(item).subscribe({
+          next: () => {
+            console.log('item eliminado');
+          },
+          error: (error) => {
+            console.error('Error al eliminar item', error);
+          },
+        });
+      }
+    }
+    this.quoteService.updateQuote(this.quoteToEdit!.id, quoteData).subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+    //eliminar las opciones
+    this.quoteService.deleteOptions(this.optionsToDelete);
+    //cerrar el form
+    setTimeout(() => {
+      this.onQuoteCreated.emit();
+      this.close();
+      this.loadingEdit = false;
+    }, 5000);
   }
 
   async updateQuote() {
@@ -670,6 +712,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   }
 
   addItem(index: number) {
+    this.itemsAdd = this.itemsAdd + 1;
     this.itemsPorOpcion[index].items.push({
       id: 0, // Genera un id único temporal
       description: '',
@@ -719,6 +762,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.totalPrice = 0;
     this.optionsSelected = 0;
     this.itemsToDelete = [];
+    this.itemsAdd = 0;
     this.itemsDelete = 0;
     this.newItemsIds = [];
   }
@@ -759,6 +803,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     if (changes['quoteToEdit'] && this.quoteToEdit) {
       if (this.action === 1 && this.quoteToEdit) {
+        console.log('cotizacion a editar', this.quoteToEdit);
         this.description = this.quoteToEdit.description;
         this.selectedCustomer =
           this.customers.find((c) => c.id === this.quoteToEdit?.customer.id) ||
@@ -777,13 +822,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             unit_value: item.unit_value,
           })),
         }));
-        // Set valueUnits to the first item's units if available
-        if (
-          this.quoteToEdit.options.length > 0 &&
-          this.quoteToEdit.options[0].items.length > 0
-        ) {
-          this.valueUnits = this.quoteToEdit.options[0].items[0].units || '';
-        }
+        console.log('items por opcion', this.itemsPorOpcion);
       }
     }
   }
