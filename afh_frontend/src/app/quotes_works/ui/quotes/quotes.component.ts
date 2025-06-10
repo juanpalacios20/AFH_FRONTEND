@@ -64,7 +64,7 @@ interface Quote {
     TableModule,
     CreateQuoteComponent,
     TagModule,
-    ViewQuotesComponent
+    ViewQuotesComponent,
   ],
   templateUrl: './quotes.component.html',
   styleUrl: './quotes.component.css',
@@ -80,15 +80,22 @@ export default class QuotesComponent {
   quotes: Quote[] = [];
   quoteToEdit: Quote | null = null;
   state: string = '';
-  severity: 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast' | undefined = 'info';
+  severity:
+    | 'success'
+    | 'warn'
+    | 'danger'
+    | 'secondary'
+    | 'info'
+    | 'contrast'
+    | undefined = 'info';
 
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private quoteService: QuoteService
   ) {}
-  
-  loadQuotes(){
+
+  loadQuotes() {
     this.quoteService.getQuotes().subscribe({
       next: (response) => {
         this.quotes = response;
@@ -135,12 +142,11 @@ export default class QuotesComponent {
 
   closeEditQuoteDialog() {
     this.quoteEditDialogVisible = false;
-    
   }
 
   handleQuoteEdited() {
-    this.closeEditQuoteDialog();
     this.loadQuotes();
+    this.closeEditQuoteDialog();
     this.quoteAction = 0;
     this.messageService.add({
       severity: 'success',
@@ -238,5 +244,4 @@ export default class QuotesComponent {
       },
     });
   }
-
 }

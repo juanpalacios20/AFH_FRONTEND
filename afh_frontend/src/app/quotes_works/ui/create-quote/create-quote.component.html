@@ -86,7 +86,7 @@
         <p-button
           label="Agregar tarea"
           icon="pi pi-plus"
-          styleClass="p-button-outlined"
+          styleClass="p-button-primary"
           fluid="true"
           (onClick)="addTask()"
         ></p-button>
@@ -118,21 +118,38 @@
         label="Continuar"
         icon="pi pi-arrow-right"
         *ngIf="itemsPorOpcion.length === 0"
-        styleClass="p-button-outlined mt-1"
+        styleClass="p-button-primary"
         (onClick)="updateOptionsSelected()"
       />
     </div>
 
     <div class="mb-2" *ngFor="let opcion of itemsPorOpcion; let i = index">
-      <h1 class="mb-2 text-primary-950 font-medium">Opción {{ i + 1 }}</h1>
-
+      <div class="grid grid-cols-2 gap-4 mb-2">
+        <h1 class="mb-2 text-primary-950 font-medium">Opción {{ i + 1 }}</h1>
+        <p-button
+          fluid="true"
+          class="flex justify-end"
+          icon="pi pi-times"
+          *ngIf="itemsPorOpcion.length && this.action === 0"
+          styleClass="p-button-secondary rounded-lg" 
+          (onClick)="removeOption(i, 0)"
+        />
+        <p-button
+          fluid="true"
+          class="flex justify-end"
+          icon="pi pi-times"
+          *ngIf="itemsPorOpcion.length && this.action === 1"
+          styleClass="p-button-secondary rounded-lg" 
+          (onClick)="removeOption(i, opcion.optionId)"
+        />
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
-          *ngFor="let item of opcion; let j = index"
+          *ngFor="let item of opcion.items; let j = index"
           [ngClass]="{
             'col-span-3':
-              opcion.length === 1 ||
-              (opcion.length % 3 === 1 && j === opcion.length - 1)
+              opcion.items.length === 1 ||
+              (opcion.items.length % 3 === 1 && j === opcion.items.length - 1)
           }"
           class="relative"
         >
@@ -199,7 +216,7 @@
           </p-floatlabel>
 
           <button
-            *ngIf="opcion.length > 1 && this.action === 0"
+            *ngIf="opcion.items.length > 1 && this.action === 0"
             type="button"
             (click)="removeItem(i, j, 0)"
             class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
@@ -208,7 +225,7 @@
             &times;
           </button>
           <button
-            *ngIf="opcion.length > 1 && this.action === 1"
+            *ngIf="opcion.items.length > 1 && this.action === 1"
             type="button"
             (click)="removeItem(i, j, item.id)"
             class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
@@ -222,7 +239,7 @@
         <p-button
           label="Agregar ítem"
           icon="pi pi-plus"
-          styleClass="p-button-outlined"
+          styleClass="p-button-primary"
           fluid="true"
           (onClick)="addItem(i)"
         ></p-button>
@@ -239,7 +256,7 @@
       label="Agregar Opción"
       icon="pi pi-arrow-right"
       *ngIf="itemsPorOpcion.length > 0"
-      styleClass="p-button-outlined mt-1"
+      styleClass="p-button-primary"
       (onClick)="updateOptionsSelected()"
     />
 
@@ -247,7 +264,7 @@
       <p-button styleClass="p-button-secondary" (onClick)="close()">
         Cancelar
       </p-button>
-      <p-button styleClass="p-button-primary" (onClick)="submit()">
+      <p-button styleClass="p-button-primary" [loading]="loadingEdit" (onClick)="submit()">
         {{ this.actionTittle }}
       </p-button>
     </div>

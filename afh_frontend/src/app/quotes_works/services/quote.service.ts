@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ListenerOptions } from '@angular/core';
 import { BaseHttpService } from '../../shared/data_access/base_http.service';
 import { HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
@@ -50,6 +50,13 @@ export class QuoteService extends BaseHttpService {
     });
   }
 
+  getOptions() {
+    const headers = this.getHeaders();
+    return this.http.get<any>(`${this.apiUrl}/option/getoptions/`, {
+      headers,
+    });
+  }
+
   getQuoteById(quoteId: number) {
     const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}/quote/getquote/${quoteId}`, {
@@ -60,7 +67,7 @@ export class QuoteService extends BaseHttpService {
   getItemById(itemId: number) {
     const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}/item/getitem/${itemId}`, {
-      headers
+      headers,
     });
   }
 
@@ -102,5 +109,25 @@ export class QuoteService extends BaseHttpService {
       this.deleteItem(item);
     }
     return;
+  }
+
+  deleteOption(optionId: number) {
+    console.log(optionId)
+    return this.http.delete<any>(`${this.apiUrl}/option/delete/${optionId}`).subscribe({
+      next: (response) => {
+        console.log("opcion eliminada")
+      }, 
+      error: (err) => {
+        console.log(err)
+      }
+    });
+  }
+
+  deleteOptions(listOptions: number[]) {
+    for (let index = 0; index < listOptions.length; index++) {
+      const option = listOptions[index];
+      this.deleteOption(option);
+    }
+    console.log(listOptions);
   }
 }
