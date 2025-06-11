@@ -1,7 +1,8 @@
 import { Injectable, ListenerOptions } from '@angular/core';
 import { BaseHttpService } from '../../shared/data_access/base_http.service';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -135,17 +136,61 @@ export class QuoteService extends BaseHttpService {
 
   itemToOption(optionId: number, itemsData: any) {
     const headers = this.getHeaders();
-    return this.http.patch<any>(
-      `${this.apiUrl}/option/additemtooption/${optionId}`,
-      itemsData,
-      { headers }
-    ).subscribe({
-      next: (response) => {
-        console.log("epa, funciono", response);
-      },
-      error: (err) => {
-        console.log("error al crear nuevo item",err);
-      }
+    return this.http
+      .patch<any>(
+        `${this.apiUrl}/option/additemtooption/${optionId}`,
+        itemsData,
+        { headers }
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('epa, funciono', response);
+        },
+        error: (err) => {
+          console.log('error al crear nuevo item', err);
+        },
+      });
+  }
+
+  optionToQuote(quoteId: number, optionsData: any) {
+    const headers = this.getHeaders();
+    return this.http
+      .patch<any>(
+        `${this.apiUrl}/quote/addoptiontoquote/${quoteId}`,
+        optionsData,
+        { headers }
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('epa, funciono tambien', response);
+        },
+        error: (err) => {
+          console.log('error al crear nueva opcion', err);
+        },
+      });
+  }
+
+  getPDF(quoteId: number): Observable<HttpResponse<Blob>> {
+    const headers = this.getHeaders();
+    console.log('id de la cotizacion', quoteId);
+    return this.http.get(`${this.apiUrl}quote/pdf/${quoteId}`, {
+      headers: headers,
+      observe: 'response',
+      responseType: 'blob',
     });
+  }
+
+  changeState(quoteId: number, data: any) {
+    const headers = this.getHeaders();
+    return this.http
+      .patch(`${this.apiUrl}quote/changestate/${quoteId}`, data, { headers })
+      .subscribe({
+        next: (response) => {
+          console.log('exito', response);
+        },
+        error: (err) => {
+          console.log('error', err);
+        },
+      });
   }
 }

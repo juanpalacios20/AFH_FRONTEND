@@ -155,6 +155,11 @@ export default class QuotesComponent {
     });
   }
 
+  closeViewComponet(){
+    this.viewQuoteDialogVisible = false;
+    this.loadQuotes();
+  }
+
   showViewComponent(quote: Quote) {
     this.viewQuote = quote;
     this.state = this.getStateString(quote.state);

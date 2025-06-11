@@ -18,6 +18,7 @@
             placeholder="Nombre del cliente"
             [suggestions]="filteredCustomers ?? []"
             (completeMethod)="filterCustomer($event)"
+            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             optionLabel="name"
             fluid="true"
           />
@@ -35,7 +36,7 @@
             [(ngModel)]="description"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="description">Descripción</label>
         </p-floatlabel>
@@ -45,7 +46,7 @@
     <div class="w-full mb-10">
       <h1 class="mb-2 text-primary-950 font-medium">Tareas del trabajo</h1>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mb-4">
         <div
           *ngFor="let task of tasks; let i = index"
           [ngClass]="{
@@ -53,7 +54,7 @@
               tasks.length === 1 ||
               (tasks.length % 3 === 1 && i === tasks.length - 1)
           }"
-          class="relative"
+          class="relative "
         >
           <div class="w-full">
             <p-floatlabel class="block mb-1" variant="on" required="true">
@@ -63,7 +64,7 @@
                 [(ngModel)]="task.descripcion"
                 [ngModelOptions]="{ standalone: true }"
                 fluid="true"
-                class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+                class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
               />
               <label for="desc-{{ i }}">
                 Descripción de la tarea {{ i + 1 }}
@@ -93,7 +94,7 @@
       </div>
     </div>
 
-    <div class="mb-2" *ngIf="this.action === 0">
+    <div class="mb-2">
       <h1 class="mb-2 text-primary-950 font-medium">
         Opciones para el trabajo
       </h1>
@@ -108,7 +109,7 @@
           type="number"
           [(ngModel)]="this.optionsSelected"
           [ngModelOptions]="{ standalone: true }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
         <label>Digite la cantidad de opciones</label>
       </p-float-label>
@@ -123,15 +124,16 @@
       />
     </div>
 
-    <div class="mb-2" *ngFor="let opcion of itemsPorOpcion; let i = index">
+    <div class="mb-4 p-4 bg-gray-100 border rounded-lg" *ngFor="let opcion of itemsPorOpcion; let i = index">
       <div class="grid grid-cols-2 gap-4 mb-2">
-        <h1 class="mb-2 text-primary-950 font-medium">Opción {{ i + 1 }}</h1>
+        <h1 class="mb-2 text-primary-950 font-medium" *ngIf="this.action === 0">Opción {{ i + 1 }}</h1>
+        <h1 class="mb-2 text-primary-950 font-medium" *ngIf="this.action === 1 && opcion.name">{{opcion.name}}</h1>
         <p-button
           fluid="true"
           class="flex justify-end"
           icon="pi pi-times"
           *ngIf="itemsPorOpcion.length && this.action === 0"
-          styleClass="p-button-secondary rounded-lg" 
+          styleClass="p-button-secondary rounded-lg " 
           (onClick)="removeOption(i, 0)"
         />
         <p-button
@@ -159,7 +161,7 @@
               type="text"
               [(ngModel)]="item.description"
               [ngModelOptions]="{ standalone: true }"
-              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             ></textarea>
             <label for="desc-{{ i }}-{{ j }}"
               >Descripción ítem {{ j + 1 }}</label
@@ -171,7 +173,7 @@
               [dropdown]="true"
               [suggestions]="filteredUnits"
               (completeMethod)="search($event)"
-              class="mb-2 bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="mb-2 bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
               fluid="true"
             />
             <label>Unidad de medida</label></p-float-label
@@ -183,9 +185,9 @@
               type="number"
               [(ngModel)]="item.amount"
               (ngModelChange)="updatePrice()"
-              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
-            <label for="cantidad-{{ i }}-{{ j }}">Cantidad {{ j + 1 }}</label>
+            <label for="cantidad-{{ i }}-{{ j }}">Cantidad</label>
           </p-floatlabel>
 
           <p-floatlabel class="mb-2 block" variant="on" required="true">
@@ -195,10 +197,10 @@
               [(ngModel)]="item.unit_value"
               (ngModelChange)="updatePrice()"
               [ngModelOptions]="{ standalone: true }"
-              class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
             <label for="valor-{{ i }}-{{ j }}"
-              >Valor unitario {{ j + 1 }}</label
+              >Valor unitario</label
             >
           </p-floatlabel>
 
@@ -210,9 +212,9 @@
               [(ngModel)]="item.total_value"
               (ngModelChange)="updateTotalPrice()"
               [ngModelOptions]="{ standalone: true }"
-              class="w-full bg-white text-gray-600 font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="w-full bg-white text-gray-600 font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
-            <label for="precio-{{ i }}-{{ j }}">Precio {{ j + 1 }}</label>
+            <label for="precio-{{ i }}-{{ j }}">Precio total del item</label>
           </p-floatlabel>
 
           <button

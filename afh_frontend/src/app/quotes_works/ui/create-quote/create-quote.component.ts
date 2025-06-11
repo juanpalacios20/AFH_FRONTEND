@@ -20,6 +20,7 @@ import { ToastModule } from 'primeng/toast';
 import { QuoteService } from '../../services/quote.service';
 import { ClientService } from '../../../clients/services/client.service';
 import { AutoComplete, AutoCompleteModule } from 'primeng/autocomplete';
+import { forkJoin } from 'rxjs';
 
 interface Item {
   id: number;
@@ -84,6 +85,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   actionTittle: string = 'Crear';
   itemsPorOpcion: {
     optionId: number;
+    name: string;
     items: {
       id: number;
       description: string;
@@ -108,6 +110,10 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     'Milímetros',
     'Kilómetros',
     'Pulgadas',
+    'Metros cuadrados (m2)',
+    'Centímetros cuadrados (cm2)',
+    'Metros cubicos (m3)',
+    'Centímetros (cm3)',
     'Pies',
     'Kilogramos',
     'Gramos',
@@ -136,11 +142,43 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   @Output() closeDialog = new EventEmitter<void>();
   @Output() onQuoteCreated = new EventEmitter<void>();
 
+  clientErrorMessage: string = '';
+  descriptionErrorMessage: string = '';
+  taskDescriptionErrorMessage: string = '';
+  selectedOptionsErrorMessage: string = '';
+  itemDescriptionErrorMessage: string = '';
+  itemUnitsErrorMessage: String = '';
+  itemAmountErrorMessage: String = '';
+  itemUnitValueErrorMessage: String = '';
+
   constructor(
     private quoteService: QuoteService,
     private clientService: ClientService
   ) {}
 
+  verify() {
+    if (this.selectedCustomer === null || this.selectedCustomer === undefined) {
+      this.clientErrorMessage = 'El nombre del cliente es obligatorio';
+    }
+    if (this.description === '') {
+      this.descriptionErrorMessage = 'La descripción del trabajo es necesaria';
+    }
+
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].descripcion) {
+        this.taskDescriptionErrorMessage =
+          'La descripcion de la tarea es necesaria';
+      }
+    }
+    
+    if (this.optionsSelected === 0 && this.action === 0) {
+      this.selectedOptionsErrorMessage = "No puede crear una cotización sin al menos una opción para el trabajo";
+    }
+
+    // for (let i = 0; i < this.itemsPorOpcion.length; i++) {
+    //   for ()
+    // }
+  }
   search(event: AutoCompleteCompleteEvent) {
     const query = event.query.toLowerCase();
 
@@ -183,7 +221,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     if (this.action === 0) {
       this.submitQuote();
     } else if (this.action === 1) {
-      this.opcionEditar();
+      this.editQuote();
     }
   }
 
@@ -224,7 +262,10 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       for (const itemIds of optionItemIds) {
         const optionData = {
           description:
-            'Opción ' + (optionsToSend.length + 1) + ' para ' + this.description,
+            'Opción ' +
+            (optionsToSend.length + 1) +
+            ' para ' +
+            this.description,
           items: itemIds,
         };
 
@@ -262,7 +303,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       .then(() => createFinalQuote());
   }
 
-  opcionEditar() {
+  //pasamos de 236 lineas a 170
+  editQuote() {
     this.loadingEdit = true;
     let quoteData: any = {};
 
@@ -283,83 +325,118 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     //actualizar los items
     for (let i = 0; i < this.itemsPorOpcion.length; i++) {
-      for (
-        let j = 0;
-        j <
-        this.itemsPorOpcion[i].items.length - this.itemsDelete;
-        j++
-      ) {
-        if (this.itemsPorOpcion[i].items[j].id !== undefined) {
-          console.log('informacion', this.itemsPorOpcion[i].items[j].id);
-          if (this.itemsPorOpcion[i].items[j].id === 0) {
-            const itemToCreateData = {
-              description: this.itemsPorOpcion[i].items[j].description,
-              units: this.itemsPorOpcion[i].items[j].units,
-              amount: this.itemsPorOpcion[i].items[j].amount,
-              unit_value: this.itemsPorOpcion[i].items[j].unit_value,
-            };
-
-            const payload = {
-              items: [itemToCreateData],
-            };
-
-            console.log('para crear un nuevo item', payload);
-
-            this.quoteService.itemToOption(
-              this.itemsPorOpcion[i].optionId,
-              payload
-            );
-          }
-        }
-        const editedItem = this.itemsPorOpcion[i].items[j];
-        console.log('items', this.itemsPorOpcion, i, j);
-        console.log('id del item', this.itemsPorOpcion[i].items[j].id);
-        const item = this.itemsPorOpcion[i].items[j]; // Suponiendo que el orden se mantiene
-        let itemData = {};
-        if (item !== undefined) {
-          itemData = {
-            ...itemData,
-            description: editedItem.description,
-          };
-          itemData = {
-            ...itemData,
-            units: editedItem.units,
-          };
-
-          if (
-            editedItem.amount !== item.amount &&
-            editedItem.amount &&
-            item.amount &&
-            typeof item.amount === 'number'
-          ) {
-            itemData = {
-              ...itemData,
-              amount: item.amount,
-            };
-          }
-
-          if (
-            editedItem.unit_value !== item.unit_value &&
-            editedItem.unit_value &&
-            item.unit_value &&
-            typeof item.unit_value === 'number'
-          ) {
-            itemData = {
-              ...itemData,
-              unit_value: editedItem.unit_value,
-            };
-          }
-
-          if (editedItem.id !== 0) {
-            console.log('informacion del item', itemData, editedItem.id);
-            this.quoteService.updateItem(editedItem.id, itemData).subscribe({
+      console.log(this.itemsPorOpcion);
+      //crear opciones nuevas y sus respectivos ids
+      if (this.itemsPorOpcion[i].optionId === 0) {
+        console.log('entrando para crear opciones');
+        let itemsToCreateIdList: number[] = [];
+        let length = this.itemsPorOpcion[i].items.length;
+        for (let j = 0; j < length; j++) {
+          console.log('entrando para crear items a la nueva opcion');
+          console.log('estructura item', this.itemsPorOpcion[i].items[j]);
+          this.quoteService
+            .createItem(this.itemsPorOpcion[i].items[j])
+            .subscribe({
               next: (response) => {
-                console.log('item actualizado', response);
+                console.log('item creado para nueva opcion', response);
+                itemsToCreateIdList.push(response.item_id);
+                console.log(itemsToCreateIdList);
               },
-              error: (error) => {
-                console.error('Error al actualizar item', error);
+              error: (err) => {
+                console.log('error', err);
               },
             });
+        }
+        let quoteId = this.quoteToEdit!.id;
+        let name = 'Opción ' + (i + 1) + ' para ' + this.description;
+        let optionCreateData = {
+          description: name,
+          items: itemsToCreateIdList,
+        };
+
+        setTimeout(() => {
+          console.log('option a crear', optionCreateData);
+          this.quoteService.optionToQuote(quoteId, optionCreateData);
+        }, 2000);
+      }
+      console.log('id de la opcion', this.itemsPorOpcion[i].optionId);
+      if (this.itemsPorOpcion[i].optionId !== 0) {
+        console.log('id del item', this.itemsPorOpcion[i].optionId);
+        //crear items nuevos
+        for (
+          let j = 0;
+          j < this.itemsPorOpcion[i].items.length - this.itemsDelete;
+          j++
+        ) {
+          if (this.itemsPorOpcion[i].items[j].id !== undefined) {
+            if (this.itemsPorOpcion[i].items[j].id === 0) {
+              const itemToCreateData = {
+                description: this.itemsPorOpcion[i].items[j].description,
+                units: this.itemsPorOpcion[i].items[j].units,
+                amount: this.itemsPorOpcion[i].items[j].amount,
+                unit_value: this.itemsPorOpcion[i].items[j].unit_value,
+              };
+
+              const payload = {
+                items: [itemToCreateData],
+              };
+
+              this.quoteService.itemToOption(
+                this.itemsPorOpcion[i].optionId,
+                payload
+              );
+            }
+          }
+
+          //editar los items
+          const editedItem = this.itemsPorOpcion[i].items[j];
+          const item = this.itemsPorOpcion[i].items[j]; // Suponiendo que el orden se mantiene
+          let itemData = {};
+          if (item !== undefined) {
+            itemData = {
+              ...itemData,
+              description: editedItem.description,
+            };
+            itemData = {
+              ...itemData,
+              units: editedItem.units,
+            };
+
+            if (
+              editedItem.amount !== item.amount &&
+              editedItem.amount &&
+              item.amount &&
+              typeof item.amount === 'number'
+            ) {
+              itemData = {
+                ...itemData,
+                amount: item.amount,
+              };
+            }
+
+            if (
+              editedItem.unit_value !== item.unit_value &&
+              editedItem.unit_value &&
+              item.unit_value &&
+              typeof item.unit_value === 'number'
+            ) {
+              itemData = {
+                ...itemData,
+                unit_value: editedItem.unit_value,
+              };
+            }
+
+            if (editedItem.id !== 0) {
+              console.log('id del item antes de actualizar', editedItem.id);
+              this.quoteService.updateItem(editedItem.id, itemData).subscribe({
+                next: (response) => {
+                  console.log('item actualizado', response);
+                },
+                error: (error) => {
+                  console.error('Error al actualizar item', error);
+                },
+              });
+            }
           }
         }
       }
@@ -396,245 +473,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       this.onQuoteCreated.emit();
       this.close();
       this.loadingEdit = false;
-    }, 5000);
-  }
-
-  async updateQuote() {
-    this.loadingEdit = true;
-    const quoteId = this.quoteToEdit?.id;
-    const newOptionIds: number[] = [];
-    const existingOptions = this.quoteToEdit?.options ?? [];
-    const newOptionsToCreate = this.itemsPorOpcion.filter(
-      (optionItems, idx) => {
-        return !existingOptions[idx]; // Es una nueva opción si no hay opción con ese índice
-      }
-    );
-
-    for (const optionItems of newOptionsToCreate) {
-      try {
-        interface CreatedItemResponse {
-          item_id: number;
-        }
-
-        const createdItemIds: number[] = await Promise.all(
-          optionItems.items.map(async (item: Item): Promise<number> => {
-            // Si item no tiene id, lo creamos
-            if (item.id === 0) {
-              const res: CreatedItemResponse = await this.quoteService
-                .createItem({
-                  description: item.description,
-                  units: item.units,
-                  amount: item.amount,
-                  unit_value: item.unit_value,
-                })
-                .toPromise();
-              this.newItemsIds.push(res.item_id);
-              return res.item_id;
-            } else {
-              return item.id;
-            }
-          })
-        );
-        if (this.newItemsIds.length > 0) {
-          const optionResponse: any = await this.quoteService
-            .createOption({
-              description: 'Opción creada para ' + this.description,
-              items: this.newItemsIds,
-            })
-            .toPromise();
-          newOptionIds.push(optionResponse.option_id);
-          this.newItemsIds = [];
-        }
-      } catch (error) {
-        console.error('Error creando nueva opción:', error);
-      }
-    }
-    let quoteData: any = {};
-
-    if (this.description !== this.quoteToEdit?.description) {
-      quoteData.description = this.description;
-    }
-    if (this.selectedCustomer?.id !== this.quoteToEdit?.customer.id) {
-      quoteData.customer_id = this.selectedCustomer?.id;
-    }
-    if (this.tasks.length > 0) {
-      quoteData.tasks = this.tasks.map((t) => t.descripcion);
-    }
-
-    // Agregar opciones nuevas a las ya existentes
-    quoteData.options = [
-      ...(this.quoteToEdit?.options.map((o) => o.id) ?? []),
-      ...newOptionIds,
-    ];
-
-    try {
-      await this.quoteService.updateQuote(quoteId!, quoteData).toPromise();
-    } catch (error) {
-      console.error('Error actualizando cotización:', error);
-    }
-
-    for (let i = 0; i < this.itemsPorOpcion.length; i++) {
-      console.log('repito', this.itemsPorOpcion);
-      const option = this.quoteToEdit!.options;
-      if (
-        this.itemsPorOpcion[i].items &&
-        this.itemsPorOpcion[i].items[0] &&
-        this.itemsPorOpcion[i].items[0].description === ''
-      ) {
-        this.quoteService.createOption(this.itemsPorOpcion[i].items[0]);
-        for (let index = 0; index < option[i].items.length; index++) {
-          this.quoteService.createItem(this.itemsPorOpcion[i].items[index]);
-        }
-      }
-      if (option[i].items) {
-        console.log('opciones', option[i].items);
-        for (let j = 0; j < option[i].items.length - this.itemsDelete; j++) {
-          const editedItem = this.itemsPorOpcion[i].items[j];
-          const item = option[i].items[j]; // Suponiendo que el orden se mantiene
-          let itemData = {};
-          if (item !== undefined) {
-            if (
-              editedItem.description !== undefined &&
-              item.description !== undefined &&
-              editedItem.description !== item.description
-            ) {
-              itemData = {
-                ...itemData,
-                description: editedItem.description,
-              };
-            }
-            if (
-              editedItem.units !== item.units &&
-              editedItem.units &&
-              item.units
-            ) {
-              itemData = {
-                ...itemData,
-                units: editedItem.units,
-              };
-            }
-            if (
-              editedItem.amount !== item.amount &&
-              editedItem.amount &&
-              item.amount &&
-              typeof item.amount === 'number'
-            ) {
-              itemData = {
-                ...itemData,
-                amount: item.amount,
-              };
-            }
-            if (
-              editedItem.unit_value !== item.unit_value &&
-              editedItem.unit_value &&
-              item.unit_value
-            ) {
-              itemData = {
-                ...itemData,
-                unit_value: editedItem.unit_value,
-              };
-            }
-            this.quoteService.updateItem(item.id, itemData).subscribe({
-              error: (error) => {
-                console.error('Error al actualizar item', error);
-              },
-            });
-
-            //si se agregan mas items
-            console.log('items por porcion', this.itemsPorOpcion);
-            if (this.itemsPorOpcion[i].items.length > option[i].items.length) {
-              console.log('buscando errores');
-              // Captura segura del número de ítems antes de cualquier modificación
-              const originalLength = option[i].items.length;
-              const newItems =
-                this.itemsPorOpcion[i].items.slice(originalLength);
-
-              // Evita modificar directamente el objeto referenciado
-              const currentOption = JSON.parse(
-                JSON.stringify(this.quoteToEdit!.options[i])
-              );
-              let optionData = {};
-              for (const newItem of newItems) {
-                console.log('nuevos items', newItems);
-                const itemData = {
-                  description: newItem.description,
-                  units: newItem.units,
-                  amount: newItem.amount,
-                  unit_value: newItem.unit_value,
-                };
-
-                this.quoteService.createItem(itemData).subscribe({
-                  next: (response) => {
-                    if (currentOption && currentOption.items) {
-                      currentOption.items.push({
-                        id: response.item_id,
-                        description: newItem.description,
-                        units: newItem.units,
-                        total_value: newItem.total_value,
-                        amount: newItem.amount,
-                        unit_value: newItem.unit_value,
-                      });
-                      optionData = {
-                        name: currentOption.name,
-                        items: [
-                          ...option[i].items.map((item) => item.id),
-                          response.item_id,
-                        ],
-                      };
-
-                      this.quoteService
-                        .updateOption(currentOption.id, optionData)
-                        .subscribe({
-                          next: (response) => {},
-                          error: (error) => {
-                            console.error('Error al actualizar opción', error);
-                          },
-                        });
-                    } else {
-                      console.error(
-                        'currentOption o currentOption.items está vacío en el momento del push'
-                      );
-                    }
-
-                    console.log('item creado');
-                  },
-                  error: (error) => {
-                    console.error('Error al crear nuevo item', error);
-                  },
-                });
-              }
-            }
-          }
-        }
-      }
-    }
-    console.log(
-      'antes de leer la condicion',
-      this.itemsToDelete.length,
-      this.itemsToDelete
-    );
-    if (this.itemsToDelete.length > 0) {
-      console.log('entrando para editar');
-      for (let index = 0; index < this.itemsToDelete.length; index++) {
-        console.log('continuando para editar');
-        const item = this.itemsToDelete[index];
-        this.quoteService.deleteItem(item).subscribe({
-          next: () => {
-            console.log('item eliminado');
-          },
-          error: (error) => {
-            console.error('Error al eliminar item', error);
-          },
-        });
-      }
-    }
-    this.quoteService.deleteOptions(this.optionsToDelete);
-    setTimeout(() => {
-      this.onQuoteCreated.emit();
-      this.close();
-      this.loadingEdit = false;
-    }, 5000);
-    console.log('por aqui ando otra vez');
+    }, 3000);
   }
 
   updateTotalPrice() {
@@ -667,7 +506,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
       for (let i = 0; i < this.optionsSelected; i++) {
         this.itemsPorOpcion.push({
-          optionId: i,
+          name: '',
+          optionId: 0,
           items: [
             {
               id: 0,
@@ -682,7 +522,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       }
     } else {
       this.itemsPorOpcion.push({
-        optionId: this.itemsPorOpcion.length,
+        name: '',
+        optionId: 0,
         items: [
           {
             id: 0,
@@ -695,6 +536,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         ],
       });
     }
+    console.log('option agregado', this.itemsPorOpcion);
   }
 
   addItem(index: number) {
@@ -760,6 +602,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       this.selectedCustomer = this.quoteToEdit.customer;
       this.tasks = this.quoteToEdit.tasks.map((t) => ({ descripcion: t }));
       this.itemsPorOpcion = this.quoteToEdit.options.map((option, idx) => ({
+        name: option.name,
         optionId: option.id,
         items: option.items.map((item) => ({
           id: item.id,
@@ -798,6 +641,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         this.tasks = this.quoteToEdit.tasks.map((t) => ({ descripcion: t }));
         this.optionsSelected = this.quoteToEdit.options.length;
         this.itemsPorOpcion = this.quoteToEdit.options.map((option, idx) => ({
+          name: option.name,
           optionId: option.id,
           items: option.items.map((item) => ({
             id: item.id,
