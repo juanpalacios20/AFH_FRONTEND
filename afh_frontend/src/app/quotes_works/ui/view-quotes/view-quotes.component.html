@@ -36,6 +36,7 @@
         class="flex w-full"
         label="Aprobar cotización"
         icon="pi pi-check"
+        *ngIf="this.state === 'PROCESO'"
         styleClass="p-button-primary"
         (onClick)="changeState()"
       />
