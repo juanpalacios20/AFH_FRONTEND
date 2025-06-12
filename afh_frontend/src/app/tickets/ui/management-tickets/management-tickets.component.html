@@ -79,7 +79,7 @@
             <p class="text-center">{{ ticket.entry_date_formatted }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
-            <p class="text-center">{{ ticket.responsible }}</p>
+            <p class="text-center">{{ ticket.responsible || 'Sin responsable asignado' }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
             <div class="flex justify-center">
