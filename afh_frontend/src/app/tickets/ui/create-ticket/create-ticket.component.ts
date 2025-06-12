@@ -108,7 +108,8 @@ export class CreateTicketComponent {
         this.selectedToolsIds,
         this.description,
         this.email,
-        this.place
+        this.place, 
+        this.responsible
       )
       .subscribe({
         next: () => {

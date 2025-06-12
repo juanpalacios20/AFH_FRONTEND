@@ -22,7 +22,8 @@ export class TicketsService extends BaseHttpService {
     tools: Number[],
     description: string,
     email: string,
-    place: string
+    place: string,
+    responsible: string
   ): Observable<any> {
     const body = {
       tools,
