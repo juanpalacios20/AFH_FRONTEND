@@ -30,6 +30,7 @@ export class TicketsService extends BaseHttpService {
       description,
       email,
       place,
+      responsible
     };
 
     const headers = this.getHeaders();
