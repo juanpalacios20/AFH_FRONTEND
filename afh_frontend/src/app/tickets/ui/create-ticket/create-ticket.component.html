@@ -17,8 +17,36 @@
         [maxSelectedLabels]="3"
         styleClass="w-full bg-white text-black font-medium rounded-lg"
       ></p-multiselect>
-      <small id="tool-help" class="text-red-600 text-center" *ngIf="toolErrorMessage">
+      <small
+        id="tool-help"
+        class="text-red-600 text-center"
+        *ngIf="toolErrorMessage"
+      >
         {{ toolErrorMessage }}
+      </small>
+    </div>
+
+    <div class="mb-4">
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="responsible"
+          [(ngModel)]="this.responsible"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': responsibleErrorMessage
+          }"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-gray font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          required
+        />
+        <label for="responsible">Responsable de la herramienta</label>
+      </p-floatlabel>
+      <small
+        id="tool-help"
+        class="text-red-600 text-center"
+        *ngIf="responsibleErrorMessage"
+      >
+        {{ responsibleErrorMessage }}
       </small>
     </div>
 
@@ -44,13 +72,19 @@
           id="placeFinal"
           [(ngModel)]="place"
           [ngModelOptions]="{ standalone: true }"
-          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': placeErrorMessage }"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': placeErrorMessage
+          }"
           class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           required
         />
         <label for="placeFinal">Lugar Destino</label>
       </p-floatlabel>
-      <small id="place-help" class="text-red-600 text-center" *ngIf="placeErrorMessage">
+      <small
+        id="place-help"
+        class="text-red-600 text-center"
+        *ngIf="placeErrorMessage"
+      >
         {{ placeErrorMessage }}
       </small>
     </div>
@@ -61,7 +95,9 @@
           pTextarea
           id="description"
           [(ngModel)]="description"
-          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': descriptionErrorMessage }"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': descriptionErrorMessage
+          }"
           rows="5"
           cols="30"
           style="resize: none"
@@ -70,16 +106,17 @@
         ></textarea>
         <label for="description">Descripción</label>
       </p-floatlabel>
-      <small id="description-help" class="text-red-600 text-center" *ngIf="descriptionErrorMessage">
+      <small
+        id="description-help"
+        class="text-red-600 text-center"
+        *ngIf="descriptionErrorMessage"
+      >
         {{ descriptionErrorMessage }}
       </small>
     </div>
 
     <div class="flex justify-end gap-2">
-      <p-button
-        (click)="close()"
-        styleClass="p-button-secondary"
-      >
+      <p-button (click)="close()" styleClass="p-button-secondary">
         Cancelar
       </p-button>
       <p-button

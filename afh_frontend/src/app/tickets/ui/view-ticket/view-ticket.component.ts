@@ -45,6 +45,7 @@ export class ViewTicketComponent {
   @Input() state: number = 3;
   @Input() date: string = '';
   @Input() description: string = '';
+  @Input() responsible: string = '';
   @Input() place: string = '';
   @Input() tools: Tool[] = [];
   @Input() dateEnd: string = '';
