@@ -76,6 +76,7 @@ interface AutoCompleteCompleteEvent {
     TextareaModule,
     NgIf,
     AutoComplete,
+    ToastModule,
   ],
   templateUrl: './create-quote.component.html',
   styleUrls: ['./create-quote.component.css'],
@@ -142,42 +143,50 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   @Output() closeDialog = new EventEmitter<void>();
   @Output() onQuoteCreated = new EventEmitter<void>();
 
-  clientErrorMessage: string = '';
-  descriptionErrorMessage: string = '';
-  taskDescriptionErrorMessage: string = '';
-  selectedOptionsErrorMessage: string = '';
-  itemDescriptionErrorMessage: string = '';
-  itemUnitsErrorMessage: String = '';
-  itemAmountErrorMessage: String = '';
-  itemUnitValueErrorMessage: String = '';
+  // clientErrorMessage: string = '';
+  // descriptionErrorMessage: string = '';
+  // taskDescriptionErrorMessage: string = '';
+  // selectedOptionsErrorMessage: string = '';
+  // itemDescriptionErrorMessage: string = '';
+  // itemUnitsErrorMessage: String = '';
+  // itemAmountErrorMessage: String = '';
+  // itemUnitValueErrorMessage: String = '';
+  errorMessage: String = '';
 
   constructor(
     private quoteService: QuoteService,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private messageService: MessageService
   ) {}
 
   verify() {
-    if (this.selectedCustomer === null || this.selectedCustomer === undefined) {
-      this.clientErrorMessage = 'El nombre del cliente es obligatorio';
-    }
-    if (this.description === '') {
-      this.descriptionErrorMessage = 'La descripción del trabajo es necesaria';
+    if (
+      this.selectedCustomer === null ||
+      this.selectedCustomer === undefined ||
+      this.description === '' ||
+      (this.optionsSelected === 0 && this.action === 0)
+    ) {
+      this.errorMessage = 'Campo obligatorio';
     }
 
     for (let i = 0; i < this.tasks.length; i++) {
-      if (this.tasks[i].descripcion) {
-        this.taskDescriptionErrorMessage =
-          'La descripcion de la tarea es necesaria';
+      if (this.tasks[i].descripcion === '') {
+        this.errorMessage = 'Campo obligatorio';
       }
     }
-    
-    if (this.optionsSelected === 0 && this.action === 0) {
-      this.selectedOptionsErrorMessage = "No puede crear una cotización sin al menos una opción para el trabajo";
-    }
 
-    // for (let i = 0; i < this.itemsPorOpcion.length; i++) {
-    //   for ()
-    // }
+    for (let i = 0; i < this.itemsPorOpcion.length; i++) {
+      for (let j = 0; j < this.itemsPorOpcion[i].items.length; j++) {
+        if (
+          (this.itemsPorOpcion[i].items[j].description === '' ||
+            this.itemsPorOpcion[i].items[j].amount === 0,
+          this.itemsPorOpcion[i].items[j].unit_value === 0,
+          this.itemsPorOpcion[i].items[j].units === '')
+        ) {
+          this.errorMessage = 'Campo obligatorio';
+        }
+      }
+    }
   }
   search(event: AutoCompleteCompleteEvent) {
     const query = event.query.toLowerCase();
@@ -218,6 +227,15 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   }
 
   submit() {
+    this.verify();
+    if (this.errorMessage !== '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Todos los campos son requeridos',
+      });
+      return;
+    }
     if (this.action === 0) {
       this.submitQuote();
     } else if (this.action === 1) {
@@ -593,6 +611,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.itemsAdd = 0;
     this.itemsDelete = 0;
     this.newItemsIds = [];
+    this.errorMessage = '';
   }
 
   loadEditData() {

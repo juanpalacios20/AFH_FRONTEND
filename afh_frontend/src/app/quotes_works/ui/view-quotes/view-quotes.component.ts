@@ -70,7 +70,7 @@ export default class ViewQuotesComponent {
     this.visible = false;
     this.closeDialog.emit();
   }
-  
+
   pdf(): void {
     this.loadingDownload = true;
 
@@ -105,12 +105,17 @@ export default class ViewQuotesComponent {
     });
   }
 
-  changeState() {
+  changeState(state: number) {
     const data = {
-      state: 2,
+      state: state,
     };
     this.quoteService.changeState(this.quote?.id || 0, data);
-    this.state = "APROBADO";
-    this.severity = "success";
+    if ((state = 2)) {
+      this.state = 'APROBADO';
+      this.severity = 'success';
+    } else {
+      this.state = 'RECHAZADO';
+      this.severity = 'danger';
+    }
   }
 }
