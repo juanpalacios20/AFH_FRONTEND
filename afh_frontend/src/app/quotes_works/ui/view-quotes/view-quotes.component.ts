@@ -110,10 +110,10 @@ export default class ViewQuotesComponent {
       state: state,
     };
     this.quoteService.changeState(this.quote?.id || 0, data);
-    if ((state = 2)) {
+    if ((state === 2)) {
       this.state = 'APROBADO';
       this.severity = 'success';
-    } else {
+    } if ((state === 3)) {
       this.state = 'RECHAZADO';
       this.severity = 'danger';
     }
