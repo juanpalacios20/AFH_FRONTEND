@@ -38,12 +38,14 @@ export class EditToolsComponent implements OnInit {
   @Input() tool: any = {};
   @Input() state: string = '';
   @Output() closeDialog = new EventEmitter<void>();
+  @Output() onToolEdited = new EventEmitter<void>();
 
   states: State[] | undefined;
   selectedState: State | undefined;
   selectedFile!: File;
   previewImage: string | ArrayBuffer | null = null;
   errorMessage: string = '';
+  loadingEdit: boolean = false;
   
 
   originalTool = this.tool;
@@ -69,6 +71,7 @@ export class EditToolsComponent implements OnInit {
     }  else if (this.selectedState?.name === 'EN RESERVA') {
       this.tool.state = 4;
     }
+    this.loadingEdit = true;
 
     const formData = new FormData();
     formData.append('id', this.tool.id.toString());
@@ -97,7 +100,8 @@ export class EditToolsComponent implements OnInit {
           detail: 'La herramienta ha sido actualizada con éxito',
         });
         this.closeDialog.emit();
-        window.location.reload();
+        this.onToolEdited.emit(); 
+        this.loadingEdit = false;
       },
       error: (error) => {
         this.error();

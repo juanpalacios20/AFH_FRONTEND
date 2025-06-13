@@ -1,0 +1,125 @@
+<p-dialog
+  header="Información de la cotización 01-2025"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '60vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <!-- Información general -->
+  <div class="mb-4">
+    <p class="text-gray-700 font-semibold text-lg mb-2">
+      <span class="text-black font-bold">Código:</span> {{ this.quote?.code }}
+    </p>
+    <p class="text-gray-700 font-semibold text-lg mb-2">
+      <span class="text-black font-bold">Cliente:</span>
+      {{ this.quote?.customer?.name }}
+    </p>
+    <p class="text-gray-700 font-semibold text-lg mb-2 flex items-center">
+      <span class="text-black font-bold">Estado:</span>
+      <p-tag class="ml-2" [value]="state" [severity]="this.severity"></p-tag>
+    </p>
+    <p class="text-gray-700 font-semibold text-lg mb-2">
+      <span class="text-black font-bold">Descripción:</span>
+      {{ this.quote?.description }}
+    </p>
+    <p class="text-gray-700 font-semibold text-lg mb-2">
+      <span class="text-black font-bold">Fecha:</span>
+      {{ this.quote?.issue_date }}
+    </p>
+    <div class="w-full">
+      <p-button
+        fluid="true"
+        class="flex w-full"
+        label="Descargar cotización"
+        icon="pi pi-download"
+        styleClass="p-button-secondary"
+        (onClick)="pdf()"
+        [loading]="loadingDownload"
+      />
+    </div>
+    <h2
+      class="text-lg text-black font-bold mb-2"
+      *ngIf="this.state === 'PROCESO'"
+    >
+      Acciones
+    </h2>
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+      <p-button
+        fluid="true"
+        class="flex w-full"
+        label="Aprobar cotización"
+        icon="pi pi-check"
+        *ngIf="this.state === 'PROCESO'"
+        styleClass="p-button-primary"
+        (onClick)="changeState(2)"
+      />
+      <p-button
+        fluid="true"
+        class="flex w-full"
+        label="Rechazar cotización"
+        icon="pi pi-times"
+        *ngIf="this.state === 'PROCESO'"
+        severity="danger"
+        (onClick)="changeState(3)"
+      />
+    </div>
+  </div>
+
+  <!-- Opciones e ítems -->
+  <h2 class="text-lg text-black font-bold mb-2">Tareas</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div
+      *ngFor="let task of quote?.tasks; let i = index"
+      class="mb-6 p-4 bg-gray-50 border rounded-lg"
+    >
+      <p>
+        <strong>Tarea {{ i + 1 }}</strong>
+      </p>
+      <p><strong>Descripcion tarea:</strong> {{ task }}</p>
+    </div>
+  </div>
+
+  <div *ngFor="let opcion of quote?.options; let i = index" class="mb-6">
+    <h2 class="text-lg text-black font-bold mb-2">Opción {{ i + 1 }}</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div
+        *ngFor="let item of opcion.items; let j = index"
+        [ngClass]="{
+          'col-span-3':
+            opcion.items.length === 1 ||
+            (opcion.items.length % 3 === 1 && j === opcion.items.length - 1)
+        }"
+        class="p-4 bg-gray-50 border rounded-lg"
+      >
+        <p><strong>Descripción:</strong> {{ item.description }}</p>
+        <p><strong>Cantidad:</strong> {{ item.amount }}</p>
+        <p><strong>Unidades de medida:</strong> {{ item.units }}</p>
+        <p>
+          <strong>Valor Unitario:</strong>
+          {{
+            item.unit_value | currency : "COP" : "symbol" : "1.0-0" : "es-CO"
+          }}
+        </p>
+        <p>
+          <strong>Precio:</strong>
+          {{
+            item.total_value | currency : "COP" : "symbol" : "1.0-0" : "es-CO"
+          }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Total por opción -->
+    <p class="text-right font-semibold text-lg mt-4">
+      Total opción {{ i + 1 }}:
+      <span class="text-primary-700"
+        >{{ quote?.options?.[i]?.total_value | currency:'COP':'symbol':'1.0-0':'es-CO' }}
+      </span>
+    </p>
+  </div>
+</p-dialog>

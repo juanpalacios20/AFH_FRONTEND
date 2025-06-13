@@ -115,6 +115,15 @@ export class ManagementTicketsComponent implements OnInit {
     this.createTicketDialogVisible = true;
   }
 
+  handleTicketCreated() {
+    this.getTickets();
+    this.createTicketDialogVisible = false; 
+  }
+
+  handleStateChange() {
+    this.getTickets();
+  }
+
   getTickets() {
     this.loadingTickets = true
     this.ticketService.getTickets().subscribe({
@@ -138,6 +147,7 @@ export class ManagementTicketsComponent implements OnInit {
   ngOnInit() {
     this.getTickets();
     this.currentUrl = this.router.url;
+    this.authService.isLoggedIn()
   }
 
   showViewTicketDialog(ticketId: number) {
