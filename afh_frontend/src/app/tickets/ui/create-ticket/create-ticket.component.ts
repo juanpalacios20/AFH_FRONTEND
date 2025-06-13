@@ -41,6 +41,7 @@ export class CreateTicketComponent {
   place: string = '';
   description: string = '';
   email: string = '';
+  responsible: string = '';
   tools: Tool[] = [];
   selectedTools: Tool[] = [];
   selectedToolsIds: number[] = [];
@@ -48,6 +49,7 @@ export class CreateTicketComponent {
   toolErrorMessage: string = '';
   placeErrorMessage: string = '';
   descriptionErrorMessage: string = '';
+  responsibleErrorMessage: string = '';
 
   @Input() visible: boolean = false;
   @Output() closeDialog = new EventEmitter<void>();
@@ -106,7 +108,8 @@ export class CreateTicketComponent {
         this.selectedToolsIds,
         this.description,
         this.email,
-        this.place
+        this.place, 
+        this.responsible
       )
       .subscribe({
         next: () => {
@@ -136,6 +139,7 @@ export class CreateTicketComponent {
     this.toolErrorMessage = '';
     this.placeErrorMessage = '';
     this.descriptionErrorMessage = '';
+    this.responsibleErrorMessage = '';
   }
 
   close() {
@@ -153,6 +157,10 @@ export class CreateTicketComponent {
     }
     if (this.description == '') {
       this.descriptionErrorMessage = 'Debes ingresar una descripcion';
+    }
+
+    if (this.responsible === '') {
+      this.responsibleErrorMessage = 'Debes ingresar un responsable de las herramientas';
     }
     if (this.selectedTools.length > 0) {
       this.toolErrorMessage = '';

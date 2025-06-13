@@ -103,6 +103,7 @@ export class ManagementTicketsComponent implements OnInit {
   place: string = '';
   date: string = '';
   description: string = '';
+  responsible: string = '';
 
   constructor(
     private ticketService: TicketsService,
@@ -158,7 +159,7 @@ export class ManagementTicketsComponent implements OnInit {
         this.place = data.place;
         this.description = data.description;
         this.state = data.state;
-        
+        this.responsible = data.responsible;
       },
       error: (error) => {
         this.error()
