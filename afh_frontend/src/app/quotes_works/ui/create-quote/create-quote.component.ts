@@ -357,7 +357,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     if (this.utility !== this.quoteToEdit?.utility) {
       quoteData.utility = this.utility / 100;
     }
-    if(this.method_of_payment !== this.quoteToEdit?.method_of_payment) {
+    if (this.method_of_payment !== this.quoteToEdit?.method_of_payment) {
       quoteData.method_of_payment = this.method_of_payment;
     }
     //verifica si hay que cambiar la descripcion
@@ -376,88 +376,96 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       quoteData.tasks = this.tasks.map((t) => t.descripcion);
     }
     //actualizar los items
-      console.log(this.itemsPorOpcion);
-      console.log('id de la opcion', this.itemsPorOpcion.optionId);
-      if (this.itemsPorOpcion.optionId !== 0) {
-        console.log('id del item', this.itemsPorOpcion.optionId);
-        //crear items nuevos
-        for (
-          let j = 0;
-          j < this.itemsPorOpcion.items.length - this.itemsDelete;
-          j++
-        ) {
-          if (this.itemsPorOpcion.items[j].id !== undefined) {
-            if (this.itemsPorOpcion.items[j].id === 0) {
-              const itemToCreateData = {
-                description: this.itemsPorOpcion.items[j].description,
-                units: this.itemsPorOpcion.items[j].units,
-                amount: this.itemsPorOpcion.items[j].amount,
-                unit_value: this.itemsPorOpcion.items[j].unit_value,
-              };
+    console.log(this.itemsPorOpcion);
+    console.log('id de la opcion', this.itemsPorOpcion.optionId);
+    if (this.itemsPorOpcion.optionId !== 0) {
+      console.log('id del item', this.itemsPorOpcion.optionId);
+      //crear items nuevos
+      for (
+        let j = 0;
+        j < this.itemsPorOpcion.items.length - this.itemsDelete;
+        j++
+      ) {
+        if (this.itemsPorOpcion.items[j].id !== undefined) {
+          if (this.itemsPorOpcion.items[j].id === 0) {
+            const itemToCreateData = {
+              description: this.itemsPorOpcion.items[j].description,
+              units: this.itemsPorOpcion.items[j].units,
+              amount: this.itemsPorOpcion.items[j].amount,
+              unit_value: this.itemsPorOpcion.items[j].unit_value,
+            };
 
-              const payload = {
-                items: [itemToCreateData],
-              };
+            const payload = {
+              items: [itemToCreateData],
+            };
 
-              this.quoteService.itemToOption(
-                this.itemsPorOpcion.optionId,
-                payload
-              );
-            }
+            this.quoteService.itemToOption(
+              this.itemsPorOpcion.optionId,
+              payload
+            );
           }
+        }
 
-          //editar los items
-          const editedItem = this.itemsPorOpcion.items[j];
-          const item = this.itemsPorOpcion.items[j]; // Suponiendo que el orden se mantiene
-          let itemData = {};
-          if (item !== undefined) {
+        //editar los items
+        const editedItem = this.itemsPorOpcion.items[j];
+        const item = this.quoteToEdit?.options.items[j]; // Obtener el item original de la cotización
+         // Suponiendo que el orden se mantiene
+        let itemData = {};
+        if (item !== undefined) {
+          console.log('editando item', editedItem);
+          if (editedItem.description !== item.description) {
             itemData = {
               ...itemData,
               description: editedItem.description,
             };
+          }
+
+          if (editedItem.units !== item.units) {
             itemData = {
               ...itemData,
               units: editedItem.units,
             };
+          }
 
-            if (
-              editedItem.amount !== item.amount &&
-              editedItem.amount &&
-              item.amount &&
-              typeof item.amount === 'number'
-            ) {
-              itemData = {
-                ...itemData,
-                amount: item.amount,
-              };
-            }
+          if (
+            editedItem.amount !== Number(item.amount) &&
+            editedItem.amount &&
+            Number(item.amount)
+          ) {
+            itemData = {
+              ...itemData,
+              amount: item.amount,
+            };
+          }
 
-            if (
-              editedItem.unit_value !== item.unit_value &&
-              editedItem.unit_value &&
-              item.unit_value &&
-              typeof item.unit_value === 'number'
-            ) {
-              itemData = {
-                ...itemData,
-                unit_value: editedItem.unit_value,
-              };
-            }
+          console.log('costo unitario', editedItem.unit_value);
+          console.log('costo unitario del item', Number(item.unit_value));
+          if (
+            editedItem.unit_value !== Number(item.unit_value) &&
+            Number(item.unit_value) &&
+            item.unit_value 
+          ) {
+            console.log('editando el costo unitario del item');
+            itemData = {
+              ...itemData,
+              unit_value: editedItem.unit_value,
+            };
+          }
 
-            if (editedItem.id !== 0) {
-              console.log('id del item antes de actualizar', editedItem.id);
-              this.quoteService.updateItem(editedItem.id, itemData).subscribe({
-                next: (response) => {
-                  console.log('item actualizado', response);
-                },
-                error: (error) => {
-                  console.error('Error al actualizar item', error);
-                },
-              });
-            }
+          if (editedItem.id !== 0) {
+            console.log('id del item antes de actualizar', editedItem.id);
+            this.quoteService.updateItem(editedItem.id, itemData).subscribe({
+              next: (response) => {
+                console.log('item actualizado', response);
+              },
+              error: (error) => {
+                console.error('Error al actualizar item', error);
+              },
+            });
           }
         }
       }
+    }
 
     //eliminar los items
     if (this.itemsToDelete.length > 0) {
@@ -492,26 +500,24 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   }
 
   updateTotalPrice() {
-  this.totalPrice = this.itemsPorOpcion.items.reduce(
-    (sum, item) => sum + (item.total_value || 0),
-    0
-  );
-}
-
+    this.totalPrice = this.itemsPorOpcion.items.reduce(
+      (sum, item) => sum + (item.total_value || 0),
+      0
+    );
+  }
 
   updatePrice() {
-  this.itemsPorOpcion.items.forEach((item) => {
-    item.total_value = item.unit_value * (item.amount || 1);
-  });
-}
-
+    this.itemsPorOpcion.items.forEach((item) => {
+      item.total_value = item.unit_value * (item.amount || 1);
+    });
+  }
 
   getTotalPrice(): number {
-  return this.itemsPorOpcion.items.reduce((sum, item) => {
-    const value = Number(item.total_value);
-    return sum + (!isNaN(value) ? value : 0);
-  }, 0);
-}
+    return this.itemsPorOpcion.items.reduce((sum, item) => {
+      const value = Number(item.total_value);
+      return sum + (!isNaN(value) ? value : 0);
+    }, 0);
+  }
 
   addItem() {
     this.itemsAdd = this.itemsAdd + 1;
