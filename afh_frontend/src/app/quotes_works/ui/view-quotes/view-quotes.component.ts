@@ -1,4 +1,4 @@
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
@@ -18,6 +18,8 @@ interface Option {
   id: number;
   name: string;
   total_value: number;
+  subtotal: string;
+  total_value_formatted: string;
   items: Item[];
 }
 
@@ -34,20 +36,37 @@ interface Quote {
   code: string;
   description: string;
   issue_date: number;
-  options: Option[];
+  options: Option;
   state: number;
   tasks: string[];
+  administration: number;
+  unforeseen: number;
+  utility: number;
+  iva: number;
+  method_of_payment: string;
+  administration_value: string;
+  unforeseen_value: string;
+  utility_value: string;
+  iva_value: string;
+}
+
+interface OrderWork {
+  id: number;
+  Quotes: Quote;
+  start_date: string;
+  end_date: string;
 }
 
 @Component({
   selector: 'app-view-quotes',
-  imports: [Dialog, ButtonModule, TagModule, NgFor, CommonModule, ButtonModule],
+  imports: [Dialog, ButtonModule, TagModule, NgFor, CommonModule, ButtonModule, NgIf],
   templateUrl: './view-quotes.component.html',
   styleUrl: './view-quotes.component.css',
 })
 export default class ViewQuotesComponent {
   loadingDownload = false;
-  @Input() quote: Quote | null = null;
+  @Input() orderWork: OrderWork | null = null;
+  @Input() quote: Quote | null = this.orderWork?.Quotes || null;
   @Input() state: string = '';
   @Input() severity:
     | 'success'
@@ -110,10 +129,11 @@ export default class ViewQuotesComponent {
       state: state,
     };
     this.quoteService.changeState(this.quote?.id || 0, data);
-    if ((state === 2)) {
+    if (state === 2) {
       this.state = 'APROBADO';
       this.severity = 'success';
-    } if ((state === 3)) {
+    }
+    if (state === 3) {
       this.state = 'RECHAZADO';
       this.severity = 'danger';
     }

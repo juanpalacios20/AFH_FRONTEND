@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateQuoteComponent } from './create-quote.component';
+import  CreateQuoteComponent  from './create-quote.component';
 
 describe('CreateQuoteComponent', () => {
   let component: CreateQuoteComponent;

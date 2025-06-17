@@ -40,9 +40,11 @@ export default class FormClientsComponent implements OnChanges {
   name: string = '';
   email: string = '';
   phone: string = '';
+  position: string = '';
   errorMessageName: string = '';
   errorMessageEmail: string = '';
   errorMessagePhone: string = '';
+  errorMessagePosition: string = '';
   @Input() visible: boolean = false;
   @Input() action: number = 0; // 0: create, 1: edit
   @Input() clientId: number | null = null;
@@ -65,6 +67,7 @@ export default class FormClientsComponent implements OnChanges {
     this.errorMessageName = '';
     this.errorMessageEmail = '';
     this.errorMessagePhone = '';
+    this.errorMessagePosition = '';
     this.visible = false;
     this.closeDialog.emit();
   }
@@ -83,6 +86,9 @@ export default class FormClientsComponent implements OnChanges {
       this.errorMessageEmail =
         'El correo electrónico es inválido, ejemplo@dominio.com';
     }
+    if (this.position === '') {
+      this.errorMessagePosition = 'El cargo es obligatorio';
+    }
   }
 
   createClient() {
@@ -92,7 +98,8 @@ export default class FormClientsComponent implements OnChanges {
       this.errorMessageEmail === 'El email es obligatorio' ||
       this.errorMessagePhone === 'El teléfono es obligatorio' ||
       this.errorMessageEmail ===
-        'El correo electrónico es inválido, ejemplo@dominio.com'
+        'El correo electrónico es inválido, ejemplo@dominio.com' ||
+      this.errorMessagePosition === 'El cargo es obligatorio'
     ) {
       return;
     }
@@ -126,7 +133,8 @@ export default class FormClientsComponent implements OnChanges {
       this.errorMessageEmail === 'El email es obligatorio' ||
       this.errorMessagePhone === 'El teléfono es obligatorio' ||
       this.errorMessageEmail ===
-        'El correo electrónico es inválido, ejemplo@dominio.com'
+        'El correo electrónico es inválido, ejemplo@dominio.com' || 
+      this.errorMessagePosition === 'El cargo es obligatorio'
     ) {
       return;
     }

@@ -26,10 +26,19 @@
       <span class="text-black font-bold">Descripción:</span>
       {{ this.quote?.description }}
     </p>
-    <p class="text-gray-700 font-semibold text-lg mb-2">
+    <p class="text-gray-700 font-semibold text-lg mb-2" *ngIf="this.orderWork === null">
       <span class="text-black font-bold">Fecha:</span>
       {{ this.quote?.issue_date }}
     </p>
+    <p class="text-gray-700 font-semibold text-lg mb-2" *ngIf="this.orderWork !== null">
+      <span class="text-black font-bold">Fecha de inicio:</span>
+      {{ this.orderWork.start_date }}
+    </p>
+    <p class="text-gray-700 font-semibold text-lg mb-2" *ngIf="this.orderWork !== null">
+      <span class="text-black font-bold">Fecha de finalización:</span>
+      {{ this.orderWork.end_date || 'No definida' }}
+    </p>
+    
     <div class="w-full">
       <p-button
         fluid="true"
@@ -83,16 +92,16 @@
     </div>
   </div>
 
-  <div *ngFor="let opcion of quote?.options; let i = index" class="mb-6">
-    <h2 class="text-lg text-black font-bold mb-2">Opción {{ i + 1 }}</h2>
+  <div class="mb-6">
+    <h2 class="text-lg text-black font-bold mb-2">Opción de la cotización</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div
-        *ngFor="let item of opcion.items; let j = index"
+        *ngFor="let item of quote?.options?.items; let j = index"
         [ngClass]="{
           'col-span-3':
-            opcion.items.length === 1 ||
-            (opcion.items.length % 3 === 1 && j === opcion.items.length - 1)
+            (quote?.options?.items?.length || 0) === 1 ||
+            ((quote?.options?.items?.length || 0) % 3 === 1 && j === (quote?.options?.items?.length || 0) - 1)
         }"
         class="p-4 bg-gray-50 border rounded-lg"
       >
@@ -116,9 +125,39 @@
 
     <!-- Total por opción -->
     <p class="text-right font-semibold text-lg mt-4">
-      Total opción {{ i + 1 }}:
+      Subtotal de la cotización:
       <span class="text-primary-700"
-        >{{ quote?.options?.[i]?.total_value | currency:'COP':'symbol':'1.0-0':'es-CO' }}
+        >{{ quote?.options?.subtotal }}
+      </span>
+    </p>
+    <p class="text-right font-semibold text-lg mt-4">
+      Costo de administración:
+      <span class="text-primary-700"
+        >{{ quote?.administration_value }}
+      </span>
+    </p>
+    <p class="text-right font-semibold text-lg mt-4">
+      Costo de imprevisto:
+      <span class="text-primary-700"
+        >{{ quote?.unforeseen_value }}
+      </span>
+    </p>
+    <p class="text-right font-semibold text-lg mt-4">
+      Costo de utilidad:
+      <span class="text-primary-700"
+        >{{ quote?.utility_value }}
+      </span>
+    </p>
+    <p class="text-right font-semibold text-lg mt-4">
+      Costo de iva:
+      <span class="text-primary-700"
+        >{{ quote?.iva_value }}
+      </span>
+    </p>
+    <p class="text-right font-semibold text-lg mt-4">
+      Costo total de la cotización:
+      <span class="text-primary-700"
+        >{{ quote?.options?.total_value_formatted }}
       </span>
     </p>
   </div>

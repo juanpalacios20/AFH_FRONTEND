@@ -70,7 +70,12 @@
             <p class="text-center">{{ quote.customer.name }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewComponent(quote)">
-            <p class="text-center">{{ quote.description }}</p>
+            <p
+              class="text-center truncate w-52 mx-auto"
+              title="{{ quote.description }}"
+            >
+              {{ quote.description }}
+            </p>
           </td>
           <td class="cursor-pointer" (click)="showViewComponent(quote)">
             <p class="text-center">{{ quote.issue_date }}</p>
@@ -86,8 +91,15 @@
           </td>
           <td>
             <div class="card flex justify-center gap-2">
-              <p-button icon="pi pi-pencil" (click)="showEditQuoteDialog(quote)"/>
-              <p-button icon="pi pi-trash" (click)="confirmationDelete(quote.id)" severity="danger" />
+              <p-button
+                icon="pi pi-pencil"
+                (click)="showEditQuoteDialog(quote)"
+              />
+              <p-button
+                icon="pi pi-trash"
+                (click)="confirmationDelete(quote.id)"
+                severity="danger"
+              />
             </div>
           </td>
         </tr>
@@ -114,5 +126,6 @@
     [quote]="viewQuote"
     [state]="state"
     [severity]="severity"
-    (closeDialog)="closeViewComponet()"></app-view-quotes>
+    (closeDialog)="closeViewComponet()"
+  ></app-view-quotes>
 </div>
