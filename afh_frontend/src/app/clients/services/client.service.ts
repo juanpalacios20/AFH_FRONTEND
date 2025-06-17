@@ -18,12 +18,13 @@ export class ClientService extends BaseHttpService {
     });
   }
 
-  createClient(name: string, email: string, phone: string): Observable<any> {
+  createClient(name: string, email: string, phone: string, post: string): Observable<any> {
     const headers = this.getHeaders();
     const formData = new FormData();
     formData.append('name', name);
     formData.append('email', email);
     formData.append('phone', phone);
+    formData.append('post', post);
 
     return this.http
       .post(`${this.apiUrl}customer/addcustomer/`, formData, { headers: headers })

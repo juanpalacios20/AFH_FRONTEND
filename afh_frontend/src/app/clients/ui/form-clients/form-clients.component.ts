@@ -51,6 +51,7 @@ export default class FormClientsComponent implements OnChanges {
   @Input() nameClient: string = '';
   @Input() emailClient: string = '';
   @Input() phoneClient: string = '';
+  @Input() positionClient: string = '';
   @Output() closeDialog = new EventEmitter<void>();
   @Output() onQuoteCreated = new EventEmitter<void>();
   @Output() isEdited = new EventEmitter<boolean>();
@@ -104,7 +105,7 @@ export default class FormClientsComponent implements OnChanges {
       return;
     }
     this.clientService
-      .createClient(this.name, this.email, this.phone)
+      .createClient(this.name, this.email, this.phone, this.position)
       .subscribe({
         next: (response) => {
           this.messageService.add({
@@ -133,7 +134,7 @@ export default class FormClientsComponent implements OnChanges {
       this.errorMessageEmail === 'El email es obligatorio' ||
       this.errorMessagePhone === 'El teléfono es obligatorio' ||
       this.errorMessageEmail ===
-        'El correo electrónico es inválido, ejemplo@dominio.com' || 
+        'El correo electrónico es inválido, ejemplo@dominio.com' ||
       this.errorMessagePosition === 'El cargo es obligatorio'
     ) {
       return;
@@ -148,10 +149,14 @@ export default class FormClientsComponent implements OnChanges {
     if (this.phone !== this.phoneClient) {
       formData.append('phone', this.phone);
     }
+    if (this.position !== this.positionClient) {
+      formData.append('post', this.position);
+    }
     if (
       this.name === this.nameClient &&
       this.email === this.emailClient &&
-      this.phone === this.phoneClient
+      this.phone === this.phoneClient &&
+      this.position === this.positionClient
     ) {
       this.close();
       this.onQuoteCreated.emit();
@@ -190,6 +195,7 @@ export default class FormClientsComponent implements OnChanges {
         this.name = this.nameClient;
         this.email = this.emailClient;
         this.phone = this.phoneClient;
+        this.position = this.positionClient || '';
       }
     }
   }
