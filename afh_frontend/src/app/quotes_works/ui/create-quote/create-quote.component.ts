@@ -426,15 +426,17 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               units: editedItem.units,
             };
           }
-
+          console.log('cantidad', editedItem.amount);
+          console.log('cantidad del item', item.amount);
           if (
-            editedItem.amount !== Number(item.amount) &&
+            editedItem.amount !== item.amount &&
             editedItem.amount &&
-            Number(item.amount)
+            item.amount
           ) {
+            console.log('editando la cantidad del item');
             itemData = {
               ...itemData,
-              amount: item.amount,
+              amount: editedItem.amount,
             };
           }
 
@@ -448,7 +450,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             console.log('editando el costo unitario del item');
             itemData = {
               ...itemData,
-              unit_value: editedItem.unit_value,
+              unit_value: Number(editedItem.unit_value),
             };
           }
 
@@ -456,7 +458,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             console.log('id del item antes de actualizar', editedItem.id);
             this.quoteService.updateItem(editedItem.id, itemData).subscribe({
               next: (response) => {
-                console.log('item actualizado', response);
+                console.log('item actualizado', itemData);
               },
               error: (error) => {
                 console.error('Error al actualizar item', error);
