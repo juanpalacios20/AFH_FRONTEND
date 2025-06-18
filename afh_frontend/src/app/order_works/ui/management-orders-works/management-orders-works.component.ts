@@ -92,7 +92,8 @@ export default class ManagementOrdersWorksComponent implements OnInit {
   showDialog: boolean = false;
   orderWorkToView: OrderWork | null = null;
   state: string = '';
-  severity: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | undefined = undefined;
+  severity: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | undefined =
+    undefined;
 
   constructor(private orderWorkService: OrderWorkService) {}
 
@@ -104,12 +105,12 @@ export default class ManagementOrdersWorksComponent implements OnInit {
   }
 
   closeViewDialog() {
+    this.getOrders();
     this.showDialog = false;
   }
 
   handleQuoteCreated() {
     this.closeViewDialog();
-    this.getOrders();
   }
 
   getOrders() {
@@ -131,13 +132,7 @@ export default class ManagementOrdersWorksComponent implements OnInit {
 
   getSeverity(
     state: number
-  ):
-    | 'success'
-    | 'warn'
-    | 'danger'
-    | 'secondary'
-    | 'info'
-    | undefined {
+  ): 'success' | 'warn' | 'danger' | 'secondary' | 'info' | undefined {
     switch (state) {
       case 1:
         return 'secondary';

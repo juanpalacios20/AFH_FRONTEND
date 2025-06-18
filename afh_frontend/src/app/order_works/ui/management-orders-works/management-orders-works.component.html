@@ -52,6 +52,7 @@
             Descripcion
           </th>
           <th class="rounded-border text-primary-950 text-center">Fecha de inicio</th>
+          <th class="rounded-border text-primary-950 text-center">Fecha de finalización</th>
         </tr>
       </ng-template>
       <ng-template #body let-orderWork>
@@ -67,6 +68,9 @@
           </td>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
             <p class="text-center">{{ orderWork.start_date }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
+            <p class="text-center">{{ orderWork.end_date }}</p>
           </td>
         </tr>
       </ng-template>

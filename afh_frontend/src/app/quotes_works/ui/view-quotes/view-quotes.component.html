@@ -1,5 +1,9 @@
 <p-dialog
-  header="Información de la cotización 01-2025"
+  [header]="
+    orderWork
+      ? 'Información de la orden' + ' ' + this.quote?.code
+      : 'Información de la cotización' + ' ' + this.quote?.code
+  "
   [(visible)]="visible"
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
@@ -9,6 +13,7 @@
   [closable]="true"
   (onHide)="close()"
 >
+  <p-confirmdialog></p-confirmdialog>
   <!-- Información general -->
   <div class="mb-4">
     <p class="text-gray-700 font-semibold text-lg mb-2">
@@ -26,56 +31,94 @@
       <span class="text-black font-bold">Descripción:</span>
       {{ this.quote?.description }}
     </p>
-    <p class="text-gray-700 font-semibold text-lg mb-2" *ngIf="this.orderWork === null">
+    <p
+      class="text-gray-700 font-semibold text-lg mb-2"
+      *ngIf="this.orderWork === null"
+    >
       <span class="text-black font-bold">Fecha:</span>
       {{ this.quote?.issue_date }}
     </p>
-    <p class="text-gray-700 font-semibold text-lg mb-2" *ngIf="this.orderWork !== null">
+    <p
+      class="text-gray-700 font-semibold text-lg mb-2"
+      *ngIf="this.orderWork !== null"
+    >
       <span class="text-black font-bold">Fecha de inicio:</span>
       {{ this.orderWork.start_date }}
     </p>
-    <p class="text-gray-700 font-semibold text-lg mb-2" *ngIf="this.orderWork !== null">
+    <p
+      class="text-gray-700 font-semibold text-lg mb-2"
+      *ngIf="this.orderWork !== null"
+    >
       <span class="text-black font-bold">Fecha de finalización:</span>
-      {{ this.orderWork.end_date || 'No definida' }}
+      {{ this.orderWork.end_date || "No definida" }}
     </p>
-    
+
     <div class="w-full">
       <p-button
         fluid="true"
         class="flex w-full"
-        label="Descargar cotización"
+        [label]="
+          this.orderWork ? 'Descargar orden de trabajo' : 'Descargar cotización'
+        "
         icon="pi pi-download"
         styleClass="p-button-secondary"
         (onClick)="pdf()"
         [loading]="loadingDownload"
       />
     </div>
-    <h2
-      class="text-lg text-black font-bold mb-2"
-      *ngIf="this.state === 'PROCESO'"
-    >
-      Acciones
-    </h2>
+    <h2 class="text-lg text-black font-bold mb-2">Acciones</h2>
     <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
       <p-button
         fluid="true"
         class="flex w-full"
-        label="Aprobar cotización"
+        [label]="
+          this.state === 'APROBADO'
+            ? 'Cotización aprobada'
+            : 'Aceptar cotización'
+        "
         icon="pi pi-check"
-        *ngIf="this.state === 'PROCESO'"
-        styleClass="p-button-primary"
-        (onClick)="changeState(2)"
+        *ngIf="this.orderWork === null"
+        [disabled]="this.state === 'PROCESO' ? false : true"
+        [styleClass]="
+          this.state === 'APROBADO' || this.state === 'PROCESO'
+            ? 'p-button-primary'
+            : 'p-button-secondary'
+        "
+        (onClick)="confirmationConfirm()"
       />
       <p-button
         fluid="true"
         class="flex w-full"
-        label="Rechazar cotización"
+        [label]="
+          this.state === 'RECHAZADO'
+            ? 'Cotización rechazada'
+            : 'Rechazar cotización'
+        "
         icon="pi pi-times"
-        *ngIf="this.state === 'PROCESO'"
-        severity="danger"
-        (onClick)="changeState(3)"
+        *ngIf="this.orderWork === null"
+        [disabled]="this.state === 'PROCESO' ? false : true"
+        [severity]="
+          this.state === 'RECHAZADO' || this.state === 'PROCESO'
+            ? 'danger'
+            : 'secondary'
+        "
+        (onClick)="confirmationReject()"
       />
     </div>
+    <p-button
+      fluid="true"
+      class="flex w-full"
+      [label]="
+        orderWork.end_date
+          ? 'Orden de trabajo completada'
+          : 'Completar orden de trabajo'
+      "
+      icon="pi pi-check"
+      [disabled]="orderWork.end_date ? true : false"
+      *ngIf="this.orderWork !== null"
+      styleClass="p-button-primary"
+      (onClick)="confirmationComplete()"
+    />
   </div>
 
   <!-- Opciones e ítems -->
@@ -101,7 +144,8 @@
         [ngClass]="{
           'col-span-3':
             (quote?.options?.items?.length || 0) === 1 ||
-            ((quote?.options?.items?.length || 0) % 3 === 1 && j === (quote?.options?.items?.length || 0) - 1)
+            ((quote?.options?.items?.length || 0) % 3 === 1 &&
+              j === (quote?.options?.items?.length || 0) - 1)
         }"
         class="p-4 bg-gray-50 border rounded-lg"
       >
@@ -126,33 +170,23 @@
     <!-- Total por opción -->
     <p class="text-right font-semibold text-lg mt-4">
       Subtotal de la cotización:
-      <span class="text-primary-700"
-        >{{ quote?.options?.subtotal }}
-      </span>
+      <span class="text-primary-700">{{ quote?.options?.subtotal }} </span>
     </p>
     <p class="text-right font-semibold text-lg mt-4">
       Costo de administración:
-      <span class="text-primary-700"
-        >{{ quote?.administration_value }}
-      </span>
+      <span class="text-primary-700">{{ quote?.administration_value }} </span>
     </p>
     <p class="text-right font-semibold text-lg mt-4">
       Costo de imprevisto:
-      <span class="text-primary-700"
-        >{{ quote?.unforeseen_value }}
-      </span>
+      <span class="text-primary-700">{{ quote?.unforeseen_value }} </span>
     </p>
     <p class="text-right font-semibold text-lg mt-4">
       Costo de utilidad:
-      <span class="text-primary-700"
-        >{{ quote?.utility_value }}
-      </span>
+      <span class="text-primary-700">{{ quote?.utility_value }} </span>
     </p>
     <p class="text-right font-semibold text-lg mt-4">
       Costo de iva:
-      <span class="text-primary-700"
-        >{{ quote?.iva_value }}
-      </span>
+      <span class="text-primary-700">{{ quote?.iva_value }} </span>
     </p>
     <p class="text-right font-semibold text-lg mt-4">
       Costo total de la cotización:

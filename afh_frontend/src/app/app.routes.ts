@@ -27,8 +27,8 @@ export const routes: Routes = [
     { path: 'history-vales', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
     { path: 'menu', component: MenuComponent },
     { path: 'change-password', component: ChangePasswordComponent },
-    { path: 'quotes', component: QuotesComponent },
-    { path: 'management-orders-works', component: ManagementOrdersWorksComponent },
+    { path: 'quotes', component: QuotesComponent, canActivate: [AuthGuard]},
+    { path: 'management-orders-works', component: ManagementOrdersWorksComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'login' }
 
 ];

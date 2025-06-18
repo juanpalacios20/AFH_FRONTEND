@@ -21,4 +21,18 @@ export class OrderWorkService extends BaseHttpService {
     const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}/workorder/workorders/`, { headers });
   }
+
+  finishOrderWork(id: number) {
+    const headers = this.getHeaders();
+    return this.http.patch<any>(`${this.apiUrl}/workorder/finish/${id}/`, { headers });
+  }
+
+  workOrderPdf(id: number) {  
+    const headers = this.getHeaders();
+    return this.http.get(`${this.apiUrl}/workorder/pdf/${id}/`, {
+      headers: headers,
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
 }
