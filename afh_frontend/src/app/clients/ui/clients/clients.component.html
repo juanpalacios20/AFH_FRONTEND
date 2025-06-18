@@ -59,6 +59,7 @@
           <th class="rounded-border text-primary-950 text-center">
             Numero telefónico
           </th>
+          <th class="rounded-border text-primary-950 text-center">Cargo</th>
           <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
       </ng-template>
@@ -77,6 +78,9 @@
             <p class="text-center">{{ client.phone }}</p>
           </td>
           <td>
+            <p class="text-center">{{ client.post }}</p>
+          </td>
+          <td>
             <div class="card flex justify-center gap-2">
               <p-button
                 icon="pi pi-pencil"
@@ -85,7 +89,8 @@
                     client.id,
                     client.name,
                     client.email,
-                    client.phone
+                    client.phone,
+                    client.post
                   )
                 "
               />
@@ -128,6 +133,7 @@
     [nameClient]="name"
     [emailClient]="email"
     [phoneClient]="phone"
+    [positionClient]="position"
     (closeDialog)="clientEditVisible = false"
     (isEdited)="handleIsEdited($event)"
     (onQuoteCreated)="handleClientEdit()"

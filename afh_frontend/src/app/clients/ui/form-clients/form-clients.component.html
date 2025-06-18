@@ -55,6 +55,22 @@
         {{ errorMessageEmail }}
       </small>
     </div>
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="position"
+          [ngModelOptions]="{ standalone: true }"
+          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessagePosition}"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Cargo del cliente</label>
+      </p-floatlabel>
+      <small id="email-help" class="text-red-600" *ngIf="errorMessagePosition">
+        {{ errorMessagePosition }}
+      </small>
+    </div>
     <div class="flex justify-end gap-2 mt-10">
       <p-button styleClass="p-button-secondary" (click)="close()">
         Cancelar

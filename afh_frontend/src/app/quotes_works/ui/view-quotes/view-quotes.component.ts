@@ -1,9 +1,12 @@
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { QuoteService } from '../../services/quote.service';
+import { OrderWorkService } from '../../../order_works/services/work_order.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 interface Item {
   id: number;
@@ -18,6 +21,8 @@ interface Option {
   id: number;
   name: string;
   total_value: number;
+  subtotal: string;
+  total_value_formatted: string;
   items: Item[];
 }
 
@@ -34,20 +39,47 @@ interface Quote {
   code: string;
   description: string;
   issue_date: number;
-  options: Option[];
+  options: Option;
   state: number;
   tasks: string[];
+  administration: number;
+  unforeseen: number;
+  utility: number;
+  iva: number;
+  method_of_payment: string;
+  administration_value: string;
+  unforeseen_value: string;
+  utility_value: string;
+  iva_value: string;
+}
+
+interface OrderWork {
+  id: number;
+  Quotes: Quote;
+  start_date: string;
+  end_date: string;
 }
 
 @Component({
   selector: 'app-view-quotes',
-  imports: [Dialog, ButtonModule, TagModule, NgFor, CommonModule, ButtonModule],
+  imports: [
+    Dialog,
+    ButtonModule,
+    TagModule,
+    NgFor,
+    CommonModule,
+    ButtonModule,
+    ConfirmDialog,
+    NgIf,
+  ],
   templateUrl: './view-quotes.component.html',
   styleUrl: './view-quotes.component.css',
+  providers: [ConfirmationService, MessageService],
 })
 export default class ViewQuotesComponent {
   loadingDownload = false;
-  @Input() quote: Quote | null = null;
+  @Input() orderWork: OrderWork | null = null;
+  @Input() quote: Quote | null = this.orderWork?.Quotes || null;
   @Input() state: string = '';
   @Input() severity:
     | 'success'
@@ -60,7 +92,12 @@ export default class ViewQuotesComponent {
   @Input() visible: boolean = false;
   @Output() closeDialog = new EventEmitter<void>();
 
-  constructor(private quoteService: QuoteService) {}
+  constructor(
+    private quoteService: QuoteService,
+    private orderWorkService: OrderWorkService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
 
   showDialog() {
     this.visible = true;
@@ -72,6 +109,14 @@ export default class ViewQuotesComponent {
   }
 
   pdf(): void {
+    if (this.orderWork) {
+      this.pdfOrderWork();
+    } else {
+      this.pdfQuote();
+    }
+  }
+
+  pdfQuote(): void {
     this.loadingDownload = true;
 
     this.quoteService.getPDF(this.quote?.id || 0).subscribe({
@@ -105,17 +150,151 @@ export default class ViewQuotesComponent {
     });
   }
 
+  pdfOrderWork(): void {
+    this.loadingDownload = true;
+
+    this.orderWorkService.workOrderPdf(this.orderWork?.id || 0).subscribe({
+      next: (response) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = `orden de trabajo ${this.quote?.code}.pdf`;
+
+        if (contentDisposition) {
+          const matches = /filename="(.+)"/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            filename = matches[1];
+          }
+        }
+
+        const blob = new Blob([response.body!], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.loadingDownload = false;
+      },
+      error: (error) => {
+        this.loadingDownload = false;
+        console.log(error);
+      },
+    });
+  }
+
   changeState(state: number) {
     const data = {
       state: state,
     };
     this.quoteService.changeState(this.quote?.id || 0, data);
-    if ((state === 2)) {
+    if (state === 2) {
       this.state = 'APROBADO';
       this.severity = 'success';
-    } if ((state === 3)) {
+    }
+    if (state === 3) {
       this.state = 'RECHAZADO';
       this.severity = 'danger';
     }
+  }
+
+  finishOrderWork() {
+    if (this.orderWork) {
+      this.orderWorkService.finishOrderWork(this.orderWork.id).subscribe({
+        next: (response) => {
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, '0'); // enero es 0
+          const day = String(today.getDate()).padStart(2, '0');
+          const formattedDate = `${year}/${month}/${day}`;
+
+          if (this.orderWork) {
+            this.orderWork.end_date = formattedDate;
+          }
+        },
+        error: (err) => {
+          console.error('Error finishing order work', err);
+        },
+      });
+    }
+  }
+
+  confirmationConfirm() {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea APROBAR la cotización? Esta acción NO se puede deshacer.',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.changeState(2);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'Cotización aprobada con éxito',
+        });
+      },
+    });
+  }
+
+  confirmationReject() {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea RECHAZAR la cotización? Esta acción NO se puede deshacer.',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.changeState(3);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'La cotización ha sido rechazada con éxito',
+        });
+      },
+    });
+  }
+
+  confirmationComplete() {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea FINALIZAR el acta? Esta acción NO se puede deshacer.',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.finishOrderWork();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'Acta finalizada con éxito',
+        });
+      },
+    });
   }
 }

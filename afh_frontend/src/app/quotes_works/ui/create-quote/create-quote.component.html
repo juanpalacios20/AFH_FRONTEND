@@ -68,8 +68,121 @@
           {{ errorMessage }}
         </small>
       </div>
+      <div class="mb-2">
+        <h1 class="mb-2 text-primary-950 font-medium">
+          Ingrese el porcentaje de administración.
+        </h1>
+        <p-floatlabel variant="on" required="true">
+          <input
+            pInputText
+            id="description"
+            type="text"
+            [(ngModel)]="administration"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && administration === 0
+            }"
+            [ngModelOptions]="{ standalone: true }"
+            fluid="true"
+            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+          <label for="description">% administración </label>
+        </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600"
+          *ngIf="errorMessage && administration === 0"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+      <div class="mb-2">
+        <h1 class="mb-2 text-primary-950 font-medium">
+          Ingrese el porcentaje de imprevisto.
+        </h1>
+        <p-floatlabel variant="on" required="true">
+          <input
+            pInputText
+            id="description"
+            type="text"
+            [(ngModel)]="unexpected"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && unexpected === 0
+            }"
+            [ngModelOptions]="{ standalone: true }"
+            fluid="true"
+            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+          <label for="description">% imprevistos </label>
+        </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600"
+          *ngIf="errorMessage && unexpected === 0"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+      <div class="mb-2">
+        <h1 class="mb-2 text-primary-950 font-medium">
+          Ingrese el porcentaje de utilidad.
+        </h1>
+        <p-floatlabel variant="on" required="true">
+          <input
+            pInputText
+            id="description"
+            type="text"
+            [(ngModel)]="utility"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && utility === 0
+            }"
+            [ngModelOptions]="{ standalone: true }"
+            fluid="true"
+            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+          <label for="description">% utilidad </label>
+        </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600"
+          *ngIf="errorMessage && utility === 0"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+      <div class="mb-2">
+        <h1 class="mb-2 text-primary-950 font-medium">
+          Ingrese el plan de pago.
+        </h1>
+        <p-floatlabel variant="on" required="true">
+          <input
+            pInputText
+            id="method_of_payment"
+            type="text"
+            [(ngModel)]="method_of_payment"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && method_of_payment === ''
+            }"
+            [ngModelOptions]="{ standalone: true }"
+            fluid="true"
+            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+          <label for="method_of_payment">Plan de pago</label>
+        </p-floatlabel>
+        <small
+          id="method_of_payment-help"
+          class="text-red-600"
+          *ngIf="errorMessage && method_of_payment === ''"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
     </div>
 
+    <!-- Tareas del trabajo -->
     <div class="w-full mb-10">
       <h1 class="mb-2 text-primary-950 font-medium">Tareas del trabajo</h1>
 
@@ -132,76 +245,20 @@
       </div>
     </div>
 
-    <div class="mb-2">
-      <h1 class="mb-2 text-primary-950 font-medium">
-        Opciones para el trabajo
-      </h1>
-      <p-float-label
-        variant="on"
-        required="true"
-        *ngIf="itemsPorOpcion.length === 0"
-      >
-        <input
-          pInputText
-          type="number"
-          [(ngModel)]="this.optionsSelected"
-          [ngClass]="{
-            'ng-invalid ng-dirty border-red-500':
-              errorMessage && optionsSelected === 0
-          }"
-          [ngModelOptions]="{ standalone: true }"
-          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-        />
-        <label>Digite la cantidad de opciones</label>
-      </p-float-label>
-      <small
-        id="email-help"
-        class="text-red-600 mb-4"
-        *ngIf="errorMessage && optionsSelected === 0"
-      >
-        {{ errorMessage }}
-      </small>
-      <p-button
-        fluid="true"
-        class="flex justify-end"
-        label="Continuar"
-        icon="pi pi-arrow-right"
-        *ngIf="itemsPorOpcion.length === 0"
-        styleClass="p-button-primary"
-        (onClick)="updateOptionsSelected()"
-      />
-    </div>
-
+    <!-- Opciones del trabajo -->
     <div
       class="mb-4 p-4 bg-gray-100 border rounded-lg"
-      *ngFor="let opcion of itemsPorOpcion; let i = index"
     >
       <div class="grid grid-cols-2 gap-4 mb-2">
-        <h1 class="mb-2 text-primary-950 font-medium">Opción {{ i + 1 }}</h1>
-        <p-button
-          fluid="true"
-          class="flex justify-end"
-          icon="pi pi-times"
-          *ngIf="itemsPorOpcion.length && this.action === 0"
-          styleClass="p-button-secondary rounded-lg "
-          (onClick)="removeOption(i, 0)"
-        />
-        <p-button
-          fluid="true"
-          class="flex justify-end"
-          icon="pi pi-times"
-          *ngIf="itemsPorOpcion.length && this.action === 1"
-          styleClass="p-button-secondary rounded-lg"
-          (onClick)="removeOption(i, opcion.optionId)"
-        />
+        <h1 class="mb-2 text-primary-950 font-medium">Opción para la cotización</h1>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
-          *ngFor="let item of opcion.items; let j = index"
+          *ngFor="let item of itemsPorOpcion.items; let j = index"
           [ngClass]="{
             'col-span-3':
-              opcion.items.length === 1 ||
-              (opcion.items.length % 3 === 1 && j === opcion.items.length - 1)
+              itemsPorOpcion.items.length === 1 ||
+              (itemsPorOpcion.items.length % 3 === 1 && j === itemsPorOpcion.items.length - 1)
           }"
           class="relative"
         >
@@ -217,7 +274,7 @@
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             ></textarea>
-            <label for="desc-{{ i }}-{{ j }}"
+            <label for="desc{{ j }}"
               >Descripción ítem {{ j + 1 }}</label
             >
           </p-floatlabel>
@@ -263,7 +320,7 @@
               (ngModelChange)="updatePrice()"
               class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
-            <label for="cantidad-{{ i }}-{{ j }}">Cantidad</label>
+            <label for="cantidad{{ j }}">Cantidad</label>
           </p-floatlabel>
           <small
             id="email-help"
@@ -286,7 +343,7 @@
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
-            <label for="valor-{{ i }}-{{ j }}">Valor unitario</label>
+            <label for="valor{{ j }}">Valor unitario</label>
           </p-floatlabel>
           <small
             id="email-help"
@@ -306,22 +363,22 @@
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-gray-600 font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
-            <label for="precio-{{ i }}-{{ j }}">Precio total del item</label>
+            <label for="precio{{ j }}">Precio total del item</label>
           </p-floatlabel>
 
           <button
-            *ngIf="opcion.items.length > 1 && this.action === 0"
+            *ngIf="itemsPorOpcion.items.length > 1 && this.action === 0"
             type="button"
-            (click)="removeItem(i, j, 0)"
+            (click)="removeItem(j, 0)"
             class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
             title="Eliminar"
           >
             &times;
           </button>
           <button
-            *ngIf="opcion.items.length > 1 && this.action === 1"
+            *ngIf="itemsPorOpcion.items.length > 1 && this.action === 1"
             type="button"
-            (click)="removeItem(i, j, item.id)"
+            (click)="removeItem(j, item.id)"
             class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
             title="Eliminar"
           >
@@ -335,24 +392,15 @@
           icon="pi pi-plus"
           styleClass="p-button-primary"
           fluid="true"
-          (onClick)="addItem(i)"
+          (onClick)="addItem()"
         ></p-button>
       </div>
       <div class="mt-2">
         <h1 class="text-left text-primary-950 font-medium">
-          Total opción {{ i + 1 }}: {{ getTotalPrice(i) }}
+          Subtotal: {{ getTotalPrice() }}
         </h1>
       </div>
     </div>
-    <p-button
-      fluid="true"
-      class="flex justify-end"
-      label="Agregar Opción"
-      icon="pi pi-arrow-right"
-      *ngIf="itemsPorOpcion.length > 0"
-      styleClass="p-button-primary"
-      (onClick)="updateOptionsSelected()"
-    />
 
     <div class="flex justify-end gap-2 mt-10">
       <p-button styleClass="p-button-secondary" (onClick)="close()">
@@ -360,7 +408,7 @@
       </p-button>
       <p-button
         styleClass="p-button-primary"
-        [loading]="loadingEdit"
+        [loading]="loading"
         (onClick)="submit()"
       >
         {{ this.actionTittle }}

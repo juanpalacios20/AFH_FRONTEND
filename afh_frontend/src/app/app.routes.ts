@@ -12,6 +12,7 @@ import { HistoryTicketsComponent } from './tickets/ui/history-tickets/history-ti
 import { AdminGuard } from './shared/auth/data_access/admin.guard';
 import  ClientsComponent  from './clients/ui/clients/clients.component';
 import QuotesComponent from './quotes_works/ui/quotes/quotes.component';
+import ManagementOrdersWorksComponent from './order_works/ui/management-orders-works/management-orders-works.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -26,7 +27,8 @@ export const routes: Routes = [
     { path: 'history-vales', component: HistoryTicketsComponent, canActivate: [AuthGuard] },
     { path: 'menu', component: MenuComponent },
     { path: 'change-password', component: ChangePasswordComponent },
-    { path: 'quotes', component: QuotesComponent, canActivate: [AuthGuard] },
+    { path: 'quotes', component: QuotesComponent, canActivate: [AuthGuard]},
+    { path: 'management-orders-works', component: ManagementOrdersWorksComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'login' }
 
 ];

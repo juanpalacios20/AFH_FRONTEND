@@ -28,6 +28,8 @@ interface Option {
   id: number;
   name: string;
   total_value: number;
+  subtotal: string;
+  total_value_formatted: string;
   items: Item[];
 }
 
@@ -44,9 +46,18 @@ interface Quote {
   code: string;
   description: string;
   issue_date: number;
-  options: Option[];
+  options: Option;
   state: number;
   tasks: string[];
+  administration: number;
+  unforeseen: number;
+  utility: number;
+  iva: number;
+  method_of_payment: string;
+  administration_value: string;
+  unforeseen_value: string;
+  utility_value: string;
+  iva_value: string;
 }
 
 @Component({
@@ -155,7 +166,7 @@ export default class QuotesComponent {
     });
   }
 
-  closeViewComponet(){
+  closeViewComponet() {
     this.viewQuoteDialogVisible = false;
     this.loadQuotes();
   }

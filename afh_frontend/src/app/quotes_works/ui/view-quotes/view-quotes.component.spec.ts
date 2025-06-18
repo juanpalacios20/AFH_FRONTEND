@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewQuotesComponent } from './view-quotes.component';
+import  ViewQuotesComponent  from './view-quotes.component';
 
 describe('ViewQuotesComponent', () => {
   let component: ViewQuotesComponent;
