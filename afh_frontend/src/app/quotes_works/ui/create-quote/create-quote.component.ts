@@ -293,10 +293,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
         this.quoteService.createOption(optionData).subscribe({
           next: (response) => {
-            console.log('Opción creada', response.option_id);
             optionId = response.option_id;
-            console.log(this.description);
-            console.log(this.selectedCustomer?.id);
             const quoteData = {
               description: this.description,
               customer_id: this.selectedCustomer?.id,
@@ -308,10 +305,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               utility: this.utility / 100,
               method_of_payment: this.method_of_payment,
             };
-            console.log('data', quoteData);
             this.quoteService.createQuote(quoteData).subscribe({
               next: (res) => {
-                console.log('Cotización creada', res);
               },
               error: (err) => {
                 console.log('Error al crear cotización', err);
@@ -362,24 +357,18 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     //verifica si hay que cambiar la descripcion
     if (this.description !== this.quoteToEdit?.description) {
-      console.log('editando descripcin de la cotizacion');
       quoteData.description = this.description;
     }
     //verifica si hay que cambiar el cliente
     if (this.selectedCustomer?.id !== this.quoteToEdit?.customer.id) {
-      console.log('editando cliente');
       quoteData.customer_id = this.selectedCustomer?.id;
     }
     //verifica si hay que cambiar las tareas
     if (this.tasks.length > 0) {
-      console.log('editando tareas');
       quoteData.tasks = this.tasks.map((t) => t.descripcion);
     }
     //actualizar los items
-    console.log(this.itemsPorOpcion);
-    console.log('id de la opcion', this.itemsPorOpcion.optionId);
     if (this.itemsPorOpcion.optionId !== 0) {
-      console.log('id del item', this.itemsPorOpcion.optionId);
       //crear items nuevos
       for (
         let j = 0;
@@ -412,7 +401,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
          // Suponiendo que el orden se mantiene
         let itemData = {};
         if (item !== undefined) {
-          console.log('editando item', editedItem);
           if (editedItem.description !== item.description) {
             itemData = {
               ...itemData,
@@ -426,28 +414,21 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               units: editedItem.units,
             };
           }
-          console.log('cantidad', editedItem.amount);
-          console.log('cantidad del item', item.amount);
           if (
             editedItem.amount !== item.amount &&
             editedItem.amount &&
             item.amount
           ) {
-            console.log('editando la cantidad del item');
             itemData = {
               ...itemData,
               amount: editedItem.amount,
             };
           }
-
-          console.log('costo unitario', editedItem.unit_value);
-          console.log('costo unitario del item', Number(item.unit_value));
           if (
             editedItem.unit_value !== Number(item.unit_value) &&
             Number(item.unit_value) &&
             item.unit_value 
           ) {
-            console.log('editando el costo unitario del item');
             itemData = {
               ...itemData,
               unit_value: Number(editedItem.unit_value),
@@ -455,10 +436,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
           }
 
           if (editedItem.id !== 0) {
-            console.log('id del item antes de actualizar', editedItem.id);
             this.quoteService.updateItem(editedItem.id, itemData).subscribe({
               next: (response) => {
-                console.log('item actualizado', itemData);
               },
               error: (error) => {
                 console.error('Error al actualizar item', error);
@@ -471,13 +450,10 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
     //eliminar los items
     if (this.itemsToDelete.length > 0) {
-      console.log('entrando para editar');
       for (let index = 0; index < this.itemsToDelete.length; index++) {
-        console.log('continuando para editar');
         const item = this.itemsToDelete[index];
         this.quoteService.deleteItem(item).subscribe({
           next: () => {
-            console.log('item eliminado');
           },
           error: (error) => {
             console.error('Error al eliminar item', error);
@@ -487,7 +463,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     this.quoteService.updateQuote(this.quoteToEdit!.id, quoteData).subscribe({
       next: (response) => {
-        console.log(response);
       },
       error: (err) => {
         console.log(err);
@@ -538,10 +513,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
     if (itemId !== 0) {
       this.itemsToDelete.push(itemId);
-      console.log('dentro de la condicion', this.itemsToDelete);
       this.itemsDelete = this.itemsToDelete.length;
     }
-    console.log(this.itemsToDelete);
   }
 
   addTask() {
@@ -624,7 +597,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     if (changes['quoteToEdit'] && this.quoteToEdit) {
       if (this.action === 1 && this.quoteToEdit) {
-        console.log('cotizacion a editar', this.quoteToEdit);
         this.description = this.quoteToEdit.description;
         this.administration = this.quoteToEdit.administration * 100;
         this.unexpected = this.quoteToEdit.unforeseen * 100;
@@ -650,7 +622,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
           })),
         };
 
-        console.log('items por opcion', this.itemsPorOpcion);
       }
     }
   }

@@ -7,6 +7,7 @@ import { QuoteService } from '../../services/quote.service';
 import { OrderWorkService } from '../../../order_works/services/work_order.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 interface Item {
   id: number;
@@ -67,6 +68,7 @@ interface OrderWork {
     ButtonModule,
     TagModule,
     NgFor,
+    ToastModule,
     CommonModule,
     ButtonModule,
     ConfirmDialog,
@@ -188,7 +190,19 @@ export default class ViewQuotesComponent {
     const data = {
       state: state,
     };
-    this.quoteService.changeState(this.quote?.id || 0, data);
+    this.quoteService.changeState(this.quote?.id || 0, data).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `Cotización 'aprobada'`,
+        });
+      },
+      error: (error) => {
+        console.error('Error changing state:', error);
+      },
+    });
+
     if (state === 2) {
       this.state = 'APROBADO';
       this.severity = 'success';

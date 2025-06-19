@@ -176,7 +176,6 @@ export default class QuotesComponent {
     this.state = this.getStateString(quote.state);
     this.severity = this.getSeverity(quote.state);
     this.viewQuoteDialogVisible = true;
-    console.log('Quote to view:', quote, this.viewQuote);
   }
 
   getSeverity(

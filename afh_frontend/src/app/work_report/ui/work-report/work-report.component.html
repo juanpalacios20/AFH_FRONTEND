@@ -1,0 +1,90 @@
+<div class="relative h-screen">
+  <app-menu class="absolute top-0 left-0 p-4"></app-menu>
+  <p-toast position="top-right"></p-toast>
+  <div class="w-full p-5 pt-20">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">
+        AFH: Administración de actas de trabajo
+      </h1>
+    </div>
+
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <p-floatlabel variant="on" fluid="true" class="w-full">
+          <p-iconfield>
+            <p-inputicon class="pi pi-search" rounded="true" />
+            <input fluid="true" pInputText id="on_label" autocomplete="off" />
+          </p-iconfield>
+          <label for="on_label">Buscar acta de trabajo</label>
+        </p-floatlabel>
+        <small id="search-help" class="text-gray-500 text-center">
+          Busca por nombre de cliente y fecha de acta de trabajo</small
+        >
+      </div>
+      <button
+        pButton
+        icon="pi pi-plus"
+        label="Generar nueva acta de trabajo"
+        (click)="showCreateWorkReportDialog()"
+        rounded="true"
+        styleClass="w-full"
+      ></button>
+    </div>
+
+    <!-- Confirmación de eliminación (solo una instancia) -->
+    <p-confirmdialog></p-confirmdialog>
+
+    <p-table
+      #to
+      [rows]="20"
+      [paginator]="true"
+      [value]="workReports"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+    >
+      <ng-template #header>
+        <tr>
+          <th class="rounded-border text-primary-950 text-center">Código</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Nombre cliente
+          </th>
+          <th class="rounded-border text-primary-950 text-center">
+            Descripcion
+          </th>
+          <th class="rounded-border text-primary-950 text-center">
+            Fecha de inicio
+          </th>
+          <th class="rounded-border text-primary-950 text-center">
+            Fecha de finalización
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-workReport>
+        <tr>
+          <td class="cursor-pointer">
+            <p class="text-center">{{ workReport.work_order.Quotes.code }}</p>
+          </td>
+          <td class="cursor-pointer">
+            <p class="text-center">{{ workReport.work_order.Quotes.customer.name }}</p>
+          </td>
+          <td class="cursor-pointer">
+            <p class="text-center">{{ workReport.work_order.Quotes.description }}</p>
+          </td>
+          <td class="cursor-pointer">
+            <p class="text-center">{{ workReport.work_order.start_date }}</p>
+          </td>
+          <td class="cursor-pointer">
+            <p class="text-center">{{ workReport.work_order.end_date }}</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <app-form-work
+    [visible]="workReportDialogVisible"
+    (closeDialog)="workReportDialogVisible = false"
+    (onQuoteCreated)="handleWorkReportCreated()"
+  >
+  </app-form-work>
+</div>

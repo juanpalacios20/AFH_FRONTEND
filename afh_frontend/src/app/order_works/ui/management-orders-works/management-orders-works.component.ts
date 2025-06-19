@@ -117,8 +117,6 @@ export default class ManagementOrdersWorksComponent implements OnInit {
     this.orderWorkService.getOrders().subscribe({
       next: (response) => {
         this.orderWorks = response;
-        console.log('Orders fetched successfully:', this.orderWorks);
-        console.log('OrderWorks:', this.orderWorks);
       },
       error: (error) => {
         console.error('Error fetching orders:', error);

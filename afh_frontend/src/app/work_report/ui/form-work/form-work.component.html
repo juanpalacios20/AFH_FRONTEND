@@ -1,0 +1,100 @@
+<p-dialog
+  header="Generar acta de trabajo"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '60rem' }"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <div class="w-full mx-auto rounded-xl justify-center mt-2">
+    <div class="mb-4">
+      <h1 class="mb-4 text-primary-950 font-medium">
+        Ingrese el codigo de la orden de trabajo.
+      </h1>
+      <div class="mb-4">
+        <p-autocomplete
+          [(ngModel)]="selectedOrderWork"
+          placeholder="Codigo de la orden de trabajo"
+          [suggestions]="filteredOrderWork ?? []"
+          (completeMethod)="filterWorkReport($event)"
+          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          optionLabel="Quotes.code"
+          fluid="true"
+        />
+      </div>
+    </div>
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="recommendations"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Recomendaciones </label>
+      </p-floatlabel>
+    </div>
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="observations"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Observaciones</label>
+      </p-floatlabel>
+    </div>
+    <div class="mb-4" *ngFor="let tarea of tareas; let i = index">
+      <h2 class="text-lg font-semibold text-primary-800 mb-2">
+        {{ tarea.titulo }}
+      </h2>
+
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div
+          *ngFor="let sub of tarea.subdescripciones; let j = index"
+          class="relative"
+        >
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="tarea.subdescripciones[j]"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Subdescripción {{ j + 1 }}"
+            class="w-full bg-white text-black font-normal py-2 pr-8 rounded-lg"
+          />
+
+          <button
+            *ngIf="tarea.subdescripciones.length > 1"
+            type="button"
+            class="absolute top-1 right-2 text-red-500 hover:text-red-700 font-bold text-lg"
+            (click)="tarea.subdescripciones.splice(j, 1)"
+            title="Eliminar"
+          >
+            &times;
+          </button>
+        </div>
+      </div>
+
+      <p-button
+        label="Agregar subdescripción"
+        icon="pi pi-plus"
+        styleClass="p-button-primary"
+        fluid="true"
+        (onClick)="tarea.subdescripciones.push('')"
+      >
+      </p-button>
+
+      <hr class="my-4 border-gray-300" />
+    </div>
+
+    <div class="flex justify-end gap-2 mt-10">
+      <p-button styleClass="p-button-secondary"> Cancelar </p-button>
+      <p-button styleClass="p-button-primary">
+        Generar acta de trabajo
+      </p-button>
+    </div>
+  </div>
+</p-dialog>
