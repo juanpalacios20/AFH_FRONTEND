@@ -22,5 +22,14 @@ export class WorkReportService extends BaseHttpService {
     return this.http.get<any>(`${this.apiUrl}/deliverycertificate/get/`, { headers });
   }
 
-  
+  createWorkReport(workReport: any) {
+    const headers = this.getHeaders();
+    return this.http.post<any>(`${this.apiUrl}/deliverycertificate/create/`, workReport, { headers });
+  }
+
+  createExhibit(exhibit: any) {
+    const headers = this.getHeaders();
+    return this.http.post<any>(`${this.apiUrl}/exhibit/create/`, exhibit, { headers });
+  }
+
 }

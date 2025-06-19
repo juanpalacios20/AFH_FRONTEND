@@ -104,6 +104,7 @@ interface exhibit {
 export default class WorkReportComponent implements OnInit {
   workReports: WorkReport[] = [];
   workReportDialogVisible: boolean = false;
+  workReportToSearch: string = '';
 
   constructor(
     private workReportService: WorkReportService,

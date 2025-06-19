@@ -13,7 +13,14 @@
         <p-floatlabel variant="on" fluid="true" class="w-full">
           <p-iconfield>
             <p-inputicon class="pi pi-search" rounded="true" />
-            <input fluid="true" pInputText id="on_label" autocomplete="off" />
+            <input
+              fluid="true"
+              pInputText
+              id="on_label"
+              [(ngModel)]="workReportToSearch"
+              (input)="tr?.filterGlobal(workReportToSearch, 'contains')"
+              autocomplete="off"
+            />
           </p-iconfield>
           <label for="on_label">Buscar acta de trabajo</label>
         </p-floatlabel>
@@ -35,13 +42,16 @@
     <p-confirmdialog></p-confirmdialog>
 
     <p-table
-      #to
+      #tr
       [rows]="20"
       [paginator]="true"
       [value]="workReports"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
-      [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+      [globalFilterFields]="[
+        'work_order.start_date',
+        'work_order.Quotes.customer.name'
+      ]"
     >
       <ng-template #header>
         <tr>
@@ -66,10 +76,14 @@
             <p class="text-center">{{ workReport.work_order.Quotes.code }}</p>
           </td>
           <td class="cursor-pointer">
-            <p class="text-center">{{ workReport.work_order.Quotes.customer.name }}</p>
+            <p class="text-center">
+              {{ workReport.work_order.Quotes.customer.name }}
+            </p>
           </td>
           <td class="cursor-pointer">
-            <p class="text-center">{{ workReport.work_order.Quotes.description }}</p>
+            <p class="text-center">
+              {{ workReport.work_order.Quotes.description }}
+            </p>
           </td>
           <td class="cursor-pointer">
             <p class="text-center">{{ workReport.work_order.start_date }}</p>

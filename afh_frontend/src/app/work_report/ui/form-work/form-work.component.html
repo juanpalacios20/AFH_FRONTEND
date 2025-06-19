@@ -47,10 +47,13 @@
         <label>Observaciones</label>
       </p-floatlabel>
     </div>
+    <h1 class="mb-4 mt-4 text-primary-950 font-medium">
+      Información adicional de las tareas.
+    </h1>
     <div class="mb-4" *ngFor="let tarea of tareas; let i = index">
-      <h2 class="text-lg font-semibold text-primary-800 mb-2">
+      <h1 class="font-normal text-black mb-2">
         {{ tarea.titulo }}
-      </h2>
+      </h1>
 
       <div class="grid grid-cols-3 gap-4 mb-4">
         <div
@@ -69,7 +72,7 @@
           <button
             *ngIf="tarea.subdescripciones.length > 1"
             type="button"
-            class="absolute top-1 right-2 text-red-500 hover:text-red-700 font-bold text-lg"
+            class="absolute top-1 right-2 text-gray-700 hover:text-gray-500 font-bold text-lg cursor-pointer"
             (click)="tarea.subdescripciones.splice(j, 1)"
             title="Eliminar"
           >
@@ -86,13 +89,71 @@
         (onClick)="tarea.subdescripciones.push('')"
       >
       </p-button>
-
-      <hr class="my-4 border-gray-300" />
     </div>
+    <!-- anexos -->
+    <h1 class="mb-4 mt-4 text-primary-950 font-medium">
+      Anexos correspondientes.
+    </h1>
+    <div
+      *ngFor="let anexo of anexos; let i = index"
+      class="mb-6 relative bg-white p-4"
+    >
+      <button
+        *ngIf="anexos.length > 1"
+        type="button"
+        class="absolute top-1 right-2 text-gray-700 hover:text-gray-500 font-bold text-lg cursor-pointer"
+        (click)="anexos.splice(i, 1)"
+        title="Eliminar"
+      >
+        &times;
+      </button>
+
+      <p-floatlabel class="mt-2" variant="on">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="anexo.descripcion"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Descripción de la imagen {{ i + 1 }}</label>
+      </p-floatlabel>
+
+      <div class="card flex justify-center mt-3 mb-2">
+        <p-image
+          [src]="anexo.imagen ? anexo.imagen : ''"
+          alt="Vista previa"
+          width="250"
+          *ngIf="anexo.imagen"
+        />
+      </div>
+
+      <div class="justify-center mb-2">
+        <p-fileupload
+          mode="basic"
+          chooseLabel="Suba una imagen"
+          chooseIcon="pi pi-upload"
+          name="image"
+          accept="image/*"
+          maxFileSize="1000000"
+          auto="false"
+          customUpload="true"
+          (onSelect)="onImageSelected($event, i)"
+        ></p-fileupload>
+      </div>
+    </div>
+
+    <p-button
+      label="Agregar otro anexo"
+      icon="pi pi-plus"
+      fluid="true"
+      styleClass="p-button-primary mb-4"
+      (onClick)="anexos.push({ descripcion: '', imagen: null, file: null })"
+    />
 
     <div class="flex justify-end gap-2 mt-10">
       <p-button styleClass="p-button-secondary"> Cancelar </p-button>
-      <p-button styleClass="p-button-primary">
+      <p-button styleClass="p-button-primary" (onClick)="createWorkReport()">
         Generar acta de trabajo
       </p-button>
     </div>
