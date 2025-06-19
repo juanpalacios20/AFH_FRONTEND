@@ -42,6 +42,23 @@
       </div>
       <div class="mb-2">
         <h1 class="mb-2 text-primary-950 font-medium">
+          Ingrese el nombre de la constructora si aplica.
+        </h1>
+        <p-floatlabel variant="on" required="true">
+          <input
+            pInputText
+            id="construction_company"
+            type="text"
+            [(ngModel)]="construction_company"
+            [ngModelOptions]="{ standalone: true }"
+            fluid="true"
+            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+          <label for="construction_company">Nombre constructora:</label>
+        </p-floatlabel>
+      </div>
+      <div class="mb-2">
+        <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese la descripción del trabajo.
         </h1>
         <p-floatlabel variant="on" required="true">
@@ -78,9 +95,13 @@
             id="description"
             type="text"
             [(ngModel)]="administration"
+            [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && administration === 0
+                errorMessage && administration === 0,
+              'bg-white text-black': construction_company,
+              'bg-gray-100 text-gray-500': !construction_company,
+              'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
@@ -106,9 +127,13 @@
             id="description"
             type="text"
             [(ngModel)]="unexpected"
+            [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && unexpected === 0
+                errorMessage && unexpected === 0,
+              'bg-white text-black': construction_company,
+              'bg-gray-100 text-gray-500': !construction_company,
+              'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
@@ -134,9 +159,13 @@
             id="description"
             type="text"
             [(ngModel)]="utility"
+            [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && utility === 0
+                errorMessage && utility === 0,
+              'bg-white text-black': construction_company,
+              'bg-gray-100 text-gray-500': !construction_company,
+              'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
@@ -246,11 +275,11 @@
     </div>
 
     <!-- Opciones del trabajo -->
-    <div
-      class="mb-4 p-4 bg-gray-100 border rounded-lg"
-    >
+    <div class="mb-4 p-4 bg-gray-100 border rounded-lg">
       <div class="grid grid-cols-2 gap-4 mb-2">
-        <h1 class="mb-2 text-primary-950 font-medium">Opción para la cotización</h1>
+        <h1 class="mb-2 text-primary-950 font-medium">
+          Opción para la cotización
+        </h1>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
@@ -258,7 +287,8 @@
           [ngClass]="{
             'col-span-3':
               itemsPorOpcion.items.length === 1 ||
-              (itemsPorOpcion.items.length % 3 === 1 && j === itemsPorOpcion.items.length - 1)
+              (itemsPorOpcion.items.length % 3 === 1 &&
+                j === itemsPorOpcion.items.length - 1)
           }"
           class="relative"
         >
@@ -274,9 +304,7 @@
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             ></textarea>
-            <label for="desc{{ j }}"
-              >Descripción ítem {{ j + 1 }}</label
-            >
+            <label for="desc{{ j }}">Descripción ítem {{ j + 1 }}</label>
           </p-floatlabel>
           <small
             id="email-help"

@@ -19,58 +19,13 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { QuoteService } from '../../services/quote.service';
 import { ClientService } from '../../../clients/services/client.service';
-import { AutoComplete, AutoCompleteModule } from 'primeng/autocomplete';
+import {
+  AutoComplete,
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
 import { forkJoin } from 'rxjs';
-
-interface Item {
-  id: number;
-  description: string;
-  units: string;
-  total_value: number;
-  amount: number;
-  unit_value: number;
-}
-
-interface Option {
-  id: number;
-  name: string;
-  total_value: number;
-  subtotal: string;
-  total_value_formatted: string;
-  items: Item[];
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface Quote {
-  id: number;
-  customer: Customer;
-  code: string;
-  description: string;
-  issue_date: number;
-  options: Option;
-  state: number;
-  tasks: string[];
-  administration: number;
-  unforeseen: number;
-  utility: number;
-  iva: number;
-  method_of_payment: string;
-  administration_value: string;
-  unforeseen_value: string;
-  utility_value: string;
-  iva_value: string;
-}
-
-interface AutoCompleteCompleteEvent {
-  originalEvent: Event;
-  query: string;
-}
+import { Customer, Item, Quote } from '../../../interfaces/models';
 
 @Component({
   selector: 'app-create-quote',
@@ -120,6 +75,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   items: Item[] = [];
   totalPrice: number = 0;
   optionsSelected: number = 0;
+  construction_company: string = '';
   administration: number = 0;
   unexpected: number = 0;
   utility: number = 0;
@@ -178,10 +134,16 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       this.selectedCustomer === null ||
       this.selectedCustomer === undefined ||
       this.description === '' ||
-      this.utility === 0 ||
-      this.administration === 0 ||
-      this.unexpected === 0 ||
       this.method_of_payment === ''
+    ) {
+      this.errorMessage = 'Campo obligatorio';
+    }
+
+    if (
+      (this.utility === 0 ||
+        this.administration === 0 ||
+        this.unexpected === 0) &&
+      this.construction_company === ''
     ) {
       this.errorMessage = 'Campo obligatorio';
     }
@@ -306,8 +268,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               method_of_payment: this.method_of_payment,
             };
             this.quoteService.createQuote(quoteData).subscribe({
-              next: (res) => {
-              },
+              next: (res) => {},
               error: (err) => {
                 console.log('Error al crear cotización', err);
               },
@@ -398,7 +359,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         //editar los items
         const editedItem = this.itemsPorOpcion.items[j];
         const item = this.quoteToEdit?.options.items[j]; // Obtener el item original de la cotización
-         // Suponiendo que el orden se mantiene
+        // Suponiendo que el orden se mantiene
         let itemData = {};
         if (item !== undefined) {
           if (editedItem.description !== item.description) {
@@ -427,7 +388,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
           if (
             editedItem.unit_value !== Number(item.unit_value) &&
             Number(item.unit_value) &&
-            item.unit_value 
+            item.unit_value
           ) {
             itemData = {
               ...itemData,
@@ -437,8 +398,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
           if (editedItem.id !== 0) {
             this.quoteService.updateItem(editedItem.id, itemData).subscribe({
-              next: (response) => {
-              },
+              next: (response) => {},
               error: (error) => {
                 console.error('Error al actualizar item', error);
               },
@@ -453,8 +413,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       for (let index = 0; index < this.itemsToDelete.length; index++) {
         const item = this.itemsToDelete[index];
         this.quoteService.deleteItem(item).subscribe({
-          next: () => {
-          },
+          next: () => {},
           error: (error) => {
             console.error('Error al eliminar item', error);
           },
@@ -462,8 +421,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       }
     }
     this.quoteService.updateQuote(this.quoteToEdit!.id, quoteData).subscribe({
-      next: (response) => {
-      },
+      next: (response) => {},
       error: (err) => {
         console.log(err);
       },
@@ -621,7 +579,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             unit_value: item.unit_value,
           })),
         };
-
       }
     }
   }

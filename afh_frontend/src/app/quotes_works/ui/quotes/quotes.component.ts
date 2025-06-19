@@ -14,51 +14,7 @@ import CreateQuoteComponent from '../create-quote/create-quote.component';
 import { TagModule } from 'primeng/tag';
 import ViewQuotesComponent from '../view-quotes/view-quotes.component';
 import { QuoteService } from '../../services/quote.service';
-
-interface Item {
-  id: number;
-  description: string;
-  units: string;
-  total_value: number;
-  amount: number;
-  unit_value: number;
-}
-
-interface Option {
-  id: number;
-  name: string;
-  total_value: number;
-  subtotal: string;
-  total_value_formatted: string;
-  items: Item[];
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface Quote {
-  id: number;
-  customer: Customer;
-  code: string;
-  description: string;
-  issue_date: number;
-  options: Option;
-  state: number;
-  tasks: string[];
-  administration: number;
-  unforeseen: number;
-  utility: number;
-  iva: number;
-  method_of_payment: string;
-  administration_value: string;
-  unforeseen_value: string;
-  utility_value: string;
-  iva_value: string;
-}
+import { Quote } from '../../../interfaces/models';
 
 @Component({
   selector: 'app-quotes',
