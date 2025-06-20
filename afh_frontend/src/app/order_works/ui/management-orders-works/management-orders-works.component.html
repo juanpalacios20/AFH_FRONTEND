@@ -28,6 +28,14 @@
           Busca por nombre de cliente y fecha de orden de trabajo</small
         >
       </div>
+      <button
+        pButton
+        icon="pi pi-plus"
+        label="Generar nueva orden de trabajo"
+        (click)="showCreateOrderWorkDialog()"
+        rounded="true"
+        styleClass="w-full"
+      ></button>
     </div>
 
     <!-- Confirmación de eliminación (solo una instancia) -->
@@ -49,22 +57,34 @@
             Nombre cliente
           </th>
           <th class="rounded-border text-primary-950 text-center">
-            Descripcion
+            Cantidad de personal
           </th>
-          <th class="rounded-border text-primary-950 text-center">Fecha de inicio</th>
-          <th class="rounded-border text-primary-950 text-center">Fecha de finalización</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Fecha de inicio
+          </th>
+          <th class="rounded-border text-primary-950 text-center">
+            Fecha de finalización
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
       </ng-template>
       <ng-template #body let-orderWork>
         <tr>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
-            <p class="text-center">{{ orderWork.Quotes.code }}</p>
+            <p class="text-center">{{ orderWork.quote.code }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
-            <p class="text-center">{{ orderWork.Quotes.customer.name }}</p>
+            <p class="text-center">{{ orderWork.quote.customer.name }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
-            <p class="text-center">{{ orderWork.Quotes.description }}</p>
+            <p class="text-center">
+              {{
+                orderWork.number_technicians +
+                  orderWork.number_officers +
+                  orderWork.number_auxiliaries +
+                  orderWork.number_supervisors
+              }}
+            </p>
           </td>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
             <p class="text-center">{{ orderWork.start_date }}</p>
@@ -72,15 +92,36 @@
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
             <p class="text-center">{{ orderWork.end_date }}</p>
           </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                (click)="showEditOrderWorkDialog(orderWork)"
+              />
+            </div>
+          </td>
         </tr>
       </ng-template>
     </p-table>
   </div>
-  <app-view-quotes
+  <app-view-orders-work
     [visible]="showDialog"
     [orderWork]="orderWorkToView"
-    [quote]="orderWorkToView?.Quotes ?? null"
-    [state]="state"
-    [severity]="severity"
-    (closeDialog)="closeViewDialog()"></app-view-quotes>
+    (closeDialog)="closeViewDialog()"
+  ></app-view-orders-work>
+  <app-form-order-works
+    [visible]="OrderWorkDialogVisible"
+    [action]="action"
+    (closeDialog)="OrderWorkDialogVisible = false"
+    (onOrderWorkCreated)="handleOrderWorkCreated()"
+  >
+  </app-form-order-works>
+  <app-form-order-works
+    [visible]="showEditDialog"
+    [orderWorkToEdit]="orderWorkToEdit"
+    [action]="action"
+    (closeDialog)="closeEditDialog()"
+    (onOrderWorkCreated)="handleOrderWorkEdited()"
+  >
+  </app-form-order-works>
 </div>

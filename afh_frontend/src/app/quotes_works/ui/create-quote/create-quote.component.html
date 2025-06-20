@@ -98,8 +98,8 @@
             [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && administration === 0,
-              'bg-white text-black': construction_company,
+                errorMessage && administration === 0 && !!construction_company,
+              'bg-white text-black': !!construction_company,
               'bg-gray-100 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
@@ -112,7 +112,7 @@
         <small
           id="email-help"
           class="text-red-600"
-          *ngIf="errorMessage && administration === 0"
+          *ngIf="errorMessage && administration === 0 && !!construction_company"
         >
           {{ errorMessage }}
         </small>
@@ -130,7 +130,7 @@
             [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && unexpected === 0,
+                errorMessage && unexpected === 0 && !!construction_company,
               'bg-white text-black': construction_company,
               'bg-gray-100 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
@@ -144,7 +144,7 @@
         <small
           id="email-help"
           class="text-red-600"
-          *ngIf="errorMessage && unexpected === 0"
+          *ngIf="errorMessage && unexpected === 0 && !!construction_company"
         >
           {{ errorMessage }}
         </small>
@@ -162,7 +162,7 @@
             [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && utility === 0,
+                errorMessage && utility === 0 && !!construction_company,
               'bg-white text-black': construction_company,
               'bg-gray-100 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
@@ -176,7 +176,7 @@
         <small
           id="email-help"
           class="text-red-600"
-          *ngIf="errorMessage && utility === 0"
+          *ngIf="errorMessage && utility === 0 && !!construction_company"
         >
           {{ errorMessage }}
         </small>

@@ -143,7 +143,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       (this.utility === 0 ||
         this.administration === 0 ||
         this.unexpected === 0) &&
-      this.construction_company === ''
+      this.construction_company !== ''
     ) {
       this.errorMessage = 'Campo obligatorio';
     }
@@ -266,9 +266,12 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               unforeseen: this.unexpected / 100,
               utility: this.utility / 100,
               method_of_payment: this.method_of_payment,
+              construction: this.construction_company,
             };
             this.quoteService.createQuote(quoteData).subscribe({
-              next: (res) => {},
+              next: (res) => {
+                console.log('Cotización creada', res);
+              },
               error: (err) => {
                 console.log('Error al crear cotización', err);
               },
@@ -290,7 +293,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }, 2000);
   }
 
-  //pasamos de 236 lineas a 170
   editQuote() {
     this.verify();
     if (this.errorMessage !== '') {
@@ -315,6 +317,11 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     if (this.method_of_payment !== this.quoteToEdit?.method_of_payment) {
       quoteData.method_of_payment = this.method_of_payment;
+    }
+    if (this.quoteToEdit) {
+      if (this.construction_company !== this.quoteToEdit.construction) {
+        quoteData.construction = this.construction_company;
+      }
     }
     //verifica si hay que cambiar la descripcion
     if (this.description !== this.quoteToEdit?.description) {
@@ -521,6 +528,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       this.unexpected = this.quoteToEdit.unforeseen * 100;
       this.utility = this.quoteToEdit.utility * 100;
       this.method_of_payment = this.quoteToEdit.method_of_payment;
+      this.construction_company = this.quoteToEdit.construction || '';
       this.ivaPercentage = this.quoteToEdit.iva;
       this.selectedCustomer = this.quoteToEdit.customer;
       this.tasks = this.quoteToEdit.tasks.map((t) => ({ descripcion: t }));

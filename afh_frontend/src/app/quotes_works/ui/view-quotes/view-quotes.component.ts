@@ -30,7 +30,7 @@ import { OrderWork, Quote } from '../../../interfaces/models';
 export default class ViewQuotesComponent {
   loadingDownload = false;
   @Input() orderWork: OrderWork | null = null;
-  @Input() quote: Quote | null = this.orderWork?.Quotes || null;
+  @Input() quote: Quote | null = this.orderWork?.quote || null;
   @Input() state: string = '';
   @Input() severity:
     | 'success'

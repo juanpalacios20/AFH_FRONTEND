@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { AutoComplete, AutoCompleteModule } from 'primeng/autocomplete';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -20,78 +20,7 @@ import { OrderWorkService } from '../../../order_works/services/work_order.servi
 import { FileUpload } from 'primeng/fileupload';
 import { Image } from 'primeng/image';
 import { WorkReportService } from '../../services/work_report.service';
-
-interface Item {
-  id: number;
-  description: string;
-  units: string;
-  total_value: number;
-  amount: number;
-  unit_value: number;
-}
-
-interface Option {
-  id: number;
-  name: string;
-  total_value: number;
-  subtotal: string;
-  total_value_formatted: string;
-  items: Item[];
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface Quote {
-  id: number;
-  customer: Customer;
-  code: string;
-  description: string;
-  issue_date: number;
-  options: Option;
-  state: number;
-  tasks: string[];
-  administration: number;
-  unforeseen: number;
-  utility: number;
-  iva: number;
-  method_of_payment: string;
-  administration_value: string;
-  unforeseen_value: string;
-  utility_value: string;
-  iva_value: string;
-}
-
-interface OrderWork {
-  id: number;
-  Quotes: Quote;
-  start_date: string;
-  end_date: string;
-}
-
-interface WorkReport {
-  id: number;
-  work_order: OrderWork;
-  exhibits: exhibit[];
-  date: string;
-  observations: string;
-  recommendations: string;
-}
-
-interface exhibit {
-  id: number;
-  tittle: string;
-  image: string;
-}
-
-interface AutoCompleteCompleteEvent {
-  originalEvent: Event;
-  query: string;
-}
+import { OrderWork } from '../../../interfaces/models';
 
 @Component({
   selector: 'app-form-work',
@@ -121,6 +50,8 @@ export default class FormWorkComponent {
   @Output() onWorkReportCreated = new EventEmitter<void>();
   recommendations: string = '';
   observations: string = '';
+  development: string = '';
+  description: string = '';
   orderWork: OrderWork[] = [];
   selectedOrderWork: OrderWork | null = null;
   filteredOrderWork: any[] | undefined;
@@ -216,7 +147,7 @@ export default class FormWorkComponent {
     for (let i = 0; i < this.orderWorks.length; i++) {
       let orderWork = this.orderWorks[i];
       if (
-        orderWork.Quotes.code.toLowerCase().indexOf(query.toLowerCase()) == 0
+        orderWork.quote.code.toLowerCase().indexOf(query.toLowerCase()) == 0
       ) {
         filtered.push(orderWork);
       }

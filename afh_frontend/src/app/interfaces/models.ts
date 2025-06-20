@@ -41,14 +41,22 @@ export interface Quote {
   unforeseen_value: string;
   utility_value: string;
   iva_value: string;
-  construction_company: string;
+  construction: string;
 }
 
 export interface OrderWork {
   id: number;
-  Quotes: Quote;
+  quote: Quote;
+  description: string;
   start_date: string;
   end_date: string;
+  workplace: number;
+  number_technicians: number;
+  number_officers: number;
+  number_auxiliaries: number;
+  number_supervisors: number;
+  activity: number;
+  permissions: [];
 }
 
 export interface AutoCompleteCompleteEvent {
