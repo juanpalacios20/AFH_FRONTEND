@@ -198,7 +198,7 @@ export default class FormOrderWorksComponent {
       number_auxiliaries: this.auxiliary,
       number_supervisors: this.supervisor,
       activity: activityType,
-      permissions: this.permisosRequeridos.join(', '),
+      permissions: this.permisosRequeridos
     };
 
     console.log(data);
@@ -261,7 +261,7 @@ export default class FormOrderWorksComponent {
       JSON.stringify(this.permisosRequeridos.sort()) !==
       JSON.stringify(permisos.sort())
     ) {
-      quoteData.permissions = this.permisosRequeridos.join(', ');
+      quoteData.permissions = this.permisosRequeridos;
     }
     if (this.technician !== this.orderWorkToEdit?.number_technicians) {
       quoteData.number_technicians = this.technician;
@@ -381,10 +381,10 @@ export default class FormOrderWorksComponent {
       console.log('Se abrió el diálogo con action =', this.action);
 
       if (this.action === 0) {
-        this.actionTittle = 'Generar acta de trabajo';
+        this.actionTittle = 'Generar orden de trabajo';
       } else if (this.action === 1) {
-        this.actionTittle = 'Editar acta de trabajo';
-        this.loadEditData(); // <-- esto carga los datos
+        this.actionTittle = 'Editar orden de trabajo';
+        this.loadEditData();
       }
 
       this.loadQuotes();

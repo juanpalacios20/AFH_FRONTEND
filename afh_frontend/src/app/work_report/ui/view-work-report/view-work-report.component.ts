@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { WorkReport } from '../../../interfaces/models';
 import { ButtonModule } from 'primeng/button';
@@ -14,12 +14,14 @@ import { WorkReportService } from '../../services/work_report.service';
 export class ViewWorkReportComponent {
   @Input() visible: boolean = false;
   @Input() report?: WorkReport;
+  @Output() closeDialog = new EventEmitter<void>();
   loadingDownload: boolean = false;
 
   constructor(private workReportService: WorkReportService) {}
 
   close() {
     this.visible = false;
+    this.closeDialog.emit();
   }
 
   generarPDF(): void {

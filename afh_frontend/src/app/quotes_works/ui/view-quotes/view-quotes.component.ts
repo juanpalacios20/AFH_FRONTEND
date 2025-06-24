@@ -144,7 +144,7 @@ export default class ViewQuotesComponent {
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
-          detail: `Cotización 'aprobada'`,
+          detail: `Cotización aprobada con éxito`,
         });
       },
       error: (error) => {
@@ -200,11 +200,6 @@ export default class ViewQuotesComponent {
       },
       accept: () => {
         this.changeState(2);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Exito',
-          detail: 'Cotización aprobada con éxito',
-        });
       },
     });
   }

@@ -41,7 +41,7 @@
       fluid="true"
       class="flex w-full"
       label="Descargar pdf"
-      loading="true"
+      [loading]="loadingDownload"
       icon="pi pi-check"
       styleClass="p-button-primary"
       (onClick)="generarPDF()"

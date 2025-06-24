@@ -65,13 +65,18 @@ export default class WorkReportComponent implements OnInit {
   }
 
   closeEditDialog() {
-    this.loadWorkReports()
     this.action = 0;
     this.workEditVisible = false;
+    this.loadWorkReports();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Acta de trabajo editada exitosamente.',
+    });
   }
 
   handleWorkEdited() {
-    this.closeEditDialog;
+    this.closeEditDialog();
   }
 
   showCreateWorkReportDialog() {
@@ -80,9 +85,14 @@ export default class WorkReportComponent implements OnInit {
   }
 
   closeWorkReportDialog() {
-    this.loadWorkReports()
     this.action = 0;
     this.workReportDialogVisible = false;
+    this.loadWorkReports();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Acta de trabajo creada exitosamente.',
+    });
   }
 
   handleWorkReportCreated() {

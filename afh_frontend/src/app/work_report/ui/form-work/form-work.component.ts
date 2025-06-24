@@ -167,7 +167,8 @@ export default class FormWorkComponent {
 
       const formData = new FormData();
 
-      if (hasTitle) formData.append('tittle', anexo.descripcion);
+      if (hasTitle && anexo.id === 0) formData.append('tittle', anexo.descripcion);
+      if (hasTitle && anexo.id !== 0) formData.append('title', anexo.descripcion);
 
       // Convertir URLs de imágenes previas a blobs
       const urlFetches = (anexo.imagenes || [])

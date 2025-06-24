@@ -1,5 +1,5 @@
 <p-dialog
-  header="{{ this.actionTittle + ' ' + orderWorkToEdit?.quote?.code }}"
+  [header]="this.action === 1 ? this.actionTittle + ' ' + orderWorkToEdit?.quote?.code : this.actionTittle "
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '60rem' }"
