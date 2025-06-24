@@ -4,7 +4,7 @@
   <div class="w-full p-5 pt-20">
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-bold">
-        AFH: Administración de actas de trabajo
+        AFH: Administración de actas de entrega
       </h1>
     </div>
 
@@ -22,16 +22,16 @@
               autocomplete="off"
             />
           </p-iconfield>
-          <label for="on_label">Buscar acta de trabajo</label>
+          <label for="on_label">Buscar acta de entrega</label>
         </p-floatlabel>
         <small id="search-help" class="text-gray-500 text-center">
-          Busca por nombre de cliente y fecha de acta de trabajo</small
+          Busca por nombre de cliente y fecha de acta de entrega</small
         >
       </div>
       <button
         pButton
         icon="pi pi-plus"
-        label="Generar nueva acta de trabajo"
+        label="Generar nueva acta de entrega"
         (click)="showCreateWorkReportDialog()"
         rounded="true"
         styleClass="w-full"
@@ -62,34 +62,35 @@
           <th class="rounded-border text-primary-950 text-center">
             Descripcion
           </th>
-          <th class="rounded-border text-primary-950 text-center">
-            Fecha de inicio
-          </th>
-          <th class="rounded-border text-primary-950 text-center">
-            Fecha de finalización
-          </th>
+          <th class="rounded-border text-primary-950 text-center">Fecha</th>
+          <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
       </ng-template>
       <ng-template #body let-workReport>
         <tr>
-          <td class="cursor-pointer">
-            <p class="text-center">{{ workReport.work_order.Quotes.code }}</p>
+          <td class="cursor-pointer" (click)="openView(workReport)">
+            <p class="text-center">{{ workReport.work_order.quote.code }}</p>
           </td>
-          <td class="cursor-pointer">
+          <td class="cursor-pointer" (click)="openView(workReport)">
             <p class="text-center">
-              {{ workReport.work_order.Quotes.customer.name }}
+              {{ workReport.work_order.quote.customer.name }}
             </p>
           </td>
-          <td class="cursor-pointer">
+          <td class="cursor-pointer" (click)="openView(workReport)">
             <p class="text-center">
-              {{ workReport.work_order.Quotes.description }}
+              {{ workReport.description }}
             </p>
           </td>
-          <td class="cursor-pointer">
-            <p class="text-center">{{ workReport.work_order.start_date }}</p>
+          <td class="cursor-pointer" (click)="openView(workReport)">
+            <p class="text-center">{{ workReport.date }}</p>
           </td>
-          <td class="cursor-pointer">
-            <p class="text-center">{{ workReport.work_order.end_date }}</p>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                (click)="showEditDialog(workReport)"
+              />
+            </div>
           </td>
         </tr>
       </ng-template>
@@ -97,8 +98,22 @@
   </div>
   <app-form-work
     [visible]="workReportDialogVisible"
+    [action]="action"
     (closeDialog)="workReportDialogVisible = false"
-    (onQuoteCreated)="handleWorkReportCreated()"
+    (onWorkReportCreated)="handleWorkReportCreated()"
   >
   </app-form-work>
+  <app-form-work
+    [visible]="workEditVisible"
+    [action]="action"
+    [workReportToEdit]="workReportToEdit"
+    (closeDialog)="workEditVisible = false"
+    (onWorkReportCreated)="handleWorkEdited()"
+  >
+  </app-form-work>
+  <app-view-work-report
+    [visible]="viewVisible"
+    [report]="selectedReport"
+    (onHide)="viewVisible = false"
+  ></app-view-work-report>
 </div>

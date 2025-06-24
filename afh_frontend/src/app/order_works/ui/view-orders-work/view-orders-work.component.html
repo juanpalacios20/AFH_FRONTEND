@@ -44,7 +44,20 @@
       {{ orderWork?.quote?.method_of_payment }}
     </p>
   </div>
-
+  <h2 class="text-lg text-black font-bold mb-2">Acciones</h2>
+  <div class="w-full">
+    <p-button
+      fluid="true"
+      class="flex w-full"
+      [label]="orderWork?.end_date ? 'Orden finalizada' : 'Aceptar orden'"
+      icon="pi pi-check"
+      [disabled]="orderWork?.end_date ? true : false"
+      [styleClass]="
+        orderWork?.end_date === null ? 'p-button-primary' : 'p-button-secondary'
+      "
+      (onClick)="finishOrderWork()"
+    />
+  </div>
   <!-- Información específica de la orden -->
   <div class="mb-6">
     <h2 class="text-lg text-black font-bold mb-2">Datos de la orden</h2>
@@ -58,14 +71,14 @@
       <span class="text-black font-bold">Lugar de trabajo:</span>
       {{
         orderWork?.workplace === 1
-          ? 'Instalaciones propias'
-          : 'Instalaciones del cliente'
+          ? "Instalaciones propias"
+          : "Instalaciones del cliente"
       }}
     </p>
 
     <p class="text-gray-700 font-semibold text-lg mb-2">
       <span class="text-black font-bold">Tipo de actividad:</span>
-      {{ orderWork?.activity === 1 ? 'Emergencia' : 'Programado' }}
+      {{ orderWork?.activity === 1 ? "Emergencia" : "Programado" }}
     </p>
 
     <p class="text-gray-700 font-semibold text-lg mb-2">
@@ -75,7 +88,7 @@
 
     <p class="text-gray-700 font-semibold text-lg mb-2">
       <span class="text-black font-bold">Fecha de finalización:</span>
-      {{ orderWork?.end_date || 'No definida' }}
+      {{ orderWork?.end_date || "No definida" }}
     </p>
 
     <p class="text-gray-700 font-semibold text-lg mb-2">

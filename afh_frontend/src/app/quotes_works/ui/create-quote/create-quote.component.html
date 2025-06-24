@@ -40,7 +40,7 @@
           </small>
         </div>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el nombre de la constructora si aplica.
         </h1>
@@ -51,13 +51,21 @@
             type="text"
             [(ngModel)]="construction_company"
             [ngModelOptions]="{ standalone: true }"
+            [ngClass]="{
+              'bg-gray-200 text-gray-500':
+                quoteToEdit?.construction === null,
+              'w-full font-sans py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
+            }"
+            [disabled]="
+              this.action === 1 && this.quoteToEdit?.construction === null
+            "
             fluid="true"
             class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="construction_company">Nombre constructora:</label>
         </p-floatlabel>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese la descripción del trabajo.
         </h1>
@@ -85,7 +93,7 @@
           {{ errorMessage }}
         </small>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de administración.
         </h1>
@@ -117,7 +125,7 @@
           {{ errorMessage }}
         </small>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de imprevisto.
         </h1>
@@ -149,7 +157,7 @@
           {{ errorMessage }}
         </small>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de utilidad.
         </h1>
@@ -398,7 +406,7 @@
             *ngIf="itemsPorOpcion.items.length > 1 && this.action === 0"
             type="button"
             (click)="removeItem(j, 0)"
-            class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
+            class="absolute top-0 right-0 text-gray-500 hover:text-gray-700 font-bold text-lg cursor-pointer"
             title="Eliminar"
           >
             &times;
@@ -407,7 +415,7 @@
             *ngIf="itemsPorOpcion.items.length > 1 && this.action === 1"
             type="button"
             (click)="removeItem(j, item.id)"
-            class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
+            class="absolute top-0 right-0 text-gray-500 hover:text-gray-700 font-bold text-lg cursor-pointer"
             title="Eliminar"
           >
             &times;

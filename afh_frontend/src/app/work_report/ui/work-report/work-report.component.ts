@@ -13,73 +13,8 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import FormWorkComponent from '../form-work/form-work.component';
 import { WorkReportService } from '../../services/work_report.service';
-
-interface Item {
-  id: number;
-  description: string;
-  units: string;
-  total_value: number;
-  amount: number;
-  unit_value: number;
-}
-
-interface Option {
-  id: number;
-  name: string;
-  total_value: number;
-  subtotal: string;
-  total_value_formatted: string;
-  items: Item[];
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface Quote {
-  id: number;
-  customer: Customer;
-  code: string;
-  description: string;
-  issue_date: number;
-  options: Option;
-  state: number;
-  tasks: string[];
-  administration: number;
-  unforeseen: number;
-  utility: number;
-  iva: number;
-  method_of_payment: string;
-  administration_value: string;
-  unforeseen_value: string;
-  utility_value: string;
-  iva_value: string;
-}
-
-interface OrderWork {
-  id: number;
-  Quotes: Quote;
-  start_date: string;
-  end_date: string;
-}
-
-interface WorkReport {
-  id: number;
-  work_order: OrderWork;
-  exhibits: exhibit[];
-  date: string;
-  observations: string;
-  recommendations: string;
-}
-
-interface exhibit {
-  id: number;
-  tittle: string;
-  image: string;
-}
+import { WorkReport } from '../../../interfaces/models';
+import { ViewWorkReportComponent } from '../view-work-report/view-work-report.component';
 
 @Component({
   selector: 'app-work-report',
@@ -96,26 +31,57 @@ interface exhibit {
     TableModule,
     TagModule,
     FormWorkComponent,
+    ViewWorkReportComponent,
   ],
   templateUrl: './work-report.component.html',
   styleUrl: './work-report.component.css',
   providers: [ConfirmationService, MessageService],
 })
 export default class WorkReportComponent implements OnInit {
+  action: number = 0;
+  viewVisible = false;
+  selectedReport!: WorkReport;
   workReports: WorkReport[] = [];
   workReportDialogVisible: boolean = false;
+  workEditVisible: boolean = false;
   workReportToSearch: string = '';
+  workReportToEdit: WorkReport | null = null;
 
   constructor(
     private workReportService: WorkReportService,
     private messageService: MessageService
   ) {}
 
+  openView(report: WorkReport) {
+    console.log(report);
+    this.selectedReport = report;
+    this.viewVisible = true;
+  }
+
+  showEditDialog(workReport: WorkReport) {
+    this.workReportToEdit = workReport;
+    this.action = 1;
+    this.workEditVisible = true;
+  }
+
+  closeEditDialog() {
+    this.loadWorkReports()
+    this.action = 0;
+    this.workEditVisible = false;
+  }
+
+  handleWorkEdited() {
+    this.closeEditDialog;
+  }
+
   showCreateWorkReportDialog() {
+    this.action = 0;
     this.workReportDialogVisible = true;
   }
 
   closeWorkReportDialog() {
+    this.loadWorkReports()
+    this.action = 0;
     this.workReportDialogVisible = false;
   }
 

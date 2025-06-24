@@ -252,7 +252,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
           description: 'Opción para ' + this.description,
           items: itemIds,
         };
-
         this.quoteService.createOption(optionData).subscribe({
           next: (response) => {
             optionId = response.option_id;
@@ -266,7 +265,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               unforeseen: this.unexpected / 100,
               utility: this.utility / 100,
               method_of_payment: this.method_of_payment,
-              construction: this.construction_company,
+              construction: this.construction_company ? this.construction_company : null,
             };
             this.quoteService.createQuote(quoteData).subscribe({
               next: (res) => {

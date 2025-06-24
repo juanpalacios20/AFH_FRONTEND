@@ -59,6 +59,24 @@ export interface OrderWork {
   permissions: [];
 }
 
+export interface WorkReport {
+  id: number;
+  work_order: OrderWork;
+  exhibit: exhibit[];
+  date: string;
+  observations: string;
+  recommendations: string;
+  description: string;
+  development: string;
+  tasks: { titulo: string; subdescripciones: string[] }[];
+}
+
+export interface exhibit {
+  id: number;
+  tittle: string;
+  images: string[];
+}
+
 export interface AutoCompleteCompleteEvent {
   originalEvent: Event;
   query: string;

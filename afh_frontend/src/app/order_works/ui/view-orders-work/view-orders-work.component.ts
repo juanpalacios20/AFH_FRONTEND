@@ -17,7 +17,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TagModule,
     ToastModule,
     CommonModule,
-    ButtonModule,
     ConfirmDialog,
     NgIf,
   ],

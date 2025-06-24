@@ -19,17 +19,65 @@ export class WorkReportService extends BaseHttpService {
 
   getWorkReports() {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/deliverycertificate/get/`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/deliverycertificate/get/`, {
+      headers,
+    });
   }
 
   createWorkReport(workReport: any) {
     const headers = this.getHeaders();
-    return this.http.post<any>(`${this.apiUrl}/deliverycertificate/create/`, workReport, { headers });
+    return this.http.post<any>(
+      `${this.apiUrl}/deliverycertificate/create/`,
+      workReport,
+      { headers }
+    );
   }
 
-  createExhibit(exhibit: any) {
+  createExhibit(data: any) {
     const headers = this.getHeaders();
-    return this.http.post<any>(`${this.apiUrl}/exhibit/create/`, exhibit, { headers });
+    return this.http.post<any>(`${this.apiUrl}/exhibit/create/`, data, {
+      headers,
+    });
   }
 
+  updateExhibit(data: any, id: number) {
+    const headers = this.getHeaders();
+    return this.http.patch<any>(`${this.apiUrl}/exhibit/update/${id}/`, data, {
+      headers,
+    });
+  }
+
+  deleteExhibit(id: number) {
+    return this.http.delete<any>(`${this.apiUrl}/exhibit/delete/${id}/`);
+  }
+
+  updateWorkReport(data: any, id: number) {
+    const headers = this.getHeaders();
+    return this.http.patch<any>(
+      `${this.apiUrl}/deliverycertificate/update/${id}/`,
+      data,
+      {
+        headers,
+      }
+    );
+  }
+
+  addExhibitToWorkReport(delivery_certificate_id: number, exhibit_id: number) {
+    const headers = this.getHeaders();
+    return this.http.patch<any>(
+      `${this.apiUrl}/deliverycertificate/add-exhibit/${delivery_certificate_id}/${exhibit_id}/`,
+      {
+        headers,
+      }
+    );
+  }
+
+  workReportPdf(id: number) {
+    const headers = this.getHeaders();
+    return this.http.get(`${this.apiUrl}/deliverycertificate/pdf/${id}/`, {
+      headers: headers,
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
 }
