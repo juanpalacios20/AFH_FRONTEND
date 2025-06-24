@@ -122,7 +122,6 @@ export default class ClientsComponent implements OnInit {
   }
 
   handleClientEdit() {
-    console.log(this.isEdited);
     this.clientEditVisible = false;
     this.getClients();
     if (this.isEdited) {

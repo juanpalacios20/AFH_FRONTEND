@@ -7,58 +7,8 @@ import { QuoteService } from '../../services/quote.service';
 import { OrderWorkService } from '../../../order_works/services/work_order.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
-
-interface Item {
-  id: number;
-  description: string;
-  units: string;
-  total_value: number;
-  amount: number;
-  unit_value: number;
-}
-
-interface Option {
-  id: number;
-  name: string;
-  total_value: number;
-  subtotal: string;
-  total_value_formatted: string;
-  items: Item[];
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface Quote {
-  id: number;
-  customer: Customer;
-  code: string;
-  description: string;
-  issue_date: number;
-  options: Option;
-  state: number;
-  tasks: string[];
-  administration: number;
-  unforeseen: number;
-  utility: number;
-  iva: number;
-  method_of_payment: string;
-  administration_value: string;
-  unforeseen_value: string;
-  utility_value: string;
-  iva_value: string;
-}
-
-interface OrderWork {
-  id: number;
-  Quotes: Quote;
-  start_date: string;
-  end_date: string;
-}
+import { ToastModule } from 'primeng/toast';
+import { OrderWork, Quote } from '../../../interfaces/models';
 
 @Component({
   selector: 'app-view-quotes',
@@ -67,6 +17,7 @@ interface OrderWork {
     ButtonModule,
     TagModule,
     NgFor,
+    ToastModule,
     CommonModule,
     ButtonModule,
     ConfirmDialog,
@@ -79,7 +30,7 @@ interface OrderWork {
 export default class ViewQuotesComponent {
   loadingDownload = false;
   @Input() orderWork: OrderWork | null = null;
-  @Input() quote: Quote | null = this.orderWork?.Quotes || null;
+  @Input() quote: Quote | null = this.orderWork?.quote || null;
   @Input() state: string = '';
   @Input() severity:
     | 'success'
@@ -188,7 +139,19 @@ export default class ViewQuotesComponent {
     const data = {
       state: state,
     };
-    this.quoteService.changeState(this.quote?.id || 0, data);
+    this.quoteService.changeState(this.quote?.id || 0, data).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `Cotización aprobada con éxito`,
+        });
+      },
+      error: (error) => {
+        console.error('Error changing state:', error);
+      },
+    });
+
     if (state === 2) {
       this.state = 'APROBADO';
       this.severity = 'success';
@@ -237,11 +200,6 @@ export default class ViewQuotesComponent {
       },
       accept: () => {
         this.changeState(2);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Exito',
-          detail: 'Cotización aprobada con éxito',
-        });
       },
     });
   }

@@ -13,58 +13,9 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { OrderWorkService } from '../../services/work_order.service';
 import ViewQuotesComponent from '../../../quotes_works/ui/view-quotes/view-quotes.component';
-
-interface Item {
-  id: number;
-  description: string;
-  units: string;
-  total_value: number;
-  amount: number;
-  unit_value: number;
-}
-
-interface Option {
-  id: number;
-  name: string;
-  total_value: number;
-  subtotal: string;
-  total_value_formatted: string;
-  items: Item[];
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface Quote {
-  id: number;
-  customer: Customer;
-  code: string;
-  description: string;
-  issue_date: number;
-  options: Option;
-  state: number;
-  tasks: string[];
-  administration: number;
-  unforeseen: number;
-  utility: number;
-  iva: number;
-  method_of_payment: string;
-  administration_value: string;
-  unforeseen_value: string;
-  utility_value: string;
-  iva_value: string;
-}
-
-interface OrderWork {
-  id: number;
-  Quotes: Quote;
-  start_date: string;
-  end_date: string;
-}
+import { OrderWork } from '../../../interfaces/models';
+import FormOrderWorksComponent from '../form-order-works/form-order-works.component';
+import ViewOrdersWorkComponent from '../view-orders-work/view-orders-work.component';
 
 @Component({
   selector: 'app-management-orders-works',
@@ -80,7 +31,8 @@ interface OrderWork {
     ToastModule,
     TableModule,
     TagModule,
-    ViewQuotesComponent,
+    ViewOrdersWorkComponent,
+    FormOrderWorksComponent,
   ],
   templateUrl: './management-orders-works.component.html',
   styleUrl: './management-orders-works.component.css',
@@ -90,35 +42,80 @@ export default class ManagementOrdersWorksComponent implements OnInit {
   orderWorkFound: string | null = null;
   orderWorks: OrderWork[] = [];
   showDialog: boolean = false;
+  showEditDialog: boolean = false;
+  action: number = 0;
   orderWorkToView: OrderWork | null = null;
+  orderWorkToEdit: OrderWork | null = null;
+  OrderWorkDialogVisible: boolean = false;
   state: string = '';
   severity: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | undefined =
     undefined;
 
-  constructor(private orderWorkService: OrderWorkService) {}
+  constructor(
+    private orderWorkService: OrderWorkService,
+    private messageService: MessageService
+  ) {}
 
   showViewDialog(orderWork: OrderWork) {
     this.orderWorkToView = orderWork;
-    this.state = this.getStateString(orderWork.Quotes.state);
-    this.severity = this.getSeverity(orderWork.Quotes.state);
+    this.state = this.getStateString(orderWork.quote.state);
+    this.severity = this.getSeverity(orderWork.quote.state);
     this.showDialog = true;
+  }
+
+  showCreateOrderWorkDialog() {
+    this.action = 0;
+    this.OrderWorkDialogVisible = true;
+  }
+
+  showEditOrderWorkDialog(orderWork: OrderWork) {
+    this.action = 1;
+    this.orderWorkToEdit = orderWork;
+    this.showEditDialog = true;
   }
 
   closeViewDialog() {
     this.getOrders();
+    this.orderWorkToView = null;
     this.showDialog = false;
   }
 
-  handleQuoteCreated() {
-    this.closeViewDialog();
+  closeCreateDialog() {
+    this.OrderWorkDialogVisible = false;
+    this.getOrders();
   }
+
+  closeEditDialog() {
+    this.showEditDialog = false;
+    this.action = 0;
+    this.getOrders();
+  }
+
+  handleOrderWorkCreated() {
+    this.closeCreateDialog();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Exito',
+      detail: 'Orden de trabajo creada correctamente',
+    });
+    this.getOrders();
+  }
+
+  handleOrderWorkEdited() {
+    this.closeEditDialog();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Exito',
+      detail: 'Orden de trabajo editada correctamente',
+    });
+  }
+
 
   getOrders() {
     this.orderWorkService.getOrders().subscribe({
       next: (response) => {
+        console.log(response);
         this.orderWorks = response;
-        console.log('Orders fetched successfully:', this.orderWorks);
-        console.log('OrderWorks:', this.orderWorks);
       },
       error: (error) => {
         console.error('Error fetching orders:', error);

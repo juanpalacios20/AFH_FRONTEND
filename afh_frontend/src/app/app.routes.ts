@@ -13,6 +13,7 @@ import { AdminGuard } from './shared/auth/data_access/admin.guard';
 import  ClientsComponent  from './clients/ui/clients/clients.component';
 import QuotesComponent from './quotes_works/ui/quotes/quotes.component';
 import ManagementOrdersWorksComponent from './order_works/ui/management-orders-works/management-orders-works.component';
+import WorkReportComponent from './work_report/ui/work-report/work-report.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -29,6 +30,7 @@ export const routes: Routes = [
     { path: 'change-password', component: ChangePasswordComponent },
     { path: 'quotes', component: QuotesComponent, canActivate: [AuthGuard]},
     { path: 'management-orders-works', component: ManagementOrdersWorksComponent, canActivate: [AuthGuard] },
+    { path: 'work-report', component: WorkReportComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'login' }
 
 ];

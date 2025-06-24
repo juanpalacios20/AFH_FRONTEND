@@ -40,7 +40,32 @@
           </small>
         </div>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
+        <h1 class="mb-2 text-primary-950 font-medium">
+          Ingrese el nombre de la constructora si aplica.
+        </h1>
+        <p-floatlabel variant="on" required="true">
+          <input
+            pInputText
+            id="construction_company"
+            type="text"
+            [(ngModel)]="construction_company"
+            [ngModelOptions]="{ standalone: true }"
+            [ngClass]="{
+              'bg-gray-200 text-gray-500':
+                quoteToEdit?.construction === null,
+              'w-full font-sans py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
+            }"
+            [disabled]="
+              this.action === 1 && this.quoteToEdit?.construction === null
+            "
+            fluid="true"
+            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+          <label for="construction_company">Nombre constructora:</label>
+        </p-floatlabel>
+      </div>
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese la descripción del trabajo.
         </h1>
@@ -68,7 +93,7 @@
           {{ errorMessage }}
         </small>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de administración.
         </h1>
@@ -78,9 +103,13 @@
             id="description"
             type="text"
             [(ngModel)]="administration"
+            [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && administration === 0
+                errorMessage && administration === 0 && !!construction_company,
+              'bg-white text-black': !!construction_company,
+              'bg-gray-100 text-gray-500': !construction_company,
+              'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
@@ -91,12 +120,12 @@
         <small
           id="email-help"
           class="text-red-600"
-          *ngIf="errorMessage && administration === 0"
+          *ngIf="errorMessage && administration === 0 && !!construction_company"
         >
           {{ errorMessage }}
         </small>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de imprevisto.
         </h1>
@@ -106,9 +135,13 @@
             id="description"
             type="text"
             [(ngModel)]="unexpected"
+            [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && unexpected === 0
+                errorMessage && unexpected === 0 && !!construction_company,
+              'bg-white text-black': construction_company,
+              'bg-gray-100 text-gray-500': !construction_company,
+              'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
@@ -119,12 +152,12 @@
         <small
           id="email-help"
           class="text-red-600"
-          *ngIf="errorMessage && unexpected === 0"
+          *ngIf="errorMessage && unexpected === 0 && !!construction_company"
         >
           {{ errorMessage }}
         </small>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de utilidad.
         </h1>
@@ -134,9 +167,13 @@
             id="description"
             type="text"
             [(ngModel)]="utility"
+            [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && utility === 0
+                errorMessage && utility === 0 && !!construction_company,
+              'bg-white text-black': construction_company,
+              'bg-gray-100 text-gray-500': !construction_company,
+              'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
@@ -147,7 +184,7 @@
         <small
           id="email-help"
           class="text-red-600"
-          *ngIf="errorMessage && utility === 0"
+          *ngIf="errorMessage && utility === 0 && !!construction_company"
         >
           {{ errorMessage }}
         </small>
@@ -246,11 +283,11 @@
     </div>
 
     <!-- Opciones del trabajo -->
-    <div
-      class="mb-4 p-4 bg-gray-100 border rounded-lg"
-    >
+    <div class="mb-4 p-4 bg-gray-100 border rounded-lg">
       <div class="grid grid-cols-2 gap-4 mb-2">
-        <h1 class="mb-2 text-primary-950 font-medium">Opción para la cotización</h1>
+        <h1 class="mb-2 text-primary-950 font-medium">
+          Opción para la cotización
+        </h1>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
@@ -258,7 +295,8 @@
           [ngClass]="{
             'col-span-3':
               itemsPorOpcion.items.length === 1 ||
-              (itemsPorOpcion.items.length % 3 === 1 && j === itemsPorOpcion.items.length - 1)
+              (itemsPorOpcion.items.length % 3 === 1 &&
+                j === itemsPorOpcion.items.length - 1)
           }"
           class="relative"
         >
@@ -274,9 +312,7 @@
               [ngModelOptions]="{ standalone: true }"
               class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             ></textarea>
-            <label for="desc{{ j }}"
-              >Descripción ítem {{ j + 1 }}</label
-            >
+            <label for="desc{{ j }}">Descripción ítem {{ j + 1 }}</label>
           </p-floatlabel>
           <small
             id="email-help"
@@ -370,7 +406,7 @@
             *ngIf="itemsPorOpcion.items.length > 1 && this.action === 0"
             type="button"
             (click)="removeItem(j, 0)"
-            class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
+            class="absolute top-0 right-0 text-gray-500 hover:text-gray-700 font-bold text-lg cursor-pointer"
             title="Eliminar"
           >
             &times;
@@ -379,7 +415,7 @@
             *ngIf="itemsPorOpcion.items.length > 1 && this.action === 1"
             type="button"
             (click)="removeItem(j, item.id)"
-            class="absolute top-0 right-0 text-red-500 hover:text-red-700 font-bold text-lg cursor-pointer"
+            class="absolute top-0 right-0 text-gray-500 hover:text-gray-700 font-bold text-lg cursor-pointer"
             title="Eliminar"
           >
             &times;

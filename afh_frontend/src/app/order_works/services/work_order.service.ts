@@ -19,20 +19,38 @@ export class OrderWorkService extends BaseHttpService {
 
   getOrders() {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/workorder/workorders/`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/workorder/workorders/`, {
+      headers,
+    });
   }
 
   finishOrderWork(id: number) {
     const headers = this.getHeaders();
-    return this.http.patch<any>(`${this.apiUrl}/workorder/finish/${id}/`, { headers });
+    return this.http.patch<any>(`${this.apiUrl}/workorder/finish/${id}/`, {
+      headers,
+    });
   }
 
-  workOrderPdf(id: number) {  
+  workOrderPdf(id: number) {
     const headers = this.getHeaders();
     return this.http.get(`${this.apiUrl}/workorder/pdf/${id}/`, {
       headers: headers,
       observe: 'response',
       responseType: 'blob',
+    });
+  }
+
+  createWorkOrder(data: any) {
+    const headers = this.getHeaders();
+    return this.http.post<any>(`${this.apiUrl}/workorder/create/`, data, {
+      headers,
+    });
+  }
+
+  updateOrderWork(data: any, id: Number) {
+    const headers = this.getHeaders();
+    return this.http.patch<any>(`${this.apiUrl}/workorder/update/${id}/`, data, {
+      headers,
     });
   }
 }

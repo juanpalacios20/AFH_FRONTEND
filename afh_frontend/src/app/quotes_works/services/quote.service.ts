@@ -91,7 +91,6 @@ export class QuoteService extends BaseHttpService {
 
   updateItem(itemId: number, itemData: any) {
     const headers = this.getHeaders();
-    console.log('id del item a actualizar', itemId);
     return this.http.put<any>(
       `${this.apiUrl}/item/updateitem/${itemId}`,
       itemData,
@@ -113,12 +112,11 @@ export class QuoteService extends BaseHttpService {
   }
 
   deleteOption(optionId: number) {
-    console.log(optionId);
     return this.http
       .delete<any>(`${this.apiUrl}/option/delete/${optionId}`)
       .subscribe({
         next: (response) => {
-          console.log('opcion eliminada');
+          console.log('');
         },
         error: (err) => {
           console.log(err);
@@ -131,7 +129,6 @@ export class QuoteService extends BaseHttpService {
       const option = listOptions[index];
       this.deleteOption(option);
     }
-    console.log(listOptions);
   }
 
   itemToOption(optionId: number, itemsData: any) {
@@ -144,7 +141,7 @@ export class QuoteService extends BaseHttpService {
       )
       .subscribe({
         next: (response) => {
-          console.log('epa, funciono', response);
+          console.log('');
         },
         error: (err) => {
           console.log('error al crear nuevo item', err);
@@ -162,7 +159,7 @@ export class QuoteService extends BaseHttpService {
       )
       .subscribe({
         next: (response) => {
-          console.log('epa, funciono tambien', response);
+          console.log('');
         },
         error: (err) => {
           console.log('error al crear nueva opcion', err);
@@ -172,7 +169,6 @@ export class QuoteService extends BaseHttpService {
 
   getPDF(quoteId: number): Observable<HttpResponse<Blob>> {
     const headers = this.getHeaders();
-    console.log('id de la cotizacion', quoteId);
     return this.http.get(`${this.apiUrl}quote/pdf/${quoteId}`, {
       headers: headers,
       observe: 'response',
@@ -182,15 +178,8 @@ export class QuoteService extends BaseHttpService {
 
   changeState(quoteId: number, data: any) {
     const headers = this.getHeaders();
-    return this.http
-      .patch(`${this.apiUrl}quote/changestate/${quoteId}`, data, { headers })
-      .subscribe({
-        next: (response) => {
-          console.log('exito', response);
-        },
-        error: (err) => {
-          console.log('error', err);
-        },
-      });
+    return this.http.patch(`${this.apiUrl}quote/changestate/${quoteId}`, data, {
+      headers,
+    });
   }
 }
