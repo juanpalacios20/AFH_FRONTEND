@@ -77,7 +77,10 @@
             </p>
           </td>
           <td class="cursor-pointer" (click)="openView(workReport)">
-            <p class="text-center">
+            <p
+              class="text-center truncate w-52 mx-auto"
+              title="{{ workReport.description }}"
+            >
               {{ workReport.description }}
             </p>
           </td>
