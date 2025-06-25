@@ -308,14 +308,25 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     this.loading = true;
     let quoteData: any = {};
-
-    if (this.administration !== (Number(this.quoteToEdit?.administration)*100)) {
+    console.log(
+      this.administration,
+      Number(this.quoteToEdit?.administration) * 100
+    );
+    if (
+      this.administration !==
+      Number(this.quoteToEdit?.administration) * 100
+    ) {
+      console.log('cambiando administracion');
       quoteData.administration = this.administration / 100;
     }
-    if (this.unexpected !== (Number(this.quoteToEdit?.unforeseen)*100)) {
+    console.log(this.unexpected, Number(this.quoteToEdit?.unforeseen) * 100);
+    if (this.unexpected !== Number(this.quoteToEdit?.unforeseen) * 100) {
+      console.log('cambiando imprevisto');
       quoteData.unforeseen = this.unexpected / 100;
     }
-    if (this.utility !== (Number(this.quoteToEdit?.utility)*100)) {
+    console.log(this.utility, Number(this.quoteToEdit?.utility) * 100);
+    if (this.utility !== Number(this.quoteToEdit?.utility) * 100) {
+      console.log('cambiando utilidad');
       quoteData.utility = this.utility / 100;
     }
     if (this.method_of_payment !== this.quoteToEdit?.method_of_payment) {
@@ -395,8 +406,10 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               amount: editedItem.amount,
             };
           }
+
+          console.log(editedItem.unit_value, Number(item.unit_value));
           if (
-            editedItem.unit_value !== Number(item.unit_value) &&
+            Number(editedItem.unit_value) !== Number(item.unit_value) &&
             Number(item.unit_value) &&
             item.unit_value
           ) {
@@ -406,9 +419,12 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             };
           }
 
-          if (editedItem.id !== 0) {
+          console.log(itemData);
+          if (Object.keys(itemData).length > 0) {
             this.quoteService.updateItem(editedItem.id, itemData).subscribe({
-              next: (response) => {},
+              next: (response) => {
+                console.log('item actualizado');
+              },
               error: (error) => {
                 console.error('Error al actualizar item', error);
               },
