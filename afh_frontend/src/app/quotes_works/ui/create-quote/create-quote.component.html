@@ -100,7 +100,8 @@
         <p-floatlabel variant="on" required="true">
           <input
             pInputText
-            id="description"
+            id="administration"
+            min="0"
             type="text"
             [(ngModel)]="administration"
             [disabled]="!construction_company"
@@ -133,7 +134,8 @@
           <input
             pInputText
             id="description"
-            type="text"
+            type="number"
+            min="0"
             [(ngModel)]="unexpected"
             [disabled]="!construction_company"
             [ngClass]="{
@@ -165,7 +167,8 @@
           <input
             pInputText
             id="description"
-            type="text"
+            type="number"
+            min="0"
             [(ngModel)]="utility"
             [disabled]="!construction_company"
             [ngClass]="{
@@ -348,10 +351,11 @@
             <input
               pInputText
               type="number"
+              min="0"
               [(ngModel)]="item.amount"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
-                  errorMessage && item.amount === 0
+                  errorMessage && (item.amount === 0 || item.amount === null)
               }"
               (ngModelChange)="updatePrice()"
               class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -361,7 +365,7 @@
           <small
             id="email-help"
             class="text-red-600 mb-4"
-            *ngIf="errorMessage && item.amount === 0"
+            *ngIf="errorMessage && (item.amount === 0 || item.amount === null)"
           >
             {{ errorMessage }}
           </small>
@@ -370,10 +374,11 @@
             <input
               pInputText
               type="number"
+              min="0"
               [(ngModel)]="item.unit_value"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
-                  errorMessage && item.unit_value === 0
+                  errorMessage && (item.unit_value === 0 && item.unit_value === null)
               }"
               (ngModelChange)="updatePrice()"
               [ngModelOptions]="{ standalone: true }"
@@ -384,7 +389,7 @@
           <small
             id="email-help"
             class="text-red-600 mb-4"
-            *ngIf="errorMessage && item.unit_value === 0"
+            *ngIf="errorMessage && (item.unit_value === 0 && item.unit_value === null)"
           >
             {{ errorMessage }}
           </small>
