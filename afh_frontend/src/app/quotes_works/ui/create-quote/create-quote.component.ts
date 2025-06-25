@@ -491,6 +491,11 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   resetForm() {
     this.actionTittle = 'Crear';
+    this.construction_company = '';
+    this.administration = 0;
+    this.unexpected = 0;
+    this.utility = 0;
+    this.method_of_payment = '';
     this.description = '';
     this.selectedCustomer = null;
     this.tasks = [{ descripcion: '' }];
