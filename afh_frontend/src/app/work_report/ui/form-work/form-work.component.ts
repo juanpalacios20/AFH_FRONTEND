@@ -93,10 +93,10 @@ export default class FormWorkComponent {
 
   verify() {
     if (
-      !this.description ||
-      !this.development ||
-      !this.recommendations ||
-      !this.observations ||
+      this.description === '' ||
+      this.development === '' ||
+      this.recommendations === '' ||
+      this.observations === '' ||
       this.selectedOrderWork === null
     ) {
       this.errorMessage = 'Campo requerido';
@@ -136,18 +136,24 @@ export default class FormWorkComponent {
         this.workReportService.createWorkReport(workReportData).subscribe({
           next: () => {
             console.log('creada el acta');
+            this.loading = false;
+            setTimeout(() => {
+              this.closeDialog.emit();
+              this.onWorkReportCreated.emit();
+              this.close();
+            }, 2000);
           },
-          error: (err) => console.error('Error creando WorkReport:', err),
+          error: (err) => {
+            console.error('Error creando WorkReport:', err);
+            this.loading = false;
+          },
         });
       },
-      error: (err) => console.error('Error creando anexos:', err),
+      error: (err) => {
+        console.error('Error creando anexos:', err);
+        this.loading = false;
+      },
     });
-    setTimeout(() => {
-      this.closeDialog.emit();
-      this.onWorkReportCreated.emit();
-      this.close();
-      this.loading = false;
-    }, 2000);
   }
 
   updateWorkReport() {
