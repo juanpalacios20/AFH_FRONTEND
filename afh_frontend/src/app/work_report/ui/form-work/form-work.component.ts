@@ -100,14 +100,21 @@ export default class FormWorkComponent {
       this.selectedOrderWork === null
     ) {
       this.errorMessage = 'Campo requerido';
+      console.log('error otros datos');
     }
     for (let i = 0; i < this.anexos.length; i++) {
+      console.log(i);
       if (
         this.anexos[i].descripcion === '' ||
-        this.anexos[i].files.length === 0 ||
         this.anexos[i].imagenes.length === 0
       ) {
-        this.errorMessage = 'Campo requerido';
+        if (this.anexos[i].files.length === 0 && this.action === 0) {
+          this.errorMessage = 'Campo requerido';
+        }
+
+        if (this.action === 1) {
+          this.errorMessage = 'Campo requerido';
+        }
       }
     }
   }
