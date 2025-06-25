@@ -1,5 +1,5 @@
 <p-dialog
-  [header]="'Información de la orden ' + this.orderWork?.quote?.code"
+  [header]="'Información de la orden: ' + orderWork?.quote?.code"
   [(visible)]="visible"
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
@@ -12,100 +12,90 @@
   <p-toast position="top-right"></p-toast>
   <p-confirmdialog></p-confirmdialog>
 
-  <!-- Información general -->
-  <div class="mb-6">
-    <h2 class="text-lg text-black font-bold mb-2">Información general</h2>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Código:</span>
+  <!-- ======= Información del Cliente ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">
+    Información del Cliente
+  </h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+    <p>
+      <span class="font-semibold text-black">Código:</span>
       {{ orderWork?.quote?.code }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Cliente:</span>
+    <p>
+      <span class="font-semibold text-black">Cliente:</span>
       {{ orderWork?.quote?.customer?.name }}
     </p>
-
-    <p
-      class="text-gray-700 font-semibold text-lg mb-2"
-      *ngIf="orderWork?.quote?.construction"
-    >
-      <span class="text-black font-bold">Constructora:</span>
+    <p *ngIf="orderWork?.quote?.construction">
+      <span class="font-semibold text-black">Constructora:</span>
       {{ orderWork?.quote?.construction }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Descripción del trabajo:</span>
+    <p>
+      <span class="font-semibold text-black">Descripción del trabajo:</span>
       {{ orderWork?.quote?.description }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Plan de pago:</span>
+    <p>
+      <span class="font-semibold text-black">Plan de pago:</span>
       {{ orderWork?.quote?.method_of_payment }}
     </p>
   </div>
-  <h2 class="text-lg text-black font-bold mb-2">Acciones</h2>
-  <div class="w-full mt-4">
-    <p-button
-      fluid="true"
-      class="flex w-full"
-      label="Descargar orden de trabajo"
-      icon="pi pi-download"
-      styleClass="p-button-secondary"
-      (onClick)="pdfOrderWork()"
-      [loading]="loadingDownload"
-    />
-  </div>
-  <!-- Información específica de la orden -->
-  <div class="mb-6">
-    <h2 class="text-lg text-black font-bold mb-2">Datos de la orden</h2>
 
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Descripción de la actividad:</span>
+  <!-- ======= Acciones ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Acciones disponibles</h2>
+  <p-button
+    fluid="true"
+    label="Descargar orden de trabajo"
+    icon="pi pi-download"
+    styleClass="p-button-secondary w-full mb-4"
+    (onClick)="pdfOrderWork()"
+    [loading]="loadingDownload"
+  ></p-button>
+
+  <!-- ======= Información de la Orden ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Detalles de la Orden</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+    <p>
+      <span class="font-semibold text-black">Descripción de la actividad:</span>
       {{ orderWork?.description }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Lugar de trabajo:</span>
+    <p>
+      <span class="font-semibold text-black">Lugar de trabajo:</span>
       {{
         orderWork?.workplace === 1
           ? "Instalaciones propias"
           : "Instalaciones del cliente"
       }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Tipo de actividad:</span>
+    <p>
+      <span class="font-semibold text-black">Tipo de actividad:</span>
       {{ orderWork?.activity === 1 ? "Emergencia" : "Programado" }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Fecha de inicio:</span>
+    <p>
+      <span class="font-semibold text-black">Fecha de inicio:</span>
       {{ orderWork?.start_date }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Fecha de finalización:</span>
+    <p>
+      <span class="font-semibold text-black">Fecha de finalización:</span>
       {{ orderWork?.end_date || "No definida" }}
     </p>
+  </div>
 
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Técnicos asignados:</span>
+  <!-- ======= Personal Asignado ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Personal Asignado</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+    <p>
+      <span class="font-semibold text-black">Técnicos:</span>
       {{ orderWork?.number_technicians }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Oficiales asignados:</span>
+    <p>
+      <span class="font-semibold text-black">Oficiales:</span>
       {{ orderWork?.number_officers }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Auxiliares asignados:</span>
+    <p>
+      <span class="font-semibold text-black">Auxiliares:</span>
       {{ orderWork?.number_auxiliaries }}
     </p>
-
-    <p class="text-gray-700 font-semibold text-lg mb-2">
-      <span class="text-black font-bold">Supervisores asignados:</span>
+    <p>
+      <span class="font-semibold text-black">Supervisores:</span>
       {{ orderWork?.number_supervisors }}
     </p>
   </div>

@@ -98,10 +98,15 @@ export class CreateToolsComponent {
       this.errorBrandMessage == 'Por favor, ingrese una marca.' ||
       this.errorImageMessage == 'Por favor, seleccione una imagen.'
     ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Todos los campos son requeridos',
+      });
       return;
     }
 
-    this.loadingTool = true
+    this.loadingTool = true;
     this.toolService
       .addTool(this.name, this.brand, this.selectedFile)
       .subscribe({
@@ -114,11 +119,11 @@ export class CreateToolsComponent {
           this.closeDialog.emit();
           this.resetForm();
           this.onToolCreated.emit();
-          this.loadingTool = false
+          this.loadingTool = false;
         },
         error: (err) => {
-          this.loadingTool = false
-          this.error()
+          this.loadingTool = false;
+          this.error();
         },
       });
   }
@@ -136,8 +141,7 @@ export class CreateToolsComponent {
     if (this.name !== '') {
       this.errorNameMessage = '';
     }
-    if (this.brand !== '')
-      this.errorBrandMessage = '';
+    if (this.brand !== '') this.errorBrandMessage = '';
 
     if (this.selectedFile) {
       this.errorImageMessage = '';

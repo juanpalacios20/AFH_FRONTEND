@@ -66,11 +66,7 @@ export class CreateTicketComponent {
     this.getEmail();
     this.toolService.getTools().subscribe({
       next: (data) => {
-        this.tools = data.filter(
-          (tool: Tool) =>
-            tool.state === 1
-        );
-
+        this.tools = data.filter((tool: Tool) => tool.state === 1);
       },
       error: (error) => {
         console.error('Error al obtener herramientas', error);
@@ -97,6 +93,11 @@ export class CreateTicketComponent {
       this.descriptionErrorMessage != '' ||
       this.toolErrorMessage != ''
     ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Todos los campos son requeridos',
+      });
       return;
     }
     this.loading = true;
@@ -108,7 +109,7 @@ export class CreateTicketComponent {
         this.selectedToolsIds,
         this.description,
         this.email,
-        this.place, 
+        this.place,
         this.responsible
       )
       .subscribe({
@@ -126,7 +127,7 @@ export class CreateTicketComponent {
         error: (err) => {
           console.error('Error al crear el ticket:', err);
           this.loading = false;
-          this.error()
+          this.error();
         },
       });
   }
@@ -160,7 +161,8 @@ export class CreateTicketComponent {
     }
 
     if (this.responsible === '') {
-      this.responsibleErrorMessage = 'Debes ingresar un responsable de las herramientas';
+      this.responsibleErrorMessage =
+        'Debes ingresar un responsable de las herramientas';
     }
     if (this.selectedTools.length > 0) {
       this.toolErrorMessage = '';

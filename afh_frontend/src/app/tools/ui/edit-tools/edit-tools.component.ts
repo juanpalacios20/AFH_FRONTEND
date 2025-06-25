@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
@@ -46,7 +53,6 @@ export class EditToolsComponent implements OnInit {
   previewImage: string | ArrayBuffer | null = null;
   errorMessage: string = '';
   loadingEdit: boolean = false;
-  
 
   originalTool = this.tool;
 
@@ -61,14 +67,34 @@ export class EditToolsComponent implements OnInit {
     }
   }
 
+  verify() {
+    if (
+      !this.tool.name ||
+      !this.tool.marca ||
+      this.tool.state === null ||
+      !this.selectedFile
+    ) {
+      this.errorMessage = 'todos los campos son requeridos';
+    }
+  }
+
   showSuccess() {
+    this.verify();
+    if (this.errorMessage !== '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Todos los campos son requeridos',
+      });
+      return;
+    }
     if (this.selectedState?.name === 'ACTIVO') {
       this.tool.state = 1;
     } else if (this.selectedState?.name === 'INACTIVO') {
       this.tool.state = 2;
     } else if (this.selectedState?.name === 'EN USO') {
       this.tool.state = 3;
-    }  else if (this.selectedState?.name === 'EN RESERVA') {
+    } else if (this.selectedState?.name === 'EN RESERVA') {
       this.tool.state = 4;
     }
     this.loadingEdit = true;
@@ -92,21 +118,23 @@ export class EditToolsComponent implements OnInit {
       formData.append('image', this.selectedFile);
     }
 
-    this.toolService.updateTool(this.tool.id, formData).subscribe({
-      next: (response: any) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Actualizado',
-          detail: 'La herramienta ha sido actualizada con éxito',
-        });
-        this.closeDialog.emit();
-        this.onToolEdited.emit(); 
-        this.loadingEdit = false;
-      },
-      error: (error) => {
-        this.error();
-      },
-    });
+    if (formData) {
+      this.toolService.updateTool(this.tool.id, formData).subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Actualizado',
+            detail: 'La herramienta ha sido actualizada con éxito',
+          });
+          this.closeDialog.emit();
+          this.onToolEdited.emit();
+          this.loadingEdit = false;
+        },
+        error: (error) => {
+          this.error();
+        },
+      });
+    }
   }
 
   onFileSelected(event: any) {
@@ -130,6 +158,7 @@ export class EditToolsComponent implements OnInit {
   }
 
   close() {
+    this.errorMessage = '';
     this.visible = false;
     this.closeDialog.emit();
   }
