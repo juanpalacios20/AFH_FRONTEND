@@ -13,12 +13,22 @@
         pInputText
         id="nombre"
         [(ngModel)]="tool.name"
+        [ngClass]="{
+          'ng-invalid ng-dirty border-red-500': errorMessage && tool.name === ''
+        }"
         [ngModelOptions]="{ standalone: true }"
         class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         autocomplete="on"
       />
       <label for="nombre">Nombre</label>
     </p-floatlabel>
+    <small
+      id="email-help"
+      class="text-red-600 mb-4"
+      *ngIf="errorMessage && !tool.nombre"
+    >
+      {{ errorMessage }}
+    </small>
   </div>
 
   <div class="justify-center mb-4">
@@ -43,11 +53,22 @@
         id="marca"
         [(ngModel)]="tool.marca"
         [ngModelOptions]="{ standalone: true }"
+        [ngClass]="{
+          'ng-invalid ng-dirty border-red-500':
+            errorMessage && !tool.marca
+        }"
         class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         autocomplete="on"
       />
       <label for="marca">Marca</label>
     </p-floatlabel>
+    <small
+      id="email-help"
+      class="text-red-600 mb-4"
+      *ngIf="errorMessage && !tool.marca"
+    >
+      {{ errorMessage }}
+    </small>
   </div>
 
   <div class="flex items-center justify-center gap-4 mb-6">
@@ -55,12 +76,22 @@
       <p-select
         [options]="states"
         [(ngModel)]="selectedState"
+        [ngClass]="{
+          'ng-invalid ng-dirty border-red-500': errorMessage && !selectedState
+        }"
         [ngModelOptions]="{ standalone: true }"
         optionLabel="name"
         class="w-full md:w-56"
       />
       <label for="on_label">Cambiar Estado</label>
     </p-floatlabel>
+    <small
+      id="email-help"
+      class="text-red-600 mb-4"
+      *ngIf="errorMessage && !selectedState"
+    >
+      {{ errorMessage }}
+    </small>
     <label
       class="font-bold"
       [ngClass]="{
@@ -93,6 +124,13 @@
       auto="false"
     />
   </div>
+  <small
+    id="email-help"
+    class="text-red-600 mb-4"
+    *ngIf="errorMessage && !tool.image"
+  >
+    {{ errorMessage }}
+  </small>
 
   <div class="flex justify-end gap-2">
     <button

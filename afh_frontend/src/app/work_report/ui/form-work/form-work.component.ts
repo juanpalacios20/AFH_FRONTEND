@@ -78,7 +78,7 @@ export default class FormWorkComponent {
     },
   ];
 
-  tareas = [{ titulo: '', subdescripciones: [''] }];
+  errorMessage: string = '';
 
   constructor(
     private messageService: MessageService,
@@ -89,6 +89,27 @@ export default class FormWorkComponent {
 
   trackByIndex(index: number, obj: any): any {
     return index;
+  }
+
+  verify() {
+    if (
+      !this.description ||
+      !this.development ||
+      !this.recommendations ||
+      this.observations ||
+      this.selectedOrderWork === null
+    ) {
+      this.errorMessage = 'Campo requerido';
+    }
+    for (let i = 0; i < this.anexos.length; i++) {
+      if (
+        this.anexos[i].descripcion === '' ||
+        this.anexos[i].files.length === 0 ||
+        this.anexos[i].imagenes.length === 0
+      ) {
+        this.errorMessage = 'Campo requerido';
+      }
+    }
   }
 
   createWorkReport() {
@@ -167,8 +188,10 @@ export default class FormWorkComponent {
 
       const formData = new FormData();
 
-      if (hasTitle && anexo.id === 0) formData.append('tittle', anexo.descripcion);
-      if (hasTitle && anexo.id !== 0) formData.append('title', anexo.descripcion);
+      if (hasTitle && anexo.id === 0)
+        formData.append('tittle', anexo.descripcion);
+      if (hasTitle && anexo.id !== 0)
+        formData.append('title', anexo.descripcion);
 
       // Convertir URLs de imágenes previas a blobs
       const urlFetches = (anexo.imagenes || [])
@@ -243,6 +266,16 @@ export default class FormWorkComponent {
   }
 
   onSubmit() {
+    this.errorMessage = '';
+    this.verify();
+    if (this.errorMessage !== '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Todos los campos son requeridos',
+      });
+      return;
+    }
     if (this.action === 0) {
       this.createWorkReport();
     }
@@ -293,6 +326,7 @@ export default class FormWorkComponent {
   }
 
   resetForm() {
+    this.errorMessage = '';
     this.orderWorks = [];
     this.selectedOrderWork = null;
     this.filteredOrderWork = undefined;

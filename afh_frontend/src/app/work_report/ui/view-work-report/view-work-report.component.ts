@@ -17,7 +17,7 @@ export class ViewWorkReportComponent {
   @Output() closeDialog = new EventEmitter<void>();
   loadingDownload: boolean = false;
 
-  constructor(private workReportService: WorkReportService) {}
+  constructor(private workReportService: WorkReportService) {} 
 
   close() {
     this.visible = false;
