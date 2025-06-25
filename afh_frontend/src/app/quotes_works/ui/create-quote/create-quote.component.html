@@ -44,7 +44,7 @@
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el nombre de la constructora si aplica.
         </h1>
-        <p-floatlabel variant="on" required="true">
+        <p-floatlabel variant="on" required="true"> 
           <input
             pInputText
             id="construction_company"
@@ -102,7 +102,8 @@
             pInputText
             id="administration"
             min="0"
-            type="text"
+            type="number"
+            (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="administration"
             [disabled]="!construction_company"
             [ngClass]="{
@@ -136,6 +137,7 @@
             id="description"
             type="number"
             min="0"
+            (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="unexpected"
             [disabled]="!construction_company"
             [ngClass]="{
@@ -169,6 +171,7 @@
             id="description"
             type="number"
             min="0"
+            (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="utility"
             [disabled]="!construction_company"
             [ngClass]="{
@@ -352,6 +355,7 @@
               pInputText
               type="number"
               min="0"
+              (keypress)="preventNonNumericInput($event)"
               [(ngModel)]="item.amount"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
@@ -375,6 +379,7 @@
               pInputText
               type="number"
               min="0"
+              (keypress)="preventNonNumericInput($event)"
               [(ngModel)]="item.unit_value"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':

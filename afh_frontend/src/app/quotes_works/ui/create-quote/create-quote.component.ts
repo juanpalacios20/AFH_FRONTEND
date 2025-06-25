@@ -265,7 +265,9 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               unforeseen: this.unexpected / 100,
               utility: this.utility / 100,
               method_of_payment: this.method_of_payment,
-              construction: this.construction_company ? this.construction_company : null,
+              construction: this.construction_company
+                ? this.construction_company
+                : null,
             };
             this.quoteService.createQuote(quoteData).subscribe({
               next: (res) => {
@@ -592,6 +594,14 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
           })),
         };
       }
+    }
+  }
+
+  preventNonNumericInput(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
     }
   }
 }
