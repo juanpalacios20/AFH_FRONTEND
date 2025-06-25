@@ -140,13 +140,7 @@ export default class ViewQuotesComponent {
       state: state,
     };
     this.quoteService.changeState(this.quote?.id || 0, data).subscribe({
-      next: (response) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: `Cotización aprobada con éxito`,
-        });
-      },
+      next: (response) => {},
       error: (error) => {
         console.error('Error changing state:', error);
       },
@@ -200,6 +194,11 @@ export default class ViewQuotesComponent {
       },
       accept: () => {
         this.changeState(2);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'La cotización ha sido aprobada con éxito',
+        });
       },
     });
   }
