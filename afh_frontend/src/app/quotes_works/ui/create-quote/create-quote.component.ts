@@ -130,9 +130,11 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   ) {}
 
   verify() {
+    console.log(this.selectedCustomer);
     if (
       this.selectedCustomer === null ||
       this.selectedCustomer === undefined ||
+      !this.selectedCustomer ||
       this.description === '' ||
       this.method_of_payment === ''
     ) {
@@ -307,13 +309,13 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.loading = true;
     let quoteData: any = {};
 
-    if (this.administration !== this.quoteToEdit?.administration) {
+    if (this.administration !== (Number(this.quoteToEdit?.administration)*100)) {
       quoteData.administration = this.administration / 100;
     }
-    if (this.unexpected !== this.quoteToEdit?.unforeseen) {
+    if (this.unexpected !== (Number(this.quoteToEdit?.unforeseen)*100)) {
       quoteData.unforeseen = this.unexpected / 100;
     }
-    if (this.utility !== this.quoteToEdit?.utility) {
+    if (this.utility !== (Number(this.quoteToEdit?.utility)*100)) {
       quoteData.utility = this.utility / 100;
     }
     if (this.method_of_payment !== this.quoteToEdit?.method_of_payment) {

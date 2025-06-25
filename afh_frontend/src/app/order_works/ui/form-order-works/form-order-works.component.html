@@ -20,11 +20,21 @@
           [(ngModel)]="selectedQuote"
           placeholder="Codigo de la orden de trabajo"
           [suggestions]="filteredQuotes ?? []"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessage && !selectedQuote
+          }"
           (completeMethod)="filterWorkReport($event)"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           optionLabel="code"
           fluid="true"
         />
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !selectedQuote"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
       <div class="mb-4">
         <h1 class="mb-4 text-primary-950 font-normal">
@@ -35,10 +45,21 @@
             pInputText
             type="text"
             [(ngModel)]="descriptionActivity"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && descriptionActivity === ''
+            }"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
         </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && descriptionActivity === ''"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
     </div>
     <h1 class="mb-4 text-primary-950 font-medium">
@@ -54,11 +75,22 @@
             type="number"
             min="0"
             (keypress)="preventNonNumericInput($event)"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && (technician === 0 || technician === null)
+            }"
             [(ngModel)]="technician"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
         </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && (technician === 0 || technician === null)"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
       <div class="mb-4">
         <h1 class="mb-4 text-primary-950 font-normal">Supervisor</h1>
@@ -67,12 +99,23 @@
             pInputText
             type="number"
             min="0"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && (supervisor === 0 || supervisor === null)
+            }"
             (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="supervisor"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
         </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && (supervisor === 0 || supervisor === null)"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
       <div class="mb-4">
         <h1 class="mb-4 text-primary-950 font-normal">Oficial</h1>
@@ -83,10 +126,21 @@
             min="0"
             (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="officer"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && (officer === 0 || officer === null)
+            }"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
         </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && (officer === 0 || officer === null)"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
       <div class="mb-4">
         <h1 class="mb-4 text-primary-950 font-normal">Auxiliar</h1>
@@ -97,22 +151,44 @@
             min="0"
             (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="auxiliary"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && (auxiliary === 0 || auxiliary === null)
+            }"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
         </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && (auxiliary === 0 || auxiliary === null)"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
       <div>
         <h1 class="mb-2 text-primary-950 font-medium">Sitio de trabajo</h1>
         <p-autocomplete
           [(ngModel)]="selectedWorkSite"
           [suggestions]="filteredWorkSites"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && !selectedWorkSite
+          }"
           (completeMethod)="filterWorkSite($event)"
           [dropdown]="true"
           fluid="true"
           placeholder="Seleccione el sitio"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         ></p-autocomplete>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !selectedWorkSite"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
 
       <!-- Actividad -->
@@ -122,11 +198,22 @@
           [(ngModel)]="selectedActivityType"
           [suggestions]="filteredActivities"
           (completeMethod)="filterActivity($event)"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && !selectedActivityType
+          }"
           [dropdown]="true"
           fluid="true"
           placeholder="Seleccione el tipo de actividad"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         ></p-autocomplete>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !selectedActivityType"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
@@ -138,10 +225,20 @@
           [(ngModel)]="start_date"
           [showIcon]="true"
           inputId="buttondisplay"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessage && !start_date
+          }"
           [showOnFocus]="false"
           dateFormat="dd/mm/yy"
           fluid="true"
         />
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !start_date"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
       <div>
         <label for="buttondisplay" class="font-bold block mb-2">
@@ -151,10 +248,20 @@
           [(ngModel)]="end_date"
           [showIcon]="true"
           fluid="true"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessage && !end_date
+          }"
           inputId="buttondisplay"
           [showOnFocus]="false"
           dateFormat="dd/mm/yy"
         />
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !end_date"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
     </div>
     <div class="mb-6 mt-6">
@@ -172,6 +279,13 @@
           ></p-checkbox>
           <label [for]="permiso" class="ml-2"> {{ permiso }} </label>
         </div>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && permisosRequeridos.length === 0"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
     </div>
 

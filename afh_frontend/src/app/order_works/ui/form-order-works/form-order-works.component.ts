@@ -80,6 +80,7 @@ export default class FormOrderWorksComponent {
   start_date: Date | undefined;
   end_date: Date | undefined;
   loading: boolean = true;
+  errorMessage: string = '';
 
   constructor(
     private messageService: MessageService,
@@ -114,7 +115,35 @@ export default class FormOrderWorksComponent {
     this.filteredQuotes = filtered;
   }
 
+  verify() {
+    if (
+      !this.selectedQuote ||
+      !this.descriptionActivity ||
+      !this.technician ||
+      !this.supervisor ||
+      !this.officer ||
+      !this.auxiliary ||
+      !this.selectedWorkSite ||
+      !this.selectedActivityType ||
+      !this.start_date ||
+      !this.end_date ||
+      !this.permisosRequeridos
+    ) {
+      this.errorMessage = 'Campo requerido';
+    }
+  }
+
   submit() {
+    this.verify();
+    if (this.errorMessage !== '') {
+      this.loading = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Por favor, complete todos los campos requeridos.',
+      });
+      return;
+    }
     if (this.action === 0) {
       this.createOrderWork();
       return;
@@ -127,20 +156,6 @@ export default class FormOrderWorksComponent {
 
   createOrderWork() {
     this.loading = true;
-    if (
-      !this.selectedQuote ||
-      !this.selectedWorkSite ||
-      !this.selectedActivityType ||
-      !this.descriptionActivity
-    ) {
-      this.loading = false;
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Por favor, complete todos los campos requeridos.',
-      });
-      return;
-    }
 
     if (this.start_date === undefined || this.end_date === undefined) {
       this.loading = false;
@@ -188,7 +203,7 @@ export default class FormOrderWorksComponent {
     }
 
     let data = {
-      quote_id: this.selectedQuote.id,
+      quote_id: this.selectedQuote?.id,
       start_date: this.start_date.toISOString().split('T')[0],
       end_date: this.end_date.toISOString().split('T')[0],
       description: this.descriptionActivity,
@@ -198,7 +213,7 @@ export default class FormOrderWorksComponent {
       number_auxiliaries: this.auxiliary,
       number_supervisors: this.supervisor,
       activity: activityType,
-      permissions: this.permisosRequeridos
+      permissions: this.permisosRequeridos,
     };
 
     console.log(data);
@@ -317,6 +332,7 @@ export default class FormOrderWorksComponent {
   }
 
   resetForm() {
+    this.errorMessage = '';
     this.selectedQuote = null;
     this.selectedWorkSite = '';
     this.selectedActivityType = '';

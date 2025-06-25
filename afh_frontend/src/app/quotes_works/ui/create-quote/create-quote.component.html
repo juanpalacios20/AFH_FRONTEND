@@ -33,7 +33,7 @@
             class="text-red-600"
             *ngIf="
               errorMessage &&
-              (selectedCustomer === null || selectedCustomer === undefined)
+              (selectedCustomer === null || selectedCustomer === undefined || !selectedCustomer)
             "
           >
             {{ errorMessage }}
