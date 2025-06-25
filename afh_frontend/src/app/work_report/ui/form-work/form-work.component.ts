@@ -96,7 +96,7 @@ export default class FormWorkComponent {
       !this.description ||
       !this.development ||
       !this.recommendations ||
-      this.observations ||
+      !this.observations ||
       this.selectedOrderWork === null
     ) {
       this.errorMessage = 'Campo requerido';
