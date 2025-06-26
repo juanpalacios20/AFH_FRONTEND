@@ -42,6 +42,15 @@ export default class ViewQuotesComponent {
     | undefined = 'info';
   @Input() visible: boolean = false;
   @Output() closeDialog = new EventEmitter<void>();
+  temporalState: string = '';
+  temporalSeverity:
+    | 'success'
+    | 'warn'
+    | 'danger'
+    | 'secondary'
+    | 'info'
+    | 'contrast'
+    | undefined = undefined;
 
   constructor(
     private quoteService: QuoteService,
@@ -56,8 +65,8 @@ export default class ViewQuotesComponent {
 
   close() {
     this.visible = false;
-    this.quote = null;
-    this.state = '';
+    this.temporalSeverity = undefined;
+    this.temporalState = '';
     this.closeDialog.emit();
   }
 
@@ -149,12 +158,12 @@ export default class ViewQuotesComponent {
     });
 
     if (state === 2) {
-      this.state = 'APROBADO';
-      this.severity = 'success';
+      this.temporalState = 'APROBADO';
+      this.temporalSeverity = 'success';
     }
     if (state === 3) {
-      this.state = 'RECHAZADO';
-      this.severity = 'danger';
+      this.temporalState = 'RECHAZADO';
+      this.temporalSeverity = 'danger';
     }
   }
 

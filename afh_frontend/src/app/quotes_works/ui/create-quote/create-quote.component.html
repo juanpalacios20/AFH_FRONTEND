@@ -25,7 +25,7 @@
         <h1 class="mb-4 text-primary-950 font-medium">
           Ingrese el nombre del cliente.
         </h1>
-        <div class="mb-4">
+        <div>
           <p-autocomplete
             [(ngModel)]="selectedCustomer"
             [ngClass]="{
@@ -86,10 +86,6 @@
       </div>
       <div
         class="mb-2"
-        *ngIf="
-          this.action === 0 ||
-          (this.action === 1 && this.quoteToEdit?.construction !== null)
-        "
       >
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese la descripción del trabajo.
