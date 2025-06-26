@@ -56,6 +56,8 @@ export default class ViewQuotesComponent {
 
   close() {
     this.visible = false;
+    this.quote = null;
+    this.state = '';
     this.closeDialog.emit();
   }
 

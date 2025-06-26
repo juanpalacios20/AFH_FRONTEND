@@ -74,6 +74,11 @@ export default class FormClientsComponent implements OnChanges {
   }
 
   verifyFields() {
+    this.errorMessageName = '';
+    this.errorMessageEmail = '';
+    this.errorMessagePhone = '';
+    this.errorMessagePosition = '';
+
     if (this.name === '') {
       this.errorMessageName = 'El nombre es obligatorio';
     }

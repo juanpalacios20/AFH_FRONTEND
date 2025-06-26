@@ -11,7 +11,7 @@ import {
   OrderWork,
   Quote,
 } from '../../../interfaces/models';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AutoComplete } from 'primeng/autocomplete';
 import { TextareaModule } from 'primeng/textarea';
@@ -26,6 +26,7 @@ import { QuoteService } from '../../../quotes_works/services/quote.service';
 import { Checkbox } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
 import { OrderWorkService } from '../../services/work_order.service';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-form-order-works',
@@ -85,7 +86,8 @@ export default class FormOrderWorksComponent {
   constructor(
     private messageService: MessageService,
     private quoteService: QuoteService,
-    private orderWorkService: OrderWorkService
+    private orderWorkService: OrderWorkService,
+    private confirmationService: ConfirmationService
   ) {}
 
   filterWorkSite(event: any) {
@@ -119,10 +121,6 @@ export default class FormOrderWorksComponent {
     if (
       !this.selectedQuote ||
       !this.descriptionActivity ||
-      !this.technician ||
-      !this.supervisor ||
-      !this.officer ||
-      !this.auxiliary ||
       !this.selectedWorkSite ||
       !this.selectedActivityType ||
       !this.start_date ||
@@ -130,6 +128,8 @@ export default class FormOrderWorksComponent {
       !this.permisosRequeridos
     ) {
       this.errorMessage = 'Campo requerido';
+    } else {
+      this.errorMessage = '';
     }
   }
 
@@ -412,5 +412,25 @@ export default class FormOrderWorksComponent {
     if (!allowedKeys.includes(event.key)) {
       event.preventDefault();
     }
+  }
+  confirmationClose() {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea cerrar el formulario? Los cambios se perderán',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.close();
+      },
+    });
   }
 }

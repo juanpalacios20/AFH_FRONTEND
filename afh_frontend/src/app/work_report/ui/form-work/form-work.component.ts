@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import {
   AutoComplete,
   AutoCompleteCompleteEvent,
@@ -28,6 +28,7 @@ import { OrderWork, WorkReport } from '../../../interfaces/models';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { QuoteService } from '../../../quotes_works/services/quote.service';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-form-work',
@@ -84,7 +85,8 @@ export default class FormWorkComponent {
     private messageService: MessageService,
     private orderWorkService: OrderWorkService,
     private workReportService: WorkReportService,
-    private quoteService: QuoteService
+    private quoteService: QuoteService,
+    private confirmationService: ConfirmationService
   ) {}
 
   trackByIndex(index: number, obj: any): any {
@@ -92,6 +94,7 @@ export default class FormWorkComponent {
   }
 
   verify() {
+    this.errorMessage = '';
     if (
       this.description === '' ||
       this.development === '' ||
@@ -424,5 +427,26 @@ export default class FormWorkComponent {
       }
       this.imagenesEliminadas[anexo.id].push(imgUrl);
     }
+  }
+
+  confirmationClose() {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea cerrar el formulario? Los cambios se perderán',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.close();
+      },
+    });
   }
 }
