@@ -28,7 +28,9 @@
           placeholder="Codigo de la orden de trabajo"
           [suggestions]="filteredOrderWork ?? []"
           (completeMethod)="filterWorkReport($event)"
+          [disabled]="this.action === 1"
           [ngClass]="{
+            'bg-gray-200 text-gray-500': this.action === 1,
             'ng-invalid ng-dirty border-red-500':
               errorMessage &&
               selectedOrderWork === null &&

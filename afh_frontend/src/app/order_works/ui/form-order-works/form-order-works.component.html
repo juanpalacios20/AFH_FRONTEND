@@ -31,8 +31,10 @@
         <p-autocomplete
           [(ngModel)]="selectedQuote"
           placeholder="Codigo de la orden de trabajo"
+          [disabled]="this.action === 1"
           [suggestions]="filteredQuotes ?? []"
           [ngClass]="{
+            'bg-gray-200 text-gray-500': this.action === 1,
             'ng-invalid ng-dirty border-red-500':
               (errorMessage && !selectedQuote) || quoteInvalidMessage
           }"
