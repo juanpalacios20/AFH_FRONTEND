@@ -60,6 +60,7 @@ export default class FormOrderWorksComponent {
   officer: number = 0;
   auxiliary: number = 0;
   quotes: Quote[] = [];
+  quotesWithoutOrder: Quote[] = [];
   selectedQuote: Quote | null = null;
   filteredQuotes: Quote[] | undefined;
   workSiteOptions = ['Instalaciones del cliente', 'Instalaciones propias'];
@@ -82,6 +83,7 @@ export default class FormOrderWorksComponent {
   end_date: Date | undefined;
   loading: boolean = true;
   errorMessage: string = '';
+  quoteInvalidMessage: string = '';
 
   constructor(
     private messageService: MessageService,
@@ -128,8 +130,30 @@ export default class FormOrderWorksComponent {
       !this.permisosRequeridos
     ) {
       this.errorMessage = 'Campo requerido';
+      return;
     } else {
       this.errorMessage = '';
+    }
+
+    if (
+      this.selectedQuote &&
+      typeof this.selectedQuote === 'string' &&
+      typeof (this.selectedQuote as string).trim === 'function'
+    ) {
+      const manualCode = (this.selectedQuote as string).trim();
+      const match = this.filteredQuotes?.find((q) => q.code === manualCode);
+      if (match) {
+        this.selectedQuote = match;
+      } else {
+        this.quoteInvalidMessage =
+          'Este cotización no ha sido aceptada o ya tiene una orden en curso';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Por favor seleccione una cotización válida del listado.',
+        });
+        return;
+      }
     }
   }
 
@@ -200,6 +224,19 @@ export default class FormOrderWorksComponent {
         detail: 'Por favor, complete todos los campos requeridos.',
       });
       return;
+    }
+
+    //validar si el campo es un texto y no se selecciona una opcion del autocomplete
+    if (
+      this.selectedQuote &&
+      typeof this.selectedQuote === 'string' &&
+      typeof (this.selectedQuote as string).trim === 'function'
+    ) {
+      const manualCode = (this.selectedQuote as string).trim();
+      const match = this.filteredQuotes?.find((q) => q.code === manualCode);
+      if (match) {
+        this.selectedQuote = match;
+      }
     }
 
     let data = {
@@ -317,11 +354,11 @@ export default class FormOrderWorksComponent {
   }
 
   loadQuotes() {
-    this.quoteService.getQuotes().subscribe({
+    this.orderWorkService.getQuotesWithoutOrder().subscribe({
       next: (response) => {
-        this.quotes = response.filter((o: Quote) => o.state === 2);
+        this.quotes = response;
       },
-      error: (error) => {
+      error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -333,6 +370,7 @@ export default class FormOrderWorksComponent {
 
   resetForm() {
     this.errorMessage = '';
+    this.quoteInvalidMessage = '';
     this.selectedQuote = null;
     this.selectedWorkSite = '';
     this.selectedActivityType = '';
