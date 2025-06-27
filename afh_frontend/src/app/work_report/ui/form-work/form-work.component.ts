@@ -80,6 +80,7 @@ export default class FormWorkComponent {
   ];
 
   errorMessage: string = '';
+  errorOrderInvalidMessage: String = '';
 
   constructor(
     private messageService: MessageService,
@@ -120,6 +121,26 @@ export default class FormWorkComponent {
         }
       }
     }
+    if (
+      this.selectedOrderWork &&
+      typeof this.selectedOrderWork === 'string' &&
+      typeof (this.selectedOrderWork as string).trim === 'function'
+    ) {
+      const manualCode = (this.selectedOrderWork as string).trim();
+      const match = this.filteredOrderWork?.find((q) => q.quote.code === manualCode);
+      if (match) {
+        this.selectedOrderWork = match;
+      } else {
+        this.errorOrderInvalidMessage =
+          'Este cotización no tiene una orden o ya tiene un acta en curso';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Por favor seleccione una cotización válida del listado.',
+        });
+        return;
+      }
+    }
   }
 
   createWorkReport() {
@@ -142,6 +163,20 @@ export default class FormWorkComponent {
           development: this.development,
           description: this.description,
         };
+
+        if (
+          this.selectedOrderWork &&
+          typeof this.selectedOrderWork === 'string' &&
+          typeof (this.selectedOrderWork as string).trim === 'function'
+        ) {
+          const manualCode = (this.selectedOrderWork as string).trim();
+          const match = this.filteredOrderWork?.find(
+            (q) => q.code === manualCode
+          );
+          if (match) {
+            this.selectedOrderWork = match;
+          }
+        }
 
         this.workReportService.createWorkReport(workReportData).subscribe({
           next: () => {
@@ -327,9 +362,10 @@ export default class FormWorkComponent {
   }
 
   loadOrderWorks() {
-    this.orderWorkService.getOrders().subscribe({
+    this.workReportService.getQuotesWithoutReport().subscribe({
       next: (response) => {
-        this.orderWorks = response.filter((o: OrderWork) => !!o.end_date);
+        this.orderWorks = response;
+        console.log(response);
       },
       error: () => {
         this.messageService.add({
@@ -343,6 +379,7 @@ export default class FormWorkComponent {
 
   resetForm() {
     this.errorMessage = '';
+    this.errorOrderInvalidMessage = '';
     this.orderWorks = [];
     this.selectedOrderWork = null;
     this.filteredOrderWork = undefined;

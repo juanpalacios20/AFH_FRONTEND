@@ -22,7 +22,7 @@
           <label for="on_label">Buscar cotización</label>
         </p-floatlabel>
         <small id="search-help" class="text-gray-500 text-center">
-          Busca por código de la cotización</small
+          Busca por código de la cotización o nombre de cliente</small
         >
       </div>
       <button
@@ -45,7 +45,7 @@
       [paginator]="true"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
-      [globalFilterFields]="['code']"
+      [globalFilterFields]="['code', 'customer.name']"
     >
       <ng-template #header>
         <tr>

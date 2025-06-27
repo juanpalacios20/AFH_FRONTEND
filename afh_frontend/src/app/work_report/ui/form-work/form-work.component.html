@@ -30,7 +30,9 @@
           (completeMethod)="filterWorkReport($event)"
           [ngClass]="{
             'ng-invalid ng-dirty border-red-500':
-              errorMessage && selectedOrderWork === null
+              errorMessage &&
+              selectedOrderWork === null &&
+              errorOrderInvalidMessage
           }"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           optionLabel="quote.code"
@@ -39,9 +41,16 @@
         <small
           id="email-help"
           class="text-red-600 mb-4"
-          *ngIf="errorMessage && selectedOrderWork === null"
+          *ngIf="
+            (errorMessage && selectedOrderWork === null) ||
+            errorOrderInvalidMessage
+          "
         >
-          {{ errorMessage }}
+          {{
+            errorMessage && selectedOrderWork === null
+              ? errorMessage
+              : errorOrderInvalidMessage
+          }}
         </small>
       </div>
     </div>
