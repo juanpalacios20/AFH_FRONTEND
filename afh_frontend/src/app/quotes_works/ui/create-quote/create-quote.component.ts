@@ -145,9 +145,9 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
 
     if (
-      (this.utility === 0 ||
-        this.administration === 0 ||
-        this.unexpected === 0) &&
+      (this.utility === null ||
+        this.administration === null ||
+        this.unexpected === null) &&
       this.construction_company !== ''
     ) {
       this.errorMessage = 'Campo obligatorio';

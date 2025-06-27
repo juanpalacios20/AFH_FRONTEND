@@ -25,7 +25,7 @@
         <h1 class="mb-4 text-primary-950 font-medium">
           Ingrese el nombre del cliente.
         </h1>
-        <div> 
+        <div>
           <p-autocomplete
             [(ngModel)]="selectedCustomer"
             [ngClass]="{
@@ -84,9 +84,7 @@
           <label for="construction_company">Nombre constructora:</label>
         </p-floatlabel>
       </div>
-      <div
-        class="mb-2"
-      >
+      <div class="mb-2">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese la descripción del trabajo.
         </h1>
@@ -439,7 +437,7 @@
               [(ngModel)]="item.amount"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
-                  errorMessage && (item.amount === 0 || item.amount === null)
+                  errorMessage && item.amount === null
               }"
               (ngModelChange)="updatePrice()"
               class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -449,7 +447,7 @@
           <small
             id="email-help"
             class="text-red-600 mb-4"
-            *ngIf="errorMessage && (item.amount === 0 || item.amount === null)"
+            *ngIf="errorMessage && item.amount === null"
           >
             {{ errorMessage }}
           </small>
@@ -463,9 +461,7 @@
               [(ngModel)]="item.unit_value"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
-                  errorMessage &&
-                  item.unit_value === 0 &&
-                  item.unit_value === null
+                  errorMessage && item.unit_value === null
               }"
               (ngModelChange)="updatePrice()"
               [ngModelOptions]="{ standalone: true }"
@@ -476,9 +472,7 @@
           <small
             id="email-help"
             class="text-red-600 mb-4"
-            *ngIf="
-              errorMessage && item.unit_value === 0 && item.unit_value === null
-            "
+            *ngIf="errorMessage && item.unit_value === null"
           >
             {{ errorMessage }}
           </small>
