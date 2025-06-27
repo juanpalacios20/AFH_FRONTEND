@@ -59,23 +59,25 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
       <div class="mb-4">
         <p-floatlabel class="mt-2" variant="on" required="true">
-          <input
-            pInputText
+          <textarea
+            pTextarea
             type="text"
-            [(ngModel)]="recommendations"
+            rows="5"
+            cols="30"
+            [(ngModel)]="description"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && recommendations === ''
+                errorMessage && description === ''
             }"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-          />
-          <label>Recomendaciones </label>
+          ></textarea>
+          <label>Descripción </label>
         </p-floatlabel>
         <small
           id="email-help"
           class="text-red-600 mb-4"
-          *ngIf="errorMessage && recommendations === ''"
+          *ngIf="errorMessage && description === ''"
         >
           {{ errorMessage }}
         </small>
@@ -105,25 +107,23 @@
       </div>
       <div class="mb-4">
         <p-floatlabel class="mt-2" variant="on" required="true">
-          <textarea
-            pTextarea
+          <input
+            pInputText
             type="text"
-            rows="5"
-            cols="30"
-            [(ngModel)]="description"
+            [(ngModel)]="recommendations"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && description === ''
+                errorMessage && recommendations === ''
             }"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-          ></textarea>
-          <label>Descripción </label>
+          />
+          <label>Recomendaciones </label>
         </p-floatlabel>
         <small
           id="email-help"
           class="text-red-600 mb-4"
-          *ngIf="errorMessage && description === ''"
+          *ngIf="errorMessage && recommendations === ''"
         >
           {{ errorMessage }}
         </small>
