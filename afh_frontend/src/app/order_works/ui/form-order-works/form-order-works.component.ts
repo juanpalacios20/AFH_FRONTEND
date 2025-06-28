@@ -471,4 +471,8 @@ export default class FormOrderWorksComponent {
       },
     });
   }
+
+  blockTyping(event: KeyboardEvent) {
+    event.preventDefault();
+  }
 }

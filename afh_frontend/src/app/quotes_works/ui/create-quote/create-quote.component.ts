@@ -484,7 +484,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   updatePrice() {
     this.itemsPorOpcion.items.forEach((item) => {
-      item.total_value = item.unit_value * (item.amount || 1);
+      item.total_value = item.unit_value * (item.amount || 0);
     });
   }
 
