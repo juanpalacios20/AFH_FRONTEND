@@ -27,7 +27,6 @@ import ViewOrdersWorkComponent from '../view-orders-work/view-orders-work.compon
     InputTextModule,
     FloatLabelModule,
     FormsModule,
-    ConfirmDialog,
     ToastModule,
     TableModule,
     TagModule,

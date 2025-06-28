@@ -12,7 +12,6 @@ export interface Option {
   name: string;
   total_value: number;
   subtotal: string;
-  total_value_formatted: string;
   items: Item[];
 }
 
@@ -42,6 +41,7 @@ export interface Quote {
   utility_value: string;
   iva_value: string;
   construction: string;
+  total_value: string;
 }
 
 export interface OrderWork {

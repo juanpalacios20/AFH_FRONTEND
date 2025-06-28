@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import {
   AutoComplete,
   AutoCompleteCompleteEvent,
@@ -28,6 +28,7 @@ import { OrderWork, WorkReport } from '../../../interfaces/models';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { QuoteService } from '../../../quotes_works/services/quote.service';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-form-work',
@@ -79,12 +80,14 @@ export default class FormWorkComponent {
   ];
 
   errorMessage: string = '';
+  errorOrderInvalidMessage: String = '';
 
   constructor(
     private messageService: MessageService,
     private orderWorkService: OrderWorkService,
     private workReportService: WorkReportService,
-    private quoteService: QuoteService
+    private quoteService: QuoteService,
+    private confirmationService: ConfirmationService
   ) {}
 
   trackByIndex(index: number, obj: any): any {
@@ -92,22 +95,50 @@ export default class FormWorkComponent {
   }
 
   verify() {
+    this.errorMessage = '';
     if (
-      !this.description ||
-      !this.development ||
-      !this.recommendations ||
-      this.observations ||
+      this.description === '' ||
+      this.development === '' ||
+      this.recommendations === '' ||
+      this.observations === '' ||
       this.selectedOrderWork === null
     ) {
       this.errorMessage = 'Campo requerido';
+      console.log('error otros datos');
     }
     for (let i = 0; i < this.anexos.length; i++) {
+      console.log(i);
       if (
         this.anexos[i].descripcion === '' ||
-        this.anexos[i].files.length === 0 ||
         this.anexos[i].imagenes.length === 0
       ) {
-        this.errorMessage = 'Campo requerido';
+        if (this.anexos[i].files.length === 0 && this.action === 0) {
+          this.errorMessage = 'Campo requerido';
+        }
+
+        if (this.action === 1) {
+          this.errorMessage = 'Campo requerido';
+        }
+      }
+    }
+    if (
+      this.selectedOrderWork &&
+      typeof this.selectedOrderWork === 'string' &&
+      typeof (this.selectedOrderWork as string).trim === 'function'
+    ) {
+      const manualCode = (this.selectedOrderWork as string).trim();
+      const match = this.filteredOrderWork?.find((q) => q.quote.code === manualCode);
+      if (match) {
+        this.selectedOrderWork = match;
+      } else {
+        this.errorOrderInvalidMessage =
+          'Este cotización no tiene una orden o ya tiene un acta en curso';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Por favor seleccione una cotización válida del listado.',
+        });
+        return;
       }
     }
   }
@@ -133,21 +164,41 @@ export default class FormWorkComponent {
           description: this.description,
         };
 
+        if (
+          this.selectedOrderWork &&
+          typeof this.selectedOrderWork === 'string' &&
+          typeof (this.selectedOrderWork as string).trim === 'function'
+        ) {
+          const manualCode = (this.selectedOrderWork as string).trim();
+          const match = this.filteredOrderWork?.find(
+            (q) => q.code === manualCode
+          );
+          if (match) {
+            this.selectedOrderWork = match;
+          }
+        }
+
         this.workReportService.createWorkReport(workReportData).subscribe({
           next: () => {
             console.log('creada el acta');
+            this.loading = false;
+            setTimeout(() => {
+              this.closeDialog.emit();
+              this.onWorkReportCreated.emit();
+              this.close();
+            }, 2000);
           },
-          error: (err) => console.error('Error creando WorkReport:', err),
+          error: (err) => {
+            console.error('Error creando WorkReport:', err);
+            this.loading = false;
+          },
         });
       },
-      error: (err) => console.error('Error creando anexos:', err),
+      error: (err) => {
+        console.error('Error creando anexos:', err);
+        this.loading = false;
+      },
     });
-    setTimeout(() => {
-      this.closeDialog.emit();
-      this.onWorkReportCreated.emit();
-      this.close();
-      this.loading = false;
-    }, 2000);
   }
 
   updateWorkReport() {
@@ -311,9 +362,10 @@ export default class FormWorkComponent {
   }
 
   loadOrderWorks() {
-    this.orderWorkService.getOrders().subscribe({
+    this.workReportService.getQuotesWithoutReport().subscribe({
       next: (response) => {
-        this.orderWorks = response.filter((o: OrderWork) => !!o.end_date);
+        this.orderWorks = response;
+        console.log(response);
       },
       error: () => {
         this.messageService.add({
@@ -327,6 +379,7 @@ export default class FormWorkComponent {
 
   resetForm() {
     this.errorMessage = '';
+    this.errorOrderInvalidMessage = '';
     this.orderWorks = [];
     this.selectedOrderWork = null;
     this.filteredOrderWork = undefined;
@@ -411,5 +464,26 @@ export default class FormWorkComponent {
       }
       this.imagenesEliminadas[anexo.id].push(imgUrl);
     }
+  }
+
+  confirmationClose() {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea cerrar el formulario? Los cambios se perderán',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.close();
+      },
+    });
   }
 }

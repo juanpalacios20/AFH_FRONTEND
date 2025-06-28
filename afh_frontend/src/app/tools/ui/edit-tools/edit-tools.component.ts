@@ -75,6 +75,8 @@ export class EditToolsComponent implements OnInit {
       !this.selectedFile
     ) {
       this.errorMessage = 'todos los campos son requeridos';
+    } else {
+      this.errorMessage = '';
     }
   }
 

@@ -11,7 +11,7 @@ import {
   OrderWork,
   Quote,
 } from '../../../interfaces/models';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AutoComplete } from 'primeng/autocomplete';
 import { TextareaModule } from 'primeng/textarea';
@@ -26,6 +26,7 @@ import { QuoteService } from '../../../quotes_works/services/quote.service';
 import { Checkbox } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
 import { OrderWorkService } from '../../services/work_order.service';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-form-order-works',
@@ -59,6 +60,7 @@ export default class FormOrderWorksComponent {
   officer: number = 0;
   auxiliary: number = 0;
   quotes: Quote[] = [];
+  quotesWithoutOrder: Quote[] = [];
   selectedQuote: Quote | null = null;
   filteredQuotes: Quote[] | undefined;
   workSiteOptions = ['Instalaciones del cliente', 'Instalaciones propias'];
@@ -80,11 +82,14 @@ export default class FormOrderWorksComponent {
   start_date: Date | undefined;
   end_date: Date | undefined;
   loading: boolean = true;
+  errorMessage: string = '';
+  quoteInvalidMessage: string = '';
 
   constructor(
     private messageService: MessageService,
     private quoteService: QuoteService,
-    private orderWorkService: OrderWorkService
+    private orderWorkService: OrderWorkService,
+    private confirmationService: ConfirmationService
   ) {}
 
   filterWorkSite(event: any) {
@@ -114,7 +119,55 @@ export default class FormOrderWorksComponent {
     this.filteredQuotes = filtered;
   }
 
+  verify() {
+    if (
+      !this.selectedQuote ||
+      !this.descriptionActivity ||
+      !this.selectedWorkSite ||
+      !this.selectedActivityType ||
+      !this.start_date ||
+      !this.end_date ||
+      !this.permisosRequeridos
+    ) {
+      this.errorMessage = 'Campo requerido';
+      return;
+    } else {
+      this.errorMessage = '';
+    }
+
+    if (
+      this.selectedQuote &&
+      typeof this.selectedQuote === 'string' &&
+      typeof (this.selectedQuote as string).trim === 'function'
+    ) {
+      const manualCode = (this.selectedQuote as string).trim();
+      const match = this.filteredQuotes?.find((q) => q.code === manualCode);
+      if (match) {
+        this.selectedQuote = match;
+      } else {
+        this.quoteInvalidMessage =
+          'Este cotización no ha sido aceptada o ya tiene una orden en curso';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Por favor seleccione una cotización válida del listado.',
+        });
+        return;
+      }
+    }
+  }
+
   submit() {
+    this.verify();
+    if (this.errorMessage !== '') {
+      this.loading = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Por favor, complete todos los campos requeridos.',
+      });
+      return;
+    }
     if (this.action === 0) {
       this.createOrderWork();
       return;
@@ -127,20 +180,6 @@ export default class FormOrderWorksComponent {
 
   createOrderWork() {
     this.loading = true;
-    if (
-      !this.selectedQuote ||
-      !this.selectedWorkSite ||
-      !this.selectedActivityType ||
-      !this.descriptionActivity
-    ) {
-      this.loading = false;
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Por favor, complete todos los campos requeridos.',
-      });
-      return;
-    }
 
     if (this.start_date === undefined || this.end_date === undefined) {
       this.loading = false;
@@ -187,8 +226,21 @@ export default class FormOrderWorksComponent {
       return;
     }
 
+    //validar si el campo es un texto y no se selecciona una opcion del autocomplete
+    if (
+      this.selectedQuote &&
+      typeof this.selectedQuote === 'string' &&
+      typeof (this.selectedQuote as string).trim === 'function'
+    ) {
+      const manualCode = (this.selectedQuote as string).trim();
+      const match = this.filteredQuotes?.find((q) => q.code === manualCode);
+      if (match) {
+        this.selectedQuote = match;
+      }
+    }
+
     let data = {
-      quote_id: this.selectedQuote.id,
+      quote_id: this.selectedQuote?.id,
       start_date: this.start_date.toISOString().split('T')[0],
       end_date: this.end_date.toISOString().split('T')[0],
       description: this.descriptionActivity,
@@ -198,7 +250,7 @@ export default class FormOrderWorksComponent {
       number_auxiliaries: this.auxiliary,
       number_supervisors: this.supervisor,
       activity: activityType,
-      permissions: this.permisosRequeridos
+      permissions: this.permisosRequeridos,
     };
 
     console.log(data);
@@ -302,11 +354,11 @@ export default class FormOrderWorksComponent {
   }
 
   loadQuotes() {
-    this.quoteService.getQuotes().subscribe({
+    this.orderWorkService.getQuotesWithoutOrder().subscribe({
       next: (response) => {
-        this.quotes = response.filter((o: Quote) => o.state === 2);
+        this.quotes = response;
       },
-      error: (error) => {
+      error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -317,6 +369,8 @@ export default class FormOrderWorksComponent {
   }
 
   resetForm() {
+    this.errorMessage = '';
+    this.quoteInvalidMessage = '';
     this.selectedQuote = null;
     this.selectedWorkSite = '';
     this.selectedActivityType = '';
@@ -389,5 +443,36 @@ export default class FormOrderWorksComponent {
 
       this.loadQuotes();
     }
+  }
+  preventNonNumericInput(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+  confirmationClose() {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea cerrar el formulario? Los cambios se perderán',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.close();
+      },
+    });
+  }
+
+  blockTyping(event: KeyboardEvent) {
+    event.preventDefault();
   }
 }

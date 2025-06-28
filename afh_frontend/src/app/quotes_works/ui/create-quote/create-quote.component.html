@@ -1,11 +1,23 @@
 <p-dialog
-  header="{{ this.actionTittle }}"
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '60rem' }"
-  [closable]="true"
-  (onHide)="close()"
+  [closable]="false"
 >
+  <ng-template pTemplate="header">
+    <div class="flex justify-between items-center w-full">
+      <span>
+        {{ this.actionTittle }}
+      </span>
+      <button
+        type="button"
+        class="p-dialog-header-icon p-dialog-header-close p-link cursor-pointer"
+        (click)="confirmationClose()"
+      >
+        <span class="pi pi-times"></span>
+      </button>
+    </div>
+  </ng-template>
   <p-toast position="top-right"></p-toast>
   <div class="w-full mx-auto rounded-xl justify-center">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
@@ -13,7 +25,7 @@
         <h1 class="mb-4 text-primary-950 font-medium">
           Ingrese el nombre del cliente.
         </h1>
-        <div class="mb-4">
+        <div>
           <p-autocomplete
             [(ngModel)]="selectedCustomer"
             [ngClass]="{
@@ -33,14 +45,22 @@
             class="text-red-600"
             *ngIf="
               errorMessage &&
-              (selectedCustomer === null || selectedCustomer === undefined)
+              (selectedCustomer === null ||
+                selectedCustomer === undefined ||
+                !selectedCustomer)
             "
           >
             {{ errorMessage }}
           </small>
         </div>
       </div>
-      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
+      <div
+        class="mb-2"
+        *ngIf="
+          this.action === 0 ||
+          (this.action === 1 && this.quoteToEdit?.construction !== null)
+        "
+      >
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el nombre de la constructora si aplica.
         </h1>
@@ -52,8 +72,7 @@
             [(ngModel)]="construction_company"
             [ngModelOptions]="{ standalone: true }"
             [ngClass]="{
-              'bg-gray-200 text-gray-500':
-                quoteToEdit?.construction === null,
+              'bg-gray-200 text-gray-500': quoteToEdit?.construction === null,
               'w-full font-sans py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [disabled]="
@@ -65,7 +84,7 @@
           <label for="construction_company">Nombre constructora:</label>
         </p-floatlabel>
       </div>
-      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
+      <div class="mb-2">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese la descripción del trabajo.
         </h1>
@@ -93,20 +112,34 @@
           {{ errorMessage }}
         </small>
       </div>
-      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
+      <div
+        class="mb-2"
+        *ngIf="
+          this.action === 0 ||
+          (this.action === 1 && this.quoteToEdit?.construction !== null)
+        "
+      >
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de administración.
         </h1>
         <p-floatlabel variant="on" required="true">
           <input
             pInputText
-            id="description"
-            type="text"
+            id="administration"
+            min="0"
+            type="number"
+            (keypress)="preventNonNumericInput($event)"
+            (ngModelChange)="validatePercent()"
             [(ngModel)]="administration"
             [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && administration === 0 && !!construction_company,
+                (errorMessage &&
+                  administration === 0 &&
+                  !!construction_company) ||
+                (errorMessagePercent &&
+                  administration > 100 &&
+                  !!construction_company),
               'bg-white text-black': !!construction_company,
               'bg-gray-100 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
@@ -124,8 +157,25 @@
         >
           {{ errorMessage }}
         </small>
+        <small
+          id="email-help"
+          class="text-red-600"
+          *ngIf="
+            errorMessagePercent &&
+            administration > 100 &&
+            !!construction_company
+          "
+        >
+          {{ errorMessagePercent }}
+        </small>
       </div>
-      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
+      <div
+        class="mb-2"
+        *ngIf="
+          this.action === 0 ||
+          (this.action === 1 && this.quoteToEdit?.construction !== null)
+        "
+      >
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de imprevisto.
         </h1>
@@ -133,12 +183,18 @@
           <input
             pInputText
             id="description"
-            type="text"
+            type="number"
+            min="0"
+            (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="unexpected"
+            (ngModelChange)="validatePercent()"
             [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && unexpected === 0 && !!construction_company,
+                (errorMessage && unexpected === 0 && !!construction_company) ||
+                (errorMessagePercent &&
+                  unexpected > 100 &&
+                  !!construction_company),
               'bg-white text-black': construction_company,
               'bg-gray-100 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
@@ -156,8 +212,23 @@
         >
           {{ errorMessage }}
         </small>
+        <small
+          id="email-help"
+          class="text-red-600"
+          *ngIf="
+            errorMessagePercent && unexpected > 100 && !!construction_company
+          "
+        >
+          {{ errorMessagePercent }}
+        </small>
       </div>
-      <div class="mb-2" *ngIf="this.action === 0 || (this.action === 1 && this.quoteToEdit?.construction !== null)">
+      <div
+        class="mb-2"
+        *ngIf="
+          this.action === 0 ||
+          (this.action === 1 && this.quoteToEdit?.construction !== null)
+        "
+      >
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el porcentaje de utilidad.
         </h1>
@@ -165,12 +236,18 @@
           <input
             pInputText
             id="description"
-            type="text"
+            type="number"
+            min="0"
+            (keypress)="preventNonNumericInput($event)"
+            (ngModelChange)="validatePercent()"
             [(ngModel)]="utility"
             [disabled]="!construction_company"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && utility === 0 && !!construction_company,
+                (errorMessage && utility === 0 && !!construction_company) ||
+                (errorMessagePercent &&
+                  utility > 100 &&
+                  !!construction_company),
               'bg-white text-black': construction_company,
               'bg-gray-100 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
@@ -187,6 +264,13 @@
           *ngIf="errorMessage && utility === 0 && !!construction_company"
         >
           {{ errorMessage }}
+        </small>
+        <small
+          id="email-help"
+          class="text-red-600"
+          *ngIf="errorMessagePercent && utility > 100 && !!construction_company"
+        >
+          {{ errorMessagePercent }}
         </small>
       </div>
       <div class="mb-2">
@@ -304,6 +388,8 @@
             <textarea
               pTextarea
               type="text"
+              rows="5"
+              cols="30"
               [(ngModel)]="item.description"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
@@ -348,10 +434,12 @@
             <input
               pInputText
               type="number"
+              min="0"
+              (keypress)="preventNonNumericInput($event)"
               [(ngModel)]="item.amount"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
-                  errorMessage && item.amount === 0
+                  errorMessage && item.amount === null
               }"
               (ngModelChange)="updatePrice()"
               class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -361,7 +449,7 @@
           <small
             id="email-help"
             class="text-red-600 mb-4"
-            *ngIf="errorMessage && item.amount === 0"
+            *ngIf="errorMessage && item.amount === null"
           >
             {{ errorMessage }}
           </small>
@@ -370,10 +458,12 @@
             <input
               pInputText
               type="number"
+              min="0"
+              (keypress)="preventNonNumericInput($event)"
               [(ngModel)]="item.unit_value"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
-                  errorMessage && item.unit_value === 0
+                  errorMessage && item.unit_value === null
               }"
               (ngModelChange)="updatePrice()"
               [ngModelOptions]="{ standalone: true }"
@@ -384,7 +474,7 @@
           <small
             id="email-help"
             class="text-red-600 mb-4"
-            *ngIf="errorMessage && item.unit_value === 0"
+            *ngIf="errorMessage && item.unit_value === null"
           >
             {{ errorMessage }}
           </small>
@@ -439,7 +529,7 @@
     </div>
 
     <div class="flex justify-end gap-2 mt-10">
-      <p-button styleClass="p-button-secondary" (onClick)="close()">
+      <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()">
         Cancelar
       </p-button>
       <p-button

@@ -32,7 +32,13 @@
     </p>
     <p>
       <span class="font-semibold text-black">Estado:</span>
-      <p-tag class="ml-2" [value]="state" [severity]="severity"></p-tag>
+      <p-tag
+        class="ml-2"
+        [value]="this.temporalState === '' ? state : this.temporalState"
+        [severity]="
+          this.temporalSeverity === undefined ? severity : this.temporalSeverity
+        "
+      ></p-tag>
     </p>
     <p>
       <span class="font-semibold text-black">Descripción:</span>
@@ -76,12 +82,19 @@
     <p-button
       fluid="true"
       label="{{
-        state === 'APROBADO' ? 'Cotización aprobada' : 'Aceptar cotización'
+        state === 'APROBADO' || temporalState === 'APROBADO'
+          ? 'Cotización aprobada'
+          : 'Aceptar cotización'
       }}"
       icon="pi pi-check"
-      [disabled]="state === 'PROCESO' ? false : true"
+      [disabled]="
+        (temporalState === '' && state === 'PROCESO') || (temporalState !== '' && temporalState === 'PROCESO') ? false : true
+      "
       [styleClass]="
-        state === 'APROBADO' || state === 'PROCESO'
+        (temporalState === '' && (state === 'APROBADO' ||
+        state === 'PROCESO')) ||
+        (temporalState !== '' && (temporalState === 'APROBADO' ||
+        temporalState === 'PROCESO'))
           ? 'p-button-primary'
           : 'p-button-secondary'
       "
@@ -91,12 +104,24 @@
     <p-button
       fluid="true"
       label="{{
-        state === 'RECHAZADO' ? 'Cotización rechazada' : 'Rechazar cotización'
+        state === 'RECHAZADO' || temporalState === 'RECHAZADO'
+          ? 'Cotización rechazada'
+          : 'Rechazar cotización'
       }}"
       icon="pi pi-times"
-      [disabled]="state === 'PROCESO' ? false : true"
+      [disabled]="
+        (temporalState !== '' && temporalState === 'PROCESO') ||
+        (temporalState === '' && state === 'PROCESO')
+          ? false
+          : true
+      "
       [severity]="
-        state === 'RECHAZADO' || state === 'PROCESO' ? 'danger' : 'secondary'
+        (temporalState === '' &&
+          (state === 'RECHAZADO' || state === 'PROCESO')) ||
+        (temporalState !== '' &&
+          (temporalState === 'RECHAZADO' || temporalState === 'PROCESO'))
+          ? 'danger'
+          : 'secondary'
       "
       (onClick)="confirmationReject()"
     ></p-button>
@@ -181,7 +206,7 @@
     <p class="text-xl mt-2">
       Total:
       <span class="text-primary-700">{{
-        quote?.options?.total_value_formatted
+        quote?.total_value
       }}</span>
     </p>
   </div>

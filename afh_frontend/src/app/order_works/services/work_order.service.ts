@@ -53,4 +53,8 @@ export class OrderWorkService extends BaseHttpService {
       headers,
     });
   }
+
+  getQuotesWithoutOrder() {
+    return this.http.get<any>(`${this.apiUrl}/quote/getquoteswhitouthorder/`);
+  }
 }

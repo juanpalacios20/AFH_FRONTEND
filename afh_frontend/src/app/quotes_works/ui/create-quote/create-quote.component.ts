@@ -9,7 +9,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -26,6 +26,7 @@ import {
 } from 'primeng/autocomplete';
 import { forkJoin } from 'rxjs';
 import { Customer, Item, Quote } from '../../../interfaces/models';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-create-quote',
@@ -122,17 +123,21 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   @Output() closeDialog = new EventEmitter<void>();
   @Output() onQuoteCreated = new EventEmitter<void>();
   errorMessage: String = '';
+  errorMessagePercent: String = '';
 
   constructor(
     private quoteService: QuoteService,
     private clientService: ClientService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   verify() {
+    this.errorMessage = '';
     if (
       this.selectedCustomer === null ||
       this.selectedCustomer === undefined ||
+      !this.selectedCustomer ||
       this.description === '' ||
       this.method_of_payment === ''
     ) {
@@ -140,9 +145,9 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
 
     if (
-      (this.utility === 0 ||
-        this.administration === 0 ||
-        this.unexpected === 0) &&
+      (this.utility === null ||
+        this.administration === null ||
+        this.unexpected === null) &&
       this.construction_company !== ''
     ) {
       this.errorMessage = 'Campo obligatorio';
@@ -163,6 +168,18 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       ) {
         this.errorMessage = 'Campo obligatorio';
       }
+    }
+
+    if (
+      (this.administration > 100 ||
+        this.unexpected > 100 ||
+        this.utility > 100) &&
+      this.construction_company
+    ) {
+      this.errorMessagePercent =
+        'El porcentaje debe ser un valor entre 1 y 100';
+    } else {
+      this.errorMessagePercent = '';
     }
   }
   search(event: AutoCompleteCompleteEvent) {
@@ -223,7 +240,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   submitQuote() {
     this.loading = true;
     this.verify();
-    if (this.errorMessage !== '') {
+    if (this.errorMessage !== '' || this.errorMessagePercent !== '') {
       this.loading = false;
       this.messageService.add({
         severity: 'error',
@@ -265,7 +282,9 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               unforeseen: this.unexpected / 100,
               utility: this.utility / 100,
               method_of_payment: this.method_of_payment,
-              construction: this.construction_company ? this.construction_company : null,
+              construction: this.construction_company
+                ? this.construction_company
+                : null,
             };
             this.quoteService.createQuote(quoteData).subscribe({
               next: (res) => {
@@ -294,7 +313,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   editQuote() {
     this.verify();
-    if (this.errorMessage !== '') {
+    if (this.errorMessage !== '' || this.errorMessagePercent !== '') {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -304,14 +323,25 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     this.loading = true;
     let quoteData: any = {};
-
-    if (this.administration !== this.quoteToEdit?.administration) {
+    console.log(
+      this.administration,
+      Number(this.quoteToEdit?.administration) * 100
+    );
+    if (
+      this.administration !==
+      Number(this.quoteToEdit?.administration) * 100
+    ) {
+      console.log('cambiando administracion');
       quoteData.administration = this.administration / 100;
     }
-    if (this.unexpected !== this.quoteToEdit?.unforeseen) {
+    console.log(this.unexpected, Number(this.quoteToEdit?.unforeseen) * 100);
+    if (this.unexpected !== Number(this.quoteToEdit?.unforeseen) * 100) {
+      console.log('cambiando imprevisto');
       quoteData.unforeseen = this.unexpected / 100;
     }
-    if (this.utility !== this.quoteToEdit?.utility) {
+    console.log(this.utility, Number(this.quoteToEdit?.utility) * 100);
+    if (this.utility !== Number(this.quoteToEdit?.utility) * 100) {
+      console.log('cambiando utilidad');
       quoteData.utility = this.utility / 100;
     }
     if (this.method_of_payment !== this.quoteToEdit?.method_of_payment) {
@@ -391,8 +421,10 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               amount: editedItem.amount,
             };
           }
+
+          console.log(editedItem.unit_value, Number(item.unit_value));
           if (
-            editedItem.unit_value !== Number(item.unit_value) &&
+            Number(editedItem.unit_value) !== Number(item.unit_value) &&
             Number(item.unit_value) &&
             item.unit_value
           ) {
@@ -402,9 +434,12 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             };
           }
 
-          if (editedItem.id !== 0) {
+          console.log(itemData);
+          if (Object.keys(itemData).length > 0) {
             this.quoteService.updateItem(editedItem.id, itemData).subscribe({
-              next: (response) => {},
+              next: (response) => {
+                console.log('item actualizado');
+              },
               error: (error) => {
                 console.error('Error al actualizar item', error);
               },
@@ -449,7 +484,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   updatePrice() {
     this.itemsPorOpcion.items.forEach((item) => {
-      item.total_value = item.unit_value * (item.amount || 1);
+      item.total_value = item.unit_value * (item.amount || 0);
     });
   }
 
@@ -491,6 +526,11 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   resetForm() {
     this.actionTittle = 'Crear';
+    this.construction_company = '';
+    this.administration = 0;
+    this.unexpected = 0;
+    this.utility = 0;
+    this.method_of_payment = '';
     this.description = '';
     this.selectedCustomer = null;
     this.tasks = [{ descripcion: '' }];
@@ -517,6 +557,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.itemsDelete = 0;
     this.newItemsIds = [];
     this.errorMessage = '';
+    this.errorMessagePercent = '';
   }
 
   loadEditData() {
@@ -588,5 +629,46 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         };
       }
     }
+  }
+
+  preventNonNumericInput(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  validatePercent() {
+    if (
+      this.administration > 100 ||
+      this.utility > 100 ||
+      this.unexpected > 100
+    ) {
+      this.errorMessagePercent = 'El valor debe ser entre 1 y 100';
+    } else {
+      this.errorMessagePercent = '';
+    }
+  }
+
+  confirmationClose() {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro que desea cerrar el formulario? Los cambios se perderán',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.close();
+      },
+    });
   }
 }

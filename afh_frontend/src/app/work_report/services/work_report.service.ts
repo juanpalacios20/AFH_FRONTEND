@@ -80,4 +80,8 @@ export class WorkReportService extends BaseHttpService {
       responseType: 'blob',
     });
   }
+
+  getQuotesWithoutReport() {
+    return this.http.get<any>(`${this.apiUrl}/workorder/getworkorderwhitoutcertificate/`);
+  }
 }

@@ -42,6 +42,15 @@ export default class ViewQuotesComponent {
     | undefined = 'info';
   @Input() visible: boolean = false;
   @Output() closeDialog = new EventEmitter<void>();
+  temporalState: string = '';
+  temporalSeverity:
+    | 'success'
+    | 'warn'
+    | 'danger'
+    | 'secondary'
+    | 'info'
+    | 'contrast'
+    | undefined = undefined;
 
   constructor(
     private quoteService: QuoteService,
@@ -56,6 +65,8 @@ export default class ViewQuotesComponent {
 
   close() {
     this.visible = false;
+    this.temporalSeverity = undefined;
+    this.temporalState = '';
     this.closeDialog.emit();
   }
 
@@ -140,25 +151,19 @@ export default class ViewQuotesComponent {
       state: state,
     };
     this.quoteService.changeState(this.quote?.id || 0, data).subscribe({
-      next: (response) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: `Cotización aprobada con éxito`,
-        });
-      },
+      next: (response) => {},
       error: (error) => {
         console.error('Error changing state:', error);
       },
     });
 
     if (state === 2) {
-      this.state = 'APROBADO';
-      this.severity = 'success';
+      this.temporalState = 'APROBADO';
+      this.temporalSeverity = 'success';
     }
     if (state === 3) {
-      this.state = 'RECHAZADO';
-      this.severity = 'danger';
+      this.temporalState = 'RECHAZADO';
+      this.temporalSeverity = 'danger';
     }
   }
 
@@ -200,6 +205,11 @@ export default class ViewQuotesComponent {
       },
       accept: () => {
         this.changeState(2);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'La cotización ha sido aprobada con éxito',
+        });
       },
     });
   }

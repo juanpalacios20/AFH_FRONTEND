@@ -1,26 +1,55 @@
 <p-dialog
-  [header]="this.action === 1 ? this.actionTittle + ' ' + orderWorkToEdit?.quote?.code : this.actionTittle "
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '60rem' }"
-  [closable]="true" 
-  (onHide)="close()"
+  [closable]="false"
 >
+  <ng-template pTemplate="header">
+    <div class="flex justify-between items-center w-full">
+      <span>
+        {{
+          this.action === 1
+            ? this.actionTittle + " " + orderWorkToEdit?.quote?.code
+            : this.actionTittle
+        }}
+      </span>
+      <button
+        type="button"
+        class="p-dialog-header-icon p-dialog-header-close p-link cursor-pointer"
+        (click)="confirmationClose()"
+      >
+        <span class="pi pi-times"></span>
+      </button>
+    </div>
+  </ng-template>
   <div class="w-full mx-auto rounded-xl justify-center mt-2">
     <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="mb-4">
         <h1 class="mb-4 text-primary-950 font-normal">
-          Ingrese el codigo de la orden de trabajo.
+          Ingrese el codigo de la cotizaciónde trabajo.
         </h1>
         <p-autocomplete
           [(ngModel)]="selectedQuote"
           placeholder="Codigo de la orden de trabajo"
+          [disabled]="this.action === 1"
           [suggestions]="filteredQuotes ?? []"
+          [ngClass]="{
+            'bg-gray-200 text-gray-500': this.action === 1,
+            'ng-invalid ng-dirty border-red-500':
+              (errorMessage && !selectedQuote) || quoteInvalidMessage
+          }"
           (completeMethod)="filterWorkReport($event)"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           optionLabel="code"
           fluid="true"
         />
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="(errorMessage && !selectedQuote) || quoteInvalidMessage"
+        >
+          {{ errorMessage && !selectedQuote ? errorMessage : quoteInvalidMessage }}
+        </small>
       </div>
       <div class="mb-4">
         <h1 class="mb-4 text-primary-950 font-normal">
@@ -31,10 +60,21 @@
             pInputText
             type="text"
             [(ngModel)]="descriptionActivity"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && descriptionActivity === ''
+            }"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
         </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && descriptionActivity === ''"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
     </div>
     <h1 class="mb-4 text-primary-950 font-medium">
@@ -47,7 +87,9 @@
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
-            type="text"
+            type="number"
+            min="0"
+            (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="technician"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -59,7 +101,9 @@
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
-            type="text"
+            type="number"
+            min="0"
+            (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="supervisor"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -71,7 +115,9 @@
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
-            type="text"
+            type="number"
+            min="0"
+            (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="officer"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -83,7 +129,9 @@
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
-            type="text"
+            type="number"
+            min="0"
+            (keypress)="preventNonNumericInput($event)"
             [(ngModel)]="auxiliary"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -95,12 +143,24 @@
         <p-autocomplete
           [(ngModel)]="selectedWorkSite"
           [suggestions]="filteredWorkSites"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && !selectedWorkSite
+          }"
           (completeMethod)="filterWorkSite($event)"
+          (keydown)="blockTyping($event)"
           [dropdown]="true"
           fluid="true"
           placeholder="Seleccione el sitio"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         ></p-autocomplete>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !selectedWorkSite"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
 
       <!-- Actividad -->
@@ -110,11 +170,23 @@
           [(ngModel)]="selectedActivityType"
           [suggestions]="filteredActivities"
           (completeMethod)="filterActivity($event)"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && !selectedActivityType
+          }"
           [dropdown]="true"
+          (keydown)="blockTyping($event)"
           fluid="true"
           placeholder="Seleccione el tipo de actividad"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         ></p-autocomplete>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !selectedActivityType"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
@@ -125,11 +197,23 @@
         <p-datepicker
           [(ngModel)]="start_date"
           [showIcon]="true"
+          (keydown)="blockTyping($event)"
           inputId="buttondisplay"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessage && !start_date
+          }"
           [showOnFocus]="false"
           dateFormat="dd/mm/yy"
           fluid="true"
+          placeholder="Seleccione la fecha de inicio"
         />
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !start_date"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
       <div>
         <label for="buttondisplay" class="font-bold block mb-2">
@@ -139,10 +223,22 @@
           [(ngModel)]="end_date"
           [showIcon]="true"
           fluid="true"
+          (keydown)="blockTyping($event)"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessage && !end_date
+          }"
           inputId="buttondisplay"
           [showOnFocus]="false"
           dateFormat="dd/mm/yy"
+          placeholder="Seleccione la fecha de fin"
         />
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && !end_date"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
     </div>
     <div class="mb-6 mt-6">
@@ -160,13 +256,22 @@
           ></p-checkbox>
           <label [for]="permiso" class="ml-2"> {{ permiso }} </label>
         </div>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && permisosRequeridos.length === 0"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
     </div>
 
     <div class="flex justify-end gap-2 mt-10">
-      <p-button styleClass="p-button-secondary" (onClick)="close()"> Cancelar </p-button>
+      <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()">
+        Cancelar
+      </p-button>
       <p-button styleClass="p-button-primary" (onClick)="submit()">
-        {{this.actionTittle}}
+        {{ this.actionTittle }}
       </p-button>
     </div>
   </div>
