@@ -88,6 +88,7 @@ export default class QuotesComponent {
   }
 
   closeCreateQuoteDialog() {
+    this.loadQuotes();
     this.quoteCreateDialogVisible = false;
   }
 
@@ -109,6 +110,7 @@ export default class QuotesComponent {
 
   closeEditQuoteDialog() {
     this.quoteEditDialogVisible = false;
+    this.loadQuotes();
   }
 
   handleQuoteEdited() {

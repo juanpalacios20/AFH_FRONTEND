@@ -65,9 +65,9 @@ export default class WorkReportComponent implements OnInit {
   }
 
   closeEditDialog() {
+    this.loadWorkReports();
     this.action = 0;
     this.workEditVisible = false;
-    this.loadWorkReports();
     this.messageService.add({
       severity: 'success',
       summary: 'Éxito',
