@@ -19,7 +19,7 @@ export class WorkReportService extends BaseHttpService {
 
   getWorkReports() {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/deliverycertificate/get/`, {
+    return this.http.get<any>(`${this.apiUrl}deliverycertificate/get/`, {
       headers,
     });
   }
@@ -27,7 +27,7 @@ export class WorkReportService extends BaseHttpService {
   createWorkReport(workReport: any) {
     const headers = this.getHeaders();
     return this.http.post<any>(
-      `${this.apiUrl}/deliverycertificate/create/`,
+      `${this.apiUrl}deliverycertificate/create/`,
       workReport,
       { headers }
     );
@@ -35,26 +35,26 @@ export class WorkReportService extends BaseHttpService {
 
   createExhibit(data: any) {
     const headers = this.getHeaders();
-    return this.http.post<any>(`${this.apiUrl}/exhibit/create/`, data, {
+    return this.http.post<any>(`${this.apiUrl}exhibit/create/`, data, {
       headers,
     });
   }
 
   updateExhibit(data: any, id: number) {
     const headers = this.getHeaders();
-    return this.http.patch<any>(`${this.apiUrl}/exhibit/update/${id}/`, data, {
+    return this.http.patch<any>(`${this.apiUrl}exhibit/update/${id}/`, data, {
       headers,
     });
   }
 
   deleteExhibit(id: number) {
-    return this.http.delete<any>(`${this.apiUrl}/exhibit/delete/${id}/`);
+    return this.http.delete<any>(`${this.apiUrl}exhibit/delete/${id}/`);
   }
 
   updateWorkReport(data: any, id: number) {
     const headers = this.getHeaders();
     return this.http.patch<any>(
-      `${this.apiUrl}/deliverycertificate/update/${id}/`,
+      `${this.apiUrl}deliverycertificate/update/${id}/`,
       data,
       {
         headers,
@@ -65,7 +65,7 @@ export class WorkReportService extends BaseHttpService {
   addExhibitToWorkReport(delivery_certificate_id: number, exhibit_id: number) {
     const headers = this.getHeaders();
     return this.http.patch<any>(
-      `${this.apiUrl}/deliverycertificate/add-exhibit/${delivery_certificate_id}/${exhibit_id}/`,
+      `${this.apiUrl}deliverycertificate/add-exhibit/${delivery_certificate_id}/${exhibit_id}/`,
       {
         headers,
       }
@@ -74,7 +74,7 @@ export class WorkReportService extends BaseHttpService {
 
   workReportPdf(id: number) {
     const headers = this.getHeaders();
-    return this.http.get(`${this.apiUrl}/deliverycertificate/pdf/${id}/`, {
+    return this.http.get(`${this.apiUrl}deliverycertificate/pdf/${id}/`, {
       headers: headers,
       observe: 'response',
       responseType: 'blob',
@@ -82,6 +82,6 @@ export class WorkReportService extends BaseHttpService {
   }
 
   getQuotesWithoutReport() {
-    return this.http.get<any>(`${this.apiUrl}/workorder/getworkorderwhitoutcertificate/`);
+    return this.http.get<any>(`${this.apiUrl}workorder/getworkorderwhitoutcertificate/`);
   }
 }

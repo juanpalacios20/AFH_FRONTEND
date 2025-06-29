@@ -20,54 +20,54 @@ export class QuoteService extends BaseHttpService {
 
   getQuotes() {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/quote/getquotes/`, { headers });
+    return this.http.get<any>(`${this.apiUrl}quote/getquotes/`, { headers });
   }
 
   createItem(item: any) {
     const headers = this.getHeaders();
-    return this.http.post<any>(`${this.apiUrl}/item/additem/`, item, {
+    return this.http.post<any>(`${this.apiUrl}item/additem/`, item, {
       headers,
     });
   }
 
   createOption(option: any) {
     const headers = this.getHeaders();
-    return this.http.post<any>(`${this.apiUrl}/option/addoption/`, option, {
+    return this.http.post<any>(`${this.apiUrl}option/addoption/`, option, {
       headers,
     });
   }
 
   createQuote(quote: any) {
     const headers = this.getHeaders();
-    return this.http.post<any>(`${this.apiUrl}/quote/addquote/`, quote, {
+    return this.http.post<any>(`${this.apiUrl}quote/addquote/`, quote, {
       headers,
     });
   }
 
   deleteQuote(quoteId: number) {
     const headers = this.getHeaders();
-    return this.http.delete<any>(`${this.apiUrl}/quote/delete/${quoteId}`, {
+    return this.http.delete<any>(`${this.apiUrl}quote/delete/${quoteId}`, {
       headers,
     });
   }
 
   getOptions() {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/option/getoptions/`, {
+    return this.http.get<any>(`${this.apiUrl}option/getoptions/`, {
       headers,
     });
   }
 
   getQuoteById(quoteId: number) {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/quote/getquote/${quoteId}`, {
+    return this.http.get<any>(`${this.apiUrl}quote/getquote/${quoteId}`, {
       headers,
     });
   }
 
   getItemById(itemId: number) {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/item/getitem/${itemId}`, {
+    return this.http.get<any>(`${this.apiUrl}item/getitem/${itemId}`, {
       headers,
     });
   }
@@ -75,7 +75,7 @@ export class QuoteService extends BaseHttpService {
   updateQuote(quoteId: number, quoteData: any) {
     const headers = this.getHeaders();
     return this.http.put<any>(
-      `${this.apiUrl}/quote/updatequote/${quoteId}`,
+      `${this.apiUrl}quote/updatequote/${quoteId}`,
       quoteData,
       { headers }
     );
@@ -84,7 +84,7 @@ export class QuoteService extends BaseHttpService {
   updateOption(optionId: number, optionData: any) {
     const headers = this.getHeaders();
     return this.http.put<any>(
-      `${this.apiUrl}/option/updateoption/${optionId}`,
+      `${this.apiUrl}option/updateoption/${optionId}`,
       optionData
     );
   }
@@ -92,7 +92,7 @@ export class QuoteService extends BaseHttpService {
   updateItem(itemId: number, itemData: any) {
     const headers = this.getHeaders();
     return this.http.put<any>(
-      `${this.apiUrl}/item/updateitem/${itemId}`,
+      `${this.apiUrl}item/updateitem/${itemId}`,
       itemData,
       { headers }
     );
@@ -100,7 +100,7 @@ export class QuoteService extends BaseHttpService {
 
   deleteItem(itemId: number) {
     const headers = this.getHeaders();
-    return this.http.delete<any>(`${this.apiUrl}/item/delete/${itemId}`);
+    return this.http.delete<any>(`${this.apiUrl}item/delete/${itemId}`);
   }
 
   deleteItems(listItems: number[]) {
@@ -113,7 +113,7 @@ export class QuoteService extends BaseHttpService {
 
   deleteOption(optionId: number) {
     return this.http
-      .delete<any>(`${this.apiUrl}/option/delete/${optionId}`)
+      .delete<any>(`${this.apiUrl}option/delete/${optionId}`)
       .subscribe({
         next: (response) => {
           console.log('');
@@ -135,7 +135,7 @@ export class QuoteService extends BaseHttpService {
     const headers = this.getHeaders();
     return this.http
       .patch<any>(
-        `${this.apiUrl}/option/additemtooption/${optionId}`,
+        `${this.apiUrl}option/additemtooption/${optionId}`,
         itemsData,
         { headers }
       )
@@ -153,7 +153,7 @@ export class QuoteService extends BaseHttpService {
     const headers = this.getHeaders();
     return this.http
       .patch<any>(
-        `${this.apiUrl}/quote/addoptiontoquote/${quoteId}`,
+        `${this.apiUrl}quote/addoptiontoquote/${quoteId}`,
         optionsData,
         { headers }
       )
