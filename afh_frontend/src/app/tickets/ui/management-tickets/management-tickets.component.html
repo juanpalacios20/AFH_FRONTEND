@@ -62,6 +62,7 @@
             Lugar Destino
           </th>
           <th class="rounded-border text-primary-950 text-center">Fecha</th>
+          <th class="rounded-border text-primary-950 text-center">Responsable</th>
           <th class="rounded-border text-primary-950 text-center">Estado</th>
           <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
@@ -76,6 +77,9 @@
           </td>
           <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
             <p class="text-center">{{ ticket.entry_date_formatted }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
+            <p class="text-center">{{ ticket.responsible || 'Sin responsable asignado' }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
             <div class="flex justify-center">

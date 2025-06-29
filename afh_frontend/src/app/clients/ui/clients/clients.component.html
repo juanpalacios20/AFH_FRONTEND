@@ -1,0 +1,142 @@
+<div class="relative h-screen">
+  <app-menu class="absolute top-0 left-0 p-4"></app-menu>
+  <p-toast position="top-right"></p-toast>
+  <div class="w-full p-5 pt-20">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">AFH: Administración de Clientes</h1>
+      <p class="rounded-border text-primary-950 font-semibold">
+        Total clientes: {{ clients.length }}
+      </p>
+    </div>
+
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <p-floatlabel variant="on">
+          <p-iconfield>
+            <p-inputicon class="pi pi-search" rounded="true" />
+            <input
+              pInputText
+              id="on_label"
+              [(ngModel)]="searchClient"
+              (input)="tc?.filterGlobal(searchClient, 'contains')"
+              autocomplete="off"
+            />
+          </p-iconfield>
+          <label for="on_label">Buscar cliente</label>
+        </p-floatlabel>
+        <small id="search-help" class="text-gray-500 text-center">
+          Busca por nombre del cliente</small
+        >
+      </div>
+      <button
+        pButton
+        icon="pi pi-plus"
+        (click)="showCreateClientDialog()"
+        label="Agregar nuevo cliente"
+        rounded="true"
+        styleClass="w-full"
+      ></button>
+    </div>
+
+    <p-confirmdialog></p-confirmdialog>
+
+    <p-table
+      #tc
+      [value]="clients"
+      [rows]="20"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['name']"
+    >
+      <ng-template #header>
+        <tr>
+          <th class="rounded-border text-primary-950 text-center"></th>
+          <th class="rounded-border text-primary-950 text-center">Nombre</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Correo electrónico
+          </th>
+          <th class="rounded-border text-primary-950 text-center">
+            Numero telefónico
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Cargo</th>
+          <th class="rounded-border text-primary-950 text-center">Opciones</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-client let-i="rowIndex">
+        <tr>
+          <td class="text-center">
+            {{ i + 1 }}
+          </td>
+          <td>
+            <p class="text-center">{{ client.name }}</p>
+          </td>
+          <td>
+            <p class="text-center">{{ client.email }}</p>
+          </td>
+          <td>
+            <p class="text-center">{{ client.phone }}</p>
+          </td>
+          <td>
+            <p class="text-center">{{ client.post }}</p>
+          </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                (click)="
+                  showEditClientDialog(
+                    client.id,
+                    client.name,
+                    client.email,
+                    client.phone,
+                    client.post
+                  )
+                "
+              />
+              <p-button
+                icon="pi pi-trash"
+                severity="danger"
+                (click)="confirmationDelete(client.id)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay clientes para mostrar
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <app-form-clients
+    [visible]="clientDialogVisible"
+    [action]="action"
+    (closeDialog)="clientDialogVisible = false"
+    (onQuoteCreated)="handClientCreated()"
+  >
+  </app-form-clients>
+  <app-form-clients
+    [visible]="clientEditVisible"
+    [action]="action"
+    [clientId]="id"
+    [nameClient]="name"
+    [emailClient]="email"
+    [phoneClient]="phone"
+    [positionClient]="position"
+    (closeDialog)="clientEditVisible = false"
+    (isEdited)="handleIsEdited($event)"
+    (onQuoteCreated)="handleClientEdit()"
+  >
+  </app-form-clients>
+</div>
