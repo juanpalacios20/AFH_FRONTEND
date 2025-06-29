@@ -1,0 +1,213 @@
+<p-dialog
+  [header]="
+    orderWork
+      ? 'Información de la orden: ' + quote?.code
+      : 'Información de la cotización: ' + quote?.code
+  "
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '60vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <p-toast position="top-right"></p-toast>
+  <p-confirmdialog></p-confirmdialog>
+
+  <!-- ======= Información general ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Información general</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+    <p>
+      <span class="font-semibold text-black">Código:</span> {{ quote?.code }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Cliente:</span>
+      {{ quote?.customer?.name }}
+    </p>
+    <p *ngIf="quote?.construction">
+      <span class="font-semibold text-black">Constructora:</span>
+      {{ quote?.construction }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Estado:</span>
+      <p-tag
+        class="ml-2"
+        [value]="this.temporalState === '' ? state : this.temporalState"
+        [severity]="
+          this.temporalSeverity === undefined ? severity : this.temporalSeverity
+        "
+      ></p-tag>
+    </p>
+    <p>
+      <span class="font-semibold text-black">Descripción:</span>
+      {{ quote?.description }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Plan de pago:</span>
+      {{ quote?.method_of_payment }}
+    </p>
+
+    <p *ngIf="!orderWork">
+      <span class="font-semibold text-black">Fecha:</span>
+      {{ quote?.issue_date }}
+    </p>
+    <p *ngIf="orderWork">
+      <span class="font-semibold text-black">Fecha de inicio:</span>
+      {{ orderWork.start_date }}
+    </p>
+    <p *ngIf="orderWork">
+      <span class="font-semibold text-black">Fecha de finalización:</span>
+      {{ orderWork.end_date || "No definida" }}
+    </p>
+  </div>
+
+  <!-- ======= Acciones ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Acciones disponibles</h2>
+  <div class="w-full mb-4">
+    <p-button
+      fluid="true"
+      label="{{
+        orderWork ? 'Descargar orden de trabajo' : 'Descargar cotización'
+      }}"
+      icon="pi pi-download"
+      styleClass="p-button-secondary w-full"
+      (onClick)="pdf()"
+      [loading]="loadingDownload"
+    ></p-button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4" *ngIf="!orderWork">
+    <p-button
+      fluid="true"
+      label="{{
+        state === 'APROBADO' || temporalState === 'APROBADO'
+          ? 'Cotización aprobada'
+          : 'Aceptar cotización'
+      }}"
+      icon="pi pi-check"
+      [disabled]="
+        (temporalState === '' && state === 'PROCESO') || (temporalState !== '' && temporalState === 'PROCESO') ? false : true
+      "
+      [styleClass]="
+        (temporalState === '' && (state === 'APROBADO' ||
+        state === 'PROCESO')) ||
+        (temporalState !== '' && (temporalState === 'APROBADO' ||
+        temporalState === 'PROCESO'))
+          ? 'p-button-primary'
+          : 'p-button-secondary'
+      "
+      (onClick)="confirmationConfirm()"
+    ></p-button>
+
+    <p-button
+      fluid="true"
+      label="{{
+        state === 'RECHAZADO' || temporalState === 'RECHAZADO'
+          ? 'Cotización rechazada'
+          : 'Rechazar cotización'
+      }}"
+      icon="pi pi-times"
+      [disabled]="
+        (temporalState !== '' && temporalState === 'PROCESO') ||
+        (temporalState === '' && state === 'PROCESO')
+          ? false
+          : true
+      "
+      [severity]="
+        (temporalState === '' &&
+          (state === 'RECHAZADO' || state === 'PROCESO')) ||
+        (temporalState !== '' &&
+          (temporalState === 'RECHAZADO' || temporalState === 'PROCESO'))
+          ? 'danger'
+          : 'secondary'
+      "
+      (onClick)="confirmationReject()"
+    ></p-button>
+  </div>
+
+  <p-button
+    *ngIf="orderWork"
+    fluid="true"
+    label="{{
+      orderWork.end_date
+        ? 'Orden de trabajo completada'
+        : 'Completar orden de trabajo'
+    }}"
+    icon="pi pi-check"
+    [disabled]="orderWork.end_date ? true : false"
+    styleClass="p-button-primary w-full mb-6"
+    (onClick)="confirmationComplete()"
+  ></p-button>
+
+  <!-- ======= Tareas ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Tareas</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div
+      *ngFor="let task of quote?.tasks; let i = index"
+      class="p-4 bg-gray-50 border rounded-lg"
+    >
+      <p>
+        <strong>Tarea {{ i + 1 }}:</strong> {{ task }}
+      </p>
+    </div>
+  </div>
+
+  <!-- ======= Opciones de la Cotización ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">
+    Opciones de la Cotización
+  </h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div
+      *ngFor="let item of quote?.options?.items; let j = index"
+      [ngClass]="{
+        'col-span-3':
+          (quote?.options?.items?.length || 0) === 1 ||
+          ((quote?.options?.items?.length || 0) % 3 === 1 &&
+            j === (quote?.options?.items?.length || 0) - 1)
+      }"
+      class="p-4 bg-gray-50 border rounded-lg"
+    >
+      <p><strong>Descripción:</strong> {{ item.description }}</p>
+      <p><strong>Cantidad:</strong> {{ item.amount }}</p>
+      <p><strong>Unidad de medida:</strong> {{ item.units }}</p>
+      <p>
+        <strong>Valor Unitario:</strong>
+        {{ item.unit_value | currency : "COP" : "symbol" : "1.0-0" : "es-CO" }}
+      </p>
+      <p>
+        <strong>Precio:</strong>
+        {{ item.total_value | currency : "COP" : "symbol" : "1.0-0" : "es-CO" }}
+      </p>
+    </div>
+  </div>
+
+  <!-- ======= Totales ======= -->
+  <div class="text-right font-semibold text-lg">
+    <p>
+      Subtotal:
+      <span class="text-primary-700">{{ quote?.options?.subtotal }}</span>
+    </p>
+    <p>
+      Administración:
+      <span class="text-primary-700">{{ quote?.administration_value }}</span>
+    </p>
+    <p>
+      Imprevistos:
+      <span class="text-primary-700">{{ quote?.unforeseen_value }}</span>
+    </p>
+    <p>
+      Utilidad: <span class="text-primary-700">{{ quote?.utility_value }}</span>
+    </p>
+    <p>
+      IVA: <span class="text-primary-700">{{ quote?.iva_value }}</span>
+    </p>
+    <p class="text-xl mt-2">
+      Total:
+      <span class="text-primary-700">{{
+        quote?.total_value
+      }}</span>
+    </p>
+  </div>
+</p-dialog>

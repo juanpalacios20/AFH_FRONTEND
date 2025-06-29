@@ -1,0 +1,73 @@
+<p-dialog
+  header="Información del acta"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '60vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="close()"
+>
+
+  <!-- ======= Información general ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Detalles del acta</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <p>
+      <span class="font-semibold text-black">Fecha:</span> {{ report?.date }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Código de la cotización:</span>
+      {{ report?.work_order?.quote?.code }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Descripción:</span>
+      {{ report?.description }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Observaciones:</span>
+      {{ report?.observations }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Recomendaciones:</span>
+      {{ report?.recommendations }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Desarrollo:</span>
+      {{ report?.development }}
+    </p>
+  </div>
+
+  <!-- ======= Acciones ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Acciones disponibles</h2>
+  <div class="w-full mb-4">
+    <p-button
+      fluid="true"
+      label="Descargar PDF"
+      icon="pi pi-download"
+      styleClass="p-button-primary w-full"
+      (onClick)="generarPDF()"
+      [loading]="loadingDownload"
+    ></p-button>
+  </div>
+
+  <!-- ======= Anexos ======= -->
+  <div *ngIf="report?.exhibit?.length">
+    <h2 class="text-primary-900 font-bold text-xl mb-2">Anexos</h2>
+    <div
+      *ngFor="let ex of report?.exhibit"
+      class="p-4 mb-4 border rounded-lg bg-gray-50 shadow-sm"
+    >
+      <p class="font-semibold text-black mb-2">Título: {{ ex.tittle }}</p>
+      <div class="flex flex-wrap gap-3">
+        <img
+          *ngFor="let img of ex.images"
+          [src]="img"
+          alt="Anexo"
+          width="150"
+          class="rounded border shadow-sm"
+        />
+      </div>
+    </div>
+  </div>
+</p-dialog>
