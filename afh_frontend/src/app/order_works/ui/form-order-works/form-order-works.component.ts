@@ -253,7 +253,6 @@ export default class FormOrderWorksComponent {
       permissions: this.permisosRequeridos,
     };
 
-    console.log(data);
     this.orderWorkService.createWorkOrder(data).subscribe({
       next: (response) => {
         this.loading = true;
@@ -262,7 +261,7 @@ export default class FormOrderWorksComponent {
         this.close();
       },
       error: (err) => {
-        console.log('ups', err);
+        console.log('error', err);
       },
     });
   }
@@ -432,7 +431,6 @@ export default class FormOrderWorksComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['visible'] && this.visible === true) {
-      console.log('Se abrió el diálogo con action =', this.action);
 
       if (this.action === 0) {
         this.actionTittle = 'Generar orden de trabajo';

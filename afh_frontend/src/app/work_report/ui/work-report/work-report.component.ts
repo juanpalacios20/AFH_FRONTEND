@@ -15,6 +15,7 @@ import FormWorkComponent from '../form-work/form-work.component';
 import { WorkReportService } from '../../services/work_report.service';
 import { WorkReport } from '../../../interfaces/models';
 import { ViewWorkReportComponent } from '../view-work-report/view-work-report.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-work-report',
@@ -32,6 +33,7 @@ import { ViewWorkReportComponent } from '../view-work-report/view-work-report.co
     TagModule,
     FormWorkComponent,
     ViewWorkReportComponent,
+    NgIf
   ],
   templateUrl: './work-report.component.html',
   styleUrl: './work-report.component.css',
@@ -42,6 +44,7 @@ export default class WorkReportComponent implements OnInit {
   viewVisible = false;
   selectedReport!: WorkReport;
   workReports: WorkReport[] = [];
+  loadingWorkReports: boolean = false;
   workReportDialogVisible: boolean = false;
   workEditVisible: boolean = false;
   workReportToSearch: string = '';
@@ -53,7 +56,6 @@ export default class WorkReportComponent implements OnInit {
   ) {}
 
   openView(report: WorkReport) {
-    console.log(report);
     this.selectedReport = report;
     this.viewVisible = true;
   }
@@ -104,10 +106,11 @@ export default class WorkReportComponent implements OnInit {
   }
 
   loadWorkReports() {
+    this.loadingWorkReports = true;
     this.workReportService.getWorkReports().subscribe({
       next: (response) => {
         this.workReports = response;
-        console.log('Work reports loaded:', this.workReports);
+        this.loadingWorkReports = false;
       },
       error: (error) => {
         this.messageService.add({
@@ -115,6 +118,7 @@ export default class WorkReportComponent implements OnInit {
           summary: 'Error',
           detail: 'Failed to load work reports',
         });
+        this.loadingWorkReports = false;
       },
     });
   }
