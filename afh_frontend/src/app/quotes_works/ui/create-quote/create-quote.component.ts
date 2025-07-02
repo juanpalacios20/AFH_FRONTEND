@@ -287,15 +287,17 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
                 ? this.construction_company
                 : null,
             };
-            console.log(quoteData);
-            this.quoteService.createQuote(quoteData).subscribe({
-              next: (res) => {
-                console.log('');
-              },
-              error: (err) => {
-                console.log('Error al crear cotización', err, quoteData);
-              },
-            });
+            setTimeout(() => {
+              console.log(quoteData);
+              this.quoteService.createQuote(quoteData).subscribe({
+                next: (res) => {
+                  console.log('');
+                },
+                error: (err) => {
+                  console.log('Error al crear cotización', err, quoteData);
+                },
+              });
+            }, 2000);
           },
           error: (err) => {
             console.log('Error al crear opción', err, optionData);
@@ -310,7 +312,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       this.onQuoteCreated.emit();
       this.close();
       this.loading = false;
-    }, 2000);
+    }, 3000);
   }
 
   editQuote() {
