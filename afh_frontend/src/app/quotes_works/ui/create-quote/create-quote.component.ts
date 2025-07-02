@@ -294,7 +294,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
                   console.log('');
                 },
                 error: (err) => {
-                  console.log('Error al crear cotización', err, quoteData);
+                  console.log('Error al crear cotización', err, 'informacion' ,quoteData);
                 },
               });
             }, 2000);
