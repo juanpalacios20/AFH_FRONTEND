@@ -24,7 +24,7 @@ import {
   AutoCompleteCompleteEvent,
   AutoCompleteModule,
 } from 'primeng/autocomplete';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 import { Customer, Item, Quote } from '../../../interfaces/models';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 
@@ -241,6 +241,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   submitQuote() {
     this.loading = true;
     this.verify();
+
     if (this.errorMessage !== '' || this.errorMessagePercent !== '') {
       this.loading = false;
       this.messageService.add({
@@ -250,8 +251,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       });
       return;
     }
-    let optionId: number = 0;
 
+    // Crear ítems primero
     const itemRequests = this.itemsPorOpcion.items.map((item) => {
       const itemData = {
         description: item.description,
@@ -262,57 +263,49 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       return this.quoteService.createItem(itemData);
     });
 
-    forkJoin(itemRequests).subscribe({
-      next: (responses) => {
-        const itemIds = responses.map((res) => res.item_id);
+    forkJoin(itemRequests)
+      .pipe(
+        switchMap((itemResponses) => {
+          const itemIds = itemResponses.map((res) => res.item_id);
 
-        const optionData = {
-          description: 'Opción para ' + this.description,
-          items: itemIds,
-        };
-        this.quoteService.createOption(optionData).subscribe({
-          next: (response) => {
-            optionId = response.option_id;
-            const quoteData = {
-              description: this.description,
-              customer_id: this.selectedCustomer?.id,
-              options: optionId,
-              tasks: this.tasks.map((t) => t.descripcion),
-              iva: this.ivaPercentage,
-              administration: this.administration / 100,
-              unforeseen: this.unexpected / 100,
-              utility: this.utility / 100,
-              method_of_payment: this.method_of_payment,
-              construction: this.construction_company
-                ? this.construction_company
-                : null,
-            };
-            setTimeout(() => {
-              console.log(quoteData);
-              this.quoteService.createQuote(quoteData).subscribe({
-                next: (res) => {
-                  console.log('');
-                },
-                error: (err) => {
-                  console.log('Error al crear cotización', err, 'informacion' ,quoteData);
-                },
-              });
-            }, 2000);
-          },
-          error: (err) => {
-            console.log('Error al crear opción', err, optionData);
-          },
-        });
-      },
-      error: (err) => {
-        console.log('Error al crear items', err);
-      },
-    });
-    setTimeout(() => {
-      this.onQuoteCreated.emit();
-      this.close();
-      this.loading = false;
-    }, 3000);
+          const optionData = {
+            description: 'Opción para ' + this.description,
+            items: itemIds,
+          };
+
+          return this.quoteService.createOption(optionData).pipe(
+            switchMap((optionResponse) => {
+              const optionId = optionResponse.option_id;
+
+              const quoteData = {
+                description: this.description,
+                customer_id: this.selectedCustomer?.id,
+                options: optionId,
+                tasks: this.tasks.map((t) => t.descripcion),
+                iva: this.ivaPercentage,
+                administration: this.administration / 100,
+                unforeseen: this.unexpected / 100,
+                utility: this.utility / 100,
+                method_of_payment: this.method_of_payment,
+                construction: this.construction_company || null,
+              };
+
+              return this.quoteService.createQuote(quoteData);
+            })
+          );
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.onQuoteCreated.emit();
+          this.close();
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error en el proceso de creación:', err);
+          this.loading = false;
+        },
+      });
   }
 
   editQuote() {
