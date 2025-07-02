@@ -19,21 +19,21 @@ export class OrderWorkService extends BaseHttpService {
 
   getOrders() {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/workorder/workorders/`, {
+    return this.http.get<any>(`${this.apiUrl}workorder/workorders/`, {
       headers,
     });
   }
 
   finishOrderWork(id: number) {
     const headers = this.getHeaders();
-    return this.http.patch<any>(`${this.apiUrl}/workorder/finish/${id}/`, {
+    return this.http.patch<any>(`${this.apiUrl}workorder/finish/${id}/`, {
       headers,
     });
   }
 
   workOrderPdf(id: number) {
     const headers = this.getHeaders();
-    return this.http.get(`${this.apiUrl}/workorder/pdf/${id}/`, {
+    return this.http.get(`${this.apiUrl}workorder/pdf/${id}/`, {
       headers: headers,
       observe: 'response',
       responseType: 'blob',
@@ -42,19 +42,19 @@ export class OrderWorkService extends BaseHttpService {
 
   createWorkOrder(data: any) {
     const headers = this.getHeaders();
-    return this.http.post<any>(`${this.apiUrl}/workorder/create/`, data, {
+    return this.http.post<any>(`${this.apiUrl}workorder/create/`, data, {
       headers,
     });
   }
 
   updateOrderWork(data: any, id: Number) {
     const headers = this.getHeaders();
-    return this.http.patch<any>(`${this.apiUrl}/workorder/update/${id}/`, data, {
+    return this.http.patch<any>(`${this.apiUrl}workorder/update/${id}/`, data, {
       headers,
     });
   }
 
   getQuotesWithoutOrder() {
-    return this.http.get<any>(`${this.apiUrl}/quote/getquoteswhitouthorder/`);
+    return this.http.get<any>(`${this.apiUrl}quote/getquoteswhitouthorder/`);
   }
 }

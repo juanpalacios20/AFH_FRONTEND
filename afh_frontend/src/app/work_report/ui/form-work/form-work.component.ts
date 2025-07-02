@@ -107,7 +107,6 @@ export default class FormWorkComponent {
       console.log('error otros datos');
     }
     for (let i = 0; i < this.anexos.length; i++) {
-      console.log(i);
       if (
         this.anexos[i].descripcion === '' ||
         this.anexos[i].imagenes.length === 0
@@ -180,7 +179,6 @@ export default class FormWorkComponent {
 
         this.workReportService.createWorkReport(workReportData).subscribe({
           next: () => {
-            console.log('creada el acta');
             this.loading = false;
             setTimeout(() => {
               this.closeDialog.emit();
@@ -223,7 +221,7 @@ export default class FormWorkComponent {
     // 2. Actualizar acta si hay cambios
     if (Object.keys(data).length > 0) {
       this.workReportService.updateWorkReport(data, reportId).subscribe({
-        next: () => console.log('Acta actualizada'),
+        next: () => console.log(''),
         error: (err) => console.error('Error al actualizar el acta:', err),
       });
     }
@@ -275,7 +273,7 @@ export default class FormWorkComponent {
           // 4. Actualizar o crear anexo
           if (anexo.id !== 0) {
             this.workReportService.updateExhibit(formData, anexo.id).subscribe({
-              next: (res) => console.log('Anexo actualizado:', res),
+              next: (res) => console.log(''),
               error: (err) => console.error('Error al actualizar anexo:', err),
             });
           } else {
@@ -286,7 +284,7 @@ export default class FormWorkComponent {
                   .addExhibitToWorkReport(reportId, exhibitId)
                   .subscribe({
                     next: (res) =>
-                      console.log('Nuevo anexo vinculado al acta:', res),
+                      console.log(''),
                     error: (err) =>
                       console.error('Error al asociar anexo:', err),
                   });
@@ -302,7 +300,7 @@ export default class FormWorkComponent {
     // 5. Eliminar anexos completos
     this.anexosEliminados.forEach((anexoId) => {
       this.workReportService.deleteExhibit(anexoId).subscribe({
-        next: () => console.log(`Anexo ${anexoId} eliminado del backend`),
+        next: () => console.log(''),
         error: (err) =>
           console.error(`Error al eliminar anexo ${anexoId}:`, err),
       });
@@ -365,7 +363,6 @@ export default class FormWorkComponent {
     this.workReportService.getQuotesWithoutReport().subscribe({
       next: (response) => {
         this.orderWorks = response;
-        console.log(response);
       },
       error: () => {
         this.messageService.add({
@@ -398,7 +395,6 @@ export default class FormWorkComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['visible']) {
-      console.log(this.action);
       this.loadOrderWorks();
       if (this.action === 0) {
         this.actionTittle = 'generar acta de entrega';

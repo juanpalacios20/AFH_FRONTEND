@@ -165,7 +165,6 @@ export default class FormClientsComponent implements OnChanges {
     ) {
       this.close();
       this.onQuoteCreated.emit();
-      console.log('No hay cambios para actualizar');
       return;
     }
     this.clientService.updateClient(this.clientId!, formData).subscribe({
@@ -173,7 +172,6 @@ export default class FormClientsComponent implements OnChanges {
         this.isEdited.emit(true);
         this.close();
         this.onQuoteCreated.emit();
-        console.log('Cliente actualizado');
       },
       error: (error) => {
         console.error('Error al actualizar el cliente:', error);

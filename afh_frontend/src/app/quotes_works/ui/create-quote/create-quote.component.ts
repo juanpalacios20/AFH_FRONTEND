@@ -288,7 +288,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             };
             this.quoteService.createQuote(quoteData).subscribe({
               next: (res) => {
-                console.log('Cotización creada', res);
+                console.log('');
               },
               error: (err) => {
                 console.log('Error al crear cotización', err);
@@ -323,25 +323,16 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
     this.loading = true;
     let quoteData: any = {};
-    console.log(
-      this.administration,
-      Number(this.quoteToEdit?.administration) * 100
-    );
     if (
       this.administration !==
       Number(this.quoteToEdit?.administration) * 100
     ) {
-      console.log('cambiando administracion');
       quoteData.administration = this.administration / 100;
     }
-    console.log(this.unexpected, Number(this.quoteToEdit?.unforeseen) * 100);
     if (this.unexpected !== Number(this.quoteToEdit?.unforeseen) * 100) {
-      console.log('cambiando imprevisto');
       quoteData.unforeseen = this.unexpected / 100;
     }
-    console.log(this.utility, Number(this.quoteToEdit?.utility) * 100);
     if (this.utility !== Number(this.quoteToEdit?.utility) * 100) {
-      console.log('cambiando utilidad');
       quoteData.utility = this.utility / 100;
     }
     if (this.method_of_payment !== this.quoteToEdit?.method_of_payment) {
@@ -422,7 +413,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             };
           }
 
-          console.log(editedItem.unit_value, Number(item.unit_value));
           if (
             Number(editedItem.unit_value) !== Number(item.unit_value) &&
             Number(item.unit_value) &&
@@ -434,11 +424,10 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
             };
           }
 
-          console.log(itemData);
           if (Object.keys(itemData).length > 0) {
             this.quoteService.updateItem(editedItem.id, itemData).subscribe({
               next: (response) => {
-                console.log('item actualizado');
+                console.log('');
               },
               error: (error) => {
                 console.error('Error al actualizar item', error);

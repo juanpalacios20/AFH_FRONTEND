@@ -16,6 +16,7 @@ import ViewQuotesComponent from '../../../quotes_works/ui/view-quotes/view-quote
 import { OrderWork } from '../../../interfaces/models';
 import FormOrderWorksComponent from '../form-order-works/form-order-works.component';
 import ViewOrdersWorkComponent from '../view-orders-work/view-orders-work.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-management-orders-works',
@@ -32,6 +33,7 @@ import ViewOrdersWorkComponent from '../view-orders-work/view-orders-work.compon
     TagModule,
     ViewOrdersWorkComponent,
     FormOrderWorksComponent,
+    NgIf
   ],
   templateUrl: './management-orders-works.component.html',
   styleUrl: './management-orders-works.component.css',
@@ -40,6 +42,7 @@ import ViewOrdersWorkComponent from '../view-orders-work/view-orders-work.compon
 export default class ManagementOrdersWorksComponent implements OnInit {
   orderWorkFound: string | null = null;
   orderWorks: OrderWork[] = [];
+  loadingOrderWorks: boolean = false;
   showDialog: boolean = false;
   showEditDialog: boolean = false;
   action: number = 0;
@@ -111,13 +114,15 @@ export default class ManagementOrdersWorksComponent implements OnInit {
 
 
   getOrders() {
+    this.loadingOrderWorks = true;
     this.orderWorkService.getOrders().subscribe({
       next: (response) => {
-        console.log(response);
         this.orderWorks = response;
+         this.loadingOrderWorks = false;
       },
       error: (error) => {
         console.error('Error fetching orders:', error);
+         this.loadingOrderWorks = false;
       },
     });
   }
