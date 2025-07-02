@@ -287,6 +287,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
                 ? this.construction_company
                 : null,
             };
+            console.log(quoteData);
             this.quoteService.createQuote(quoteData).subscribe({
               next: (res) => {
                 console.log('');
