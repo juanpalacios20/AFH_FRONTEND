@@ -117,6 +117,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   loading: boolean = false;
   ivaPercentage: number = 0.19; // Variable que debe actualizarse segun el valor del iva actual en colombia
   method_of_payment: string = '';
+  clientValid: boolean = false;
   @Input() visible: boolean = false;
   @Input() action: number = 0; // 0: Create, 1: Edit
   @Input() quoteToEdit: Quote | null = null;
@@ -515,6 +516,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   resetForm() {
     this.actionTittle = 'Crear';
+    this.clientValid = false;
     this.construction_company = '';
     this.administration = 0;
     this.unexpected = 0;
@@ -637,6 +639,14 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       this.errorMessagePercent = 'El valor debe ser entre 1 y 100';
     } else {
       this.errorMessagePercent = '';
+    }
+  }
+
+  onCustomerChange() {
+    if (this.selectedCustomer && this.selectedCustomer.id !== undefined) {
+      this.clientValid = true;
+    } else {
+      this.clientValid = false;
     }
   }
 

@@ -21,13 +21,17 @@
   <p-toast position="top-right"></p-toast>
   <div class="w-full mx-auto rounded-xl justify-center">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-      <div class="mb-4">
+      <div class="mb-4" [ngClass]="{
+                  'mb-70':
+                    this.clientValid === false
+                }">
         <h1 class="mb-4 text-primary-950 font-medium">
           Ingrese el nombre del cliente.
         </h1>
         <div>
           <p-autocomplete
             [(ngModel)]="selectedCustomer"
+            (ngModelChange)="onCustomerChange()"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
                 errorMessage &&
@@ -57,8 +61,8 @@
       <div
         class="mb-2"
         *ngIf="
-          this.action === 0 ||
-          (this.action === 1 && this.quoteToEdit?.construction !== null)
+          (this.action === 0 ||
+          (this.action === 1 && this.quoteToEdit?.construction !== null)) && this.clientValid === true
         "
       >
         <h1 class="mb-2 text-primary-950 font-medium">
@@ -84,7 +88,7 @@
           <label for="construction_company">Nombre constructora:</label>
         </p-floatlabel>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.clientValid === true">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese la descripción del trabajo.
         </h1>
@@ -115,8 +119,8 @@
       <div
         class="mb-2"
         *ngIf="
-          this.action === 0 ||
-          (this.action === 1 && this.quoteToEdit?.construction !== null)
+          (this.action === 0 ||
+          (this.action === 1 && this.quoteToEdit?.construction !== null)) && this.clientValid === true
         "
       >
         <h1 class="mb-2 text-primary-950 font-medium">
@@ -172,8 +176,8 @@
       <div
         class="mb-2"
         *ngIf="
-          this.action === 0 ||
-          (this.action === 1 && this.quoteToEdit?.construction !== null)
+          (this.action === 0 ||
+          (this.action === 1 && this.quoteToEdit?.construction !== null)) &&this.clientValid === true
         "
       >
         <h1 class="mb-2 text-primary-950 font-medium">
@@ -225,8 +229,8 @@
       <div
         class="mb-2"
         *ngIf="
-          this.action === 0 ||
-          (this.action === 1 && this.quoteToEdit?.construction !== null)
+          (this.action === 0 ||
+          (this.action === 1 && this.quoteToEdit?.construction !== null)) && this.clientValid === true
         "
       >
         <h1 class="mb-2 text-primary-950 font-medium">
@@ -273,7 +277,7 @@
           {{ errorMessagePercent }}
         </small>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" *ngIf="this.clientValid === true">
         <h1 class="mb-2 text-primary-950 font-medium">
           Ingrese el plan de pago.
         </h1>
@@ -304,7 +308,7 @@
     </div>
 
     <!-- Tareas del trabajo -->
-    <div class="w-full mb-10">
+    <div class="w-full mb-10" *ngIf="this.clientValid === true">
       <h1 class="mb-2 text-primary-950 font-medium">Tareas del trabajo</h1>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mb-4">
@@ -355,7 +359,7 @@
         </div>
       </div>
 
-      <div class="w-full mb-4">
+      <div class="w-full mb-4" *ngIf="this.clientValid === true">
         <p-button
           label="Agregar tarea"
           icon="pi pi-plus"
@@ -367,7 +371,7 @@
     </div>
 
     <!-- Opciones del trabajo -->
-    <div class="mb-4 p-4 bg-gray-100 border rounded-lg">
+    <div class="mb-4 p-4 bg-gray-100 border rounded-lg" *ngIf="this.clientValid === true">
       <div class="grid grid-cols-2 gap-4 mb-2">
         <h1 class="mb-2 text-primary-950 font-medium">
           Opción para la cotización
@@ -528,7 +532,7 @@
       </div>
     </div>
 
-    <div class="flex justify-end gap-2 mt-10">
+    <div class="flex justify-end gap-2 mt-10" *ngIf="this.clientValid === true">
       <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()">
         Cancelar
       </p-button>
