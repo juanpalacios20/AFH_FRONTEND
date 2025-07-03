@@ -41,10 +41,12 @@ export default class FormClientsComponent implements OnChanges {
   email: string = '';
   phone: string = '';
   position: string = '';
+  representative: string = '';
   errorMessageName: string = '';
   errorMessageEmail: string = '';
   errorMessagePhone: string = '';
   errorMessagePosition: string = '';
+  errorMessagerepresentative: string = '';
   @Input() visible: boolean = false;
   @Input() action: number = 0; // 0: create, 1: edit
   @Input() clientId: number | null = null;
@@ -52,6 +54,7 @@ export default class FormClientsComponent implements OnChanges {
   @Input() emailClient: string = '';
   @Input() phoneClient: string = '';
   @Input() positionClient: string = '';
+  @Input() representativeClient: string = '';
   @Output() closeDialog = new EventEmitter<void>();
   @Output() onQuoteCreated = new EventEmitter<void>();
   @Output() isEdited = new EventEmitter<boolean>();
@@ -63,12 +66,15 @@ export default class FormClientsComponent implements OnChanges {
 
   close() {
     this.name = '';
+    this.representative = '';
+    this.position = '';
     this.email = '';
     this.phone = '';
     this.errorMessageName = '';
     this.errorMessageEmail = '';
     this.errorMessagePhone = '';
     this.errorMessagePosition = '';
+    this.errorMessagerepresentative = '';
     this.visible = false;
     this.closeDialog.emit();
   }
@@ -78,6 +84,7 @@ export default class FormClientsComponent implements OnChanges {
     this.errorMessageEmail = '';
     this.errorMessagePhone = '';
     this.errorMessagePosition = '';
+    this.errorMessagerepresentative = '';
 
     if (this.name === '') {
       this.errorMessageName = 'El nombre es obligatorio';
@@ -95,6 +102,9 @@ export default class FormClientsComponent implements OnChanges {
     if (this.position === '') {
       this.errorMessagePosition = 'El cargo es obligatorio';
     }
+    if (this.representative === '') {
+      this.errorMessagerepresentative = 'El representante es obligatorio';
+    }
   }
 
   createClient() {
@@ -105,12 +115,27 @@ export default class FormClientsComponent implements OnChanges {
       this.errorMessagePhone === 'El teléfono es obligatorio' ||
       this.errorMessageEmail ===
         'El correo electrónico es inválido, ejemplo@dominio.com' ||
-      this.errorMessagePosition === 'El cargo es obligatorio'
+      this.errorMessagePosition === 'El cargo es obligatorio' ||
+      this.errorMessagerepresentative === 'El representante es obligatorio'
     ) {
       return;
     }
+    console.log(
+      'datos',
+      this.name,
+      this.email,
+      this.phone,
+      this.position,
+      this.representative
+    );
     this.clientService
-      .createClient(this.name, this.email, this.phone, this.position)
+      .createClient(
+        this.name,
+        this.email,
+        this.phone,
+        this.position,
+        this.representative
+      )
       .subscribe({
         next: (response) => {
           this.messageService.add({
@@ -157,11 +182,15 @@ export default class FormClientsComponent implements OnChanges {
     if (this.position !== this.positionClient) {
       formData.append('post', this.position);
     }
+    if (this.representative !== this.representativeClient) {
+      formData.append('representative', this.representative);
+    }
     if (
       this.name === this.nameClient &&
       this.email === this.emailClient &&
       this.phone === this.phoneClient &&
-      this.position === this.positionClient
+      this.position === this.positionClient &&
+      this.representative === this.representativeClient
     ) {
       this.close();
       this.onQuoteCreated.emit();
@@ -198,7 +227,9 @@ export default class FormClientsComponent implements OnChanges {
         this.name = this.nameClient;
         this.email = this.emailClient;
         this.phone = this.phoneClient;
-        this.position = this.positionClient || '';
+        this.position = this.positionClient || 'Sin posición asignada';
+        this.representative =
+          this.representativeClient || 'Sin representante asignado';
       }
     }
   }

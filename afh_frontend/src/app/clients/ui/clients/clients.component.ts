@@ -23,6 +23,7 @@ interface Client {
   email: string;
   phone: string;
   post: string;
+  representative: string;
 }
 
 @Component({
@@ -59,6 +60,7 @@ export default class ClientsComponent implements OnInit {
   id: number = 0;
   action: number = 0;
   position: string = '';
+  representative: string = '';
   isEdited: boolean = false;
 
   constructor(
@@ -106,7 +108,8 @@ export default class ClientsComponent implements OnInit {
     nameClient: string,
     emailClient: string,
     phoneClient: string,
-    positionClient: string
+    positionClient: string,
+    representativeClient: string
   ) {
     this.action = 1;
     this.clientEditVisible = true;
@@ -115,6 +118,7 @@ export default class ClientsComponent implements OnInit {
     this.email = emailClient;
     this.phone = phoneClient;
     this.position = positionClient;
+    this.representative = representativeClient;
   }
 
   handleIsEdited(event: boolean) {
