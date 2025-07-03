@@ -20,6 +20,8 @@ export interface Customer {
   name: string;
   email: string;
   phone: string;
+  post: string;
+  representative: string;
 }
 
 export interface Quote {

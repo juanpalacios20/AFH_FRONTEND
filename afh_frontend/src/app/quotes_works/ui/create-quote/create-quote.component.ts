@@ -82,6 +82,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   utility: number = 0;
   customers: Customer[] = [];
   selectedCustomer: Customer | null = null;
+  customerName: String = '';
   filteredCustomers: any[] | undefined;
   units: string[] = [
     'Metros',
@@ -196,7 +197,9 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     let query = event.query;
     for (let i = 0; i < this.customers.length; i++) {
       let customer = this.customers[i];
-      if (customer.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+      if (
+        customer.representative?.toLowerCase().indexOf(query.toLowerCase()) == 0
+      ) {
         filtered.push(customer);
       }
     }
@@ -212,6 +215,8 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
           name: client.name,
           email: client.email,
           phone: client.phone,
+          post: client.post,
+          representative: client.representative,
         }));
       },
     });
@@ -512,6 +517,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   resetForm() {
     this.actionTittle = 'Crear';
+    this.customerName = '';
     this.clientValid = false;
     this.construction_company = '';
     this.administration = 0;
@@ -550,6 +556,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   loadEditData() {
     this.actionTittle = 'Editar';
     if (this.quoteToEdit) {
+      this.customerName = this.quoteToEdit.customer.name;
       this.description = this.quoteToEdit.description;
       this.administration = this.quoteToEdit.administration * 100;
       this.unexpected = this.quoteToEdit.unforeseen * 100;
@@ -641,6 +648,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   onCustomerChange() {
     if (this.selectedCustomer && this.selectedCustomer.id !== undefined) {
       this.clientValid = true;
+      this.customerName = this.selectedCustomer.name;
     } else {
       this.clientValid = false;
     }
