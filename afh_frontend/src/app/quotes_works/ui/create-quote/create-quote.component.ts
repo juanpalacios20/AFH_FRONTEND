@@ -73,6 +73,10 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   tasks: { descripcion: string }[] = [{ descripcion: '' }];
   description: string = '';
   tasksQuote: String[] = [];
+  contractor_contribution: { descripcion: string }[] = [{ descripcion: '' }];
+  contracting_contribution: { descripcion: string }[] = [{ descripcion: '' }];
+  contractor_contribution_Quote: String[] = [];
+  contracting_contribution_Quote: String[] = [];
   items: Item[] = [];
   totalPrice: number = 0;
   optionsSelected: number = 0;
@@ -84,6 +88,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   selectedCustomer: Customer | null = null;
   customerName: String = '';
   filteredCustomers: any[] | undefined;
+  deliveryTime: string = '';
   units: string[] = [
     'Metros',
     'Centímetros',
@@ -287,12 +292,15 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
                 customer_id: this.selectedCustomer?.id,
                 options: optionId,
                 tasks: this.tasks.map((t) => t.descripcion),
+                contracting_materials: this.contracting_contribution.map((t) => t.descripcion),
+                contractor_materials: this.contractor_contribution.map((t) => t.descripcion),
                 iva: this.ivaPercentage,
                 administration: this.administration / 100,
                 unforeseen: this.unexpected / 100,
                 utility: this.utility / 100,
                 method_of_payment: this.method_of_payment,
                 construction: this.construction_company || null,
+                delivery_time: this.deliveryTime
               };
 
               return this.quoteService.createQuote(quoteData);
@@ -357,6 +365,19 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     if (this.tasks.length > 0) {
       quoteData.tasks = this.tasks.map((t) => t.descripcion);
     }
+
+    if (this.contracting_contribution.length > 0) {
+      quoteData.contracting_materials = this.contracting_contribution.map((t) => t.descripcion);
+    }
+
+    if (this.contractor_contribution.length > 0) {
+      quoteData.contractor_materials = this.contractor_contribution.map((t) => t.descripcion);
+    }
+
+    if (this.deliveryTime !== this.quoteToEdit?.delivery_time) {
+      quoteData.delivery_time = this.deliveryTime;
+    }
+
     //actualizar los items
     if (this.itemsPorOpcion.optionId !== 0) {
       //crear items nuevos
@@ -514,6 +535,20 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   removeTask(index: number) {
     this.tasks.splice(index, 1);
   }
+  addContractorContribution() {
+    this.contractor_contribution.push({ descripcion: '' });
+  }
+
+  removeContractingContribution(index: number) {
+    this.contracting_contribution.splice(index, 1);
+  }
+  addContractingContribution() {
+    this.contracting_contribution.push({ descripcion: '' });
+  }
+
+  removeContractorContribution(index: number) {
+    this.contractor_contribution.splice(index, 1);
+  }
 
   resetForm() {
     this.actionTittle = 'Crear';
@@ -527,7 +562,11 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.description = '';
     this.selectedCustomer = null;
     this.tasks = [{ descripcion: '' }];
+    this.contracting_contribution = [{ descripcion: '' }];
+    this.contractor_contribution = [{ descripcion: '' }];
     this.tasksQuote = [];
+    this.contracting_contribution_Quote = [];
+    this.contractor_contribution_Quote = [];
     this.itemsPorOpcion = {
       optionId: 0,
       name: '',
@@ -566,6 +605,9 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       this.ivaPercentage = this.quoteToEdit.iva;
       this.selectedCustomer = this.quoteToEdit.customer;
       this.tasks = this.quoteToEdit.tasks.map((t) => ({ descripcion: t }));
+      this.contracting_contribution = this.quoteToEdit.contracting_materials.map((t) => ({ descripcion: t || '' }));
+      this.contractor_contribution = this.quoteToEdit.contractor_materials.map((t) => ({ descripcion: t || '' }));
+      this.deliveryTime = this.quoteToEdit.delivery_time;
       this.itemsPorOpcion = {
         name: this.quoteToEdit.options.name,
         optionId: this.quoteToEdit.options.id,
