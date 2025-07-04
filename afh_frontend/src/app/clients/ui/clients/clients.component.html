@@ -52,7 +52,12 @@
       <ng-template #header>
         <tr>
           <th class="rounded-border text-primary-950 text-center"></th>
-          <th class="rounded-border text-primary-950 text-center">Nombre</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Nombre Empresa
+          </th>
+          <th class="rounded-border text-primary-950 text-center">
+            Representante
+          </th>
           <th class="rounded-border text-primary-950 text-center">
             Correo electrónico
           </th>
@@ -70,6 +75,9 @@
           </td>
           <td>
             <p class="text-center">{{ client.name }}</p>
+          </td>
+          <td>
+            <p class="text-center">{{ client.representative !== ' ' ? client.representative : 'Sin representante asignado' }}</p>
           </td>
           <td>
             <p class="text-center">{{ client.email }}</p>
@@ -90,7 +98,8 @@
                     client.name,
                     client.email,
                     client.phone,
-                    client.post
+                    client.post,
+                    client.representative
                   )
                 "
               />
@@ -134,6 +143,7 @@
     [emailClient]="email"
     [phoneClient]="phone"
     [positionClient]="position"
+    [representativeClient]="representative"
     (closeDialog)="clientEditVisible = false"
     (isEdited)="handleIsEdited($event)"
     (onQuoteCreated)="handleClientEdit()"

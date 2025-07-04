@@ -18,23 +18,35 @@ export class ClientService extends BaseHttpService {
     });
   }
 
-  createClient(name: string, email: string, phone: string, post: string): Observable<any> {
+  createClient(
+    name: string,
+    email: string,
+    phone: string,
+    post: string,
+    representative: string
+  ): Observable<any> {
     const headers = this.getHeaders();
     const formData = new FormData();
     formData.append('name', name);
     formData.append('email', email);
     formData.append('phone', phone);
     formData.append('post', post);
+    formData.append('representative', representative);
 
+    console.log(formData);
     return this.http
-      .post(`${this.apiUrl}customer/addcustomer/`, formData, { headers: headers })
+      .post(`${this.apiUrl}customer/addcustomer/`, formData, {
+        headers: headers,
+      })
       .pipe(tap((response: any) => {}));
   }
 
   updateClient(id: number, formData: FormData): Observable<any> {
     const headers = this.getHeaders();
     return this.http
-      .put(`${this.apiUrl}customer/updatecustomer/${id}`, formData, { headers: headers })
+      .put(`${this.apiUrl}customer/updatecustomer/${id}`, formData, {
+        headers: headers,
+      })
       .pipe(tap((response: any) => {}));
   }
 
@@ -51,6 +63,4 @@ export class ClientService extends BaseHttpService {
       .delete(`${this.apiUrl}customer/delete/${id}`, { headers: headers })
       .pipe(tap((response: any) => {}));
   }
-
-
 }

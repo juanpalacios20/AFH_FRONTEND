@@ -143,26 +143,21 @@ export default class FormWorkComponent {
   }
 
   createWorkReport() {
-    this.loading = true;
-    const exhibitRequests = this.anexos.map((anexo) => {
-      const formData = new FormData();
-      formData.append('tittle', anexo.descripcion);
-      anexo.files.forEach((file) => formData.append('images', file));
-      return this.workReportService.createExhibit(formData);
-    });
-    forkJoin(exhibitRequests).subscribe({
-      next: (exhibitResponses) => {
-        const exhibit_ids = exhibitResponses.map((res: any) => res.exhibit_id);
+  this.loading = true;
 
-        const workReportData = {
-          work_order_id: this.selectedOrderWork?.id,
-          observations: this.observations,
-          recommendations: this.recommendations,
-          exhibit_ids: exhibit_ids,
-          development: this.development,
-          description: this.description,
-        };
+  const exhibitRequests = this.anexos.map((anexo) => {
+    const formData = new FormData();
+    formData.append('tittle', anexo.descripcion);
+    anexo.files.forEach((file) => formData.append('images', file));
+    return this.workReportService.createExhibit(formData);
+  });
 
+  forkJoin(exhibitRequests)
+    .pipe(
+      switchMap((exhibitResponses: any[]) => {
+        const exhibit_ids = exhibitResponses.map((res) => res.exhibit_id);
+
+        // Validación si el usuario ingresó el código manualmente
         if (
           this.selectedOrderWork &&
           typeof this.selectedOrderWork === 'string' &&
@@ -177,27 +172,31 @@ export default class FormWorkComponent {
           }
         }
 
-        this.workReportService.createWorkReport(workReportData).subscribe({
-          next: () => {
-            this.loading = false;
-            setTimeout(() => {
-              this.closeDialog.emit();
-              this.onWorkReportCreated.emit();
-              this.close();
-            }, 2000);
-          },
-          error: (err) => {
-            console.error('Error creando WorkReport:', err);
-            this.loading = false;
-          },
-        });
+        const workReportData = {
+          work_order_id: this.selectedOrderWork?.id,
+          observations: this.observations,
+          recommendations: this.recommendations,
+          exhibit_ids: exhibit_ids,
+          development: this.development,
+          description: this.description,
+        };
+
+        return this.workReportService.createWorkReport(workReportData);
+      })
+    )
+    .subscribe({
+      next: () => {
+        this.loading = false;
+        this.closeDialog.emit();
+        this.onWorkReportCreated.emit();
+        this.close();
       },
       error: (err) => {
-        console.error('Error creando anexos:', err);
+        console.error('Error durante la creación del informe de trabajo:', err);
         this.loading = false;
       },
     });
-  }
+}
 
   updateWorkReport() {
     this.loading = true;

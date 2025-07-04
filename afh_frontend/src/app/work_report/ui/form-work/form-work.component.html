@@ -84,6 +84,31 @@
       </div>
       <div class="mb-4">
         <p-floatlabel class="mt-2" variant="on" required="true">
+          <textarea
+            pTextarea
+            rows="5"
+            cols="30"
+            type="text"
+            [(ngModel)]="development"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && development === ''
+            }"
+            [ngModelOptions]="{ standalone: true }"
+            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          ></textarea>
+          <label>Desarrollo</label>
+        </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && development === ''"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+      <div class="mb-4">
+        <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
             type="text"
@@ -124,31 +149,6 @@
           id="email-help"
           class="text-red-600 mb-4"
           *ngIf="errorMessage && recommendations === ''"
-        >
-          {{ errorMessage }}
-        </small>
-      </div>
-      <div class="mb-4">
-        <p-floatlabel class="mt-2" variant="on" required="true">
-          <textarea
-            pTextarea
-            rows="5"
-            cols="30"
-            type="text"
-            [(ngModel)]="development"
-            [ngClass]="{
-              'ng-invalid ng-dirty border-red-500':
-                errorMessage && development === ''
-            }"
-            [ngModelOptions]="{ standalone: true }"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-          ></textarea>
-          <label>Desarrollo</label>
-        </p-floatlabel>
-        <small
-          id="email-help"
-          class="text-red-600 mb-4"
-          *ngIf="errorMessage && development === ''"
         >
           {{ errorMessage }}
         </small>

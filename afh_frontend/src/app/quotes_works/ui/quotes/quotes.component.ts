@@ -200,7 +200,7 @@ export default class QuotesComponent {
   confirmationDelete(id: number) {
     this.confirmationService.confirm({
       message:
-        '¿Está seguro que desea eliminar este cliente? Esta acción no se puede deshacer.',
+        '¿Está seguro que desea eliminar está cotización? Esta acción no se puede deshacer.',
       header: '¡Advertencia!',
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancelar',
@@ -215,11 +215,6 @@ export default class QuotesComponent {
       },
       accept: () => {
         this.deleteQuote(id);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Exito',
-          detail: 'Cliente eliminado con éxito',
-        });
       },
     });
   }
