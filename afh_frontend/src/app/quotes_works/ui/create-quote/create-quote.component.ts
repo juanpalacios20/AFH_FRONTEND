@@ -274,7 +274,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
           const itemIds = itemResponses.map((res) => res.item_id);
 
           const optionData = {
-            description: 'Opción para ' + this.description,
+            description: 'Opción para' + this.customerName,
             items: itemIds,
           };
 
