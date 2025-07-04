@@ -15,6 +15,7 @@ import { TagModule } from 'primeng/tag';
 import ViewQuotesComponent from '../view-quotes/view-quotes.component';
 import { QuoteService } from '../../services/quote.service';
 import { Quote } from '../../../interfaces/models';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-quotes',
@@ -32,6 +33,7 @@ import { Quote } from '../../../interfaces/models';
     CreateQuoteComponent,
     TagModule,
     ViewQuotesComponent,
+    NgIf
   ],
   templateUrl: './quotes.component.html',
   styleUrl: './quotes.component.css',
@@ -45,6 +47,7 @@ export default class QuotesComponent {
   quoteAction: number = 0; // 0: Create, 1: Edit
   viewQuote: Quote | null = null;
   quotes: Quote[] = [];
+  loadingQuotes: boolean = false;
   quoteToEdit: Quote | null = null;
   state: string = '';
   severity:
@@ -63,9 +66,11 @@ export default class QuotesComponent {
   ) {}
 
   loadQuotes() {
+    this.loadingQuotes = true;
     this.quoteService.getQuotes().subscribe({
       next: (response) => {
         this.quotes = response;
+         this.loadingQuotes = false;
       },
       error: (error) => {
         console.error('Error loading quotes:', error);
@@ -74,6 +79,7 @@ export default class QuotesComponent {
           summary: 'Error',
           detail: 'No se pudieron cargar las cotizaciones.',
         });
+         this.loadingQuotes = false;
       },
     });
   }
@@ -88,6 +94,7 @@ export default class QuotesComponent {
   }
 
   closeCreateQuoteDialog() {
+    this.loadQuotes();
     this.quoteCreateDialogVisible = false;
   }
 
@@ -109,6 +116,7 @@ export default class QuotesComponent {
 
   closeEditQuoteDialog() {
     this.quoteEditDialogVisible = false;
+    this.loadQuotes();
   }
 
   handleQuoteEdited() {
@@ -192,7 +200,7 @@ export default class QuotesComponent {
   confirmationDelete(id: number) {
     this.confirmationService.confirm({
       message:
-        '¿Está seguro que desea eliminar este cliente? Esta acción no se puede deshacer.',
+        '¿Está seguro que desea eliminar está cotización? Esta acción no se puede deshacer.',
       header: '¡Advertencia!',
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancelar',
@@ -207,11 +215,6 @@ export default class QuotesComponent {
       },
       accept: () => {
         this.deleteQuote(id);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Exito',
-          detail: 'Cliente eliminado con éxito',
-        });
       },
     });
   }

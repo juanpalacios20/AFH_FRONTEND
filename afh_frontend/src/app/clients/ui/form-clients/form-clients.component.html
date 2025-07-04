@@ -23,6 +23,46 @@
         {{ errorMessageName }}
       </small>
     </div>
+    <div class="mt-4">
+      <p-floatlabel class="mb-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="representative"
+          [ngModelOptions]="{ standalone: true }"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessagerepresentative
+          }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Nombre del representante </label>
+      </p-floatlabel>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessagerepresentative"
+      >
+        {{ errorMessagerepresentative }}
+      </small>
+    </div>
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="position"
+          [ngModelOptions]="{ standalone: true }"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessagePosition
+          }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label>Cargo del representante</label>
+      </p-floatlabel>
+      <small id="email-help" class="text-red-600" *ngIf="errorMessagePosition">
+        {{ errorMessagePosition }}
+      </small>
+    </div>
     <div class="mb-4">
       <p-floatlabel class="mt-2" variant="on" required="true">
         <input
@@ -30,10 +70,12 @@
           type="number"
           [(ngModel)]="phone"
           [ngModelOptions]="{ standalone: true }"
-          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessagePhone }"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessagePhone
+          }"
           class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
-        <label>Numero del cliente </label>
+        <label>Numero del representante</label>
       </p-floatlabel>
       <small id="email-help" class="text-red-600" *ngIf="errorMessagePhone">
         {{ errorMessagePhone }}
@@ -46,29 +88,15 @@
           type="text"
           [(ngModel)]="email"
           [ngModelOptions]="{ standalone: true }"
-          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessagePhone }"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500': errorMessagePhone
+          }"
           class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
-        <label>Correo electronico del cliente</label>
+        <label>Correo electronico del representante</label>
       </p-floatlabel>
       <small id="email-help" class="text-red-600" *ngIf="errorMessageEmail">
         {{ errorMessageEmail }}
-      </small>
-    </div>
-    <div class="mb-4">
-      <p-floatlabel class="mt-2" variant="on" required="true">
-        <input
-          pInputText
-          type="text"
-          [(ngModel)]="position"
-          [ngModelOptions]="{ standalone: true }"
-          [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessagePosition}"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-        />
-        <label>Cargo del cliente</label>
-      </p-floatlabel>
-      <small id="email-help" class="text-red-600" *ngIf="errorMessagePosition">
-        {{ errorMessagePosition }}
       </small>
     </div>
     <div class="flex justify-end gap-2 mt-10">

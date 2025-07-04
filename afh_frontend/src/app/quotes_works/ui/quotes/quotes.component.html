@@ -47,7 +47,7 @@
       [rowsPerPageOptions]="[20, 50, 100]"
       [globalFilterFields]="['code', 'customer.name']"
     >
-      <ng-template #header>
+      <ng-template #header *ngIf="quotes.length > 0">
         <tr>
           <th class="rounded-border text-primary-950 text-center">Código</th>
           <th class="rounded-border text-primary-950 text-center">
@@ -107,6 +107,26 @@
                 severity="danger"
               />
             </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="quotes.length === 0 && loadingQuotes === false"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay cotizaciones para mostrar
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="quotes.length === 0 && loadingQuotes === true"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
           </td>
         </tr>
       </ng-template>

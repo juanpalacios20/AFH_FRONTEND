@@ -107,7 +107,6 @@ export default class FormWorkComponent {
       console.log('error otros datos');
     }
     for (let i = 0; i < this.anexos.length; i++) {
-      console.log(i);
       if (
         this.anexos[i].descripcion === '' ||
         this.anexos[i].imagenes.length === 0
@@ -144,26 +143,21 @@ export default class FormWorkComponent {
   }
 
   createWorkReport() {
-    this.loading = true;
-    const exhibitRequests = this.anexos.map((anexo) => {
-      const formData = new FormData();
-      formData.append('tittle', anexo.descripcion);
-      anexo.files.forEach((file) => formData.append('images', file));
-      return this.workReportService.createExhibit(formData);
-    });
-    forkJoin(exhibitRequests).subscribe({
-      next: (exhibitResponses) => {
-        const exhibit_ids = exhibitResponses.map((res: any) => res.exhibit_id);
+  this.loading = true;
 
-        const workReportData = {
-          work_order_id: this.selectedOrderWork?.id,
-          observations: this.observations,
-          recommendations: this.recommendations,
-          exhibit_ids: exhibit_ids,
-          development: this.development,
-          description: this.description,
-        };
+  const exhibitRequests = this.anexos.map((anexo) => {
+    const formData = new FormData();
+    formData.append('tittle', anexo.descripcion);
+    anexo.files.forEach((file) => formData.append('images', file));
+    return this.workReportService.createExhibit(formData);
+  });
 
+  forkJoin(exhibitRequests)
+    .pipe(
+      switchMap((exhibitResponses: any[]) => {
+        const exhibit_ids = exhibitResponses.map((res) => res.exhibit_id);
+
+        // Validación si el usuario ingresó el código manualmente
         if (
           this.selectedOrderWork &&
           typeof this.selectedOrderWork === 'string' &&
@@ -178,28 +172,31 @@ export default class FormWorkComponent {
           }
         }
 
-        this.workReportService.createWorkReport(workReportData).subscribe({
-          next: () => {
-            console.log('creada el acta');
-            this.loading = false;
-            setTimeout(() => {
-              this.closeDialog.emit();
-              this.onWorkReportCreated.emit();
-              this.close();
-            }, 2000);
-          },
-          error: (err) => {
-            console.error('Error creando WorkReport:', err);
-            this.loading = false;
-          },
-        });
+        const workReportData = {
+          work_order_id: this.selectedOrderWork?.id,
+          observations: this.observations,
+          recommendations: this.recommendations,
+          exhibit_ids: exhibit_ids,
+          development: this.development,
+          description: this.description,
+        };
+
+        return this.workReportService.createWorkReport(workReportData);
+      })
+    )
+    .subscribe({
+      next: () => {
+        this.loading = false;
+        this.closeDialog.emit();
+        this.onWorkReportCreated.emit();
+        this.close();
       },
       error: (err) => {
-        console.error('Error creando anexos:', err);
+        console.error('Error durante la creación del informe de trabajo:', err);
         this.loading = false;
       },
     });
-  }
+}
 
   updateWorkReport() {
     this.loading = true;
@@ -223,7 +220,7 @@ export default class FormWorkComponent {
     // 2. Actualizar acta si hay cambios
     if (Object.keys(data).length > 0) {
       this.workReportService.updateWorkReport(data, reportId).subscribe({
-        next: () => console.log('Acta actualizada'),
+        next: () => console.log(''),
         error: (err) => console.error('Error al actualizar el acta:', err),
       });
     }
@@ -275,7 +272,7 @@ export default class FormWorkComponent {
           // 4. Actualizar o crear anexo
           if (anexo.id !== 0) {
             this.workReportService.updateExhibit(formData, anexo.id).subscribe({
-              next: (res) => console.log('Anexo actualizado:', res),
+              next: (res) => console.log(''),
               error: (err) => console.error('Error al actualizar anexo:', err),
             });
           } else {
@@ -286,7 +283,7 @@ export default class FormWorkComponent {
                   .addExhibitToWorkReport(reportId, exhibitId)
                   .subscribe({
                     next: (res) =>
-                      console.log('Nuevo anexo vinculado al acta:', res),
+                      console.log(''),
                     error: (err) =>
                       console.error('Error al asociar anexo:', err),
                   });
@@ -302,7 +299,7 @@ export default class FormWorkComponent {
     // 5. Eliminar anexos completos
     this.anexosEliminados.forEach((anexoId) => {
       this.workReportService.deleteExhibit(anexoId).subscribe({
-        next: () => console.log(`Anexo ${anexoId} eliminado del backend`),
+        next: () => console.log(''),
         error: (err) =>
           console.error(`Error al eliminar anexo ${anexoId}:`, err),
       });
@@ -365,7 +362,6 @@ export default class FormWorkComponent {
     this.workReportService.getQuotesWithoutReport().subscribe({
       next: (response) => {
         this.orderWorks = response;
-        console.log(response);
       },
       error: () => {
         this.messageService.add({
@@ -398,7 +394,6 @@ export default class FormWorkComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['visible']) {
-      console.log(this.action);
       this.loadOrderWorks();
       if (this.action === 0) {
         this.actionTittle = 'generar acta de entrega';
