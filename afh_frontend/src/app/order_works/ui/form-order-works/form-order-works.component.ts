@@ -63,6 +63,8 @@ export default class FormOrderWorksComponent {
   quotesWithoutOrder: Quote[] = [];
   selectedQuote: Quote | null = null;
   filteredQuotes: Quote[] | undefined;
+  validQuote: boolean = false;
+  quoteCode: string = '';
   workSiteOptions = ['Instalaciones del cliente', 'Instalaciones propias'];
   filteredWorkSites: string[] = [];
   selectedWorkSite: string = '';
@@ -368,6 +370,7 @@ export default class FormOrderWorksComponent {
   }
 
   resetForm() {
+    this.validQuote = false;
     this.errorMessage = '';
     this.quoteInvalidMessage = '';
     this.selectedQuote = null;
@@ -429,9 +432,17 @@ export default class FormOrderWorksComponent {
     this.closeDialog.emit();
   }
 
+  onQuoteChange() {
+    if (this.selectedQuote && this.selectedQuote.id !== undefined) {
+      this.validQuote = true;
+      this.quoteCode = this.selectedQuote.code;
+    } else {
+      this.validQuote = false;
+    }
+  }
+ 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['visible'] && this.visible === true) {
-
       if (this.action === 0) {
         this.actionTittle = 'Generar orden de trabajo';
       } else if (this.action === 1) {
