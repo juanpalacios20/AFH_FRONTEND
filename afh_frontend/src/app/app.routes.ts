@@ -14,6 +14,7 @@ import  ClientsComponent  from './clients/ui/clients/clients.component';
 import QuotesComponent from './quotes_works/ui/quotes/quotes.component';
 import ManagementOrdersWorksComponent from './order_works/ui/management-orders-works/management-orders-works.component';
 import WorkReportComponent from './work_report/ui/work-report/work-report.component';
+import ManagementComponent from './finance/management/management.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -31,6 +32,7 @@ export const routes: Routes = [
     { path: 'quotes', component: QuotesComponent, canActivate: [AuthGuard]},
     { path: 'management-orders-works', component: ManagementOrdersWorksComponent, canActivate: [AuthGuard] },
     { path: 'work-report', component: WorkReportComponent, canActivate: [AuthGuard] },
+    { path: 'finance', component: ManagementComponent},
     { path: '**', redirectTo: 'login' }
 
 ];

@@ -86,3 +86,19 @@ export interface AutoCompleteCompleteEvent {
   originalEvent: Event;
   query: string;
 }
+
+export interface income {
+  id: number;
+  amount: number;
+  payment_method: number;
+  target_account: string;
+  date: string;
+}
+
+export interface expense {
+  id: number;
+  amount: number;
+  payment_method: number;
+  target_account: string;
+  date: string;
+}
