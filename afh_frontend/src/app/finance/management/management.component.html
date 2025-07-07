@@ -62,7 +62,7 @@
           </th>
           <th class="rounded-border text-primary-950 text-center">Fecha</th>
           <th class="rounded-border text-primary-950 text-center">
-            Cuenta destino
+            {{ value === "ingreso" ? "Cuenta destino" : "Cuenta origen" }}
           </th>
           <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
@@ -73,7 +73,7 @@
             <p class="text-center">{{ data.id }}</p>
           </td>
           <td class="cursor-pointer">
-            <p class="text-center">{{ data.amount }}</p>
+            <p [class]="value === 'ingreso' ? 'text-center text-green-600' : 'text-center text-red-600'">{{value === 'ingreso' ? '+' + data.amount : '-' + data.amount }}</p>
           </td>
           <td class="cursor-pointer">
             <p class="text-center">
