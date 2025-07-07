@@ -63,6 +63,7 @@ export default class FormWorkComponent {
   description: string = '';
   orderWork: OrderWork[] = [];
   selectedOrderWork: OrderWork | null = null;
+  validOrder: boolean = false;
   filteredOrderWork: any[] | undefined;
   orderWorks: OrderWork[] = [];
   selectedFile!: File;
@@ -374,6 +375,7 @@ export default class FormWorkComponent {
   }
 
   resetForm() {
+    this.validOrder = false;
     this.errorMessage = '';
     this.errorOrderInvalidMessage = '';
     this.orderWorks = [];
@@ -390,6 +392,14 @@ export default class FormWorkComponent {
   close() {
     this.resetForm();
     this.closeDialog.emit();
+  }
+
+  onOrderChange() {
+    if (this.selectedOrderWork && this.selectedOrderWork.id !== undefined) {
+      this.validOrder = true;
+    } else {
+      this.validOrder = false;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

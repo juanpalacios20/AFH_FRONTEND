@@ -40,13 +40,17 @@
         "
       ></p-tag>
     </p>
-    <p>
+    <p class="md:col-span-2">
       <span class="font-semibold text-black">Descripción:</span>
       {{ quote?.description }}
     </p>
     <p>
       <span class="font-semibold text-black">Plan de pago:</span>
       {{ quote?.method_of_payment }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Plazo de entrega:</span>
+      {{ quote?.delivery_time }}
     </p>
 
     <p *ngIf="!orderWork">
@@ -88,13 +92,16 @@
       }}"
       icon="pi pi-check"
       [disabled]="
-        (temporalState === '' && state === 'PROCESO') || (temporalState !== '' && temporalState === 'PROCESO') ? false : true
+        (temporalState === '' && state === 'PROCESO') ||
+        (temporalState !== '' && temporalState === 'PROCESO')
+          ? false
+          : true
       "
       [styleClass]="
-        (temporalState === '' && (state === 'APROBADO' ||
-        state === 'PROCESO')) ||
-        (temporalState !== '' && (temporalState === 'APROBADO' ||
-        temporalState === 'PROCESO'))
+        (temporalState === '' &&
+          (state === 'APROBADO' || state === 'PROCESO')) ||
+        (temporalState !== '' &&
+          (temporalState === 'APROBADO' || temporalState === 'PROCESO'))
           ? 'p-button-primary'
           : 'p-button-secondary'
       "
@@ -140,6 +147,34 @@
     styleClass="p-button-primary w-full mb-6"
     (onClick)="confirmationComplete()"
   ></p-button>
+
+  <h2 class="text-primary-900 font-bold text-xl mb-2">
+    Corre por cuenta del contratiante:
+  </h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div
+      *ngFor="let contracting of quote?.contracting_materials; let i = index"
+      class="p-4 bg-gray-50 border rounded-lg"
+    >
+      <p>
+        {{ contracting }}
+      </p>
+    </div>
+  </div>
+
+  <h2 class="text-primary-900 font-bold text-xl mb-2">
+    Corre por cuenta del contratista:
+  </h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div
+      *ngFor="let contractor of quote?.contractor_materials; let i = index"
+      class="p-4 bg-gray-50 border rounded-lg"
+    >
+      <p>
+        {{ contractor }}
+      </p>
+    </div>
+  </div>
 
   <!-- ======= Tareas ======= -->
   <h2 class="text-primary-900 font-bold text-xl mb-2">Tareas</h2>
@@ -205,9 +240,7 @@
     </p>
     <p class="text-xl mt-2">
       Total:
-      <span class="text-primary-700">{{
-        quote?.total_value
-      }}</span>
+      <span class="text-primary-700">{{ quote?.total_value }}</span>
     </p>
   </div>
 </p-dialog>
