@@ -44,6 +44,9 @@ export interface Quote {
   iva_value: string;
   construction: string;
   total_value: string;
+  contractor_materials: string[];
+  contracting_materials: string[];
+  delivery_time: string;
 }
 
 export interface OrderWork {

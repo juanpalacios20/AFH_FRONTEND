@@ -43,6 +43,7 @@ export default class WorkReportComponent implements OnInit {
   action: number = 0;
   viewVisible = false;
   selectedReport!: WorkReport;
+  validReport: boolean = false;
   workReports: WorkReport[] = [];
   loadingWorkReports: boolean = false;
   workReportDialogVisible: boolean = false;
@@ -103,6 +104,14 @@ export default class WorkReportComponent implements OnInit {
 
   ngOnInit() {
     this.loadWorkReports();
+  }
+
+  onReportChange() {
+    if (this.selectedReport && this.selectedReport.id !== undefined) {
+      this.validReport = true;
+    } else {
+      this.validReport = false;
+    }
   }
 
   loadWorkReports() {
