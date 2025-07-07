@@ -23,13 +23,25 @@
     </div>
   </ng-template>
   <div class="w-full mx-auto rounded-xl justify-center mt-2">
-    <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="mb-4">
+    <div
+      [ngClass]="{
+        'w-full': !validQuote && this.action === 0,
+        'grid grid-cols-1 md:grid-cols-2 gap-4':
+          (validQuote && this.action === 0) || this.action === 1
+      }"
+    >
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'mb-30': this.validQuote === false && this.action === 0
+        }"
+      >
         <h1 class="mb-4 text-primary-950 font-normal">
           Ingrese el codigo de la cotizaciónde trabajo.
         </h1>
         <p-autocomplete
           [(ngModel)]="selectedQuote"
+          (ngModelChange)="onQuoteChange()"
           placeholder="Codigo de la orden de trabajo"
           [disabled]="this.action === 1"
           [suggestions]="filteredQuotes ?? []"
@@ -48,10 +60,12 @@
           class="text-red-600 mb-4"
           *ngIf="(errorMessage && !selectedQuote) || quoteInvalidMessage"
         >
-          {{ errorMessage && !selectedQuote ? errorMessage : quoteInvalidMessage }}
+          {{
+            errorMessage && !selectedQuote ? errorMessage : quoteInvalidMessage
+          }}
         </small>
       </div>
-      <div class="mb-4">
+      <div class="mb-4" *ngIf="this.validQuote === true">
         <h1 class="mb-4 text-primary-950 font-normal">
           Descripción de la tarea
         </h1>
@@ -77,11 +91,17 @@
         </small>
       </div>
     </div>
-    <h1 class="mb-4 text-primary-950 font-medium">
+    <h1
+      class="mb-4 text-primary-950 font-medium"
+      *ngIf="this.validQuote === true || this.action === 1"
+    >
       Ingrese la cantidad del personal según corresponda, si alguno no aplica
       deje el campo en 0.
     </h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2"
+      *ngIf="this.validQuote === true || this.action === 1"
+    >
       <div class="mb-4">
         <h1 class="mb-4 text-primary-950 font-normal">Tecnico</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
@@ -189,7 +209,10 @@
         </small>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2"
+      *ngIf="this.validQuote === true || this.action === 1"
+    >
       <div>
         <label for="buttondisplay" class="font-bold block mb-2">
           Fecha de inicio:
@@ -241,7 +264,7 @@
         </small>
       </div>
     </div>
-    <div class="mb-6 mt-6">
+    <div class="mb-6 mt-6" *ngIf="this.validQuote === true || this.action === 1">
       <h1 class="mb-4 text-primary-950 font-medium">Permisos requeridos</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div
@@ -266,7 +289,7 @@
       </div>
     </div>
 
-    <div class="flex justify-end gap-2 mt-10">
+    <div class="flex justify-end gap-2 mt-10" *ngIf="this.validQuote === true || this.action === 1">
       <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()">
         Cancelar
       </p-button>
