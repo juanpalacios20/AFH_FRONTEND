@@ -89,7 +89,7 @@
           </td>
           <td>
             <div class="card flex justify-center gap-2">
-              <p-button icon="pi pi-pencil" />
+              <p-button icon="pi pi-pencil" (onClick)="openEditIncome(income)"/>
             </div>
           </td>
         </tr>
@@ -160,7 +160,7 @@
           </td>
           <td>
             <div class="card flex justify-center gap-2">
-              <p-button icon="pi pi-pencil" />
+              <p-button icon="pi pi-pencil" (onClick)="openEditExpense(expense)" />
             </div>
           </td>
         </tr>
@@ -209,7 +209,25 @@
     [action]="action"
     [type]="value"
     (closeDialog)="createVisible = false"
-    (onOrderWorkCreated)="closeCreate()"
+    (onIncomeCreated)="closeCreate()"
+  >
+  </app-form>
+  <app-form
+    [visible]="editIncomeVisible"
+    [action]="action"
+    [type]="value"
+    [incomeToEdit]="incomeToEdit"
+    (closeDialog)="editIncomeVisible = false"
+    (onIncomeCreated)="closeEdit()"
+  >
+  </app-form>
+  <app-form
+    [visible]="editExpenseVisible"
+    [action]="action"
+    [type]="value"
+    [expenseToEdit]="expenseToEdit"
+    (closeDialog)="editExpenseVisible = false"
+    (onEgressCreated)="closeEdit()"
   >
   </app-form>
 </div>

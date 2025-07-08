@@ -56,6 +56,11 @@ export default class ManagementComponent implements OnInit {
   type: number = 0; //0 income, 1 exprense
   incomes: income[] = [];
   expenses: expense[] = [];
+  //editar
+  editIncomeVisible: boolean = false;
+  editExpenseVisible: boolean = false;
+  incomeToEdit: income | null = null;
+  expenseToEdit: expense | null = null;
 
   constructor(
     private workReportService: WorkReportService,
@@ -68,7 +73,7 @@ export default class ManagementComponent implements OnInit {
   }
 
   loadData() {
-    console.log('Trayendo informacion');
+    console.log('recargando');
     this.financeService.getIncomes().subscribe({
       next: (response) => {
         this.incomes = response;
@@ -89,12 +94,44 @@ export default class ManagementComponent implements OnInit {
     });
   }
 
+  openEditIncome(income: income) {
+    this.editIncomeVisible = true;
+    this.incomeToEdit = income;
+    this.action = 1;
+  }
+
+  openEditExpense(expense: expense) {
+    this.editExpenseVisible = true;
+    this.expenseToEdit = expense;
+    this.action = 1;
+  }
+
+  closeEdit() {
+    this.editExpenseVisible = false;
+    this.editIncomeVisible = false;
+    this.action = 0;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Cambios guardados con éxito',
+    });
+    this.loadData();
+  }
+
   openCreate() {
     this.createVisible = true;
+    this.action = 0;
   }
 
   closeCreate() {
     this.createVisible = false;
+    this.action = 0;
+    this.loadData();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Creado con éxito',
+    });
   }
 
   account(number: number): string {

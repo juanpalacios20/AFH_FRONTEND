@@ -92,10 +92,11 @@ export interface income {
   responsible: string;
   amount: number;
   reason: string;
-  payment_method: number;
+  payment_method: string;
   destination_account: number;
   observations: string;
   date: string;
+  voucher: string;
 }
 
 export interface expense {
@@ -103,8 +104,9 @@ export interface expense {
   responsible: string;
   amount: number;
   reason: string;
-  payment_method: number;
+  payment_method: string;
   origin_account: number;
   observations: string;
   date: string;
+  voucher: string;
 }
