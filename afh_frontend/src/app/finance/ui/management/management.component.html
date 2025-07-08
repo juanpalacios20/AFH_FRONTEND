@@ -47,13 +47,14 @@
     <p-table
       #to
       [rows]="20"
+      *ngIf="value === 'ingreso'"
       [paginator]="true"
-      [value]="data"
+      [value]="incomes"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
       [globalFilterFields]="['start_date', 'Quotes.customer.name']"
     >
-      <ng-template #header *ngIf="data.length > 0">
+      <ng-template #header *ngIf="incomes.length > 0">
         <tr>
           <th class="rounded-border text-primary-950 text-center">Código</th>
           <th class="rounded-border text-primary-950 text-center">Monto</th>
@@ -67,24 +68,24 @@
           <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
       </ng-template>
-      <ng-template #body let-data>
+      <ng-template #body let-income>
         <tr>
           <td class="cursor-pointer">
-            <p class="text-center">{{ data.id }}</p>
+            <p class="text-center">{{ income.id }}</p>
           </td>
           <td class="cursor-pointer">
-            <p [class]="value === 'ingreso' ? 'text-center text-green-600' : 'text-center text-red-600'">{{value === 'ingreso' ? '+' + data.amount : '-' + data.amount }}</p>
+            <p class="text-center text-green-600">{{ "+" + income.amount }}</p>
           </td>
           <td class="cursor-pointer">
             <p class="text-center">
-              {{ data.payment_method }}
+              {{ income.payment_method }}
             </p>
           </td>
           <td class="cursor-pointer">
-            <p class="text-center">{{ data.date }}</p>
+            <p class="text-center">{{ income.date }}</p>
           </td>
           <td class="cursor-pointer">
-            <p class="text-center">{{ data.target_account }}</p>
+            <p class="text-center">{{ account(income.destination_account) }}</p>
           </td>
           <td>
             <div class="card flex justify-center gap-2">
@@ -95,21 +96,7 @@
       </ng-template>
       <ng-template
         #emptymessage
-        *ngIf="
-          data.length === 0 &&
-          loadingData === false &&
-          (value === '' || value === null)
-        "
-      >
-        <tr>
-          <td colspan="5" class="text-center text-gray-600">
-            Seleccione lo que desea ver
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template
-        #emptymessage
-        *ngIf="data.length === 0 && loadingData === false && value === 'income'"
+        *ngIf="incomes.length === 0 && loadingData === false"
       >
         <tr>
           <td colspan="5" class="text-center text-gray-600">
@@ -119,9 +106,68 @@
       </ng-template>
       <ng-template
         #emptymessage
-        *ngIf="
-          data.length === 0 && loadingData === false && value === 'expense'
-        "
+        *ngIf="incomes.length !== 0 && loadingData === true"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-table
+      #to
+      [rows]="20"
+      [paginator]="true"
+      *ngIf="value === 'egreso'"
+      [value]="expenses"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+    >
+      <ng-template #header *ngIf="expenses.length > 0">
+        <tr>
+          <th class="rounded-border text-primary-950 text-center">Código</th>
+          <th class="rounded-border text-primary-950 text-center">Monto</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Forma de pago
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Fecha</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Cuenta Origen
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Opciones</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-expense>
+        <tr>
+          <td class="cursor-pointer">
+            <p class="text-center">{{ expense.id }}</p>
+          </td>
+          <td class="cursor-pointer">
+            <p class="text-center text-red-600">{{ "-" + expense.amount }}</p>
+          </td>
+          <td class="cursor-pointer">
+            <p class="text-center">
+              {{ expense.payment_method }}
+            </p>
+          </td>
+          <td class="cursor-pointer">
+            <p class="text-center">{{ expense.date }}</p>
+          </td>
+          <td class="cursor-pointer">
+            <p class="text-center">{{ account(expense.origin_account) }}</p>
+          </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button icon="pi pi-pencil" />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="expenses.length === 0 && loadingData === false"
       >
         <tr>
           <td colspan="5" class="text-center text-gray-600">
@@ -131,11 +177,28 @@
       </ng-template>
       <ng-template
         #emptymessage
-        *ngIf="data.length !== 0 && loadingData === true"
+        *ngIf="expenses.length !== 0 && loadingData === true"
       >
         <tr>
           <td colspan="5" class="text-center text-gray-600">
             Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-table
+      #to
+      [rows]="20"
+      *ngIf=" value === '' || value === null  "
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+    >
+      <ng-template #emptymessage *ngIf="value === '' || value === null">
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Seleccione lo que quiere ver
           </td>
         </tr>
       </ng-template>

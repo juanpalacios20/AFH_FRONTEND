@@ -88,17 +88,23 @@ export interface AutoCompleteCompleteEvent {
 }
 
 export interface income {
-  id: number;
+  id: number; 
+  responsible: string;
   amount: number;
+  reason: string;
   payment_method: number;
-  target_account: string;
+  destination_account: number;
+  observations: string;
   date: string;
 }
 
 export interface expense {
-  id: number;
+  id: number; 
+  responsible: string;
   amount: number;
+  reason: string;
   payment_method: number;
-  target_account: string;
+  origin_account: number;
+  observations: string;
   date: string;
 }
