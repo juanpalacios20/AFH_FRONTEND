@@ -95,7 +95,7 @@ export default class FormComponent {
       });
       return;
     }
-    this.loading = false;
+    this.loading = true;
     const formData = new FormData();
 
     formData.append('responsible', this.people);
@@ -184,8 +184,12 @@ export default class FormComponent {
       formData.append('payment_method', this.selectedPaymentMethod);
     }
 
-    if (this.observations !== this.incomeToEdit?.observations) {
-      formData.append('observations', this.observations);
+    if (this.observations) {
+      if (this.observations !== this.incomeToEdit?.observations) {
+        formData.append('observations', this.observations);
+      }
+    } else {
+      formData.append('observations', ' ');
     }
 
     if (this.selectedImage) {
@@ -258,7 +262,7 @@ export default class FormComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.action);
+    console.log(this.loading);
     if (changes['visible'] && this.visible === true) {
       if (this.action === 0) {
         this.actionTitle = 'Crear nuevo' + ' ' + this.type;

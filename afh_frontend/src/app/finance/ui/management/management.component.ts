@@ -18,6 +18,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import FormComponent from '../form/form.component';
 import { WorkReportService } from '../../../work_report/services/work_report.service';
 import { FinanceService } from '../../services/finance.service';
+import ViewsComponent from '../views/views.component';
 
 @Component({
   selector: 'app-management',
@@ -37,6 +38,7 @@ import { FinanceService } from '../../services/finance.service';
     DatePickerModule,
     FormComponent,
     ConfirmDialog,
+    ViewsComponent
   ],
   templateUrl: './management.component.html',
   styleUrl: './management.component.css',
@@ -62,6 +64,11 @@ export default class ManagementComponent implements OnInit {
   editExpenseVisible: boolean = false;
   incomeToEdit: income | null = null;
   expenseToEdit: expense | null = null;
+  //visualizar
+  visibleViewIncome: boolean = false;
+  visibleViewExpense: boolean = false;
+  incomeToView: income | null = null;
+  expenseToView: expense | null = null;
 
   constructor(
     private workReportService: WorkReportService,
@@ -133,6 +140,24 @@ export default class ManagementComponent implements OnInit {
       summary: 'Éxito',
       detail: 'Creado con éxito',
     });
+  }
+
+  openViewIncome(income: income) {
+    console.log(income);
+    this.incomeToView = income;
+    this.visibleViewIncome = true;
+  }
+
+  openViewExpense(expense: expense) {
+    this.expenseToView = expense;
+    this.visibleViewExpense = true;
+  }
+
+  closeView() {
+    this.incomeToView = null;
+    this.expenseToView = null;
+    this.visibleViewIncome = false;
+    this.visibleViewExpense = false;
   }
 
   account(number: number): string {

@@ -219,6 +219,7 @@
           styleClass="p-button-primary"
           (onClick)="onSubmit()"
           [loading]="loading"
+          disabled="{{loading}}"
         >
           {{ actionTitle }}
         </p-button>

@@ -1,1 +1,72 @@
-<p>views works!</p>
+<p-dialog
+  header="Información del acta"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '60vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <!-- ======= Información general ======= -->
+  <h2 class="text-primary-900 font-bold text-xl mb-2">Detalles del acta</h2>
+  <div class="flex w-full mb-2">
+    <p>
+      <span class="font-semibold text-black">Responsable:</span>
+      {{ type === "ingreso" ? income?.responsible : expense?.responsible }}
+    </p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+    <p>
+      <span class="font-semibold text-black">Cantidad:</span>
+      {{ type === "ingreso" ? income?.amount : expense?.amount }}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Cuenta:</span>
+      {{ account() }}
+    </p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+    <p>
+      <span class="font-semibold text-black">Fecha:</span>
+      {{type === 'ingreso' ? income?.date : expense?.date}}
+    </p>
+    <p>
+      <span class="font-semibold text-black">Metodo de pago:</span>
+      {{ type === 'ingreso' ? income?.payment_method : expense?.payment_method }}
+    </p>
+  </div>
+  <div class="flex w-full mb-2">
+    <p>
+      <span class="font-semibold text-black">Motivo o concepto:</span>
+      {{ type === "ingreso" ? income?.reason : expense?.reason }}
+    </p>
+  </div>
+  <div class="flex w-full mb-2">
+    <p>
+      <span class="font-semibold text-black">Observaciones</span>
+      {{
+        type === "ingreso"
+          ? income?.observations || "Sin observaciones adicionales"
+          : expense?.observations || "sin observaciones adicionales"
+      }}
+    </p>
+  </div>
+
+  <div *ngIf="type === 'ingreso' ? income?.voucher : expense?.voucher">
+    <h2 class="text-primary-900 font-bold text-xl mb-2">
+      Imagen del comprobante:
+    </h2>
+    <div class="p-4 mb-4 border rounded-lg bg-gray-50 shadow-sm">
+      <div class="flex flex-wrap gap-3">
+        <img
+          [src]="type === 'ingreso' ? income?.voucher : expense?.voucher"
+          alt="Comprobante"
+          width="150"
+          class="rounded border shadow-sm"
+        />
+      </div>
+    </div>
+  </div>
+</p-dialog>
