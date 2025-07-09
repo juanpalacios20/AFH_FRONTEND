@@ -20,6 +20,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { FinanceService } from '../../services/finance.service';
 import { expense, income } from '../../../interfaces/models';
+import { InputNumber } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-form',
@@ -37,6 +38,7 @@ import { expense, income } from '../../../interfaces/models';
     FileUpload,
     DatePickerModule,
     AutoComplete,
+    InputNumber,
   ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css',
@@ -181,6 +183,7 @@ export default class FormComponent {
     if (this.selectedPaymentMethod !== this.incomeToEdit?.payment_method) {
       formData.append('payment_method', this.selectedPaymentMethod);
     }
+
     if (this.observations !== this.incomeToEdit?.observations) {
       formData.append('observations', this.observations);
     }
@@ -360,6 +363,11 @@ export default class FormComponent {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  removeImage() {
+    this.selectedImagePreview = null;
+    this.selectedImage = null;
   }
 
   blockTyping(event: KeyboardEvent) {

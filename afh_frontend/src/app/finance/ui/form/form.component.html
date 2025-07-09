@@ -43,22 +43,22 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
       <div class="mb-4">
-        <p-floatlabel variant="on" required="true">
-          <input
-            pInputText
-            type="text"
+        <p-floatlabel variant="on">
+          <p-inputnumber
             [disabled]="this.action === 1"
+            inputId="integeronly"
             [(ngModel)]="amount"
             [ngClass]="{
               'border-red-500 ng-invalid ng-dirty': errorMessage && amount === 0
             }"
             [class]="
               this.action === 1
-                ? 'w-full bg-gray-300 text-gray-700 font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500'
-                : 'w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500'
+                ? 'w-full bg-gray-300 text-gray-700 font-medium rounded-lg transition focus:ring-2 focus:ring-primary-500'
+                : 'w-full bg-white text-black font-medium rounded-lg transition focus:ring-2 focus:ring-primary-500'
             "
+            size="large"
           />
-          <label>Cantidad </label>
+          <label for="on_label">Monto</label>
         </p-floatlabel>
         <small class="text-red-600" *ngIf="errorMessage && amount === 0">
           {{ errorMessage }}
@@ -169,33 +169,47 @@
       </p-floatlabel>
     </div>
     <div>
-      <h2 class="mb-2 font-medium">Comprobante</h2>
-      <div class="mb-6 relative bg-white p-3 rounded-md shadow-md">
-        <div class="flex flex-wrap gap-3 mt-3 relative">
-          <div class="relative group">
-            <div class="relative inline-block">
-              <img
-                *ngIf="selectedImagePreview"
-                [src]="selectedImagePreview"
-                alt="preview"
-                width="100"
-                height="100"
-                class="border rounded"
-              />
+      <div>
+        <h2 class="mb-2 font-medium">Comprobante</h2>
+
+        <div class="mb-6 relative bg-white p-3 rounded-md shadow-md">
+          <div
+            class="flex justify-center items-center gap-3 mt-3 relative"
+            *ngIf="selectedImagePreview"
+          >
+            <div class="relative group">
+              <div class="relative inline-block">
+                <img
+                  [src]="selectedImagePreview"
+                  alt="preview"
+                  width="150"
+                  height="150"
+                  class="border rounded shadow-md"
+                />
+
+                <button
+                  type="button"
+                  class="absolute top-0 right-0 p-1 text-black cursor-pointer rounded-full transition"
+                  (click)="removeImage()"
+                  title="Eliminar imagen"
+                >
+                  <i class="pi pi-times"></i>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="justify-center mb-2 mt-2">
-          <p-fileupload
-            mode="basic"
-            name="images"
-            accept="image/*"
-            multiple="true"
-            chooseLabel="Seleccionar imágenes"
-            [customUpload]="true"
-            (onSelect)="onImageSelect($event)"
-          ></p-fileupload>
+          <div class="flex justify-center mt-4">
+            <p-fileupload
+              mode="basic"
+              name="images"
+              accept="image/*"
+              multiple="false"
+              chooseLabel="Seleccionar imagen"
+              [customUpload]="true"
+              (onSelect)="onImageSelect($event)"
+            ></p-fileupload>
+          </div>
         </div>
       </div>
 

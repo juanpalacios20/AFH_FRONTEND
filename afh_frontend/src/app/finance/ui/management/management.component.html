@@ -6,16 +6,16 @@
       <h1 class="text-2xl font-bold">AFH: Finanzas</h1>
     </div>
 
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-4" *ngIf="this.value">
       <div>
         <p-datepicker
           [(ngModel)]="dateFilter"
           [showIcon]="true"
           fluid="true"
-          (keydown)="blockTyping($event)"
           inputId="buttondisplay"
-          dateFormat="dd/mm/yy"
+          dateFormat="yy-mm-dd"
           placeholder="Seleccione la fecha de la transaccion"
+          (onSelect)="filterByDate()"
         />
         <small id="search-help" class="text-gray-500 text-center">
           Busca por fecha de transaccion</small
@@ -45,14 +45,14 @@
     <p-confirmdialog></p-confirmdialog>
 
     <p-table
-      #to
+      #tf
       [rows]="20"
       *ngIf="value === 'ingreso'"
       [paginator]="true"
       [value]="incomes"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
-      [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+      [globalFilterFields]="['date']"
     >
       <ng-template #header *ngIf="incomes.length > 0">
         <tr>
@@ -89,7 +89,10 @@
           </td>
           <td>
             <div class="card flex justify-center gap-2">
-              <p-button icon="pi pi-pencil" (onClick)="openEditIncome(income)"/>
+              <p-button
+                icon="pi pi-pencil"
+                (onClick)="openEditIncome(income)"
+              />
             </div>
           </td>
         </tr>
@@ -116,14 +119,14 @@
       </ng-template>
     </p-table>
     <p-table
-      #to
+      #tf
       [rows]="20"
       [paginator]="true"
       *ngIf="value === 'egreso'"
       [value]="expenses"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
-      [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+      [globalFilterFields]="['date']"
     >
       <ng-template #header *ngIf="expenses.length > 0">
         <tr>
@@ -160,7 +163,10 @@
           </td>
           <td>
             <div class="card flex justify-center gap-2">
-              <p-button icon="pi pi-pencil" (onClick)="openEditExpense(expense)" />
+              <p-button
+                icon="pi pi-pencil"
+                (onClick)="openEditExpense(expense)"
+              />
             </div>
           </td>
         </tr>
@@ -189,7 +195,7 @@
     <p-table
       #to
       [rows]="20"
-      *ngIf=" value === '' || value === null  "
+      *ngIf="value === '' || value === null"
       [paginator]="true"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"

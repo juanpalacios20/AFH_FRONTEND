@@ -44,14 +44,14 @@ export class FinanceService extends BaseHttpService {
 
   updateIncomes(incomesToEdit: any, incomeId: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.patch(`${this.apiUrl}income/update/${incomeId}/`, incomesToEdit, {
+    return this.http.patch(`${this.apiUrl}income/update/${incomeId}`, incomesToEdit, {
       headers: headers,
     });
   }
 
   updateEgress(extenseToEdit: any, extenseId: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.patch(`${this.apiUrl}income/update/${extenseId}/`, extenseToEdit, {
+    return this.http.patch(`${this.apiUrl}egress/update/${extenseId}`, extenseToEdit, {
       headers: headers,
     });
   }

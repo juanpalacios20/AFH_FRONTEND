@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MenuComponent } from '../../../shared/ui/menu/menu.component';
 import { TagModule } from 'primeng/tag';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
@@ -43,6 +43,7 @@ import { FinanceService } from '../../services/finance.service';
   providers: [ConfirmationService, MessageService],
 })
 export default class ManagementComponent implements OnInit {
+  @ViewChild('tf') table!: Table;
   loadingData: boolean = false;
   createVisible: boolean = false;
   action: number = 0;
@@ -145,7 +146,7 @@ export default class ManagementComponent implements OnInit {
   }
 
   changeData() {
-    console.log(this.value);
+    this.dateFilter = '';
     if (this.value) {
       if (this.value === 'ingreso') {
         this.type = 0;
@@ -160,5 +161,24 @@ export default class ManagementComponent implements OnInit {
 
   blockTyping(event: KeyboardEvent) {
     event.preventDefault();
+  }
+
+  filterByDate() {
+    if (!this.dateFilter) {
+      this.table.clear(); // Limpia filtros si la fecha se borra
+    } else {
+      const formattedDate = this.formatDate(this.dateFilter);
+      console.log('fecha', formattedDate);
+      this.table.filterGlobal(formattedDate, 'contains');
+    }
+  }
+
+  formatDate(date: Date | string): string {
+    if (!date) return '';
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${year}-${month}-${day}`; // mismo formato que tu tabla
   }
 }
