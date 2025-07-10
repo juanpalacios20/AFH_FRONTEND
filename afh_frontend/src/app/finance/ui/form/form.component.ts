@@ -89,7 +89,7 @@ export default class FormComponent {
   onCreate() {
     if (this.errorMessage !== '') {
       this.messageService.add({
-        severity: 'danger',
+        severity: 'error',
         summary: 'Error',
         detail: 'Todos los campos son requeridos',
       });
@@ -154,7 +154,7 @@ export default class FormComponent {
   onEdit() {
     if (this.errorMessage !== '') {
       this.messageService.add({
-        severity: 'danger',
+        severity: 'error',
         summary: 'Error',
         detail: 'Todos los campos son requeridos',
       });
@@ -162,28 +162,33 @@ export default class FormComponent {
     }
     this.loading = true;
     const formData = new FormData();
+    console.log('paso 1');
     if (this.people !== this.incomeToEdit?.responsible) {
       formData.append('responsible', this.people);
     }
+    console.log('paso 2');
     if (this.date?.toISOString().split('T')[0] !== this.incomeToEdit?.date) {
       formData.append(
         'date',
         this.date ? this.date.toISOString().split('T')[0] : ''
       );
     }
+    console.log('paso 3');
     if (this.reason !== this.incomeToEdit?.reason) {
       formData.append('reason', this.reason);
     }
+    console.log('paso 4');
     if (this.account() !== this.incomeToEdit?.destination_account) {
       formData.append(
         this.type === 'ingreso' ? 'destination_account' : 'origin_account',
         this.account().toString()
       );
     }
+    console.log('paso 5');
     if (this.selectedPaymentMethod !== this.incomeToEdit?.payment_method) {
       formData.append('payment_method', this.selectedPaymentMethod);
     }
-
+    console.log('paso 6');
     if (this.observations) {
       if (this.observations !== this.incomeToEdit?.observations) {
         formData.append('observations', this.observations);
@@ -191,32 +196,37 @@ export default class FormComponent {
     } else {
       formData.append('observations', ' ');
     }
-
+    console.log('paso 7');
     if (this.selectedImage) {
       formData.append('voucher', this.selectedImage);
     }
-
+    console.log('paso 8');
     for (const pair of formData.entries()) {
       console.log(`${pair[0]}:`, pair[1]);
     }
-
+    console.log('paso 9');
     if (formData) {
-      if (this.incomeToEdit?.id !== undefined) {
+      console.log('paso 10', this.incomeToEdit?.id);
+      console.log('income', this.incomeToEdit);
+      if (this.incomeToEdit?.id) {
+        console.log('paso 11');
         this.financeService
           .updateIncomes(formData, this.incomeToEdit.id)
           .subscribe({
             next: (response) => {
+              console.log('paso 12');
               this.close();
               this.onIncomeCreated.emit();
               this.loading = false;
             },
             error: (err) => {
+              console.log('paso ERROR');
               console.log(err);
               this.loading = false;
             },
           });
       }
-      if (this.expenseToEdit?.id !== undefined) {
+      if (this.expenseToEdit?.id) {
         this.financeService
           .updateEgress(formData, this.expenseToEdit.id)
           .subscribe({
@@ -236,14 +246,16 @@ export default class FormComponent {
 
   verify() {
     if (
-      this.people === null ||
+      this.people === '' ||
       this.amount === 0 ||
-      this.date === null ||
+      this.date === undefined ||
       this.reason === '' ||
       this.selectedTargetAccount === '' ||
       this.selectedPaymentMethod === ''
     ) {
       this.errorMessage = 'Campo requerido';
+    } else {
+      this.errorMessage = '';
     }
   }
 

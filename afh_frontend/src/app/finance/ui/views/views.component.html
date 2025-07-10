@@ -18,9 +18,19 @@
     </p>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-    <p>
+    <p
+      [class]="
+        type === 'ingreso'
+          ? 'font-semibold text-green-600'
+          : 'font-semibold text-red-600'
+      "
+    >
       <span class="font-semibold text-black">Cantidad:</span>
-      {{ type === "ingreso" ? income?.amount_formatted : expense?.amount_formatted }}
+      {{
+        type === "ingreso"
+          ? '+' + income?.amount_formatted
+          : '-' + expense?.amount_formatted
+      }}
     </p>
     <p>
       <span class="font-semibold text-black">Cuenta:</span>
@@ -30,11 +40,13 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
     <p>
       <span class="font-semibold text-black">Fecha:</span>
-      {{type === 'ingreso' ? income?.date : expense?.date}}
+      {{ type === "ingreso" ? income?.date : expense?.date }}
     </p>
     <p>
       <span class="font-semibold text-black">Metodo de pago:</span>
-      {{ type === 'ingreso' ? income?.payment_method : expense?.payment_method }}
+      {{
+        type === "ingreso" ? income?.payment_method : expense?.payment_method
+      }}
     </p>
   </div>
   <div class="flex w-full mb-2">
