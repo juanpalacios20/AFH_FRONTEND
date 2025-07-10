@@ -97,6 +97,7 @@ export interface income {
   observations: string;
   date: string;
   voucher: string;
+  amount_formatted: string;
 }
 
 export interface expense {
@@ -109,4 +110,5 @@ export interface expense {
   observations: string;
   date: string;
   voucher: string;
+  amount_formatted: string;
 }

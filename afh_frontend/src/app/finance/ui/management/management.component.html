@@ -74,7 +74,7 @@
             <p class="text-center">{{ income.id }}</p>
           </td>
           <td class="cursor-pointer" (click)="openViewIncome(income)">
-            <p class="text-center text-green-600">{{ "+" + income.amount }}</p>
+            <p class="text-center text-green-600">{{ "+" + income.amount_formatted }}</p>
           </td>
           <td class="cursor-pointer" (click)="openViewIncome(income)">
             <p class="text-center">
@@ -148,7 +148,7 @@
             <p class="text-center">{{ expense.id }}</p>
           </td>
           <td class="cursor-pointer" (click)="openViewExpense(expense)">
-            <p class="text-center text-red-600">{{ "-" + expense.amount }}</p>
+            <p class="text-center text-red-600">{{ "-" + expense.amount_formatted }}</p>
           </td>
           <td class="cursor-pointer" (click)="openViewExpense(expense)">
             <p class="text-center">
