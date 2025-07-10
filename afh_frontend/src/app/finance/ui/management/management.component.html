@@ -1,0 +1,253 @@
+<div class="relative h-screen">
+  <app-menu class="absolute top-0 left-0 p-4"></app-menu>
+  <p-toast position="top-right"></p-toast>
+  <div class="w-full p-5 pt-20">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">AFH: Finanzas</h1>
+    </div>
+
+    <div class="flex justify-between items-center mb-4" *ngIf="this.value">
+      <div>
+        <p-datepicker
+          [(ngModel)]="dateFilter"
+          [showIcon]="true"
+          fluid="true"
+          inputId="buttondisplay"
+          dateFormat="yy-mm-dd"
+          placeholder="Seleccione la fecha de la transaccion"
+          (onSelect)="filterByDate()"
+        />
+        <small id="search-help" class="text-gray-500 text-center">
+          Busca por fecha de transaccion</small
+        >
+      </div>
+      <button
+        *ngIf="value"
+        pButton
+        icon="pi pi-plus"
+        [label]="value === 'ingreso' ? 'Crear Ingreso' : 'Crear Egreso'"
+        (click)="openCreate()"
+        rounded="true"
+        styleClass="w-full"
+      ></button>
+    </div>
+    <div class="card flex justify-center mb-4">
+      <p-selectButton
+        [options]="stateOptions"
+        [(ngModel)]="value"
+        optionLabel="label"
+        optionValue="value"
+        aria-labelledby="basic"
+        (onChange)="changeData()"
+      />
+    </div>
+    <!-- Confirmación de eliminación (solo una instancia) -->
+    <p-confirmdialog></p-confirmdialog>
+
+    <p-table
+      #tf
+      [rows]="20"
+      *ngIf="value === 'ingreso'"
+      [paginator]="true"
+      [value]="incomes"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['date']"
+    >
+      <ng-template #header *ngIf="incomes.length > 0">
+        <tr>
+          <th class="rounded-border text-primary-950 text-center"></th>
+          <th class="rounded-border text-primary-950 text-center">Monto</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Forma de pago
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Fecha</th>
+          <th class="rounded-border text-primary-950 text-center">
+            {{ value === "ingreso" ? "Cuenta destino" : "Cuenta origen" }}
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Opciones</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-income let-i="rowIndex">
+        <tr>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center">{{ i + 1 }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center text-green-600">{{ "+" + income.amount_formatted }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center">
+              {{ income.payment_method }}
+            </p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center">{{ income.date }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center">{{ account(income.destination_account) }}</p>
+          </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                (onClick)="openEditIncome(income)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="incomes.length === 0 && loadingData === false"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay ingresos disponibles
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="incomes.length !== 0 && loadingData === true"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-table
+      #tf
+      [rows]="20"
+      [paginator]="true"
+      *ngIf="value === 'egreso'"
+      [value]="expenses"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['date']"
+    >
+      <ng-template #header *ngIf="expenses.length > 0">
+        <tr>
+          <th class="rounded-border text-primary-950 text-center">Código</th>
+          <th class="rounded-border text-primary-950 text-center">Monto</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Forma de pago
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Fecha</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Cuenta Origen
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Opciones</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-expense let-i="rowIndex">
+        <tr>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center">{{ i + 1 }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center text-red-600">{{ "-" + expense.amount_formatted }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center">
+              {{ expense.payment_method }}
+            </p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center">{{ expense.date }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center">{{ account(expense.origin_account) }}</p>
+          </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                (onClick)="openEditExpense(expense)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="expenses.length === 0 && loadingData === false"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay egresos disponibles
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="expenses.length !== 0 && loadingData === true"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-table
+      #to
+      [rows]="20"
+      *ngIf="value === '' || value === null"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+    >
+      <ng-template #emptymessage *ngIf="value === '' || value === null">
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Seleccione lo que quiere ver
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <app-form
+    [visible]="createVisible"
+    [action]="action"
+    [type]="value"
+    (closeDialog)="createVisible = false"
+    (onIncomeCreated)="closeCreate()"
+  >
+  </app-form>
+  <app-form
+    [visible]="editIncomeVisible"
+    [action]="action"
+    [type]="value"
+    [incomeToEdit]="incomeToEdit"
+    (closeDialog)="editIncomeVisible = false"
+    (onIncomeCreated)="closeEdit()"
+  >
+  </app-form>
+  <app-form
+    [visible]="editExpenseVisible"
+    [action]="action"
+    [type]="value"
+    [expenseToEdit]="expenseToEdit"
+    (closeDialog)="editExpenseVisible = false"
+    (onEgressCreated)="closeEdit()"
+  >
+  </app-form>
+  <app-views
+    [visibleIncome]="visibleViewIncome"
+    [income]="incomeToView || undefined"
+    [type]="value"
+    (closeDialog)="closeView()"
+    >
+  </app-views>
+  <app-views
+    [visibleExpense]="visibleViewExpense"
+    [expense]="expenseToView || undefined"
+    [type]="value"
+    (closeDialog)="closeView()"
+    >
+  </app-views>
+</div>
