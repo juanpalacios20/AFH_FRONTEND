@@ -56,7 +56,7 @@
     >
       <ng-template #header *ngIf="incomes.length > 0">
         <tr>
-          <th class="rounded-border text-primary-950 text-center">Código</th>
+          <th class="rounded-border text-primary-950 text-center"></th>
           <th class="rounded-border text-primary-950 text-center">Monto</th>
           <th class="rounded-border text-primary-950 text-center">
             Forma de pago
@@ -68,10 +68,10 @@
           <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
       </ng-template>
-      <ng-template #body let-income>
+      <ng-template #body let-income let-i="rowIndex">
         <tr>
           <td class="cursor-pointer" (click)="openViewIncome(income)">
-            <p class="text-center">{{ income.id }}</p>
+            <p class="text-center">{{ i + 1 }}</p>
           </td>
           <td class="cursor-pointer" (click)="openViewIncome(income)">
             <p class="text-center text-green-600">{{ "+" + income.amount_formatted }}</p>
@@ -142,10 +142,10 @@
           <th class="rounded-border text-primary-950 text-center">Opciones</th>
         </tr>
       </ng-template>
-      <ng-template #body let-expense>
+      <ng-template #body let-expense let-i="rowIndex">
         <tr>
           <td class="cursor-pointer" (click)="openViewExpense(expense)">
-            <p class="text-center">{{ expense.id }}</p>
+            <p class="text-center">{{ i + 1 }}</p>
           </td>
           <td class="cursor-pointer" (click)="openViewExpense(expense)">
             <p class="text-center text-red-600">{{ "-" + expense.amount_formatted }}</p>
