@@ -1,0 +1,231 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '60rem' }"
+  [closable]="false"
+>
+  <ng-template pTemplate="header">
+    <div class="flex justify-between items-center w-full">
+      <span>{{ this.actionTitle }}</span>
+      <button
+        type="button"
+        class="p-dialog-header-icon p-dialog-header-close p-link cursor-pointer"
+        (click)="confirmationClose()"
+      >
+        <span class="pi pi-times"></span>
+      </button>
+    </div>
+  </ng-template>
+  <div class="w-full mx-auto rounded-xl justify-center mt-2">
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="people"
+          [ngClass]="{
+            'border-red-500 ng-invalid ng-dirty': errorMessage && people === ''
+          }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <label
+          >{{
+            type === "ingreso"
+              ? "Persona que hace el ingreso"
+              : "Persona que hace el egreso"
+          }}
+        </label>
+      </p-floatlabel>
+      <small class="text-red-600" *ngIf="errorMessage && people === ''">
+        {{ errorMessage }}
+      </small>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+      <div class="mb-4">
+        <p-floatlabel variant="on">
+          <p-inputnumber
+            [disabled]="this.action === 1"
+            inputId="integeronly"
+            [(ngModel)]="amount"
+            [ngClass]="{
+              'border-red-500 ng-invalid ng-dirty': errorMessage && amount === 0
+            }"
+            [class]="
+              this.action === 1
+                ? 'w-full bg-gray-300 text-gray-700 font-medium rounded-lg transition focus:ring-2 focus:ring-primary-500'
+                : 'w-full bg-white text-black font-medium rounded-lg transition focus:ring-2 focus:ring-primary-500'
+            "
+            size="large"
+          />
+          <label for="on_label">Monto</label>
+        </p-floatlabel>
+        <small class="text-red-600" *ngIf="errorMessage && amount === 0">
+          {{ errorMessage }}
+        </small>
+      </div>
+      <div class="mb-4">
+        <p-datepicker
+          [(ngModel)]="date"
+          [showIcon]="true"
+          (keydown)="blockTyping($event)"
+          inputId="buttondisplay"
+          [showOnFocus]="false"
+          [ngClass]="{
+            'border-red-500 ng-invalid ng-dirty':
+              errorMessage && date === undefined
+          }"
+          dateFormat="dd/mm/yy"
+          fluid="true"
+          size="large"
+          [placeholder]="
+            type === 'ingreso' ? 'Fecha del ingreso' : 'Fecha del egreso'
+          "
+        />
+        <small class="text-red-600" *ngIf="errorMessage && date === undefined">
+          {{ errorMessage }}
+        </small>
+      </div>
+    </div>
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <textarea
+          pTextarea
+          rows="5"
+          cols="30"
+          type="text"
+          [(ngModel)]="reason"
+          [ngClass]="{
+            'border-red-500 ng-invalid ng-dirty': errorMessage && reason === ''
+          }"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        ></textarea>
+        <label>Motivo o concepto</label>
+      </p-floatlabel>
+      <small class="text-red-600" *ngIf="errorMessage && reason === ''">
+        {{ errorMessage }}
+      </small>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+      <div class="mb-4">
+        <p-autocomplete
+          [(ngModel)]="selectedTargetAccount"
+          [suggestions]="filteredTargetAccount"
+          (completeMethod)="filterTargetAccount($event)"
+          [dropdown]="true"
+          (keydown)="blockTyping($event)"
+          [ngClass]="{
+            'border-red-500 ng-invalid ng-dirty':
+              errorMessage && selectedTargetAccount === ''
+          }"
+          fluid="true"
+          size="large"
+          [placeholder]="
+            type === 'ingreso' ? 'Cuenta destino' : 'Cuenta origen'
+          "
+          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        ></p-autocomplete>
+        <small
+          class="text-red-600"
+          *ngIf="errorMessage && selectedTargetAccount === ''"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+      <div class="mb-4">
+        <p-autocomplete
+          [(ngModel)]="selectedPaymentMethod"
+          [suggestions]="filteredPaymentMethod"
+          (completeMethod)="filterPaymentMethod($event)"
+          [dropdown]="true"
+          size="large"
+          (keydown)="blockTyping($event)"
+          [ngClass]="{
+            'border-red-500 ng-invalid ng-dirty':
+              errorMessage && selectedPaymentMethod === ''
+          }"
+          fluid="true"
+          placeholder="Forma de pago"
+          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        ></p-autocomplete>
+        <small
+          class="text-red-600"
+          *ngIf="errorMessage && selectedPaymentMethod === ''"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+    </div>
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <textarea
+          pTextarea
+          rows="5"
+          cols="30"
+          type="text"
+          [(ngModel)]="observations"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        ></textarea>
+        <label>Observaciones (Opcional)</label>
+      </p-floatlabel>
+    </div>
+    <div>
+      <div>
+        <h2 class="mb-2 font-medium">Comprobante</h2>
+
+        <div class="mb-6 relative bg-white p-3 rounded-md shadow-md">
+          <div
+            class="flex justify-center items-center gap-3 mt-3 relative"
+            *ngIf="selectedImagePreview"
+          >
+            <div class="relative group">
+              <div class="relative inline-block">
+                <img
+                  [src]="selectedImagePreview"
+                  alt="preview"
+                  width="150"
+                  height="150"
+                  class="border rounded shadow-md"
+                />
+
+                <button
+                  type="button"
+                  class="absolute top-0 right-0 p-1 text-black cursor-pointer rounded-full transition"
+                  (click)="removeImage()"
+                  title="Eliminar imagen"
+                >
+                  <i class="pi pi-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-center mt-4">
+            <p-fileupload
+              mode="basic"
+              name="images"
+              accept="image/*"
+              multiple="false"
+              chooseLabel="Seleccionar imagen"
+              [customUpload]="true"
+              (onSelect)="onImageSelect($event)"
+            ></p-fileupload>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-10">
+        <p-button styleClass="p-button-secondary"> Cancelar </p-button>
+        <p-button
+          styleClass="p-button-primary"
+          (onClick)="onSubmit()"
+          [loading]="loading"
+          disabled="{{ loading }}"
+        >
+          {{ actionTitle }}
+        </p-button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
