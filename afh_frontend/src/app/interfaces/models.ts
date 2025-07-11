@@ -112,3 +112,23 @@ export interface expense {
   voucher: string;
   amount_formatted: string;
 }
+
+export interface element {
+  title: string;
+  icon: string;
+  value: Number;
+}
+
+export interface BalanceMonth { 
+  mes: string; 
+  ingresos: number; 
+  egresos: number;
+  balance: number; 
+}
+
+export interface BalanceResponse {
+  ingresos: number;
+  egresos: number;
+  balance: number;
+}
+
