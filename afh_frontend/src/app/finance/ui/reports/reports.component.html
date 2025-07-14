@@ -63,13 +63,32 @@
           dateFormat="mm/yy"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
+      </ng-container>
+      <!-- Dia -->
+      <ng-container *ngIf="selectedFilter === 'DIA'">
+        <p-datepicker
+          [(ngModel)]="day"
+          [showIcon]="true"
+          (ngModelChange)="onDayChange()"
+          fluid="true"
+          inputId="buttondisplay"
+          placeholder="Seleeccione un dia"
+          dateFormat="dd/mm/yy"
+          [showOnFocus]="false"
+          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
         <small>Seleccione un mes</small>
       </ng-container>
     </div>
   </div>
 
   <div class="mt-4">
-    <h1 class="text font-bold pl-5">Reporte mes {{ nameMonth }}</h1>
+    <h1 class="text pl-5 mt-4 mb-10">
+      <span class="font-medium text-gray-700">Reporte </span>
+      <span class="font-bold text-black ml-1">{{
+        nameMonth !== "" ? nameMonth : yearNumber
+      }}</span>
+    </h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div
         class="bg-white rounded-2xl shadow-md p-6 flex flex-col"
@@ -91,8 +110,11 @@
       </div>
     </div>
   </div>
-  <div class="mt-10" *ngIf="charMonthVisible || charCustomVisible">
-    <h1 class="text font-bold pl-5 mt-4 mb-10">Finanzas mes {{ nameMonth }}</h1>
+  <div class="mt-10" *ngIf="charMonthVisible || charCustomVisible || charDayVisible">
+    <h1 class="text pl-5 mt-4 mb-10">
+      <span class="font-medium text-gray-700">Finanzas en el mes </span>
+      <span class="font-bold text-black ml-1">{{ nameMonth }}</span>
+    </h1>
     <div class="card flex justify-center">
       <p-chart
         type="doughnut"
@@ -103,7 +125,10 @@
     </div>
   </div>
   <div class="mt-10 mb-4" *ngIf="charYearVisible">
-    <h1 class="text font-bold pl-5 mt-4">Finanzas año {{ yearNumber }}</h1>
+    <h1 class="text pl-5 mt-4 mb-10">
+      <span class="font-medium text-gray-700">Finanzas en el año </span>
+      <span class="font-bold text-black ml-1">{{ yearNumber }}</span>
+    </h1>
     <div class="card flex justify-center p-5">
       <p-chart
         type="bar"

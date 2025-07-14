@@ -56,18 +56,22 @@ export default class ReportsComponent implements OnInit {
   dataYear: any;
   optionsYear: any;
   platformIdYear = inject(PLATFORM_ID);
+  day: Date | undefined;
   month: Date | undefined;
   year: Date | undefined;
   yearNumber: Number = 0;
-  filterOptions = ['MES', 'AÑO', 'PERSONALIZADO'];
+  filterOptions = ['DIA', 'MES', 'AÑO', 'PERSONALIZADO'];
   filteredOptions: string[] = [];
   selectedFilter: string = '';
   balanceMonths: BalanceMonth[] = [];
   currentDate: Date = new Date();
-  currentYear: Number = this.currentDate.getFullYear();
-  currentMonth: Number = this.currentDate.getMonth();
-  currentDay: Number = this.currentDate.getDate();
-  currentDateFormatted: string = `${this.currentYear}/${this.currentMonth}/${this.currentDay}`;
+  currentYear: number = this.currentDate.getFullYear();
+  currentMonth: number = this.currentDate.getMonth() + 1;
+  currentDay: number = this.currentDate.getDate();
+  currentDateFormatted: string = `${this.currentYear}/${String(
+    this.currentMonth
+  ).padStart(2, '0')}/${String(this.currentDay).padStart(2, '0')}`;
+
   income: number = 0;
   expense: number = 0;
   balance: number = 0;
@@ -75,14 +79,34 @@ export default class ReportsComponent implements OnInit {
   charYearVisible: boolean = false;
   charMonthVisible: boolean = false;
   charCustomVisible: boolean = false;
+  charDayVisible: boolean = false;
 
   constructor(
     private cd: ChangeDetectorRef,
     private financeService: FinanceService
   ) {}
 
-  ngOnInit() {}
+  //inicializador
+  ngOnInit() {
+    const { start, end } = this.getMonthStartEnd();
+    this.financeService.getBalanceMonth(start, end).subscribe({
+      next: (response) => {
+        this.income = response.ingresos;
+        this.expense = response.egresos;
+        this.balance = response.balance;
+        this.elements[0].value = this.income;
+        this.elements[1].value = this.expense;
+        this.elements[2].value = this.balance;
+        console.log(this.income, this.expense, this.balance);
+        this.initChart();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
 
+  //Los graficos
   initChart() {
     if (isPlatformBrowser(this.platformId)) {
       const documentStyle = getComputedStyle(document.documentElement);
@@ -94,14 +118,14 @@ export default class ReportsComponent implements OnInit {
           {
             data: [this.income, this.expense, this.balance],
             backgroundColor: [
-              documentStyle.getPropertyValue('--p-green-500'),
-              documentStyle.getPropertyValue('--p-red-500'),
-              documentStyle.getPropertyValue('--p-gray-500'),
+              documentStyle.getPropertyValue('--p-graphics-50'),
+              documentStyle.getPropertyValue('--p-graphics-150'),
+              documentStyle.getPropertyValue('--p-primary-600'),
             ],
             hoverBackgroundColor: [
-              documentStyle.getPropertyValue('--p-green-400'),
-              documentStyle.getPropertyValue('--p-red-400'),
-              documentStyle.getPropertyValue('--p-gray-400'),
+              documentStyle.getPropertyValue('--p-graphics-100'),
+              documentStyle.getPropertyValue('--p-graphics-200'),
+              documentStyle.getPropertyValue('--p-primary-400'),
             ],
           },
         ],
@@ -251,35 +275,14 @@ export default class ReportsComponent implements OnInit {
     }
   }
 
-  filterOption(event: any) {
-    const query = event.query.toLowerCase();
-    this.filteredOptions = this.filterOptions.filter((option) =>
-      option.toLowerCase().includes(query)
-    );
-  }
-
-  blockTyping(event: KeyboardEvent) {
-    event.preventDefault();
-  }
-
-  getBalanceMonths(start: string, end: string) {
-    this.financeService.getBalanceMonthDates(start, end).subscribe(
-      (data) => {
-        this.balanceMonths = data;
-        console.log('Balance mensual completo:', this.balanceMonths);
-        this.initChartYear();
-        this.getFinanceYear();
-      },
-      (error) => {
-        console.error('Error al obtener balance mensual:', error);
-      }
-    );
-  }
-
+  //Customizado
   onCustomChange() {
+    this.yearNumber = 0;
     this.charCustomVisible = true;
     this.charMonthVisible = false;
     this.charYearVisible = false;
+    this.year = new Date();
+    this.month = new Date();
     if (this.rangeDates) {
       this.getInfoCustom(
         this.rangeDates[0].toISOString().split('T')[0],
@@ -289,36 +292,92 @@ export default class ReportsComponent implements OnInit {
   }
 
   getInfoCustom(start: string, end: string) {
-    this.financeService
-      .getBalanceMonth(
-        start,
-        end
-      )
-      .subscribe({
-        next: (response) => {
-          this.income = response.ingresos;
-          this.expense = response.egresos;
-          this.balance = response.balance;
-          this.elements[0].value = this.income;
-          this.elements[1].value = this.expense;
-          this.elements[2].value = this.balance;
-          console.log(this.income, this.expense, this.balance);
-          this.initChart();
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+    this.financeService.getBalanceMonth(start, end).subscribe({
+      next: (response) => {
+        this.nameMonth = start + ' - ' + end;
+        this.income = response.ingresos;
+        this.expense = response.egresos;
+        this.balance = response.balance;
+        this.elements[0].value = this.income;
+        this.elements[1].value = this.expense;
+        this.elements[2].value = this.balance;
+        console.log(this.income, this.expense, this.balance);
+        this.initChart();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
+  //Por dia
+  onDayChange() {
+    this.yearNumber = 0;
+    this.charCustomVisible = false;
+    this.charMonthVisible = false;
+    this.charYearVisible = false;
+    this.year = new Date();
+    this.month = new Date();
+    this.getInfoDay();
+  }
+
+  getInfoDay() {
+    this.charDayVisible = true;
+    if (this.day) {
+      this.financeService
+        .getBalanceMonth(
+          this.day.toISOString().split('T')[0],
+          this.day.toISOString().split('T')[0]
+        )
+        .subscribe({
+          next: (response) => {
+            this.income = response.ingresos;
+            this.expense = response.egresos;
+            this.balance = response.balance;
+            this.elements[0].value = this.income;
+            this.elements[1].value = this.expense;
+            this.elements[2].value = this.balance;
+            this.initChart();
+            if (this.day) {
+              this.nameMonth = this.day.toISOString().split('T')[0];
+            }
+          },
+          error(err) {
+            console.log(err);
+          },
+        });
+    }
+  }
+  //Por mes
   onMonthChange(value: Date) {
+    this.yearNumber = 0;
+    this.year = new Date();
+    this.rangeDates = [];
     this.charMonthVisible = true;
     this.charCustomVisible = false;
     this.charYearVisible = false;
     if (this.month) {
-      this.getNameMonth(this.month.getMonth());
+      this.getNameMonth(this.month.getMonth(), this.month.getFullYear());
     }
     this.getInfoMonth();
+  }
+
+  getMonthStartEnd(): { start: string; end: string } {
+    this.charMonthVisible = true;
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    this.getNameMonth(now.getMonth(), now.getFullYear());
+    const format = (date: Date) =>
+      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+        2,
+        '0'
+      )}-${String(date.getDate()).padStart(2, '0')}`;
+
+    return {
+      start: format(firstDay),
+      end: format(lastDay),
+    };
   }
 
   getInfoMonth() {
@@ -361,6 +420,7 @@ export default class ReportsComponent implements OnInit {
     }
   }
 
+  //Por año
   getInfo() {
     if (this.year) {
       this.yearNumber = this.year.getFullYear();
@@ -382,34 +442,29 @@ export default class ReportsComponent implements OnInit {
       );
     }
   }
-  
+
   onYearChange(value: Date) {
+    this.nameMonth = '';
+    this.month = new Date();
+    this.rangeDates = [];
     this.charYearVisible = true;
     this.charMonthVisible = false;
     this.charCustomVisible = false;
     this.getInfo();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('month', this.month);
-  }
-
-  getNameMonth(month: number) {
-    const monthNames = [
-      'Enero',
-      'Febrero',
-      'Marzo',
-      'Abril',
-      'Mayo',
-      'Junio',
-      'Julio',
-      'Agosto',
-      'Septiembre',
-      'Octubre',
-      'Noviembre',
-      'Diciembre',
-    ];
-    this.nameMonth = monthNames[month];
+  getBalanceMonths(start: string, end: string) {
+    this.financeService.getBalanceMonthDates(start, end).subscribe(
+      (data) => {
+        this.balanceMonths = data;
+        console.log('Balance mensual completo:', this.balanceMonths);
+        this.initChartYear();
+        this.getFinanceYear();
+      },
+      (error) => {
+        console.error('Error al obtener balance mensual:', error);
+      }
+    );
   }
 
   getFinanceYear() {
@@ -429,5 +484,35 @@ export default class ReportsComponent implements OnInit {
       this.balance,
       this.balanceMonths.length
     );
+  }
+
+  //Demas metodos para el correcto funcionamiento del componente
+  getNameMonth(month: number, year: number) {
+    const monthNames = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
+    ];
+    this.nameMonth = monthNames[month] + ' ' + year.toString();
+  }
+
+  filterOption(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredOptions = this.filterOptions.filter((option) =>
+      option.toLowerCase().includes(query)
+    );
+  }
+
+  blockTyping(event: KeyboardEvent) {
+    event.preventDefault();
   }
 }

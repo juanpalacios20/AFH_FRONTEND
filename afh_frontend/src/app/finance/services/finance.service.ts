@@ -86,9 +86,9 @@ export class FinanceService extends BaseHttpService {
       return (
         found ?? {
           mes,
-          ingresos: 0,
-          egresos: 0,
-          balance: 0,
+          ingresos: 500000000,
+          egresos: 200000000,
+          balance: 300000000,
         }
       );
     });
