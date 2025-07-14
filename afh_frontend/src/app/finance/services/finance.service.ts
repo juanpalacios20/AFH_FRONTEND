@@ -86,9 +86,9 @@ export class FinanceService extends BaseHttpService {
       return (
         found ?? {
           mes,
-          ingresos: 500000000,
-          egresos: 200000000,
-          balance: 300000000,
+          ingresos: 0,
+          egresos: 0,
+          balance: 0,
         }
       );
     });
@@ -112,6 +112,18 @@ export class FinanceService extends BaseHttpService {
 
     return this.http.get<BalanceResponse>(`${this.apiUrl}balans/get/`, {
       headers: headers,
+      params: params,
+    });
+  }
+
+  pdfYear(start: string, end: string) {
+    const headers = this.getHeaders();
+    const params = new HttpParams().set('start', start).set('end', end);
+
+    return this.http.get(`${this.apiUrl}balans/getpdf/`, {
+      headers: headers,
+      observe: 'response',
+      responseType: 'blob',
       params: params,
     });
   }

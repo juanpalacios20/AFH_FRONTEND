@@ -3,6 +3,16 @@
   <div class="w-full p-5 pt-20">
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-bold">AFH: Reportes</h1>
+      <p-button
+        *ngIf="charDayVisible || charCustomVisible || charMonthVisible || charYearVisible"
+        fluid="true"
+        label="Descargar informe"
+        icon="pi pi-download"
+        styleClass="p-button-primary w-full mb-4"
+        (onClick)="downloadPdf()"
+        [loading]="loadingPDF"
+        [disabled]="loadingPDF"
+      ></p-button>
     </div>
   </div>
   <div class="flex justify-center gap-4 mt-6">
@@ -110,7 +120,10 @@
       </div>
     </div>
   </div>
-  <div class="mt-10" *ngIf="charMonthVisible || charCustomVisible || charDayVisible">
+  <div
+    class="mt-10"
+    *ngIf="charMonthVisible || charCustomVisible || charDayVisible"
+  >
     <h1 class="text pl-5 mt-4 mb-10">
       <span class="font-medium text-gray-700">Finanzas en el mes </span>
       <span class="font-bold text-black ml-1">{{ nameMonth }}</span>

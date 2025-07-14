@@ -15,6 +15,7 @@ import { ChartModule } from 'primeng/chart';
 import { AutoComplete } from 'primeng/autocomplete';
 import { FinanceService } from '../../services/finance.service';
 import { BalanceMonth, element } from '../../../interfaces/models';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-reports',
@@ -26,6 +27,7 @@ import { BalanceMonth, element } from '../../../interfaces/models';
     NgIf,
     ChartModule,
     AutoComplete,
+    ButtonModule,
   ],
   standalone: true,
   templateUrl: './reports.component.html',
@@ -80,6 +82,7 @@ export default class ReportsComponent implements OnInit {
   charMonthVisible: boolean = false;
   charCustomVisible: boolean = false;
   charDayVisible: boolean = false;
+  loadingPDF: boolean = false;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -348,6 +351,78 @@ export default class ReportsComponent implements OnInit {
         });
     }
   }
+
+  downloadPdf() {
+    this.loadingPDF = true;
+    let { start, end } = this.getMonthStartEnd();
+    if (this.day && this.charDayVisible) {
+      start = this.day.toISOString().split('T')[0];
+      end = this.day.toISOString().split('T')[0];
+    }
+    if (this.month && this.charMonthVisible) {
+      const lastDay = new Date(
+        this.month.getFullYear(),
+        this.month.getMonth() + 1,
+        0
+      );
+      start = this.month.toISOString().split('T')[0];
+      end = lastDay.toISOString().split('T')[0];
+    }
+    if (this.year && this.charYearVisible) {
+      const lastDay = new Date(
+        this.year.getFullYear(),
+        this.year.getMonth() + 12,
+        0
+      );
+      start = this.year.toISOString().split('T')[0];
+      end = lastDay.toISOString().split('T')[0];
+    }
+    if (this.year && this.charYearVisible) {
+      const lastDay = new Date(
+        this.year.getFullYear(),
+        this.year.getMonth() + 12,
+        0
+      );
+      start = this.year.toISOString().split('T')[0];
+      end = lastDay.toISOString().split('T')[0];
+    }
+
+    if (this.rangeDates && this.charCustomVisible) {
+      start = this.rangeDates[0].toISOString().split('T')[0];
+      end = this.rangeDates[1].toISOString().split('T')[0];
+    }
+
+    this.financeService.pdfYear(start, end).subscribe({
+      next: (response) => {
+        // Crear el blob desde la respuesta solo si response.body no es null
+        if (response.body) {
+          const blob = new Blob([response.body], { type: 'application/pdf' });
+
+          // Crear una URL para el blob
+          const url = window.URL.createObjectURL(blob);
+
+          // Crear un enlace temporal para descargar
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `reporte-${start}-to-${end}.pdf`; // Nombre del archivo
+          link.click();
+          window.open(url, '_blank'); // Abre en nueva pestaña
+          window.URL.revokeObjectURL(url);
+          // Liberar la URL temporal
+          window.URL.revokeObjectURL(url);
+          this.loadingPDF = false;
+        } else {
+          console.error('La respuesta no contiene datos PDF.');
+          this.loadingPDF = false;
+        }
+      },
+      error: (err) => {
+        console.error('Error al descargar PDF:', err);
+        this.loadingPDF = false;
+      },
+    });
+  }
+
   //Por mes
   onMonthChange(value: Date) {
     this.yearNumber = 0;
