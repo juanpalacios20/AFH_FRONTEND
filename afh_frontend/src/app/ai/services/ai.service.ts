@@ -18,7 +18,7 @@ export class AIService extends BaseHttpService {
         {
           role: 'user',
           parts: [
-            { text: `Responde como un asistente conversacional en una sola respuesta clara:\n\n${prompt}` }
+            { text: `Responde como un asistente conversacional que hace parte de la empresa AFH Metalmecanicos:\n\n${prompt}` }
           ]
         }
       ]
