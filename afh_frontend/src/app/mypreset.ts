@@ -16,7 +16,7 @@ const MyPreset = definePreset(Aura, {
       700: '{blue.700}',
       800: '{blue.800}',
       900: '{blue.900}',
-      950: '{stone.950}',
+      950: '{gray.500}',
     },
     graphics: {
       50: '{green.600}',
