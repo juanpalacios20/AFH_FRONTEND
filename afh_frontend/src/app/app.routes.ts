@@ -36,7 +36,7 @@ export const routes: Routes = [
     { path: 'work-report', component: WorkReportComponent, canActivate: [AuthGuard] },
     { path: 'finance', component: ManagementComponent, canActivate: [AuthGuard]},
     { path: 'reports', component: ReportsComponent},
-    { path: 'form', component: ChatComponent },
+    { path: 'agenteai', component: ChatComponent },
     { path: '**', redirectTo: 'login' }
 
 ];
