@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { environment } from "../../environments/environment";
+import { environment, geminiConfig } from "../../environments/environment";
 
 @Injectable({
     providedIn: 'root',
@@ -8,4 +8,5 @@ import { environment } from "../../environments/environment";
 export class BaseHttpService {
     http = inject(HttpClient); 
     apiUrl = environment.API_URL;
+    geminiApiUrl = geminiConfig.API_URL
 }
