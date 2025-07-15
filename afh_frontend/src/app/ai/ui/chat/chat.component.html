@@ -1,0 +1,51 @@
+<!-- Contenedor general del chat con posición relativa -->
+<div class="relative h-screen max-h-screen bg-gray-100">
+
+  <!-- Botón/menu lateral con Drawer -->
+  <app-menu class="absolute top-4 left-4 z-50"></app-menu>
+
+  <!-- Contenedor del chat principal -->
+  <div class="flex flex-col h-full p-4 pt-20">
+
+    <!-- Contenedor scroll de mensajes -->
+    <div #chatContainer class="flex-1 overflow-y-auto space-y-3 pb-4 pr-2 scroll-smooth">
+      
+      <!-- Burbujas de mensajes -->
+      <div *ngFor="let msg of messages">
+        <div
+          class="max-w-[75%] px-4 py-2 rounded-xl shadow whitespace-pre-wrap break-words prose prose-sm"
+          [ngClass]="{
+            'ml-auto bg-blue-600 text-white': msg.role === 'user',
+            'mr-auto bg-white text-gray-800': msg.role === 'ai'
+          }"
+        >
+          <markdown [data]="msg.content"></markdown>
+        </div>
+      </div>
+
+      <!-- Mensaje de cargando -->
+      <div *ngIf="loading" class="mr-auto max-w-[75%] bg-gray-300 text-gray-700 px-4 py-2 rounded-xl shadow">
+        <span class="animate-pulse">Escribiendo...</span>
+      </div>
+    </div>
+
+    <!-- Input del mensaje -->
+    <div class="flex items-center gap-2 mt-4">
+      <input
+        type="text"
+        [(ngModel)]="userInput"
+        (keyup.enter)="sendMessage()"
+        placeholder="Escribe tu pregunta al agente IA..."
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      <button
+        (click)="sendMessage()"
+        class="px-4 py-2 text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition"
+      >
+        Enviar
+      </button>
+    </div>
+
+  </div>
+</div>
+

@@ -16,6 +16,7 @@ import ManagementOrdersWorksComponent from './order_works/ui/management-orders-w
 import WorkReportComponent from './work_report/ui/work-report/work-report.component';
 import ManagementComponent from './finance/ui/management/management.component';
 import ReportsComponent from './finance/ui/reports/reports.component';
+import ChatComponent from './ai/ui/chat/chat.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -35,6 +36,7 @@ export const routes: Routes = [
     { path: 'work-report', component: WorkReportComponent, canActivate: [AuthGuard] },
     { path: 'finance', component: ManagementComponent, canActivate: [AuthGuard]},
     { path: 'reports', component: ReportsComponent},
+    { path: 'agenteai', component: ChatComponent },
     { path: '**', redirectTo: 'login' }
 
 ];

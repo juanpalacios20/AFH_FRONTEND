@@ -1,5 +1,6 @@
 <div class="relative min-h-screen pb-20">
   <app-menu class="absolute top-0 left-0 p-4"></app-menu>
+
   <div class="w-full p-5 pt-20">
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-bold">AFH: Reportes</h1>
@@ -21,8 +22,8 @@
       ></p-button>
     </div>
   </div>
+
   <div class="flex justify-center gap-4 mt-6">
-    <!-- Selector principal -->
     <p-autocomplete
       [(ngModel)]="selectedFilter"
       [suggestions]="filteredOptions"
@@ -35,12 +36,16 @@
       class="w-60 bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
     ></p-autocomplete>
 
+
+    <div *ngIf="selectedFilter" class="flex flex-col w-80 bg-white rounded-lg">
+
     <!-- Contenedor dinámico de filtros -->
     <div
       *ngIf="selectedFilter && selectedFilter !== 'MÁS INFORMACIÓN'"
       class="flex flex-col w-80 bg-white rounded-lg"
     >
       <!-- Personalizado -->
+
       <ng-container *ngIf="selectedFilter === 'PERSONALIZADO'">
         <p-datepicker
           [(ngModel)]="rangeDates"
@@ -55,7 +60,6 @@
         <small>Seleccione un intervalo de fechas</small>
       </ng-container>
 
-      <!-- Año -->
       <ng-container *ngIf="selectedFilter === 'AÑO'">
         <p-datepicker
           [(ngModel)]="year"
@@ -70,7 +74,6 @@
         />
       </ng-container>
 
-      <!-- Mes -->
       <ng-container *ngIf="selectedFilter === 'MES'">
         <p-datepicker
           [(ngModel)]="month"
@@ -84,7 +87,7 @@
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
       </ng-container>
-      <!-- Dia -->
+
       <ng-container *ngIf="selectedFilter === 'DIA'">
         <p-datepicker
           [(ngModel)]="day"
@@ -105,10 +108,11 @@
   <div class="mt-4" *ngIf="elements[0].value !== 0 || elements[1].value !== 0">
     <h1 class="text pl-5 mt-4 mb-10">
       <span class="font-medium text-gray-700">Reporte </span>
-      <span class="font-bold text-black ml-1">{{
-        nameMonth !== "" ? nameMonth : yearNumber
-      }}</span>
+      <span class="font-bold text-black ml-1">
+        {{ nameMonth !== '' ? nameMonth : yearNumber }}
+      </span>
     </h1>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div
         class="bg-white rounded-2xl shadow-md p-6 flex flex-col"
@@ -118,18 +122,19 @@
           <div class="p-3 rounded-full">
             <i class="{{ element.icon }} text-xl"></i>
           </div>
-          <span class="text-lg font-semibold text-gray-700">{{
-            element.title
-          }}</span>
+          <span class="text-lg font-semibold text-gray-700">
+            {{ element.title }}
+          </span>
         </div>
         <div class="flex justify-end">
-          <span class="text-3xl font-bold text-gray-900">{{
-            element.value
-          }}</span>
+          <span class="text-3xl font-bold text-gray-900">
+            {{ element.value.valueOf() | number:'1.0-0':'es-CO' }}
+          </span>
         </div>
       </div>
     </div>
   </div>
+
   <div
     class="mt-10"
     *ngIf="
@@ -150,12 +155,17 @@
       />
     </div>
   </div>
+
+
+  <div class="mt-10 mb-4" *ngIf="charYearVisible">
+
   <div
     class="mt-10 mb-4"
     *ngIf="
       charYearVisible && (elements[0].value !== 0 || elements[1].value !== 0)
     "
   >
+
     <h1 class="text pl-5 mt-4 mb-10">
       <span class="font-medium text-gray-700">Finanzas en el año </span>
       <span class="font-bold text-black ml-1">{{ yearNumber }}</span>

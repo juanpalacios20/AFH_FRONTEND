@@ -10,7 +10,7 @@ import {
 import { MenuComponent } from '../../../shared/ui/menu/menu.component';
 import { DatePicker } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
-import { isPlatformBrowser, NgFor, NgIf } from '@angular/common';
+import { CommonModule, isPlatformBrowser, NgFor, NgIf } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { AutoComplete } from 'primeng/autocomplete';
 import { FinanceService } from '../../services/finance.service';
@@ -33,6 +33,7 @@ import { ButtonModule } from 'primeng/button';
     ChartModule,
     AutoComplete,
     ButtonModule,
+    CommonModule
   ],
   standalone: true,
   templateUrl: './reports.component.html',
