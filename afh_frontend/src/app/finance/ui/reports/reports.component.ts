@@ -14,7 +14,12 @@ import { CommonModule, isPlatformBrowser, NgFor, NgIf } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { AutoComplete } from 'primeng/autocomplete';
 import { FinanceService } from '../../services/finance.service';
-import { BalanceMonth, element } from '../../../interfaces/models';
+import {
+  BalanceMonth,
+  balanceMoreInfoMP,
+  balanceMoreInfoOA,
+  element,
+} from '../../../interfaces/models';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -53,17 +58,27 @@ export default class ReportsComponent implements OnInit {
       value: 0,
     },
   ];
+  //info para el grafico de los meses
   data: any;
   options: any;
   platformId = inject(PLATFORM_ID);
+  //info para el grafico del año
   dataYear: any;
   optionsYear: any;
   platformIdYear = inject(PLATFORM_ID);
+  //info para el grafico de metodos de pago
+  dataMethodPayment: any;
+  optionsMethodPayment: any;
+  platformIdMethodPayment = inject(PLATFORM_ID);
+  //info para el grafico de cuentas
+  dataAccount: any;
+  optionsAccount: any;
+  platformIdAccount = inject(PLATFORM_ID);
   day: Date | undefined;
   month: Date | undefined;
   year: Date | undefined;
   yearNumber: Number = 0;
-  filterOptions = ['DIA', 'MES', 'AÑO', 'PERSONALIZADO'];
+  filterOptions = ['DIA', 'MES', 'AÑO', 'PERSONALIZADO', 'MÁS INFORMACIÓN'];
   filteredOptions: string[] = [];
   selectedFilter: string = '';
   balanceMonths: BalanceMonth[] = [];
@@ -78,12 +93,22 @@ export default class ReportsComponent implements OnInit {
   income: number = 0;
   expense: number = 0;
   balance: number = 0;
+  mainBox: number = 0;
+  bankAccount: number = 0;
+  transfer: number = 0;
+  cash: number = 0;
+  check: number = 0;
+
   nameMonth: String = '';
   charYearVisible: boolean = false;
   charMonthVisible: boolean = false;
   charCustomVisible: boolean = false;
   charDayVisible: boolean = false;
+  moreInfoVisible: boolean = false;
   loadingPDF: boolean = false;
+
+  listMoreInfoMP: balanceMoreInfoMP[] = [];
+  listMoreInfoOA: balanceMoreInfoOA[] = [];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -150,7 +175,6 @@ export default class ReportsComponent implements OnInit {
   }
 
   initChartYear() {
-    console.log('ingresos enero', this.balanceMonths);
     if (isPlatformBrowser(this.platformIdYear)) {
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--p-text-color');
@@ -279,8 +303,83 @@ export default class ReportsComponent implements OnInit {
     }
   }
 
+  initChartMethodPayment() {
+    if (isPlatformBrowser(this.platformIdMethodPayment)) {
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--p-text-color');
+
+      this.dataMethodPayment = {
+        labels: ['Transferencia', 'Efectivo', 'Cheque'],
+        datasets: [
+          {
+            data: [this.transfer, this.cash, this.check],
+            backgroundColor: [
+              documentStyle.getPropertyValue('--p-graphics-350'),
+              documentStyle.getPropertyValue('--p-graphics-400'),
+              documentStyle.getPropertyValue('--p-graphics-450'),
+            ],
+            hoverBackgroundColor: [
+              documentStyle.getPropertyValue('--p-graphics-600'),
+              documentStyle.getPropertyValue('--p-graphics-650'),
+              documentStyle.getPropertyValue('--p-graphics-700'),
+            ],
+          },
+        ],
+      };
+
+      this.optionsMethodPayment = {
+        cutout: '60%',
+        plugins: {
+          legend: {
+            labels: {
+              color: textColor,
+            },
+          },
+        },
+      };
+      this.cd.markForCheck();
+    }
+  }
+
+  initChartAccount() {
+    if (isPlatformBrowser(this.platformIdAccount)) {
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--p-text-color');
+
+      this.dataAccount = {
+        labels: ['Cuenta bancaria', 'Caja principal'],
+        datasets: [
+          {
+            data: [this.bankAccount, this.mainBox],
+            backgroundColor: [
+              documentStyle.getPropertyValue('--p-graphics-250'),
+              documentStyle.getPropertyValue('--p-graphics-300'),
+            ],
+            hoverBackgroundColor: [
+              documentStyle.getPropertyValue('--p-graphics-500'),
+              documentStyle.getPropertyValue('--p-graphics-550'),
+            ],
+          },
+        ],
+      };
+
+      this.optionsAccount = {
+        cutout: '60%',
+        plugins: {
+          legend: {
+            labels: {
+              color: textColor,
+            },
+          },
+        },
+      };
+      this.cd.markForCheck();
+    }
+  }
+
   //Customizado
   onCustomChange() {
+    this.moreInfoVisible = false;
     this.yearNumber = 0;
     this.charCustomVisible = true;
     this.charMonthVisible = false;
@@ -294,7 +393,6 @@ export default class ReportsComponent implements OnInit {
       );
     }
   }
-
   getInfoCustom(start: string, end: string) {
     this.financeService.getBalanceMonth(start, end).subscribe({
       next: (response) => {
@@ -317,6 +415,7 @@ export default class ReportsComponent implements OnInit {
   //Por dia
   onDayChange() {
     this.yearNumber = 0;
+    this.moreInfoVisible = false;
     this.charCustomVisible = false;
     this.charMonthVisible = false;
     this.charYearVisible = false;
@@ -324,7 +423,6 @@ export default class ReportsComponent implements OnInit {
     this.month = new Date();
     this.getInfoDay();
   }
-
   getInfoDay() {
     this.charDayVisible = true;
     if (this.day) {
@@ -353,6 +451,231 @@ export default class ReportsComponent implements OnInit {
     }
   }
 
+  //Por mes
+  onMonthChange(value: Date) {
+    this.moreInfoVisible = false;
+    this.yearNumber = 0;
+    this.year = new Date();
+    this.rangeDates = [];
+    this.charMonthVisible = true;
+    this.charCustomVisible = false;
+    this.charYearVisible = false;
+    if (this.month) {
+      this.getNameMonth(this.month.getMonth(), this.month.getFullYear());
+    }
+    this.getInfoMonth();
+  }
+  getMonthStartEnd(): { start: string; end: string } {
+    this.charMonthVisible = true;
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    this.getNameMonth(now.getMonth(), now.getFullYear());
+    const format = (date: Date) =>
+      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+        2,
+        '0'
+      )}-${String(date.getDate()).padStart(2, '0')}`;
+
+    return {
+      start: format(firstDay),
+      end: format(lastDay),
+    };
+  }
+  getInfoMonth() {
+    if (this.year && this.month) {
+      if (this.year.getMonth() === this.month?.getMonth()) {
+        this.income = this.balanceMonths[this.month?.getMonth() - 1].ingresos;
+        this.expense = this.balanceMonths[this.month?.getMonth() - 1].egresos;
+        this.balance = this.balanceMonths[this.month?.getMonth() - 1].balance;
+        this.initChart();
+      }
+    }
+    if (this.month) {
+      const lastDay = new Date(
+        this.month.getFullYear(),
+        this.month.getMonth() + 1,
+        0
+      );
+      const start = new Date(this.month);
+      const end = new Date(lastDay);
+      this.financeService
+        .getBalanceMonth(
+          start.toISOString().split('T')[0],
+          end.toISOString().split('T')[0]
+        )
+        .subscribe({
+          next: (response) => {
+            this.income = response.ingresos;
+            this.expense = response.egresos;
+            this.balance = response.balance;
+            this.elements[0].value = this.income;
+            this.elements[1].value = this.expense;
+            this.elements[2].value = this.balance;
+            console.log(this.income, this.expense, this.balance);
+            this.initChart();
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+    }
+  }
+
+  //Por año
+  getInfo() {
+    if (this.year) {
+      this.yearNumber = this.year.getFullYear();
+    }
+
+    if (this.year) {
+      const lastDay = new Date(
+        this.year.getFullYear(),
+        this.year.getMonth() + 12,
+        0
+      );
+      const start = new Date(this.year);
+      const end = new Date(lastDay);
+      console.log('start', start.toISOString().split('T')[0]);
+      console.log('end', end.toISOString().split('T')[0]);
+      this.getBalanceMonths(
+        start.toISOString().split('T')[0],
+        end.toISOString().split('T')[0]
+      );
+    }
+  }
+  onYearChange(value: Date) {
+    this.moreInfoVisible = false;
+    this.nameMonth = '';
+    this.month = new Date();
+    this.rangeDates = [];
+    this.charYearVisible = true;
+    this.charMonthVisible = false;
+    this.charCustomVisible = false;
+    this.charDayVisible = false;
+    this.getInfo();
+  }
+  getBalanceMonths(start: string, end: string) {
+    this.financeService.getBalanceMonthDates(start, end).subscribe(
+      (data) => {
+        this.balanceMonths = data;
+        console.log('Balance mensual completo:', this.balanceMonths);
+        this.initChartYear();
+        this.getFinanceYear();
+      },
+      (error) => {
+        console.error('Error al obtener balance mensual:', error);
+      }
+    );
+  }
+  getFinanceYear() {
+    if (this.balanceMonths) {
+      for (let i = 0; i < this.balanceMonths.length; i++) {
+        this.income = this.income + this.balanceMonths[i].ingresos;
+        this.expense = this.expense + this.balanceMonths[i].egresos;
+      }
+      this.balance = this.income - this.expense;
+      this.elements[0].value = this.income;
+      this.elements[1].value = this.expense;
+      this.elements[2].value = this.balance;
+    }
+    console.log(
+      this.income,
+      this.expense,
+      this.balance,
+      this.balanceMonths.length
+    );
+  }
+
+  //Por methodo de pago y cuenta
+  getMoreInfo() {
+    this.moreInfoVisible = true;
+    this.financeService.getBalanceMoreInfo(1).subscribe({
+      next: (response) => {
+        this.listMoreInfoMP = response;
+        console.log('info MP', this.listMoreInfoMP);
+        this.assignValuesToElements();
+        this.initChartMethodPayment();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+    this.financeService.getBalanceMoreInfo(2).subscribe({
+      next: (response) => {
+        this.listMoreInfoOA = response;
+        console.log('info OA', this.listMoreInfoOA);
+        this.assignValuesToElements();
+        this.initChartAccount();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  onChangeMainSelector() {
+    if (this.selectedFilter === 'MÁS INFORMACIÓN') {
+      this.charDayVisible = false;
+      this.charCustomVisible = false;
+      this.charMonthVisible = false;
+      this.charYearVisible = false;
+      this.elements[0].value = 0;
+      this.elements[1].value = 0;
+      this.getMoreInfo();
+    }
+  }
+
+  assignValuesToElements() {
+    console.log('info MP2', this.listMoreInfoMP);
+    console.log('info OA2', this.listMoreInfoOA);
+    for (let i = 0; i < this.listMoreInfoMP.length; i++) {
+      if (this.listMoreInfoMP[i].payment_method === 'TRANSFERENCIA') {
+        this.transfer = this.listMoreInfoMP[i].total;
+      } else if (this.listMoreInfoMP[i].payment_method === 'EFECTIVO') {
+        this.cash = this.listMoreInfoMP[i].total;
+      } else if (this.listMoreInfoMP[i].payment_method === 'CHEQUE') {
+        this.check = this.listMoreInfoMP[i].total;
+      }
+    }
+    console.log('metodos de pago', this.transfer, this.cash, this.check);
+    for (let i = 0; i < this.listMoreInfoOA.length; i++) {
+      if (this.listMoreInfoOA[i].origin_account === 1) {
+        this.bankAccount = this.listMoreInfoOA[i].total;
+      } else if (this.listMoreInfoOA[i].origin_account === 2) {
+        this.mainBox = this.listMoreInfoOA[i].total;
+      }
+    }
+    console.log('cuentas', this.bankAccount, this.mainBox);
+  }
+
+  //Demas metodos para el correcto funcionamiento del componente
+  getNameMonth(month: number, year: number) {
+    const monthNames = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
+    ];
+    this.nameMonth = monthNames[month] + ' ' + year.toString();
+  }
+  filterOption(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredOptions = this.filterOptions.filter((option) =>
+      option.toLowerCase().includes(query)
+    );
+  }
+  blockTyping(event: KeyboardEvent) {
+    event.preventDefault();
+  }
   downloadPdf() {
     this.loadingPDF = true;
     let { start, end } = this.getMonthStartEnd();
@@ -422,173 +745,5 @@ export default class ReportsComponent implements OnInit {
         this.loadingPDF = false;
       },
     });
-  }
-
-  //Por mes
-  onMonthChange(value: Date) {
-    this.yearNumber = 0;
-    this.year = new Date();
-    this.rangeDates = [];
-    this.charMonthVisible = true;
-    this.charCustomVisible = false;
-    this.charYearVisible = false;
-    if (this.month) {
-      this.getNameMonth(this.month.getMonth(), this.month.getFullYear());
-    }
-    this.getInfoMonth();
-  }
-
-  getMonthStartEnd(): { start: string; end: string } {
-    this.charMonthVisible = true;
-    const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    this.getNameMonth(now.getMonth(), now.getFullYear());
-    const format = (date: Date) =>
-      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-        2,
-        '0'
-      )}-${String(date.getDate()).padStart(2, '0')}`;
-
-    return {
-      start: format(firstDay),
-      end: format(lastDay),
-    };
-  }
-
-  getInfoMonth() {
-    if (this.year && this.month) {
-      if (this.year.getMonth() === this.month?.getMonth()) {
-        this.income = this.balanceMonths[this.month?.getMonth() - 1].ingresos;
-        this.expense = this.balanceMonths[this.month?.getMonth() - 1].egresos;
-        this.balance = this.balanceMonths[this.month?.getMonth() - 1].balance;
-        this.initChart();
-      }
-    }
-    if (this.month) {
-      const lastDay = new Date(
-        this.month.getFullYear(),
-        this.month.getMonth() + 1,
-        0
-      );
-      const start = new Date(this.month);
-      const end = new Date(lastDay);
-      this.financeService
-        .getBalanceMonth(
-          start.toISOString().split('T')[0],
-          end.toISOString().split('T')[0]
-        )
-        .subscribe({
-          next: (response) => {
-            this.income = response.ingresos;
-            this.expense = response.egresos;
-            this.balance = response.balance;
-            this.elements[0].value = this.income;
-            this.elements[1].value = this.expense;
-            this.elements[2].value = this.balance;
-            console.log(this.income, this.expense, this.balance);
-            this.initChart();
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        });
-    }
-  }
-
-  //Por año
-  getInfo() {
-    if (this.year) {
-      this.yearNumber = this.year.getFullYear();
-    }
-
-    if (this.year) {
-      const lastDay = new Date(
-        this.year.getFullYear(),
-        this.year.getMonth() + 12,
-        0
-      );
-      const start = new Date(this.year);
-      const end = new Date(lastDay);
-      console.log('start', start.toISOString().split('T')[0]);
-      console.log('end', end.toISOString().split('T')[0]);
-      this.getBalanceMonths(
-        start.toISOString().split('T')[0],
-        end.toISOString().split('T')[0]
-      );
-    }
-  }
-
-  onYearChange(value: Date) {
-    this.nameMonth = '';
-    this.month = new Date();
-    this.rangeDates = [];
-    this.charYearVisible = true;
-    this.charMonthVisible = false;
-    this.charCustomVisible = false;
-    this.getInfo();
-  }
-
-  getBalanceMonths(start: string, end: string) {
-    this.financeService.getBalanceMonthDates(start, end).subscribe(
-      (data) => {
-        this.balanceMonths = data;
-        console.log('Balance mensual completo:', this.balanceMonths);
-        this.initChartYear();
-        this.getFinanceYear();
-      },
-      (error) => {
-        console.error('Error al obtener balance mensual:', error);
-      }
-    );
-  }
-
-  getFinanceYear() {
-    if (this.balanceMonths) {
-      for (let i = 0; i < this.balanceMonths.length; i++) {
-        this.income = this.income + this.balanceMonths[i].ingresos;
-        this.expense = this.expense + this.balanceMonths[i].egresos;
-      }
-      this.balance = this.income - this.expense;
-      this.elements[0].value = this.income;
-      this.elements[1].value = this.expense;
-      this.elements[2].value = this.balance;
-    }
-    console.log(
-      this.income,
-      this.expense,
-      this.balance,
-      this.balanceMonths.length
-    );
-  }
-
-  //Demas metodos para el correcto funcionamiento del componente
-  getNameMonth(month: number, year: number) {
-    const monthNames = [
-      'Enero',
-      'Febrero',
-      'Marzo',
-      'Abril',
-      'Mayo',
-      'Junio',
-      'Julio',
-      'Agosto',
-      'Septiembre',
-      'Octubre',
-      'Noviembre',
-      'Diciembre',
-    ];
-    this.nameMonth = monthNames[month] + ' ' + year.toString();
-  }
-
-  filterOption(event: any) {
-    const query = event.query.toLowerCase();
-    this.filteredOptions = this.filterOptions.filter((option) =>
-      option.toLowerCase().includes(query)
-    );
-  }
-
-  blockTyping(event: KeyboardEvent) {
-    event.preventDefault();
   }
 }

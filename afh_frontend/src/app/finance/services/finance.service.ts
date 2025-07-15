@@ -127,4 +127,15 @@ export class FinanceService extends BaseHttpService {
       params: params,
     });
   }
+
+  getBalanceMoreInfo(option: number) {
+    const headers = this.getHeaders();
+
+    return this.http.get<any>(
+      `${this.apiUrl}balans/get_by_method_of_paymenth/${option}`,
+      {
+        headers: headers,
+      }
+    );
+  }
 }
