@@ -33,7 +33,7 @@ import { ButtonModule } from 'primeng/button';
     ChartModule,
     AutoComplete,
     ButtonModule,
-    CommonModule
+    CommonModule,
   ],
   standalone: true,
   templateUrl: './reports.component.html',
@@ -483,14 +483,6 @@ export default class ReportsComponent implements OnInit {
     };
   }
   getInfoMonth() {
-    if (this.year && this.month) {
-      if (this.year.getMonth() === this.month?.getMonth()) {
-        this.income = this.balanceMonths[this.month?.getMonth() - 1].ingresos;
-        this.expense = this.balanceMonths[this.month?.getMonth() - 1].egresos;
-        this.balance = this.balanceMonths[this.month?.getMonth() - 1].balance;
-        this.initChart();
-      }
-    }
     if (this.month) {
       const lastDay = new Date(
         this.month.getFullYear(),
