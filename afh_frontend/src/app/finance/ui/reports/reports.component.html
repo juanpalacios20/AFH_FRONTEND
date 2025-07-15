@@ -4,7 +4,13 @@
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-bold">AFH: Reportes</h1>
       <p-button
-        *ngIf="(charDayVisible || charCustomVisible || charMonthVisible || charYearVisible) && (elements[0].value !== 0 || elements[1].value !== 0)"
+        *ngIf="
+          (charDayVisible ||
+            charCustomVisible ||
+            charMonthVisible ||
+            charYearVisible) &&
+          (elements[0].value !== 0 || elements[1].value !== 0)
+        "
         fluid="true"
         label="Descargar informe"
         icon="pi pi-download"
@@ -20,6 +26,7 @@
     <p-autocomplete
       [(ngModel)]="selectedFilter"
       [suggestions]="filteredOptions"
+      (ngModelChange)="onChangeMainSelector()"
       (completeMethod)="filterOption($event)"
       [dropdown]="true"
       (keydown)="blockTyping($event)"
@@ -29,7 +36,10 @@
     ></p-autocomplete>
 
     <!-- Contenedor dinámico de filtros -->
-    <div *ngIf="selectedFilter" class="flex flex-col w-80 bg-white rounded-lg">
+    <div
+      *ngIf="selectedFilter && selectedFilter !== 'MÁS INFORMACIÓN'"
+      class="flex flex-col w-80 bg-white rounded-lg"
+    >
       <!-- Personalizado -->
       <ng-container *ngIf="selectedFilter === 'PERSONALIZADO'">
         <p-datepicker
@@ -122,7 +132,10 @@
   </div>
   <div
     class="mt-10"
-    *ngIf="(charMonthVisible || charCustomVisible || charDayVisible) && (elements[0].value !== 0 || elements[1].value !== 0)"
+    *ngIf="
+      (charMonthVisible || charCustomVisible || charDayVisible) &&
+      (elements[0].value !== 0 || elements[1].value !== 0)
+    "
   >
     <h1 class="text pl-5 mt-4 mb-10">
       <span class="font-medium text-gray-700">Finanzas en el mes </span>
@@ -137,7 +150,12 @@
       />
     </div>
   </div>
-  <div class="mt-10 mb-4" *ngIf="(charYearVisible) && (elements[0].value !== 0 || elements[1].value !== 0)">
+  <div
+    class="mt-10 mb-4"
+    *ngIf="
+      charYearVisible && (elements[0].value !== 0 || elements[1].value !== 0)
+    "
+  >
     <h1 class="text pl-5 mt-4 mb-10">
       <span class="font-medium text-gray-700">Finanzas en el año </span>
       <span class="font-bold text-black ml-1">{{ yearNumber }}</span>
@@ -151,7 +169,68 @@
       />
     </div>
   </div>
-  <div class="w-full h-full justify-center items-center flex mt-30" *ngIf="elements[0].value === 0 && elements[1].value === 0">
-    <h1 class="text-primary-950 font-medium">-No hay datos para el filtro actual-</h1>
+  <div class="flex" *ngIf="moreInfoVisible === true">
+    <div class="mt-10 w-1/2">
+      <h2 class="text-lg font-semibold pl-5 mb-5 text-gray-700">
+        Ingresos por cuenta
+      </h2>
+      <div
+        class="card flex justify-center"
+        *ngIf="bankAccount !== 0 || mainBox !== 0"
+      >
+        <p-chart
+          type="doughnut"
+          [data]="dataAccount"
+          [options]="optionsAccount"
+          class="w-full md:w-[25rem]"
+        />
+      </div>
+      <div
+        class="w-full h-full justify-center items-center flex mt-30"
+        *ngIf="bankAccount === 0 || mainBox === 0"
+      >
+        <h1 class="text-primary-950 font-medium">
+          -No hay datos para el filtro actual-
+        </h1>
+      </div>
+    </div>
+
+    <div class="mt-10 w-1/2">
+      <h2 class="text-lg font-semibold pl-5 mb-5 text-gray-700">
+        Ingresos por método de pago
+      </h2>
+      <div
+        class="card flex justify-center"
+        *ngIf="transfer !== 0 || cash !== 0 || check !== 0"
+      >
+        <p-chart
+          type="doughnut"
+          [data]="dataMethodPayment"
+          [options]="optionsMethodPayment"
+          class="w-full md:w-[25rem]"
+        />
+      </div>
+      <div
+        class="w-full h-full justify-center items-center flex mt-30"
+        *ngIf="transfer === 0 || cash === 0 || check === 0"
+      >
+        <h1 class="text-primary-950 font-medium">
+          -No hay datos para el filtro actual-
+        </h1>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full h-full justify-center items-center flex mt-30"
+    *ngIf="
+      elements[0].value === 0 &&
+      elements[1].value === 0 &&
+      moreInfoVisible === false
+    "
+  >
+    <h1 class="text-primary-950 font-medium">
+      -No hay datos para el filtro actual-
+    </h1>
   </div>
 </div>
