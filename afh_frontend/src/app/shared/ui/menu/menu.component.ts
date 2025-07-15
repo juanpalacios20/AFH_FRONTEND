@@ -51,6 +51,7 @@ export class MenuComponent implements OnInit {
         },
         { label: 'Clientes', icon: 'pi pi-users', route: '/clients' },
         { label: 'Finanzas', icon: 'pi pi-wallet', route: '/finance' },
+        { label: 'Reportes', icon: 'pi pi-chart-bar', route: '/reports' },
       ],
     },
     {

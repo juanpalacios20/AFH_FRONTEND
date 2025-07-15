@@ -88,7 +88,7 @@ export interface AutoCompleteCompleteEvent {
 }
 
 export interface income {
-  id: number; 
+  id: number;
   responsible: string;
   amount: number;
   reason: string;
@@ -101,7 +101,7 @@ export interface income {
 }
 
 export interface expense {
-  id: number; 
+  id: number;
   responsible: string;
   amount: number;
   reason: string;
@@ -112,3 +112,36 @@ export interface expense {
   voucher: string;
   amount_formatted: string;
 }
+
+export interface element {
+  title: string;
+  icon: string;
+  value: Number;
+}
+
+export interface BalanceMonth {
+  mes: string;
+  ingresos: number;
+  egresos: number;
+  balance: number;
+}
+
+export interface BalanceResponse {
+  ingresos: number;
+  egresos: number;
+  balance: number;
+}
+
+export interface balanceMoreInfoMP {
+  payment_method: string;
+  total: number;
+  cantidad: number;
+}
+
+export interface balanceMoreInfoOA{
+  origin_account: number;
+  total: number;
+  cantidad: number;
+}
+
+
