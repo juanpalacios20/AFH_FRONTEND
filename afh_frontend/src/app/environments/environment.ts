@@ -1,3 +1,3 @@
 export const environment = {
-    API_URL: 'http://127.0.0.1:8000/'
+    API_URL: process.env['NG_APP_API_URL']
 };

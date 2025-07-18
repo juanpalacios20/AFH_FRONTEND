@@ -1,4 +1,4 @@
 export const environment = {
-    API_KEY: 'AIzaSyC-rSofVvzX0gLa_y12xgpLM6A1iIkoxW4'
+    API_KEY: process.env['NG_APP_API_KEY']
 
 };
