@@ -61,6 +61,8 @@ export default class FormWorkComponent {
   observations: string = '';
   development: string = '';
   description: string = '';
+  in_charge: string = '';
+  post: string = '';
   orderWork: OrderWork[] = [];
   selectedOrderWork: OrderWork | null = null;
   validOrder: boolean = false;
@@ -102,7 +104,8 @@ export default class FormWorkComponent {
       this.development === '' ||
       this.recommendations === '' ||
       this.observations === '' ||
-      this.selectedOrderWork === null
+      this.selectedOrderWork === null ||
+      this.in_charge === ''
     ) {
       this.errorMessage = 'Campo requerido';
       console.log('error otros datos');
@@ -127,7 +130,9 @@ export default class FormWorkComponent {
       typeof (this.selectedOrderWork as string).trim === 'function'
     ) {
       const manualCode = (this.selectedOrderWork as string).trim();
-      const match = this.filteredOrderWork?.find((q) => q.quote.code === manualCode);
+      const match = this.filteredOrderWork?.find(
+        (q) => q.quote.code === manualCode
+      );
       if (match) {
         this.selectedOrderWork = match;
       } else {
@@ -144,60 +149,65 @@ export default class FormWorkComponent {
   }
 
   createWorkReport() {
-  this.loading = true;
+    this.loading = true;
 
-  const exhibitRequests = this.anexos.map((anexo) => {
-    const formData = new FormData();
-    formData.append('tittle', anexo.descripcion);
-    anexo.files.forEach((file) => formData.append('images', file));
-    return this.workReportService.createExhibit(formData);
-  });
-
-  forkJoin(exhibitRequests)
-    .pipe(
-      switchMap((exhibitResponses: any[]) => {
-        const exhibit_ids = exhibitResponses.map((res) => res.exhibit_id);
-
-        // Validación si el usuario ingresó el código manualmente
-        if (
-          this.selectedOrderWork &&
-          typeof this.selectedOrderWork === 'string' &&
-          typeof (this.selectedOrderWork as string).trim === 'function'
-        ) {
-          const manualCode = (this.selectedOrderWork as string).trim();
-          const match = this.filteredOrderWork?.find(
-            (q) => q.code === manualCode
-          );
-          if (match) {
-            this.selectedOrderWork = match;
-          }
-        }
-
-        const workReportData = {
-          work_order_id: this.selectedOrderWork?.id,
-          observations: this.observations,
-          recommendations: this.recommendations,
-          exhibit_ids: exhibit_ids,
-          development: this.development,
-          description: this.description,
-        };
-
-        return this.workReportService.createWorkReport(workReportData);
-      })
-    )
-    .subscribe({
-      next: () => {
-        this.loading = false;
-        this.closeDialog.emit();
-        this.onWorkReportCreated.emit();
-        this.close();
-      },
-      error: (err) => {
-        console.error('Error durante la creación del informe de trabajo:', err);
-        this.loading = false;
-      },
+    const exhibitRequests = this.anexos.map((anexo) => {
+      const formData = new FormData();
+      formData.append('tittle', anexo.descripcion);
+      anexo.files.forEach((file) => formData.append('images', file));
+      return this.workReportService.createExhibit(formData);
     });
-}
+
+    forkJoin(exhibitRequests)
+      .pipe(
+        switchMap((exhibitResponses: any[]) => {
+          const exhibit_ids = exhibitResponses.map((res) => res.exhibit_id);
+
+          // Validación si el usuario ingresó el código manualmente
+          if (
+            this.selectedOrderWork &&
+            typeof this.selectedOrderWork === 'string' &&
+            typeof (this.selectedOrderWork as string).trim === 'function'
+          ) {
+            const manualCode = (this.selectedOrderWork as string).trim();
+            const match = this.filteredOrderWork?.find(
+              (q) => q.code === manualCode
+            );
+            if (match) {
+              this.selectedOrderWork = match;
+            }
+          }
+
+          const workReportData = {
+            work_order_id: this.selectedOrderWork?.id,
+            observations: this.observations,
+            recommendations: this.recommendations,
+            exhibit_ids: exhibit_ids,
+            development: this.development,
+            description: this.description,
+            in_charge: this.in_charge,
+            post: this.post,
+          };
+
+          return this.workReportService.createWorkReport(workReportData);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.closeDialog.emit();
+          this.onWorkReportCreated.emit();
+          this.close();
+        },
+        error: (err) => {
+          console.error(
+            'Error durante la creación del informe de trabajo:',
+            err
+          );
+          this.loading = false;
+        },
+      });
+  }
 
   updateWorkReport() {
     this.loading = true;
@@ -217,6 +227,12 @@ export default class FormWorkComponent {
     if (this.recommendations !== this.workReportToEdit?.recommendations) {
       data.recommendations = this.recommendations;
     }
+    if (this.in_charge !== this.workReportToEdit?.in_charge) {
+      data.in_charge = this.in_charge;
+    }
+    if (this.post !== this.workReportToEdit?.post) {
+      data.post = this.post;
+    }
 
     // 2. Actualizar acta si hay cambios
     if (Object.keys(data).length > 0) {
@@ -228,6 +244,7 @@ export default class FormWorkComponent {
 
     // 3. Procesar anexos
     this.anexos.forEach((anexo, anexoIndex) => {
+      console.log('id_anexo', anexo.id);
       const hasTitle = anexo.descripcion?.trim() !== '';
       const hasFiles =
         (anexo.files && anexo.files.length > 0) ||
@@ -272,9 +289,11 @@ export default class FormWorkComponent {
 
           // 4. Actualizar o crear anexo
           if (anexo.id !== 0) {
+            console.log('anexo a actualizar', anexo.id);
             this.workReportService.updateExhibit(formData, anexo.id).subscribe({
               next: (res) => console.log(''),
-              error: (err) => console.error('Error al actualizar anexo:', err),
+              error: (err) =>
+                console.error(anexo.id, 'Error al actualizar anexo:', err),
             });
           } else {
             this.workReportService.createExhibit(formData).subscribe({
@@ -283,8 +302,7 @@ export default class FormWorkComponent {
                 this.workReportService
                   .addExhibitToWorkReport(reportId, exhibitId)
                   .subscribe({
-                    next: (res) =>
-                      console.log(''),
+                    next: (res) => console.log(''),
                     error: (err) =>
                       console.error('Error al asociar anexo:', err),
                   });
@@ -299,8 +317,9 @@ export default class FormWorkComponent {
     });
     // 5. Eliminar anexos completos
     this.anexosEliminados.forEach((anexoId) => {
+      console.log('anexo a eliminar', anexoId);
       this.workReportService.deleteExhibit(anexoId).subscribe({
-        next: () => console.log(''),
+        next: () => console.log('anexo eliminado', anexoId),
         error: (err) =>
           console.error(`Error al eliminar anexo ${anexoId}:`, err),
       });
@@ -376,6 +395,8 @@ export default class FormWorkComponent {
 
   resetForm() {
     this.validOrder = false;
+    this.post = '';
+    this.in_charge = '';
     this.errorMessage = '';
     this.errorOrderInvalidMessage = '';
     this.orderWorks = [];
@@ -418,6 +439,8 @@ export default class FormWorkComponent {
       this.recommendations = this.workReportToEdit.recommendations;
       this.observations = this.workReportToEdit.observations;
       this.selectedOrderWork = this.workReportToEdit.work_order;
+      this.in_charge = this.workReportToEdit.in_charge;
+      this.post = this.workReportToEdit.post;
       this.anexos = this.workReportToEdit.exhibit.map((ex) => ({
         id: ex.id,
         descripcion: ex.tittle,

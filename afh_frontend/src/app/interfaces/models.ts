@@ -62,6 +62,7 @@ export interface OrderWork {
   number_supervisors: number;
   activity: number;
   permissions: [];
+  days_of_execution: number;
 }
 
 export interface WorkReport {
@@ -74,6 +75,8 @@ export interface WorkReport {
   description: string;
   development: string;
   tasks: { titulo: string; subdescripciones: string[] }[];
+  in_charge: string;
+  post: string;
 }
 
 export interface exhibit {
