@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// Ruta al environment.prod.ts
-const targetPath = path.join(__dirname, './src/environments/environment.ts');
+// Ruta correcta al environment.ts
+const targetPath = path.join(__dirname, './src/app/environments/environment.ts');
 
 // Construir el contenido con las variables de Vercel
 const envConfig = `
@@ -16,4 +16,5 @@ export const environment = {
 // Escribir el archivo
 fs.writeFileSync(targetPath, envConfig);
 
-console.log('✅ environment.prod.ts generado con las variables de entorno.');
+console.log('✅ environment.ts generado con las variables de entorno.');
+
