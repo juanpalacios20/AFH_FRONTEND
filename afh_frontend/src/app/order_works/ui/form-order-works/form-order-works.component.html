@@ -66,17 +66,17 @@
         </small>
       </div>
       <div class="mb-4" *ngIf="this.validQuote === true">
-        <h1 class="mb-4 text-primary-950 font-normal">
-          Descripción de la tarea
+        <h1 class="mb-2 text-primary-950 font-normal">
+          Tiempo de ejecucion programado*
         </h1>
-        <p-floatlabel class="mt-2" variant="on" required="true">
-          <input
-            pInputText
-            type="text"
-            [(ngModel)]="descriptionActivity"
+        <p-floatlabel variant="on" required="true">
+          <p-inputnumber
+            [(ngModel)]="scheduledExecutionTime"
+            inputId="minmax"
+            mode="decimal"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
-                errorMessage && descriptionActivity === ''
+                errorMessage && scheduledExecutionTime === 0
             }"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
@@ -85,11 +85,34 @@
         <small
           id="email-help"
           class="text-red-600 mb-4"
-          *ngIf="errorMessage && descriptionActivity === ''"
+          *ngIf="errorMessage && scheduledExecutionTime === 0"
         >
           {{ errorMessage }}
         </small>
       </div>
+    </div>
+    <div class="mb-4" *ngIf="this.validQuote === true">
+      <h1 class="mb-4 text-primary-950 font-normal">Descripción de la tarea</h1>
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="descriptionActivity"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && descriptionActivity === ''
+          }"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+      </p-floatlabel>
+      <small
+        id="email-help"
+        class="text-red-600 mb-4"
+        *ngIf="errorMessage && descriptionActivity === ''"
+      >
+        {{ errorMessage }}
+      </small>
     </div>
     <h1
       class="mb-4 text-primary-950 font-medium"
@@ -264,7 +287,10 @@
         </small>
       </div>
     </div>
-    <div class="mb-6 mt-6" *ngIf="this.validQuote === true || this.action === 1">
+    <div
+      class="mb-6 mt-6"
+      *ngIf="this.validQuote === true || this.action === 1"
+    >
       <h1 class="mb-4 text-primary-950 font-medium">Permisos requeridos</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div
@@ -289,7 +315,10 @@
       </div>
     </div>
 
-    <div class="flex justify-end gap-2 mt-10" *ngIf="this.validQuote === true || this.action === 1">
+    <div
+      class="flex justify-end gap-2 mt-10"
+      *ngIf="this.validQuote === true || this.action === 1"
+    >
       <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()">
         Cancelar
       </p-button>
