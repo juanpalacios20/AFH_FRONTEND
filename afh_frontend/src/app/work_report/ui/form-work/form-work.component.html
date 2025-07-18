@@ -66,7 +66,7 @@
       class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2"
       *ngIf="this.validOrder === true || this.action === 1"
     >
-      <div class="mb-4">
+      <div class="mb-2">
         <p-floatlabel class="mt-2" variant="on" required="true">
           <textarea
             pTextarea
@@ -91,7 +91,7 @@
           {{ errorMessage }}
         </small>
       </div>
-      <div class="mb-4">
+      <div class="mb-2">
         <p-floatlabel class="mt-2" variant="on" required="true">
           <textarea
             pTextarea
@@ -158,6 +158,57 @@
           id="email-help"
           class="text-red-600 mb-4"
           *ngIf="errorMessage && recommendations === ''"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+    </div>
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2"
+      *ngIf="this.validOrder === true || this.action === 1"
+    >
+      <div class="mb-2">
+        <p-floatlabel class="mt-2" variant="on" required="true">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="in_charge"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && in_charge === ''
+            }"
+            [ngModelOptions]="{ standalone: true }"
+            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+          <label>Encargado de la orden </label>
+        </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && in_charge === ''"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+      <div class="mb-2">
+        <p-floatlabel class="mt-2" variant="on" required="true">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="post"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && post === ''
+            }"
+            [ngModelOptions]="{ standalone: true }"
+            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+          <label>Cargo del encargado </label>
+        </p-floatlabel>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && post === ''"
         >
           {{ errorMessage }}
         </small>
@@ -264,7 +315,7 @@
 
       <div
         class="flex justify-end gap-2 mt-10"
-        *ngIf="this.validOrder === true"
+        *ngIf="this.validOrder === true || this.action === 1"
       >
         <p-button
           styleClass="p-button-secondary"

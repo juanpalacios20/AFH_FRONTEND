@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 import Aura from '@primeng/themes/aura';
 import MyPreset from './mypreset';
 import { provideHttpClient } from '@angular/common/http';
+import { provideMarkdown } from 'ngx-markdown';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideRouter(routes),
     provideAnimationsAsync(),
+    provideMarkdown(),
     providePrimeNG({
       theme: {
         preset: MyPreset,

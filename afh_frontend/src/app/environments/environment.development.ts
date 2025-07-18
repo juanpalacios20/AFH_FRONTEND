@@ -1,3 +1,4 @@
 export const environment = {
-    API_URL: 'https://back-afh.onrender.com/',
+    API_KEY: 'AIzaSyC-rSofVvzX0gLa_y12xgpLM6A1iIkoxW4'
+
 };
