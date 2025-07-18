@@ -421,6 +421,7 @@ export default class FormOrderWorksComponent {
       this.selectedWorkSite = workplace;
       this.selectedActivityType = activity;
       this.start_date = new Date(this.orderWorkToEdit.start_date + 'T00:00:00');
+      this.scheduledExecutionTime = this.orderWorkToEdit.days_of_execution;
     }
   }
 

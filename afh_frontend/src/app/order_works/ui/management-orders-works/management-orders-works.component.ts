@@ -118,6 +118,7 @@ export default class ManagementOrdersWorksComponent implements OnInit {
     this.orderWorkService.getOrders().subscribe({
       next: (response) => {
         this.orderWorks = response;
+        console.log('Ordenes de trabajo obtenidas:', response);
          this.loadingOrderWorks = false;
       },
       error: (error) => {
