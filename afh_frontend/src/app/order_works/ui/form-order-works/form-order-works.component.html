@@ -26,8 +26,7 @@
     <div
       [ngClass]="{
         'w-full': !validQuote && this.action === 0,
-        'grid grid-cols-1 md:grid-cols-2 gap-4':
-          (validQuote && this.action === 0) || this.action === 1
+        'w-full': (validQuote && this.action === 0) || this.action === 1
       }"
     >
       <div
@@ -238,9 +237,9 @@
       </div>
 
       <div class="mb-4" *ngIf="this.validQuote === true">
-        <h1 class="mb-2 text-primary-950 font-normal">
-          Tiempo de ejecucion programado*
-        </h1>
+        <label for="buttondisplay" class="font-bold block mb-2">
+          Tiempo de ejecucion programado:
+        </label>
         <p-floatlabel variant="on" required="true">
           <p-inputnumber
             [(ngModel)]="scheduledExecutionTime"
