@@ -59,6 +59,7 @@ interface Ticket {
   state: number;
   entry_date_formatted: string;
   departure_date_formatted: string;
+  responsible: string;
 }
 
 @Component({
