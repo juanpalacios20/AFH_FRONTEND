@@ -558,6 +558,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   removeTask(index: number) {
     this.tasks.splice(index, 1);
   }
+
   addContractorContribution() {
     this.contractor_contribution.push({ descripcion: '' });
   }
@@ -650,7 +651,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         items: this.quoteToEdit.options.items.map((item) => ({
           id: item.id,
           description: item.description,
-          units: item.units,
+          units: this.getUnitName(item.units),
           total_value: item.total_value,
           amount: item.amount,
           unit_value: item.unit_value,
@@ -713,32 +714,61 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
   getUnitValue(unit: string): string {
     const unitMap: { [key: string]: string } = {
-      Metros: 'm',
-      Centímetros: 'cm',
-      Milímetros: 'mm',
-      Kilómetros: 'km',
-      Pulgadas: 'in',
-      'Metros cuadrados (m2)': 'm2',
-      'Centímetros cuadrados (cm2)': 'cm2',
-      'Metros cubicos (m3)': 'm3',
-      'Centímetros (cm3)': 'cm3',
-      'Metro Lineal (ml)': 'ml',
-      Pies: 'ft',
-      Kilogramos: 'kg',
-      Gramos: 'g',
-      Miligramos: 'mg',
-      Libras: 'lb',
-      Toneladas: 't',
-      Litros: 'L',
-      Mililitros: 'mL',
-      Galones: 'gal',
-      Unidades: 'u',
-      Docenas: 'dz',
-      Cajas: 'caja',
-      Pares: 'par',
+      'Metros': 'M',
+      'Centímetros': 'CM',
+      'Milímetros': 'MM',
+      'Kilómetros': 'KM',
+      'Pulgadas': 'IN',
+      'Metros cuadrados (m2)': 'M2',
+      'Centímetros cuadrados (cm2)': 'CM2',
+      'Metros cubicos (m3)': 'M3',
+      'Centímetros (cm3)': 'CM3',
+      'Metro Lineal (ml)': 'ML',
+      'Pies': 'FT',
+      'Kilogramos': 'KG',
+      'Gramos': 'G',
+      'Miligramos': 'MG',
+      'Libras': 'LB',
+      'Toneladas': 'T',
+      'Litros': 'L',
+      'Mililitros': 'ML',
+      'Galones': 'GAL',
+      'Unidades': 'UND',
+      'Docenas': 'DZ',
+      'Cajas': 'CAJA',
+      'Pares': 'PAR',
     };
 
     return unitMap[unit] ?? 'unknown';
+  }
+
+  getUnitName(abbreviation: string): string {
+  const reverseUnitMap: { [key: string]: string } = {
+    'M': 'Metros',
+    'CM': 'Centímetros',
+    'MM': 'Milímetros',
+    'KM': 'Kilómetros',
+    'IN': 'Pulgadas',
+    'M2': 'Metros cuadrados (m2)',
+    'CM2': 'Centímetros cuadrados (cm2)',
+    'M3': 'Metros cubicos (m3)',
+    'CM3': 'Centímetros (cm3)',
+    'ML': 'Metro Lineal (ml)', // Nota: si quieres diferenciar ML (mililitros) y ML (metro lineal), se debería ajustar
+    'FT': 'Pies',
+    'KG': 'Kilogramos',
+    'G': 'Gramos',
+    'MG': 'Miligramos',
+    'LB': 'Libras',
+    'T': 'Toneladas',
+    'L': 'Litros',
+    'GAL': 'Galones',
+    'UND': 'Unidades',
+    'DZ': 'Docenas',
+    'CAJA': 'Cajas',
+    'PAR': 'Pares',
+  };
+
+  return reverseUnitMap[abbreviation.toUpperCase()] ?? 'unknown';
   }
 
   validatePercent() {

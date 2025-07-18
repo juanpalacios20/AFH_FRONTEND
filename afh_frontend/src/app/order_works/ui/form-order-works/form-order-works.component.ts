@@ -84,7 +84,6 @@ export default class FormOrderWorksComponent {
     'ATS (análisis de trabajo)',
   ];
   start_date: Date | undefined;
-  end_date: Date | undefined;
   loading: boolean = true;
   errorMessage: string = '';
   quoteInvalidMessage: string = '';
@@ -131,7 +130,6 @@ export default class FormOrderWorksComponent {
       !this.selectedWorkSite ||
       !this.selectedActivityType ||
       !this.start_date ||
-      !this.end_date ||
       !this.permisosRequeridos ||
       this.scheduledExecutionTime === 0
     ) {
@@ -187,7 +185,7 @@ export default class FormOrderWorksComponent {
   createOrderWork() {
     this.loading = true;
 
-    if (this.start_date === undefined || this.end_date === undefined) {
+    if (this.start_date === undefined) {
       this.loading = false;
       this.messageService.add({
         severity: 'error',
@@ -248,7 +246,6 @@ export default class FormOrderWorksComponent {
     let data = {
       quote_id: this.selectedQuote?.id,
       start_date: this.start_date.toISOString().split('T')[0],
-      end_date: this.end_date.toISOString().split('T')[0],
       description: this.descriptionActivity,
       workplace: workSide,
       number_technicians: this.technician,
@@ -287,12 +284,6 @@ export default class FormOrderWorksComponent {
       this.orderWorkToEdit?.start_date
     ) {
       quoteData.start_date = this.start_date?.toISOString().split('T')[0];
-    }
-    if (
-      this.end_date?.toISOString().split('T')[0] !==
-      this.orderWorkToEdit?.end_date
-    ) {
-      quoteData.end_date = this.end_date?.toISOString().split('T')[0];
     }
     let selectedWorkSiteNumber = 0;
     if (this.selectedWorkSite === 'Instalaciones del cliente') {
@@ -391,7 +382,6 @@ export default class FormOrderWorksComponent {
     this.auxiliary = 0;
     this.descriptionActivity = '';
     this.start_date = undefined;
-    this.end_date = undefined;
     this.action = 0;
     this.orderWorkToEdit = null;
     this.visible = false;
@@ -431,7 +421,6 @@ export default class FormOrderWorksComponent {
       this.selectedWorkSite = workplace;
       this.selectedActivityType = activity;
       this.start_date = new Date(this.orderWorkToEdit.start_date + 'T00:00:00');
-      this.end_date = new Date(this.orderWorkToEdit.end_date + 'T00:00:00');
     }
   }
 
