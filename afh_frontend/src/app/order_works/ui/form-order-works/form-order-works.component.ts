@@ -385,6 +385,7 @@ export default class FormOrderWorksComponent {
     this.action = 0;
     this.orderWorkToEdit = null;
     this.visible = false;
+    this.scheduledExecutionTime = 0;
   }
 
   loadEditData() {
