@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "prebuild": "node generate-env.js",
+    "build": "ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -21,7 +22,7 @@
     "@tailwindcss/postcss": "^4.0.17",
     "chart.js": "^4.5.0",
     "ngx-cookie-service": "^19.1.2",
-    "ngx-markdown": "^20.0.0",
+    "ngx-markdown": "^19.0.0",
     "postcss": "^8.5.3",
     "primeicons": "^7.0.0",
     "primeng": "^19.0.10",

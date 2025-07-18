@@ -27,6 +27,7 @@ import {
 import { forkJoin, switchMap } from 'rxjs';
 import { Customer, Item, Quote } from '../../../interfaces/models';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { InputNumber } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-create-quote',
@@ -44,6 +45,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
     NgIf,
     AutoComplete,
     ToastModule,
+    InputNumber,
   ],
   templateUrl: './create-quote.component.html',
   styleUrls: ['./create-quote.component.css'],
@@ -73,8 +75,16 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   tasks: { descripcion: string }[] = [{ descripcion: '' }];
   description: string = '';
   tasksQuote: String[] = [];
-  contractor_contribution: { descripcion: string }[] = [{ descripcion: '' }];
-  contracting_contribution: { descripcion: string }[] = [{ descripcion: '' }];
+  contractor_contribution: { descripcion: string }[] = [
+    { descripcion: 'Elementos de protección personal' },
+    { descripcion: 'Herramientas manuales y eléctricas' },
+    { descripcion: 'Personal capacitado' },
+    { descripcion: 'Materiales y consumibles' },
+  ];
+  contracting_contribution: { descripcion: string }[] = [
+    { descripcion: 'Disposición del sitio de trabajo' },
+    { descripcion: 'Suministro de energía 110V/220V' },
+  ];
   contractor_contribution_Quote: String[] = [];
   contracting_contribution_Quote: String[] = [];
   items: Item[] = [];
@@ -99,6 +109,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     'Centímetros cuadrados (cm2)',
     'Metros cubicos (m3)',
     'Centímetros (cm3)',
+    'Metro Lineal (ml)',
     'Pies',
     'Kilogramos',
     'Gramos',
@@ -264,9 +275,10 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
 
     // Crear ítems primero
     const itemRequests = this.itemsPorOpcion.items.map((item) => {
+      let unitValue = this.getUnitValue(item.units);
       const itemData = {
         description: item.description,
-        units: item.units,
+        units: unitValue,
         amount: item.amount,
         unit_value: item.unit_value,
       };
@@ -292,15 +304,19 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
                 customer_id: this.selectedCustomer?.id,
                 options: optionId,
                 tasks: this.tasks.map((t) => t.descripcion),
-                contracting_materials: this.contracting_contribution.map((t) => t.descripcion),
-                contractor_materials: this.contractor_contribution.map((t) => t.descripcion),
+                contracting_materials: this.contracting_contribution.map(
+                  (t) => t.descripcion
+                ),
+                contractor_materials: this.contractor_contribution.map(
+                  (t) => t.descripcion
+                ),
                 iva: this.ivaPercentage,
                 administration: this.administration / 100,
                 unforeseen: this.unexpected / 100,
                 utility: this.utility / 100,
                 method_of_payment: this.method_of_payment,
                 construction: this.construction_company || null,
-                delivery_time: this.deliveryTime
+                delivery_time: this.deliveryTime,
               };
 
               return this.quoteService.createQuote(quoteData);
@@ -367,11 +383,15 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     }
 
     if (this.contracting_contribution.length > 0) {
-      quoteData.contracting_materials = this.contracting_contribution.map((t) => t.descripcion);
+      quoteData.contracting_materials = this.contracting_contribution.map(
+        (t) => t.descripcion
+      );
     }
 
     if (this.contractor_contribution.length > 0) {
-      quoteData.contractor_materials = this.contractor_contribution.map((t) => t.descripcion);
+      quoteData.contractor_materials = this.contractor_contribution.map(
+        (t) => t.descripcion
+      );
     }
 
     if (this.deliveryTime !== this.quoteToEdit?.delivery_time) {
@@ -418,11 +438,14 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
               description: editedItem.description,
             };
           }
-
-          if (editedItem.units !== item.units) {
+          let unitValue = this.getUnitValue(editedItem.units);
+          if (unitValue === 'unknown') {
+            unitValue = editedItem.units;
+          }
+          if (unitValue !== item.units) {
             itemData = {
               ...itemData,
-              units: editedItem.units,
+              units: unitValue,
             };
           }
           if (
@@ -535,6 +558,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
   removeTask(index: number) {
     this.tasks.splice(index, 1);
   }
+
   addContractorContribution() {
     this.contractor_contribution.push({ descripcion: '' });
   }
@@ -562,8 +586,16 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.description = '';
     this.selectedCustomer = null;
     this.tasks = [{ descripcion: '' }];
-    this.contracting_contribution = [{ descripcion: '' }];
-    this.contractor_contribution = [{ descripcion: '' }];
+    this.contracting_contribution = [
+      { descripcion: 'Disposición del sitio de trabajo' },
+      { descripcion: 'Suministro de energía 110V/220V' },
+    ];
+    this.contractor_contribution = [
+      { descripcion: 'Elementos de protección personal' },
+      { descripcion: 'Herramientas manuales y eléctricas' },
+      { descripcion: 'Personal capacitado' },
+      { descripcion: 'Materiales y consumibles' },
+    ];
     this.tasksQuote = [];
     this.contracting_contribution_Quote = [];
     this.contractor_contribution_Quote = [];
@@ -605,8 +637,13 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
       this.ivaPercentage = this.quoteToEdit.iva;
       this.selectedCustomer = this.quoteToEdit.customer;
       this.tasks = this.quoteToEdit.tasks.map((t) => ({ descripcion: t }));
-      this.contracting_contribution = this.quoteToEdit.contracting_materials.map((t) => ({ descripcion: t || '' }));
-      this.contractor_contribution = this.quoteToEdit.contractor_materials.map((t) => ({ descripcion: t || '' }));
+      this.contracting_contribution =
+        this.quoteToEdit.contracting_materials.map((t) => ({
+          descripcion: t || '',
+        }));
+      this.contractor_contribution = this.quoteToEdit.contractor_materials.map(
+        (t) => ({ descripcion: t || '' })
+      );
       this.deliveryTime = this.quoteToEdit.delivery_time;
       this.itemsPorOpcion = {
         name: this.quoteToEdit.options.name,
@@ -614,7 +651,7 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
         items: this.quoteToEdit.options.items.map((item) => ({
           id: item.id,
           description: item.description,
-          units: item.units,
+          units: this.getUnitName(item.units),
           total_value: item.total_value,
           amount: item.amount,
           unit_value: item.unit_value,
@@ -673,6 +710,65 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     if (!allowedKeys.includes(event.key)) {
       event.preventDefault();
     }
+  }
+
+  getUnitValue(unit: string): string {
+    const unitMap: { [key: string]: string } = {
+      'Metros': 'M',
+      'Centímetros': 'CM',
+      'Milímetros': 'MM',
+      'Kilómetros': 'KM',
+      'Pulgadas': 'IN',
+      'Metros cuadrados (m2)': 'M2',
+      'Centímetros cuadrados (cm2)': 'CM2',
+      'Metros cubicos (m3)': 'M3',
+      'Centímetros (cm3)': 'CM3',
+      'Metro Lineal (ml)': 'ML',
+      'Pies': 'FT',
+      'Kilogramos': 'KG',
+      'Gramos': 'G',
+      'Miligramos': 'MG',
+      'Libras': 'LB',
+      'Toneladas': 'T',
+      'Litros': 'L',
+      'Mililitros': 'ML',
+      'Galones': 'GAL',
+      'Unidades': 'UND',
+      'Docenas': 'DZ',
+      'Cajas': 'CAJA',
+      'Pares': 'PAR',
+    };
+
+    return unitMap[unit] ?? 'unknown';
+  }
+
+  getUnitName(abbreviation: string): string {
+  const reverseUnitMap: { [key: string]: string } = {
+    'M': 'Metros',
+    'CM': 'Centímetros',
+    'MM': 'Milímetros',
+    'KM': 'Kilómetros',
+    'IN': 'Pulgadas',
+    'M2': 'Metros cuadrados (m2)',
+    'CM2': 'Centímetros cuadrados (cm2)',
+    'M3': 'Metros cubicos (m3)',
+    'CM3': 'Centímetros (cm3)',
+    'ML': 'Metro Lineal (ml)', // Nota: si quieres diferenciar ML (mililitros) y ML (metro lineal), se debería ajustar
+    'FT': 'Pies',
+    'KG': 'Kilogramos',
+    'G': 'Gramos',
+    'MG': 'Miligramos',
+    'LB': 'Libras',
+    'T': 'Toneladas',
+    'L': 'Litros',
+    'GAL': 'Galones',
+    'UND': 'Unidades',
+    'DZ': 'Docenas',
+    'CAJA': 'Cajas',
+    'PAR': 'Pares',
+  };
+
+  return reverseUnitMap[abbreviation.toUpperCase()] ?? 'unknown';
   }
 
   validatePercent() {

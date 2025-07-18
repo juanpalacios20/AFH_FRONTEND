@@ -27,6 +27,7 @@ import { Checkbox } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
 import { OrderWorkService } from '../../services/work_order.service';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { InputNumber } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-form-order-works',
@@ -44,6 +45,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
     Checkbox,
     ToastModule,
     DatePickerModule,
+    InputNumber,
   ],
   templateUrl: './form-order-works.component.html',
   styleUrl: './form-order-works.component.css',
@@ -82,10 +84,10 @@ export default class FormOrderWorksComponent {
     'ATS (análisis de trabajo)',
   ];
   start_date: Date | undefined;
-  end_date: Date | undefined;
   loading: boolean = true;
   errorMessage: string = '';
   quoteInvalidMessage: string = '';
+  scheduledExecutionTime: number = 0;
 
   constructor(
     private messageService: MessageService,
@@ -128,8 +130,8 @@ export default class FormOrderWorksComponent {
       !this.selectedWorkSite ||
       !this.selectedActivityType ||
       !this.start_date ||
-      !this.end_date ||
-      !this.permisosRequeridos
+      !this.permisosRequeridos ||
+      this.scheduledExecutionTime === 0
     ) {
       this.errorMessage = 'Campo requerido';
       return;
@@ -183,7 +185,7 @@ export default class FormOrderWorksComponent {
   createOrderWork() {
     this.loading = true;
 
-    if (this.start_date === undefined || this.end_date === undefined) {
+    if (this.start_date === undefined) {
       this.loading = false;
       this.messageService.add({
         severity: 'error',
@@ -244,7 +246,6 @@ export default class FormOrderWorksComponent {
     let data = {
       quote_id: this.selectedQuote?.id,
       start_date: this.start_date.toISOString().split('T')[0],
-      end_date: this.end_date.toISOString().split('T')[0],
       description: this.descriptionActivity,
       workplace: workSide,
       number_technicians: this.technician,
@@ -253,6 +254,7 @@ export default class FormOrderWorksComponent {
       number_supervisors: this.supervisor,
       activity: activityType,
       permissions: this.permisosRequeridos,
+      days_of_execution: this.scheduledExecutionTime,
     };
 
     this.orderWorkService.createWorkOrder(data).subscribe({
@@ -282,12 +284,6 @@ export default class FormOrderWorksComponent {
       this.orderWorkToEdit?.start_date
     ) {
       quoteData.start_date = this.start_date?.toISOString().split('T')[0];
-    }
-    if (
-      this.end_date?.toISOString().split('T')[0] !==
-      this.orderWorkToEdit?.end_date
-    ) {
-      quoteData.end_date = this.end_date?.toISOString().split('T')[0];
     }
     let selectedWorkSiteNumber = 0;
     if (this.selectedWorkSite === 'Instalaciones del cliente') {
@@ -327,6 +323,9 @@ export default class FormOrderWorksComponent {
     }
     if (this.supervisor !== this.orderWorkToEdit?.number_supervisors) {
       quoteData.number_supervisors = this.supervisor;
+    }
+    if (this.scheduledExecutionTime !== this.orderWorkToEdit?.days_of_execution) {
+      quoteData.days_of_execution = this.scheduledExecutionTime;
     }
 
     if (this.orderWorkToEdit?.id !== undefined) {
@@ -383,7 +382,6 @@ export default class FormOrderWorksComponent {
     this.auxiliary = 0;
     this.descriptionActivity = '';
     this.start_date = undefined;
-    this.end_date = undefined;
     this.action = 0;
     this.orderWorkToEdit = null;
     this.visible = false;
@@ -423,7 +421,6 @@ export default class FormOrderWorksComponent {
       this.selectedWorkSite = workplace;
       this.selectedActivityType = activity;
       this.start_date = new Date(this.orderWorkToEdit.start_date + 'T00:00:00');
-      this.end_date = new Date(this.orderWorkToEdit.end_date + 'T00:00:00');
     }
   }
 
@@ -440,7 +437,7 @@ export default class FormOrderWorksComponent {
       this.validQuote = false;
     }
   }
- 
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['visible'] && this.visible === true) {
       if (this.action === 0) {

@@ -26,8 +26,7 @@
     <div
       [ngClass]="{
         'w-full': !validQuote && this.action === 0,
-        'grid grid-cols-1 md:grid-cols-2 gap-4':
-          (validQuote && this.action === 0) || this.action === 1
+        'w-full mb-2': (validQuote && this.action === 0) || this.action === 1
       }"
     >
       <div
@@ -65,31 +64,29 @@
           }}
         </small>
       </div>
-      <div class="mb-4" *ngIf="this.validQuote === true">
-        <h1 class="mb-4 text-primary-950 font-normal">
-          Descripción de la tarea
-        </h1>
-        <p-floatlabel class="mt-2" variant="on" required="true">
-          <input
-            pInputText
-            type="text"
-            [(ngModel)]="descriptionActivity"
-            [ngClass]="{
-              'ng-invalid ng-dirty border-red-500':
-                errorMessage && descriptionActivity === ''
-            }"
-            [ngModelOptions]="{ standalone: true }"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-          />
-        </p-floatlabel>
-        <small
-          id="email-help"
-          class="text-red-600 mb-4"
-          *ngIf="errorMessage && descriptionActivity === ''"
-        >
-          {{ errorMessage }}
-        </small>
-      </div>
+    </div>
+    <div class="mb-4" *ngIf="this.validQuote === true">
+      <h1 class="mb-4 text-primary-950 font-normal">Descripción de la tarea</h1>
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="descriptionActivity"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && descriptionActivity === ''
+          }"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+      </p-floatlabel>
+      <small
+        id="email-help"
+        class="text-red-600 mb-4"
+        *ngIf="errorMessage && descriptionActivity === ''"
+      >
+        {{ errorMessage }}
+      </small>
     </div>
     <h1
       class="mb-4 text-primary-950 font-medium"
@@ -238,33 +235,37 @@
           {{ errorMessage }}
         </small>
       </div>
-      <div>
+
+      <div class="mb-4" *ngIf="this.validQuote === true || this.action === 1">
         <label for="buttondisplay" class="font-bold block mb-2">
-          Fecha de fin:
+          Tiempo de ejecucion programado:
         </label>
-        <p-datepicker
-          [(ngModel)]="end_date"
-          [showIcon]="true"
-          fluid="true"
-          (keydown)="blockTyping($event)"
-          [ngClass]="{
-            'ng-invalid ng-dirty border-red-500': errorMessage && !end_date
-          }"
-          inputId="buttondisplay"
-          [showOnFocus]="false"
-          dateFormat="dd/mm/yy"
-          placeholder="Seleccione la fecha de fin"
-        />
+        <p-floatlabel variant="on" required="true">
+          <p-inputnumber
+            [(ngModel)]="scheduledExecutionTime"
+            inputId="minmax"
+            mode="decimal"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && scheduledExecutionTime === 0
+            }"
+            [ngModelOptions]="{ standalone: true }"
+            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          />
+        </p-floatlabel>
         <small
           id="email-help"
           class="text-red-600 mb-4"
-          *ngIf="errorMessage && !end_date"
+          *ngIf="errorMessage && scheduledExecutionTime === 0"
         >
           {{ errorMessage }}
         </small>
       </div>
     </div>
-    <div class="mb-6 mt-6" *ngIf="this.validQuote === true || this.action === 1">
+    <div
+      class="mb-6 mt-6"
+      *ngIf="this.validQuote === true || this.action === 1"
+    >
       <h1 class="mb-4 text-primary-950 font-medium">Permisos requeridos</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div
@@ -289,7 +290,10 @@
       </div>
     </div>
 
-    <div class="flex justify-end gap-2 mt-10" *ngIf="this.validQuote === true || this.action === 1">
+    <div
+      class="flex justify-end gap-2 mt-10"
+      *ngIf="this.validQuote === true || this.action === 1"
+    >
       <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()">
         Cancelar
       </p-button>

@@ -447,7 +447,9 @@
     </div>
 
     <div class="w-full" *ngIf="this.clientValid === true || this.action === 1">
-      <h1 class="mb-2 text-primary-950 font-medium">Corre por cuenta del contratante*</h1>
+      <h1 class="mb-2 text-primary-950 font-medium">
+        Corre por cuenta del contratante*
+      </h1>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mb-4">
         <div
@@ -455,7 +457,8 @@
           [ngClass]="{
             'col-span-3':
               contracting_contribution.length === 1 ||
-              (contracting_contribution.length % 3 === 1 && i === contracting_contribution.length - 1)
+              (contracting_contribution.length % 3 === 1 &&
+                i === contracting_contribution.length - 1)
           }"
           class="relative"
         >
@@ -645,12 +648,10 @@
           </small>
 
           <p-floatlabel class="mb-2 mt-2 block" variant="on" required="true">
-            <input
-              pInputText
-              type="number"
-              min="0"
-              (keypress)="preventNonNumericInput($event)"
+            <p-inputnumber
               [(ngModel)]="item.amount"
+              inputId="locale-user"
+              [minFractionDigits]="2"
               [ngClass]="{
                 'ng-invalid ng-dirty border-red-500':
                   errorMessage && item.amount === null
