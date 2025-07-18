@@ -1,0 +1,32 @@
+:host ::ng-deep .p-selectbutton .p-togglebutton {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+}
+
+/* Botón seleccionado */
+:host ::ng-deep .p-selectbutton .p-togglebutton.p-togglebutton-checked {
+  background-color: #3B82F6 !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #3B82F6 !important;
+}
+
+/* Etiqueta dentro del botón */
+:host ::ng-deep .p-selectbutton .p-togglebutton .p-togglebutton-label {
+  color: inherit !important;         /* Hereda el color del botón */
+  background-color: transparent !important; /* Quita fondo blanco */
+}
+
+
+/* Hover para no seleccionado */
+:host ::ng-deep .p-selectbutton .p-togglebutton:not(.p-togglebutton-checked):hover {
+  background-color: #f3f4f6 !important;
+  color: #000000 !important;
+}
+
+/* Hover para seleccionado */
+:host ::ng-deep .p-selectbutton .p-togglebutton.p-togglebutton-checked:hover {
+  background-color: #3d6ae4 !important;
+  color: #1d4ed8 !important;
+}

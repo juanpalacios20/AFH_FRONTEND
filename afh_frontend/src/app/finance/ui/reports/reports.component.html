@@ -1,0 +1,284 @@
+<div class="relative min-h-screen pb-20">
+  <app-menu class="absolute top-0 left-0 p-4"></app-menu>
+
+  <div class="w-full p-5 pt-20">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">AFH: Reportes</h1>
+      <p-button
+        *ngIf="
+          (charDayVisible ||
+            charCustomVisible ||
+            charMonthVisible ||
+            charYearVisible) &&
+          (elements[0].value !== 0 || elements[1].value !== 0)
+        "
+        fluid="true"
+        label="Descargar informe"
+        icon="pi pi-download"
+        styleClass="p-button-primary w-full mb-4"
+        (onClick)="downloadPdf()"
+        [loading]="loadingPDF"
+        [disabled]="loadingPDF"
+      ></p-button>
+    </div>
+  </div>
+
+  <div class="flex justify-center gap-4 mt-6">
+    <!-- Selector principal -->
+    <p-autocomplete
+      [(ngModel)]="selectedFilter"
+      [suggestions]="filteredOptions"
+      (ngModelChange)="onChangeMainSelector()"
+      (completeMethod)="filterOption($event)"
+      [dropdown]="true"
+      (keydown)="blockTyping($event)"
+      [forceSelection]="true"
+      placeholder="Seleccione una opción"
+      class="w-60 bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+    ></p-autocomplete>
+
+    <!-- Contenedor dinámico de filtros -->
+    <div
+      *ngIf="selectedFilter && selectedFilter !== 'MÁS INFORMACIÓN'"
+      class="flex flex-col w-80 bg-white rounded-lg"
+    >
+      <!-- Personalizado -->
+      <ng-container *ngIf="selectedFilter === 'PERSONALIZADO'">
+        <p-datepicker
+          [(ngModel)]="rangeDates"
+          (ngModelChange)="onCustomChange()"
+          selectionMode="range"
+          [readonlyInput]="true"
+          [showIcon]="true"
+          placeholder="Seleccione rango de fechas"
+          fluid="true"
+          class="w-full py-3"
+        ></p-datepicker>
+        <small>Seleccione un intervalo de fechas</small>
+      </ng-container>
+
+      <!-- Año -->
+      <ng-container *ngIf="selectedFilter === 'AÑO'">
+        <p-datepicker
+          [(ngModel)]="year"
+          view="year"
+          (ngModelChange)="onYearChange($event)"
+          fluid="true"
+          placeholder="Seleccione un año"
+          [readonlyInput]="true"
+          [showIcon]="true"
+          dateFormat="yy"
+          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+      </ng-container>
+
+      <!-- Mes -->
+      <ng-container *ngIf="selectedFilter === 'MES'">
+        <p-datepicker
+          [(ngModel)]="month"
+          view="month"
+          (ngModelChange)="onMonthChange($event)"
+          fluid="true"
+          placeholder="Seleccione un mes"
+          [readonlyInput]="true"
+          [showIcon]="true"
+          dateFormat="mm/yy"
+          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+      </ng-container>
+      <!-- Dia -->
+      <ng-container *ngIf="selectedFilter === 'DIA'">
+        <p-datepicker
+          [(ngModel)]="day"
+          [showIcon]="true"
+          (ngModelChange)="onDayChange()"
+          fluid="true"
+          inputId="buttondisplay"
+          placeholder="Seleeccione un dia"
+          dateFormat="dd/mm/yy"
+          [showOnFocus]="false"
+          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        />
+        <small>Seleccione un mes</small>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="mt-4" *ngIf="elements[0].value !== 0 || elements[1].value !== 0">
+    <h1 class="text pl-5 mt-4 mb-10">
+      <span class="font-medium text-gray-700">Reporte </span>
+      <span class="font-bold text-black ml-1">{{
+        nameMonth !== "" ? nameMonth : yearNumber
+      }}</span>
+    </h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div
+        class="bg-white rounded-2xl shadow-md p-6 flex flex-col"
+        *ngFor="let element of elements"
+      >
+        <div class="flex items-center gap-3 mb-4">
+          <div class="p-3 rounded-full">
+            <i class="{{ element.icon }} text-xl"></i>
+          </div>
+          <span class="text-lg font-semibold text-gray-700">{{
+            element.title
+          }}</span>
+        </div>
+        <div class="flex justify-end">
+          <span class="text-3xl font-bold text-gray-900">$ {{
+            element.value.valueOf() | number : "1.0-0" : "es-CO"
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mt-10"
+    *ngIf="
+      (charMonthVisible || charCustomVisible || charDayVisible) &&
+      (elements[0].value !== 0 || elements[1].value !== 0)
+    "
+  >
+    <h1 class="text pl-5 mt-4 mb-10">
+      <span class="font-medium text-gray-700">Finanzas en el mes </span>
+      <span class="font-bold text-black ml-1">{{ nameMonth }}</span>
+    </h1>
+    <div class="card flex justify-center">
+      <p-chart
+        type="doughnut"
+        [data]="data"
+        [options]="options"
+        class="w-full md:w-[30rem]"
+      />
+    </div>
+  </div>
+  <div
+    class="mt-10 mb-4"
+    *ngIf="
+      charYearVisible && (elements[0].value !== 0 || elements[1].value !== 0)
+    "
+  >
+    <h1 class="text pl-5 mt-4 mb-10">
+      <span class="font-medium text-gray-700">Finanzas en el año </span>
+      <span class="font-bold text-black ml-1">{{ yearNumber }}</span>
+    </h1>
+    <div class="card flex justify-center p-5">
+      <p-chart
+        type="bar"
+        [data]="dataYear"
+        [options]="optionsYear"
+        class="h-[25rem] w-full mb-5"
+      />
+    </div>
+  </div>
+  <div class="flex" *ngIf="moreInfoVisible === true">
+    <div class="mt-10 w-full md:w-2/3 mx-auto bg-white p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-6 pb-2">
+        Ingresos por cuenta
+      </h2>
+
+      <div
+        *ngIf="bankAccount !== 0 || mainBox !== 0"
+        class="flex flex-col md:flex-row items-center gap-6"
+      >
+        <!-- Gráfico -->
+        <div class="flex-1">
+          <p-chart
+            type="doughnut"
+            [data]="dataAccount"
+            [options]="optionsAccount"
+            class="w-full md:w-[25rem]"
+          />
+        </div>
+
+        <!-- Totales -->
+        <div class="flex-1 space-y-4">
+          <div class="flex justify-between text-gray-700">
+            <span class="font-medium">Cuenta bancaria:</span>
+            <span class="font-bold text-black">$ {{
+              bankAccount.valueOf() | number : "1.0-0" : "es-CO"
+            }}</span>
+          </div>
+          <div class="flex justify-between text-gray-700">
+            <span class="font-medium">Caja principal:</span>
+            <span class="font-bold text-black"
+              >$ {{ mainBox.valueOf() | number : "1.0-0" : "es-CO" }}</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Sin datos -->
+      <div
+        *ngIf="transfer === 0 && cash === 0 && check === 0"
+        class="text-center text-primary-950 font-medium py-10"
+      >
+        -No hay datos para el filtro actual-
+      </div>
+    </div>
+
+    <div class="mt-10 w-full md:w-2/3 mx-auto bg-white p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-6 pb-2">
+        Ingresos por método de pago
+      </h2>
+
+      <div
+        *ngIf="transfer !== 0 || cash !== 0 || check !== 0"
+        class="flex flex-col md:flex-row items-center gap-6"
+      >
+        <!-- Gráfico -->
+        <div class="flex-1">
+          <p-chart
+            type="doughnut"
+            [data]="dataMethodPayment"
+            [options]="optionsMethodPayment"
+            class="w-full md:w-[22rem]"
+          />
+        </div>
+
+        <!-- Totales -->
+        <div class="flex-1 space-y-4">
+          <div class="flex justify-between text-gray-700">
+            <span class="font-medium">Transferencia:</span>
+            <span class="font-bold text-black">$ {{
+              transfer.valueOf() | number : "1.0-0" : "es-CO"
+            }}</span>
+          </div>
+          <div class="flex justify-between text-gray-700">
+            <span class="font-medium">Efectivo:</span>
+            <span class="font-bold text-black">$ {{
+              cash.valueOf() | number : "1.0-0" : "es-CO"
+            }}</span>
+          </div>
+          <div class="flex justify-between text-gray-700">
+            <span class="font-medium">Cheque:</span>
+            <span class="font-bold text-black">$ {{
+              check.valueOf() | number : "1.0-0" : "es-CO"
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sin datos -->
+      <div
+        *ngIf="transfer === 0 && cash === 0 && check === 0"
+        class="text-center text-primary-950 font-medium py-10"
+      >
+        -No hay datos para el filtro actual-
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full h-full justify-center items-center flex mt-30"
+    *ngIf="
+      elements[0].value === 0 &&
+      elements[1].value === 0 &&
+      moreInfoVisible === false
+    "
+  >
+    <h1 class="text-primary-950 font-medium">
+      -No hay datos para el filtro actual-
+    </h1>
+  </div>
+</div>
