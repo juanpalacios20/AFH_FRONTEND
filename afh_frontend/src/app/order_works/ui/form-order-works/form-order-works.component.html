@@ -22,26 +22,26 @@
       </button>
     </div>
   </ng-template>
-  <div class="w-full mx-auto rounded-xl justify-center mt-2">
+  <div class="w-full mx-auto rounded-xl justify-center mt-4">
     <div
       [ngClass]="{
         'w-full': !validQuote && this.action === 0,
-        'w-full mb-2': (validQuote && this.action === 0) || this.action === 1
+        'w-full mb-6': (validQuote && this.action === 0) || this.action === 1
       }"
     >
       <div
-        class="mb-4"
+        class="mb-6"
         [ngClass]="{
-          'mb-30': this.validQuote === false && this.action === 0
+          'mb-10': this.validQuote === false && this.action === 0
         }"
       >
-        <h1 class="mb-4 text-primary-950 font-normal">
-          Ingrese el codigo de la cotizaciónde trabajo.
+        <h1 class="mb-3 text-primary-950 font-normal">
+          Ingrese el código de la cotización de trabajo
         </h1>
         <p-autocomplete
           [(ngModel)]="selectedQuote"
           (ngModelChange)="onQuoteChange()"
-          placeholder="Codigo de la orden de trabajo"
+          placeholder="Código de la orden de trabajo"
           [disabled]="this.action === 1"
           [suggestions]="filteredQuotes ?? []"
           [ngClass]="{
@@ -56,7 +56,7 @@
         />
         <small
           id="email-help"
-          class="text-red-600 mb-4"
+          class="text-red-600 mt-2 block"
           *ngIf="(errorMessage && !selectedQuote) || quoteInvalidMessage"
         >
           {{
@@ -65,8 +65,9 @@
         </small>
       </div>
     </div>
-    <div class="mb-4" *ngIf="this.validQuote === true">
-      <h1 class="mb-4 text-primary-950 font-normal">Descripción de la tarea</h1>
+
+    <div class="mb-6" *ngIf="this.validQuote === true">
+      <h1 class="mb-3 text-primary-950 font-normal">Descripción de la tarea</h1>
       <p-floatlabel class="mt-2" variant="on" required="true">
         <input
           pInputText
@@ -82,12 +83,13 @@
       </p-floatlabel>
       <small
         id="email-help"
-        class="text-red-600 mb-4"
+        class="text-red-600 mt-2 block"
         *ngIf="errorMessage && descriptionActivity === ''"
       >
         {{ errorMessage }}
       </small>
     </div>
+
     <h1
       class="mb-4 text-primary-950 font-medium"
       *ngIf="this.validQuote === true || this.action === 1"
@@ -95,12 +97,13 @@
       Ingrese la cantidad del personal según corresponda, si alguno no aplica
       deje el campo en 0.
     </h1>
+
     <div
-      class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2"
+      class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
       *ngIf="this.validQuote === true || this.action === 1"
     >
-      <div class="mb-4">
-        <h1 class="mb-4 text-primary-950 font-normal">Tecnico</h1>
+      <div>
+        <h1 class="mb-2 text-primary-950 font-normal">Técnico</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
@@ -113,8 +116,8 @@
           />
         </p-floatlabel>
       </div>
-      <div class="mb-4">
-        <h1 class="mb-4 text-primary-950 font-normal">Supervisor</h1>
+      <div>
+        <h1 class="mb-2 text-primary-950 font-normal">Supervisor</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
@@ -127,8 +130,8 @@
           />
         </p-floatlabel>
       </div>
-      <div class="mb-4">
-        <h1 class="mb-4 text-primary-950 font-normal">Oficial</h1>
+      <div>
+        <h1 class="mb-2 text-primary-950 font-normal">Oficial</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
@@ -141,8 +144,8 @@
           />
         </p-floatlabel>
       </div>
-      <div class="mb-4">
-        <h1 class="mb-4 text-primary-950 font-normal">Auxiliar</h1>
+      <div>
+        <h1 class="mb-2 text-primary-950 font-normal">Auxiliar</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
@@ -173,14 +176,12 @@
         ></p-autocomplete>
         <small
           id="email-help"
-          class="text-red-600 mb-4"
+          class="text-red-600 mt-2 block"
           *ngIf="errorMessage && !selectedWorkSite"
         >
           {{ errorMessage }}
         </small>
       </div>
-
-      <!-- Actividad -->
       <div>
         <h1 class="mb-2 text-primary-950 font-medium">Tipo de actividad</h1>
         <p-autocomplete
@@ -199,26 +200,28 @@
         ></p-autocomplete>
         <small
           id="email-help"
-          class="text-red-600 mb-4"
+          class="text-red-600 mt-2 block"
           *ngIf="errorMessage && !selectedActivityType"
         >
           {{ errorMessage }}
         </small>
       </div>
     </div>
+
     <div
-      class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2"
+      class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
       *ngIf="this.validQuote === true || this.action === 1"
     >
-      <div>
-        <label for="buttondisplay" class="font-bold block mb-2">
+      <!-- Fecha de inicio -->
+      <div class="flex flex-col">
+        <label for="start_date" class="font-bold block mb-4">
           Fecha de inicio:
         </label>
         <p-datepicker
           [(ngModel)]="start_date"
           [showIcon]="true"
           (keydown)="blockTyping($event)"
-          inputId="buttondisplay"
+          inputId="start_date"
           [ngClass]="{
             'ng-invalid ng-dirty border-red-500': errorMessage && !start_date
           }"
@@ -226,24 +229,26 @@
           dateFormat="dd/mm/yy"
           fluid="true"
           placeholder="Seleccione la fecha de inicio"
-        />
+          class="w-full"
+        ></p-datepicker>
         <small
           id="email-help"
-          class="text-red-600 mb-4"
+          class="text-red-600 mt-2 block"
           *ngIf="errorMessage && !start_date"
         >
           {{ errorMessage }}
         </small>
       </div>
 
-      <div class="mb-4" *ngIf="this.validQuote === true || this.action === 1">
-        <label for="buttondisplay" class="font-bold block mb-2">
-          Tiempo de ejecucion programado:
+      <!-- Tiempo de ejecución programado -->
+      <div class="flex flex-col justify-between">
+        <label for="execution_time" class="font-bold block mb-1">
+          Tiempo de ejecución programado:
         </label>
-        <p-floatlabel variant="on" required="true">
+        <p-floatlabel variant="on" required="true" class="w-full">
           <p-inputnumber
             [(ngModel)]="scheduledExecutionTime"
-            inputId="minmax"
+            inputId="execution_time"
             mode="decimal"
             [ngClass]="{
               'ng-invalid ng-dirty border-red-500':
@@ -251,25 +256,23 @@
             }"
             [ngModelOptions]="{ standalone: true }"
             class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
-          />
+          ></p-inputnumber>
         </p-floatlabel>
         <small
           id="email-help"
-          class="text-red-600 mb-4"
+          class="text-red-600 mt-2 block"
           *ngIf="errorMessage && scheduledExecutionTime === 0"
         >
           {{ errorMessage }}
         </small>
       </div>
     </div>
-    <div
-      class="mb-6 mt-6"
-      *ngIf="this.validQuote === true || this.action === 1"
-    >
-      <h1 class="mb-4 text-primary-950 font-medium">Permisos requeridos</h1>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+    <div class="mb-8" *ngIf="this.validQuote === true || this.action === 1">
+      <h1 class="mb-3 text-primary-950 font-medium">Permisos requeridos</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
-          class="flex items-center"
+          class="flex items-center mb-2"
           *ngFor="let permiso of listaPermisos; let i = index"
         >
           <p-checkbox
@@ -280,18 +283,18 @@
           ></p-checkbox>
           <label [for]="permiso" class="ml-2"> {{ permiso }} </label>
         </div>
-        <small
-          id="email-help"
-          class="text-red-600 mb-4"
-          *ngIf="errorMessage && permisosRequeridos.length === 0"
-        >
-          {{ errorMessage }}
-        </small>
       </div>
+      <small
+        id="email-help"
+        class="text-red-600 mt-2 block"
+        *ngIf="errorMessage && permisosRequeridos.length === 0"
+      >
+        {{ errorMessage }}
+      </small>
     </div>
 
     <div
-      class="flex justify-end gap-2 mt-10"
+      class="flex justify-end gap-4 mt-8"
       *ngIf="this.validQuote === true || this.action === 1"
     >
       <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()">

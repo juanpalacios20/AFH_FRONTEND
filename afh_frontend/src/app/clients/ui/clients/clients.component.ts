@@ -142,12 +142,17 @@ export default class ClientsComponent implements OnInit {
     this.clientService.deleteClient(id).subscribe({
       next: (response: any) => {
         this.getClients();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'Cliente eliminado con éxito',
+        });
       },
       error: (error: any) => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Error al eliminar el cliente, intentelo nuevamente',
+          detail: 'El cliente tiene una cotizacion creada',
         });
       },
     });
@@ -171,11 +176,6 @@ export default class ClientsComponent implements OnInit {
       },
       accept: () => {
         this.deleteClient(id);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Exito',
-          detail: 'Cliente eliminado con éxito',
-        });
       },
     });
   }
