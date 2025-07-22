@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BaseHttpService } from "../../shared/data_access/base_http.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "../../environments/enviroment.development";
+import { environment } from "../../environments/environment.development";
+
 ;
 
 @Injectable({
