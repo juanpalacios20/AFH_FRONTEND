@@ -32,7 +32,7 @@ export class FinanceService extends BaseHttpService {
 
   createIncomes(income: any): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.post(`${this.apiUrl}/income/add/`, income, {
+    return this.http.post(`${this.apiUrl}income/add/`, income, {
       headers: headers,
     });
   }
