@@ -150,5 +150,17 @@ export interface balanceMoreInfoOA{
   cantidad: number;
 }
 
+export interface workAdvance {
+  id:number;
+  exhibits: exhibit[];
+  description: string;
+  date: string;
+}
 
+export interface WorkProgress {
+  id: number;
+  work_order: OrderWork;
+  work_advances: workAdvance[];
+  state: number;
+}
 

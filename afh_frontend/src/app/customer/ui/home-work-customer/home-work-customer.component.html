@@ -1,1 +1,71 @@
-<p>home-work-customer works!</p>
+<app-toolbar [name]="work_progress?.work_order?.quote?.customer?.representative || 'Cliente desconocido'"></app-toolbar>
+<section class="flex flex-col mt-4 w-full">
+    <div class="card flex w-full">
+        <div class="mb-4 p-8 flex-1">
+            <p-card styleClass="bg-gray-800">
+                <ng-template pTemplate="header">
+                    <div class="bg-gray-900 text-amber-50 p-4 font-semibold">
+                        Codigo Orden
+                    </div>
+                </ng-template>
+                <p class="m-0 text-amber-50">
+                    {{ work_progress?.work_order?.quote?.code || 'Nombre del trabajo' }}
+                </p>
+            </p-card>
+        </div>
+        <p-divider layout="vertical" />
+        <div class="mb-4 p-8 flex-1">
+            <p-card styleClass="bg-gray-800">
+                <ng-template pTemplate="header">
+                    <div class="bg-gray-900 text-amber-50 p-4 font-semibold">
+                        Estado de la orden
+                    </div>
+                </ng-template>
+                <p class="m-0 text-amber-50">
+                    {{ workProgressStatus }}
+                </p>
+            </p-card>
+        </div>
+        <p-divider layout="vertical" />
+        <div class="mb-4 p-8 flex-1">
+            <p-card styleClass="bg-gray-800">
+                <ng-template pTemplate="header">
+                    <div class="bg-gray-900 text-amber-50 p-4 font-semibold">
+                        Fecha de finalizacion prevista
+                    </div>
+                </ng-template>
+                <p class="m-0 text-amber-50">
+                    {{ work_progress?.work_order?.end_date || 'Fecha de finalizacion' }}
+                </p>
+            </p-card>
+        </div>
+    </div>
+</section>
+<section class="flex flex-col mt-4 w-full">
+    <div>
+        <h1 class="font-semibold text-2xl">Avance de su trabajo</h1>
+    </div>
+</section>
+<section>
+    <div class="card">
+        <p-timeline [value]="events" align="alternate" class="customized-timeline">
+            <ng-template #marker let-event>
+                <span class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm "
+                    [style]="{ 'background-color': event.color }">
+                    <i [class]="event.icon"></i>
+                </span>
+            </ng-template>
+            <ng-template #content let-event>
+                <p-card [header]="event.status" [subheader]="event.date" styleClass="bg-gray-900 text-amber-50">
+                    <img *ngIf="event.image"
+                        [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + event.image"
+                        [alt]="event.name" width="200" class="shadow" />
+                    <p>
+                        {{ event.description || 'Descripcion del evento' }}
+                    </p>
+                    <p-button *ngIf="event.showButton" label="Ver más.." [text]="true"></p-button>
+                </p-card>
+            </ng-template>
+        </p-timeline>
+    </div>
+</section>

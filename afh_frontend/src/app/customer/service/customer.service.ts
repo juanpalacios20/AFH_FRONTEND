@@ -5,6 +5,7 @@ import { environment } from "../../environments/environment";
 import { Observable, tap } from "rxjs";
 import { CookieService } from 'ngx-cookie-service';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -24,5 +25,13 @@ export class CustomerService extends BaseHttpService{
         }).pipe(tap((response: any) => {
             this.cookieService.set('id', response.id, 1, '/');
         }))
+    }
+
+    getWorkProgress(id: string): Observable<any>{
+        return this.http.get(`${this.apiUrl}workprogress/get/${id}/`).pipe(
+            tap((response: any) => {
+                console.log('Work progress fetched:', response);
+            }
+        ))
     }
 }
