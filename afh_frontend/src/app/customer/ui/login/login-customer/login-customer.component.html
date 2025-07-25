@@ -6,6 +6,7 @@
 
     <!-- Lado derecho: visible en todas las pantallas -->
     <div class="w-full md:w-1/2 bg-gray-100 flex items-center justify-center h-screen md:h-auto">
+        <p-toast/>
         <div class="w-3/4">
             <img src="resource/imageAFH-removebg-preview.png" alt="Logo" class="mx-auto mb-6 block md:hidden" />
             <p class="text-gray-950 font-semibold text-center mb-4">
@@ -13,15 +14,19 @@
             </p>
             <form (submit)="login()" class="space-y-4">
                 <div>
-                    <label for="code" class="block text-sm font-medium text-gray-700">Código de Cliente</label>
-                    <input type="text" id="code" [(ngModel)]="code" name="code" required
+                    <label for="code" class="block text-sm font-medium text-gray-700">Correo Electronico</label>
+                    <input type="email" id="email" [(ngModel)]="email" [ngModelOptions]="{ standalone: true }"
+                        name="Email" required="true"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
                 </div>
                 <div>
-                    <button type="submit"
-                        class="w-full bg-blue-600 text-white font-semibold py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg transition">
-                        Ingresar
-                    </button>
+                    <label for="code" class="block text-sm font-medium text-gray-700">Código del Trabajo</label>
+                    <input type="text" id="code" [(ngModel)]="code" name="code" required="true"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                </div>
+                <div>
+                    <p-button label="Iniciar Sesión" type="submit" pRipple (click)="showWarn()" fluid="true"
+                        [loading]="loading" rounded="true" styleClass="w-full" />
                 </div>
             </form>
         </div>
