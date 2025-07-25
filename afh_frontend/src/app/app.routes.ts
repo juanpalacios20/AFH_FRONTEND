@@ -18,7 +18,7 @@ import ManagementComponent from './finance/ui/management/management.component';
 import ReportsComponent from './finance/ui/reports/reports.component';
 import ChatComponent from './ai/ui/chat/chat.component';
 import ProgressManagementComponent from './order_works/progress_order/management/management.component';
-import { ProgressInfoComponent } from './order_works/progress_order/progress-info/progress-info.component';
+import ProgressInfoComponent from './order_works/progress_order/progress-info/progress-info.component';
 import { FormAdvanceComponent } from './order_works/work_advance/form-advance/form-advance.component';
 
 export const routes: Routes = [
@@ -81,7 +81,7 @@ export const routes: Routes = [
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: 'agenteai', component: ChatComponent, canActivate: [AuthGuard] },
   { path: 'progressOrder', component: ProgressManagementComponent },
-  { path: 'progressOrder/info', component: ProgressInfoComponent },
-  { path: 'progressOrder/info/create', component: FormAdvanceComponent },
+  { path: 'progressOrder/info/:id', component: ProgressInfoComponent },
+  { path: 'progressOrder/info/create/:id', component: FormAdvanceComponent },
   { path: '**', redirectTo: 'login' },
 ];

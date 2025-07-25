@@ -165,3 +165,7 @@ export interface WorkAdvance {
 }
 
 
+export interface WorkAdvanceResponse {
+  message: string;
+  id: number;
+}

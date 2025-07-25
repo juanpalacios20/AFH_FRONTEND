@@ -34,7 +34,7 @@
       [value]="workProgressOrder"
       [tableStyle]="{ 'min-width': '50rem' }"
       [rowsPerPageOptions]="[20, 50, 100]"
-      [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+      [globalFilterFields]="['work_order.quote.code']"
     >
       <ng-template #header *ngIf="workProgressOrder.length > 0">
         <tr>
@@ -51,17 +51,29 @@
       </ng-template>
       <ng-template #body let-progressWorkOrder>
         <tr>
-          <td class="cursor-pointer">
+          <td
+            class="cursor-pointer"
+            (click)="viewProgressOrder(progressWorkOrder)"
+            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+          >
             <p class="text-center">
               {{ progressWorkOrder.work_order.quote.code }}
             </p>
           </td>
-          <td class="cursor-pointer">
+          <td
+            class="cursor-pointer"
+            (click)="viewProgressOrder(progressWorkOrder)"
+            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+          >
             <p class="text-center">
               {{ progressWorkOrder.work_order.quote.customer.name }}
             </p>
           </td>
-          <td class="cursor-pointer">
+          <td
+            class="cursor-pointer"
+            (click)="viewProgressOrder(progressWorkOrder)"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
+          >
             <p class="text-center">
               {{
                 progressWorkOrder.work_order.quote.customer.representative ||
@@ -69,11 +81,23 @@
               }}
             </p>
           </td>
-          <td class="cursor-pointer">
-            <p class="text-center">{{ progressWorkOrder.orderWork.start_date }}</p>
+          <td
+            class="cursor-pointer"
+            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+            (click)="viewProgressOrder(progressWorkOrder)"
+          >
+            <p class="text-center">
+              {{ progressWorkOrder.work_order.start_date }}
+            </p>
           </td>
-          <td class="cursor-pointer">
-            <p class="text-center">{{ progressWorkOrder.state}}</p>
+          <td
+            class="cursor-pointer text-primary font-bold"
+            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+            (click)="viewProgressOrder(progressWorkOrder)"
+          >
+            <p class="text-center">
+              {{ getStateString(progressWorkOrder.state) }}
+            </p>
           </td>
         </tr>
       </ng-template>

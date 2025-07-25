@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BaseHttpService } from '../../shared/data_access/base_http.service';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpHeaders } from '@angular/common/http';
+import { WorkAdvanceResponse } from '../../interfaces/models';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +19,13 @@ export class workAdvanceService extends BaseHttpService {
     });
   }
 
-  createWorkAdvance(data: any) {
-    return this.http.post(`${this.apiUrl}workadvance/add/`, data, {
-      headers: this.getHeaders(),
-    });
+  createWorkAdvance(data: any): Observable<WorkAdvanceResponse> {
+    return this.http.post<WorkAdvanceResponse>(
+      `${this.apiUrl}workadvance/add/`,
+      data,
+      {
+        headers: this.getHeaders(),
+      }
+    );
   }
 }

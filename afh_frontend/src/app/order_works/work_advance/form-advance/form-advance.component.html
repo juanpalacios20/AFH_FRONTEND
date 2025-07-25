@@ -1,23 +1,22 @@
 <div class="relative h-screen">
   <div class="card flex absolute top-0 left-0 p-4">
-    <button pButton [routerLink]="['/progressOrder/info']">
+    <button pButton [routerLink]="['/progressOrder/info/', progressOrderId]">
       <i class="pi pi-arrow-left" pButtonIcon></i>
       <span pButtonLabel>Volver</span>
     </button>
   </div>
   <div class="w-full flex flex-col p-5 pt-20 gap-5">
     <h1 class="text-xl font-bold text-start">
-      AFH: Seguimiento de trabajo → Información de la orden: 1-2025 → Agregar
-      avance
+      AFH: Seguimiento de trabajo → Información de la orden: {{ orderCode }} →
+      Agregar avance
     </h1>
     <div class="flex flex-col gap-2">
-      <label class="font-bold text-start"
-        >Código de la orden (autocompleta)</label
-      >
+      <label class="font-bold text-start">Código de la orden </label>
       <input
         type="text"
         [(ngModel)]="orderCode"
-        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+        disabled="true"
+        class="border border-gray-600 text-gray-600 bg-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-black"
       />
     </div>
     <div class="flex flex-col gap-2">
@@ -28,7 +27,7 @@
         rows="5"
         cols="30"
         variant="filled"
-        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-black"
       ></textarea>
     </div>
     <div class="flex flex-col gap-4">
@@ -50,38 +49,64 @@
           >
           <textarea
             rows="3"
-            class="border border-gray-300 rounded px-3 py-2 focus:outline-none"
+            class="border focus:border-black border-gray-300 rounded px-3 py-2 focus:outline-none"
             placeholder="Escriba una descripción..."
             [(ngModel)]="exhibit.tittle"
             name="descripcion{{ i }}"
           ></textarea>
         </div>
-        <div class="flex flex-wrap gap-4">
+        <div class="flex flex-wrap gap-3 mt-3 relative">
           <div
-            *ngFor="let image of exhibit.images; let j = index"
-            class="relative w-32 h-32 border border-gray-300"
+            *ngFor="let img of exhibit.images; let j = index"
+            class="relative group"
           >
-            <button
-              class="absolute top-1 right-1 cursor-pointer text-red-500 hover:text-red-700 font-bold"
-              (click)="deleteImage(i, j)"
-              title="Eliminar imagen"
-            >
-              ✖
-            </button>
+            <div class="relative inline-block">
+              <img
+                [src]="img"
+                alt="preview"
+                width="100"
+                height="100"
+                class="border rounded"
+              />
+              <button
+                type="button"
+                class="absolute cursor-pointer top-0 right-0 bg-white text-gray-500 hover:text-gray-700 rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-80 hover:opacity-100"
+                (click)="removeImage(i, img)"
+              >
+                ×
+              </button>
+            </div>
           </div>
         </div>
-        <p-button
-          label="Agregar imagenes"
-          (onClick)="addImage(i)"
-          class="flex justify-center"
-        />
+        <div class="justify-center mb-2 mt-2">
+          <p-fileupload
+            mode="basic"
+            name="images"
+            accept="image/*"
+            multiple="true"
+            chooseLabel="Seleccionar imágenes"
+            [customUpload]="true"
+            (onSelect)="onImagesSelected($event, i)"
+          ></p-fileupload>
+        </div>
       </div>
       <p-button label="Agregar Anexo" fluid="true" (click)="addExhibit()" />
     </div>
 
     <div class="flex gap-4 justify-center mt-4">
-      <p-button label="Aceptar" fluid="true" />
-      <p-button label="Cancelar" fluid="true" severity="secondary" />
+      <p-button
+        label="Aceptar"
+        [loading]="loading"
+        [disabled]="loading"
+        (onClick)="createAdvance()"
+        fluid="true"
+      />
+      <p-button
+        label="Cancelar"
+        fluid="true"
+        severity="secondary"
+        [routerLink]="['/progressOrder/info/', progressOrderId]"
+      />
     </div>
   </div>
 </div>

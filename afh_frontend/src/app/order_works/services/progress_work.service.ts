@@ -16,4 +16,35 @@ export class progressOrderService extends BaseHttpService {
       Authorization: `Token ${this.cookieService.get('token')}`,
     });
   }
+
+  getProgress() {
+    return this.http.get<any>(`${this.apiUrl}workprogress/get_all/`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getProgressById(id: number) {
+    return this.http.get<any>(`${this.apiUrl}workprogress/get/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  advanceToProgress(idAdvance: number, idProgress: number) {
+    return this.http.put(
+      `${this.apiUrl}workprogress/add/${idProgress}/${idAdvance}/`,
+      {
+        headers: this.getHeaders(),
+      }
+    );
+  }
+
+  changeState(id: number, data: any) {
+    return this.http.put(
+      `${this.apiUrl}workprogress/change_status/${id}/`,
+      data,
+      {
+        headers: this.getHeaders(),
+      }
+    );
+  }
 }
