@@ -19,6 +19,7 @@ import ReportsComponent from './finance/ui/reports/reports.component';
 import ChatComponent from './ai/ui/chat/chat.component';
 import { LoginCustomerComponent } from './customer/ui/login/login-customer/login-customer.component';
 import { HomeWorkCustomerComponent} from './customer/ui/home-work-customer/home-work-customer.component';
+import { AdvancesComponent } from './customer/ui/advances/advances.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -41,7 +42,7 @@ export const routes: Routes = [
     { path: 'agenteai', component: ChatComponent },
     {path: 'login-customer', component: LoginCustomerComponent },
     {path: 'home-customer', component: HomeWorkCustomerComponent },
+    {path: 'work-advances', component: AdvancesComponent},
     { path: '**', redirectTo: 'login' },
-    
 
 ];

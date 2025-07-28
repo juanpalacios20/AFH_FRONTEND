@@ -63,7 +63,7 @@
                     <p>
                         {{ event.description || 'Descripcion del evento' }}
                     </p>
-                    <p-button *ngIf="event.showButton" label="Ver más.." [text]="true"></p-button>
+                    <p-button *ngIf="event.showButton" (click)="advances()" label="Ver más.." [text]="true"></p-button>
                 </p-card>
             </ng-template>
         </p-timeline>

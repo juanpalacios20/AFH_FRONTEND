@@ -160,7 +160,7 @@ export interface workAdvance {
 export interface WorkProgress {
   id: number;
   work_order: OrderWork;
-  work_advances: workAdvance[];
+  work_advance: workAdvance[];
   state: number;
 }
 

@@ -1,0 +1,36 @@
+<section class="mt-5 flex flex-col gap-5 text-2xl">
+    <p-button label="Volver" (click)="backtohome()" variant="outlined" severity="contrast" />
+    <h1 class="font-semibold font-oswald">Avances del trabajo {{ work_progres?.work_order?.quote?.code || 'Nombre del
+        trabajo' }}</h1>
+</section>
+<!-- Mensaje cuando no hay work_advances -->
+<div *ngIf="!work_advances || work_advances.length === 0" class="mt-4 text-center">
+    <p class="font-oswald text-lg">No hay avances para tu trabajo, te notificaremos cuando lo hayan</p>
+</div>
+
+<!-- Contenido cuando sí hay work_advances -->
+<section class="mt-2 justify-items-center" *ngFor="let workAdvance of work_advances">
+    <h2 class="font-semibold font-oswald mb-2">Fecha: {{ workAdvance.date | date:'dd/M/yyyy' }}</h2>
+
+    <!-- Una galería por cada exhibit con su título -->
+    <div *ngFor="let exhibit of workAdvance.exhibits" class="mb-4">
+        <h3 class="font-medium font-oswald mb-2 text-center">{{ exhibit.tittle }}</h3>
+        <div class="card">
+            <p-galleria [value]="getFormattedImages(workAdvance.exhibits)" [responsiveOptions]="responsiveOptions"
+                [containerStyle]="{ 'max-width': '640px' }" [numVisible]="7" [circular]="true">
+                <ng-template #item let-item>
+                    <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </ng-template>
+                <ng-template #thumbnail let-item>
+                    <img [src]="item.thumbnailImageSrc" />
+                </ng-template>
+            </p-galleria>
+        </div>
+        <section class="mt-3 justify-items-center">
+            <div class="font-black font-oswald">
+                <p>Descripción: {{ workAdvance.description }}</p>
+            </div>
+        </section>
+    </div>
+
+</section>
