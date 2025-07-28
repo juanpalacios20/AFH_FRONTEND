@@ -13,6 +13,7 @@ import {
 import { progressOrderService } from '../../services/progress_work.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { workAdvanceService } from '../../services/work_advance.service';
 
 @Component({
   selector: 'app-progress-info',
@@ -35,22 +36,45 @@ export default class ProgressInfoComponent implements OnInit {
   filteredStates: string[] = [];
   selectedStates: string = '';
   statesOption = ['En progreso', 'Completado'];
+  idToEdit: number | null = null;
+  progressAdvance: workProgressOrder | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private workProgressOrderService: progressOrderService,
+    private workAdvanceService: workAdvanceService,
     private messageService: MessageService,
     private router: Router
   ) {
-    this.getProgress();
+    this.progressAdvance =
+      workAdvanceService.getItem<workProgressOrder>('progress');
+    console.log(this.progressAdvance);
+    if (localStorage.getItem('edit') === 'true') {
+      console.log('editado');
+    }
   }
 
   ngOnInit(): void {
     const state = localStorage.getItem('state');
+    const edit = localStorage.getItem('edit');
     console.log(state);
-    if (state === 'true') {
+    if (state === 'true' && edit === 'true') {
+      console.log('avance editado');
+      localStorage.removeItem('state');
+      localStorage.removeItem('edit');
+      this.getProgress();
+      setTimeout(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Avance editado exitosamente',
+        });
+      }, 0);
+    }
+    if (state === 'true' && edit !== 'true') {
       console.log('avance creado');
       localStorage.removeItem('state');
+      this.getProgress();
       setTimeout(() => {
         this.messageService.add({
           severity: 'success',
@@ -65,7 +89,12 @@ export default class ProgressInfoComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     this.workProgressOrderService.getProgressById(Number(id) || 0).subscribe({
       next: (response) => {
+        localStorage.removeItem('edit');
         this.workProgressOrder = response;
+        this.workAdvanceService.setItem('progress', this.workProgressOrder);
+        console.log('actualizando informacion');
+        this.progressAdvance =
+          this.workAdvanceService.getItem<workProgressOrder>('progress');
         console.log(this.workProgressOrder);
       },
       error: (error) => {
@@ -75,7 +104,7 @@ export default class ProgressInfoComponent implements OnInit {
   }
 
   changeState() {
-    if (this.workProgressOrder) {
+    if (this.progressAdvance) {
       let data: any = {};
       console.log(this.selectedStates);
       if (this.selectedStates === 'En progreso') {
@@ -90,7 +119,7 @@ export default class ProgressInfoComponent implements OnInit {
       }
       console.log(data);
       this.workProgressOrderService
-        .changeState(this.workProgressOrder.id, data)
+        .changeState(this.progressAdvance.id, data)
         .subscribe({
           next: (response) => {
             this.messageService.add({
@@ -114,7 +143,6 @@ export default class ProgressInfoComponent implements OnInit {
     }
   }
   getStateString(state: string | undefined): string {
-    console.log('State:', state);
     switch (Number(state)) {
       case 1:
         return 'Pendiente';
@@ -125,6 +153,20 @@ export default class ProgressInfoComponent implements OnInit {
       default:
         return 'Desconocido';
     }
+  }
+
+  toEdit(id: number, count: number) {
+    if (id === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'Ha ocurrido un error, intentelo más tarde',
+      });
+    }
+    this.idToEdit = id;
+    localStorage.setItem('edit', 'true');
+    localStorage.setItem('count', count.toString());
+    this.router.navigate(['/progressOrder/info/create', id]);
   }
 
   filterStates(event: any) {

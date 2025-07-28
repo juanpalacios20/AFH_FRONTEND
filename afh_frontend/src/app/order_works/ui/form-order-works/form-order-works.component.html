@@ -35,7 +35,7 @@
           'mb-10': this.validQuote === false && this.action === 0
         }"
       >
-        <h1 class="mb-3 text-primary-950 font-normal">
+        <h1 class="mb-3 font-medium">
           Ingrese el código de la cotización de trabajo
         </h1>
         <p-autocomplete
@@ -67,7 +67,7 @@
     </div>
 
     <div class="mb-6" *ngIf="this.validQuote === true">
-      <h1 class="mb-3 text-primary-950 font-normal">Descripción de la tarea</h1>
+      <h1 class="mb-3 font-medium">Descripción de la tarea</h1>
       <p-floatlabel class="mt-2" variant="on" required="true">
         <input
           pInputText
@@ -91,7 +91,7 @@
     </div>
 
     <h1
-      class="mb-4 text-primary-950 font-medium"
+      class="mb-4 font-medium"
       *ngIf="this.validQuote === true || this.action === 1"
     >
       Ingrese la cantidad del personal según corresponda, si alguno no aplica
@@ -103,7 +103,7 @@
       *ngIf="this.validQuote === true || this.action === 1"
     >
       <div>
-        <h1 class="mb-2 text-primary-950 font-normal">Técnico</h1>
+        <h1 class="mb-2 font-medium">Técnico</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
@@ -117,7 +117,7 @@
         </p-floatlabel>
       </div>
       <div>
-        <h1 class="mb-2 text-primary-950 font-normal">Supervisor</h1>
+        <h1 class="mb-2 font-medium">Supervisor</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
@@ -131,7 +131,7 @@
         </p-floatlabel>
       </div>
       <div>
-        <h1 class="mb-2 text-primary-950 font-normal">Oficial</h1>
+        <h1 class="mb-2 font-medium">Oficial</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
@@ -145,7 +145,7 @@
         </p-floatlabel>
       </div>
       <div>
-        <h1 class="mb-2 text-primary-950 font-normal">Auxiliar</h1>
+        <h1 class="mb-2 font-medium">Auxiliar</h1>
         <p-floatlabel class="mt-2" variant="on" required="true">
           <input
             pInputText
@@ -159,7 +159,7 @@
         </p-floatlabel>
       </div>
       <div>
-        <h1 class="mb-2 text-primary-950 font-medium">Sitio de trabajo</h1>
+        <h1 class="mb-2 font-medium">Sitio de trabajo</h1>
         <p-autocomplete
           [(ngModel)]="selectedWorkSite"
           [suggestions]="filteredWorkSites"
@@ -183,7 +183,7 @@
         </small>
       </div>
       <div>
-        <h1 class="mb-2 text-primary-950 font-medium">Tipo de actividad</h1>
+        <h1 class="mb-2 font-medium">Tipo de actividad</h1>
         <p-autocomplete
           [(ngModel)]="selectedActivityType"
           [suggestions]="filteredActivities"
@@ -214,7 +214,7 @@
     >
       <!-- Fecha de inicio -->
       <div class="flex flex-col">
-        <label for="start_date" class="font-bold block mb-4">
+        <label for="start_date" class="font-medium block mb-4">
           Fecha de inicio:
         </label>
         <p-datepicker
@@ -242,7 +242,7 @@
 
       <!-- Tiempo de ejecución programado -->
       <div class="flex flex-col justify-between">
-        <label for="execution_time" class="font-bold block mb-1">
+        <label for="execution_time" class="font-medium block mb-1">
           Tiempo de ejecución programado:
         </label>
         <p-floatlabel variant="on" required="true" class="w-full">
@@ -269,7 +269,7 @@
     </div>
 
     <div class="mb-8" *ngIf="this.validQuote === true || this.action === 1">
-      <h1 class="mb-3 text-primary-950 font-medium">Permisos requeridos</h1>
+      <h1 class="mb-3 font-medium">Permisos requeridos</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           class="flex items-center mb-2"

@@ -10,32 +10,32 @@
     <div class="flex justify-between items-center mb-5 md:flex-row">
       <h1 class="text-xl font-bold">
         AFH: Seguimiento de trabajo -> información de la orden
-        {{ workProgressOrder?.work_order?.quote?.code }}
+        {{ progressAdvance?.work_order?.quote?.code }}
       </h1>
     </div>
     <div class="flex flex-row justify-start gap-50 md:flex-row">
       <h1 class="text-lg">
         <span class="font-bold">Estado:</span>
-        <span class="text-primary font-medium"> {{
-          getStateString(workProgressOrder?.state)
-        }}</span>
+        <span class="text-primary font-medium">
+          {{ getStateString(progressAdvance?.state) }}</span
+        >
       </h1>
       <h1 class="text-lg">
         <span class="font-bold">Fecha:</span>
-        {{ workProgressOrder?.work_order?.start_date }}
+        {{ progressAdvance?.work_order?.start_date }}
       </h1>
       <h1 class="text-lg">
         <span class="font-bold">Cliente:</span>
-        {{ workProgressOrder?.work_order?.quote?.customer?.name }}
+        {{ progressAdvance?.work_order?.quote?.customer?.name }}
       </h1>
       <h1 class="text-lg">
         <span class="font-bold">Codigo:</span>
-        {{ workProgressOrder?.work_order?.quote?.code }}
+        {{ progressAdvance?.work_order?.quote?.code }}
       </h1>
     </div>
     <h1 class="text-lg">
       <span class="font-bold">Descripción del trabajo:</span>
-      {{ workProgressOrder?.work_order?.description }}
+      {{ progressAdvance?.work_order?.description }}
     </h1>
     <div class="flex flex-col gap-5">
       <!-- Título -->
@@ -45,7 +45,7 @@
 
       <!-- Mensaje si no hay avances -->
       <div
-        *ngIf="workProgressOrder?.work_advance?.length === 0"
+        *ngIf="progressAdvance?.work_advance?.length === 0"
         class="flex justify-center"
       >
         <h1 class="text-lg text-gray-500">-No hay avances para mostrar-</h1>
@@ -54,11 +54,12 @@
       <!-- Grid de cards -->
       <div
         class="grid grid-cols-1 md:grid-cols-2 gap-4"
-        *ngIf="(workProgressOrder?.work_advance?.length ?? 0) > 0"
+        *ngIf="(progressAdvance?.work_advance?.length ?? 0) > 0"
       >
         <div
-          *ngFor="let advance of workProgressOrder?.work_advance"
-          class="bg-white border-2 border-solid border-gray-500 p-4 size-full rounded-lg shadow-md"
+          (click)="toEdit(advance?.id || 0, i)"
+          *ngFor="let advance of progressAdvance?.work_advance; let i = index"
+          class="bg-white border-2 border-solid border-gray-500 p-4 size-full rounded-lg shadow-md cursor-pointer"
         >
           <p class="text-black font-medium">
             {{ advance.description }}
@@ -71,18 +72,18 @@
         <p-button
           label="Agregar avance"
           fluid="true"
-          [disabled]="workProgressOrder?.state?.toString() === '3'"
+          [disabled]="progressAdvance?.state?.toString() === '3'"
           [styleClass]="
-            workProgressOrder?.state === '3' ? 'bg-primary-500' : 'bg-primary'
+            progressAdvance?.state === '3' ? 'bg-primary-500' : 'bg-primary'
           "
-          [routerLink]="['/progressOrder/info/create', workProgressOrder?.id]"
+          [routerLink]="['/progressOrder/info/create', progressAdvance?.id]"
         />
       </div>
     </div>
 
     <div
       class="flex flex-col gap-2"
-      *ngIf="workProgressOrder?.state?.toString() !== '3'"
+      *ngIf="progressAdvance?.state?.toString() !== '3'"
     >
       <h1 class="text-lg font-bold">Cambiar estado</h1>
       <p-autocomplete

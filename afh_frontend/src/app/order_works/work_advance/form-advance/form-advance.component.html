@@ -1,6 +1,10 @@
 <div class="relative h-screen">
   <div class="card flex absolute top-0 left-0 p-4">
-    <button pButton [routerLink]="['/progressOrder/info/', progressOrderId]">
+    <button
+      pButton
+      [routerLink]="['/progressOrder/info/', progressToEdit?.id]"
+      (click)="close()"
+    >
       <i class="pi pi-arrow-left" pButtonIcon></i>
       <span pButtonLabel>Volver</span>
     </button>
@@ -8,7 +12,7 @@
   <div class="w-full flex flex-col p-5 pt-20 gap-5">
     <h1 class="text-xl font-bold text-start">
       AFH: Seguimiento de trabajo → Información de la orden: {{ orderCode }} →
-      Agregar avance
+      {{ titleAction }}
     </h1>
     <div class="flex flex-col gap-2">
       <label class="font-bold text-start">Código de la orden </label>
@@ -98,7 +102,7 @@
         label="Aceptar"
         [loading]="loading"
         [disabled]="loading"
-        (onClick)="createAdvance()"
+        (onClick)="submit()"
         fluid="true"
       />
       <p-button

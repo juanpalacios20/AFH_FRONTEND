@@ -63,7 +63,7 @@
           <td
             class="cursor-pointer"
             (click)="viewProgressOrder(progressWorkOrder)"
-            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
           >
             <p class="text-center">
               {{ progressWorkOrder.work_order.quote.customer.name }}
@@ -83,7 +83,7 @@
           </td>
           <td
             class="cursor-pointer"
-            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
             (click)="viewProgressOrder(progressWorkOrder)"
           >
             <p class="text-center">
@@ -92,7 +92,7 @@
           </td>
           <td
             class="cursor-pointer text-primary font-bold"
-            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
             (click)="viewProgressOrder(progressWorkOrder)"
           >
             <p class="text-center">

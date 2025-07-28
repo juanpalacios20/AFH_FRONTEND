@@ -4,7 +4,11 @@ import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import { exhibit } from '../../../interfaces/models';
+import {
+  exhibit,
+  WorkAdvance,
+  workProgressOrder,
+} from '../../../interfaces/models';
 import { NgFor } from '@angular/common';
 import { WorkReportService } from '../../../work_report/services/work_report.service';
 import { forkJoin, switchMap } from 'rxjs';
@@ -39,6 +43,10 @@ export class FormAdvanceComponent {
   imagenesEliminadas: { [key: number]: string[] } = {};
   progressOrderId: number = 0;
   loading: boolean = false;
+  titleAction: string = '';
+  advanceToEdit: WorkAdvance | undefined = undefined;
+  progressToEdit: workProgressOrder | null = null;
+  anexosEliminados: number[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -48,22 +56,179 @@ export class FormAdvanceComponent {
     private workProgressOrderService: progressOrderService
   ) {
     this.progressOrderId = Number(this.route.snapshot.paramMap.get('id'));
+    this.action();
+  }
+
+  action() {
+    console.log('listo para autocompletar');
+    console.log(localStorage.getItem('edit'));
+    if (localStorage.getItem('edit') === 'true') {
+      this.titleAction = 'Editar avance';
+      this.progressToEdit =
+        this.workAdvanceService.getItem<workProgressOrder>('progress');
+      const count = localStorage.getItem('count');
+      this.advanceToEdit = this.progressToEdit?.work_advance[Number(count)];
+      if (this.advanceToEdit) {
+        this.advanceDescription = this.advanceToEdit.description;
+        this.exhibits = this.advanceToEdit.exhibits.map((exhibit) => ({
+          id: exhibit.id,
+          tittle: exhibit.tittle,
+          images: exhibit.images,
+          files: [],
+        }));
+        console.log(
+          'lo que se muestra',
+          this.exhibits,
+          'lo que llega',
+          this.advanceToEdit
+        );
+      }
+    } else {
+      this.titleAction = 'Crear avance';
+    }
+  }
+
+  submit() {
+    if (localStorage.getItem('edit') === 'true') {
+      this.updateWorkAdvance();
+    } else {
+      this.createAdvance();
+    }
+  }
+
+  updateWorkAdvance() {
+    const original = this.advanceToEdit;
+    const current = this.exhibits;
+    const advanceId = original?.id || 0;
+    if (!advanceId) return;
+
+    this.loading = true;
+
+    // 🟡 Inicializa la variable de anexos eliminados
+    this.anexosEliminados = this.anexosEliminados || [];
+
+    // 🟠 Clonamos los current IDs (sólo anexos con ID válido)
+    const currentIds: number[] = current
+      .filter((anexo) => anexo.id !== 0)
+      .map((anexo) => anexo.id);
+
+    // 🔵 Preparar promesas para crear o actualizar anexos
+    const exhibitUpdatePromises = current.map((anexo, anexoIndex) => {
+      const hasTitle = anexo.tittle?.trim() !== '';
+      const hasFiles =
+        (anexo.files && anexo.files.length > 0) ||
+        (anexo.images && anexo.images.length > 0);
+
+      if (!hasTitle && !hasFiles) return Promise.resolve(null);
+
+      const formData = new FormData();
+      if (hasTitle) {
+        formData.append(anexo.id === 0 ? 'tittle' : 'title', anexo.tittle);
+      }
+
+      const urlFetches = (anexo.images || [])
+        .filter((url) => !this.imagenesEliminadas?.[anexo.id]?.includes(url))
+        .map((url, index) =>
+          fetch(url)
+            .then((res) => res.blob())
+            .then((blob) => ({
+              blob,
+              filename: `old_image_${anexoIndex}_${index}.jpg`,
+            }))
+        );
+      console.log('vamos bien 1');
+      return Promise.all(urlFetches).then((blobs) => {
+        console.log('vamos bien 2');
+        if (anexo.id !== 0) {
+          blobs.forEach(({ blob, filename }) => {
+            formData.append('image', blob, filename);
+          });
+        }
+
+        if (anexo.id === 0) {
+          console.log('vamos bien 3');
+          (anexo.files || []).forEach((file: File) => {
+            formData.append('images', file);
+          });
+
+          // Crear nuevo anexo
+          return this.workReportService
+            .createExhibit(formData)
+            .toPromise()
+            .then((res) => res.exhibit_id);
+        } else {
+          // Actualizar anexo existente
+          console.log('vamos bien 4', anexo.id);
+          return this.workReportService
+            .updateExhibit(formData, anexo.id)
+            .toPromise()
+            .then(() => anexo.id);
+        }
+      });
+    });
+    console.log('vamos bien 5');
+
+    // 🟢 Procesar todos los cambios
+    Promise.all([...exhibitUpdatePromises])
+      .then((results) => {
+        const createdOrUpdatedIds = results.filter(
+          (id) => id !== null
+        ) as number[];
+        const finalExhibitIds = [
+          ...currentIds.filter((id) => !this.anexosEliminados.includes(id)), // actuales no eliminados
+          ...createdOrUpdatedIds.filter((id) => !currentIds.includes(id)), // nuevos anexos
+        ];
+
+        // Preparamos los datos finales para el avance
+        const data: any = {};
+        const originalIds = original?.exhibits.map((e) => e.id).sort() || [];
+        const newSortedIds = [...finalExhibitIds].sort();
+
+        const idsSonIguales =
+          originalIds.length === newSortedIds.length &&
+          originalIds.every((id, i) => id === newSortedIds[i]);
+
+        if (this.advanceDescription !== original?.description) {
+          data.description = this.advanceDescription;
+        }
+
+        if (!idsSonIguales) {
+          data.exhibits_ids = finalExhibitIds;
+        }
+
+        if (Object.keys(data).length === 0) {
+          console.log('Sin cambios de descripción ni anexos');
+          return;
+        }
+
+        console.log(data);
+        return this.workAdvanceService
+          .updateWorkAdvance(data, advanceId)
+          .toPromise();
+      })
+      .then(() => {
+        console.log('Avance actualizado exitosamente');
+        localStorage.setItem('state', 'true');
+        this.router.navigate(['/progressOrder/info/', this.progressToEdit?.id]);
+      })
+      .catch((err) => {
+        console.error('Error durante la actualización del avance:', err);
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   createAdvance() {
     this.loading = true;
-    // 1. Crear una lista de peticiones para los exhibits
     const exhibitRequests = this.exhibits.map((anexo) => {
       const formData = new FormData();
       formData.append('tittle', anexo.tittle);
       anexo.files.forEach((file) => formData.append('images', file));
-      return this.workReportService.createExhibit(formData); // Devuelve Observable
+      return this.workReportService.createExhibit(formData);
     });
-
-    // 2. Ejecutar todas las peticiones de exhibits en paralelo
     forkJoin(exhibitRequests)
       .pipe(
-        // 3. Cuando todas terminen, crear el avance con los IDs devueltos
         switchMap((exhibitResponses: any[]) => {
           const exhibit_ids = exhibitResponses.map((res) => res.exhibit_id);
           console.log('ids', exhibit_ids);
@@ -73,11 +238,8 @@ export class FormAdvanceComponent {
             date: new Date().toISOString().split('T')[0],
           };
           console.log('workAdvanceData', workAdvanceData);
-          // Crear el avance y devolver su observable
           return this.workAdvanceService.createWorkAdvance(workAdvanceData);
         }),
-
-        // 4. Luego, asignar el avance al progreso
         switchMap((workAdvanceResponse: any) => {
           const workAdvanceId = workAdvanceResponse.id;
           const progressId = this.progressOrderId;
@@ -94,8 +256,6 @@ export class FormAdvanceComponent {
           this.loading = true;
           localStorage.setItem('state', 'true');
           this.router.navigate(['/progressOrder/info/', this.progressOrderId]);
-
-          // Puedes mostrar notificación, redireccionar, limpiar el formulario, etc.
         },
         error: (err) => {
           console.error(
@@ -104,6 +264,19 @@ export class FormAdvanceComponent {
           );
         },
       });
+  }
+
+  close() {
+    localStorage.removeItem('edit');
+    this.advanceDescription = '';
+    this.exhibits = [
+      {
+        id: 0,
+        tittle: '',
+        images: [] as string[],
+        files: [] as File[],
+      },
+    ];
   }
 
   resetForm() {

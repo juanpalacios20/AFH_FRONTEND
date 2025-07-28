@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProgressInfoComponent } from './progress-info.component';
+import  ProgressInfoComponent  from './progress-info.component';
 
 describe('ProgressInfoComponent', () => {
   let component: ProgressInfoComponent;

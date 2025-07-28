@@ -159,7 +159,7 @@ export interface workProgressOrder {
 
 export interface WorkAdvance {
   id: number;
-  exhibit: exhibit[];
+  exhibits: exhibit[];
   description: string;
   date: string;
 }
