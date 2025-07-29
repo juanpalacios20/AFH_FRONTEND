@@ -86,7 +86,27 @@ export class HomeWorkCustomerComponent implements OnInit {
         this.router.navigate(['/work-advances']).then(() => {
         });
     }
-  
+    
+    getMarkerClasses(event: any): string {
+  return 'hover:shadow-lg transform transition-all duration-300';
+}
+
+getStatusBadge(event: any): string {
+  // Lógica para determinar el badge según el estado
+  return event.completed ? 'Completado' : 'En Progreso';
+}
+
+getCurrentDate(): string {
+  return new Date().toLocaleDateString('es-ES');
+}
+
+openImageModal(imageUrl: string): void {
+  // Lógica para abrir modal de imagen
+}
+
+isLastEvent(event: any): boolean {
+  return this.events.indexOf(event) === this.events.length - 1;
+}
     
 }
 
