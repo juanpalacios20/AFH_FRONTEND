@@ -1,10 +1,11 @@
 <div class="relative h-screen">
   <div class="card flex absolute top-0 left-0 p-4">
-    <button pButton [routerLink]="['/progressOrder']">
+    <button pButton [routerLink]="['/progressOrder']" (click)="close()">
       <i class="pi pi-arrow-left" pButtonIcon></i>
       <span pButtonLabel>Volver</span>
     </button>
     <p-toast position="top-right"></p-toast>
+    <p-confirmdialog />
   </div>
   <div class="w-full flex flex-col p-5 pt-20 gap-5">
     <div class="flex justify-between items-center mb-5 md:flex-row">
@@ -61,7 +62,7 @@
           *ngFor="let advance of progressAdvance?.work_advance; let i = index"
           class="bg-white border-2 border-solid border-gray-500 p-4 size-full rounded-lg shadow-md cursor-pointer"
         >
-          <p class="text-black font-medium">
+          <p class="text-black font-medium truncate w-110 mx-auto">
             {{ advance.description }}
           </p>
         </div>
@@ -72,7 +73,8 @@
         <p-button
           label="Agregar avance"
           fluid="true"
-          [disabled]="progressAdvance?.state?.toString() === '3'"
+          pTooltip="Para esta acción es necesario estar en el estado 'en progreso'" showDelay="1000" hideDelay="300"
+          [disabled]="progressAdvance?.state?.toString() !== '2'"
           [styleClass]="
             progressAdvance?.state === '3' ? 'bg-primary-500' : 'bg-primary'
           "
@@ -99,7 +101,7 @@
         <p-button
           label="Cambiar estado"
           fluid="true"
-          (onClick)="changeState()"
+          (onClick)="submitChangeState()"
         />
       </div>
     </div>

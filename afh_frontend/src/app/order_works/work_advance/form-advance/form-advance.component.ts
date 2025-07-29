@@ -9,7 +9,7 @@ import {
   WorkAdvance,
   workProgressOrder,
 } from '../../../interfaces/models';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { WorkReportService } from '../../../work_report/services/work_report.service';
 import { forkJoin, switchMap } from 'rxjs';
 import { workAdvanceService } from '../../services/work_advance.service';
@@ -25,12 +25,13 @@ import { FileUpload } from 'primeng/fileupload';
     FormsModule,
     NgFor,
     FileUpload,
+    NgIf,
   ],
   templateUrl: './form-advance.component.html',
   styleUrl: './form-advance.component.css',
 })
 export class FormAdvanceComponent {
-  orderCode: string = localStorage.getItem('code') ?? '';
+  orderCode: string = '';
   advanceDescription: string = '';
   exhibits = [
     {
@@ -47,6 +48,7 @@ export class FormAdvanceComponent {
   advanceToEdit: WorkAdvance | undefined = undefined;
   progressToEdit: workProgressOrder | null = null;
   anexosEliminados: number[] = [];
+  disabled = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -60,12 +62,15 @@ export class FormAdvanceComponent {
   }
 
   action() {
-    console.log('listo para autocompletar');
-    console.log(localStorage.getItem('edit'));
+    this.progressToEdit =
+      this.workAdvanceService.getItem<workProgressOrder>('progress');
+    this.orderCode = this.progressToEdit?.work_order?.quote?.code ?? '';
+    const completed = localStorage.getItem('completed');
+    if (completed === 'true') {
+      this.disabled = true;
+    }
     if (localStorage.getItem('edit') === 'true') {
       this.titleAction = 'Editar avance';
-      this.progressToEdit =
-        this.workAdvanceService.getItem<workProgressOrder>('progress');
       const count = localStorage.getItem('count');
       this.advanceToEdit = this.progressToEdit?.work_advance[Number(count)];
       if (this.advanceToEdit) {

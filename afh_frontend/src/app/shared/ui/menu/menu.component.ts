@@ -80,6 +80,11 @@ export class MenuComponent implements OnInit {
           route: '/management-orders-works',
         },
         {
+          label: 'Progreso ordenes',
+          icon: 'pi pi-sync',
+          route: '/progressOrder',
+        },
+        {
           label: 'Actas de entrega',
           icon: 'pi pi-clipboard',
           route: '/work-report',

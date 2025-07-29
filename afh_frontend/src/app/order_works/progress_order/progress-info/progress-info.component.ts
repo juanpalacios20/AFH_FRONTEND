@@ -11,9 +11,11 @@ import {
   RouterModule,
 } from '@angular/router';
 import { progressOrderService } from '../../services/progress_work.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { workAdvanceService } from '../../services/work_advance.service';
+import { Tooltip } from 'primeng/tooltip';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-progress-info',
@@ -26,16 +28,18 @@ import { workAdvanceService } from '../../services/work_advance.service';
     NgFor,
     NgIf,
     ToastModule,
+    Tooltip,
+    ConfirmDialog,
   ],
   templateUrl: './progress-info.component.html',
   styleUrl: './progress-info.component.css',
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
 })
 export default class ProgressInfoComponent implements OnInit {
   workProgressOrder: workProgressOrder | null = null;
   filteredStates: string[] = [];
   selectedStates: string = '';
-  statesOption = ['En progreso', 'Completado'];
+  statesOption = ['En progreso'];
   idToEdit: number | null = null;
   progressAdvance: workProgressOrder | null = null;
 
@@ -44,7 +48,8 @@ export default class ProgressInfoComponent implements OnInit {
     private workProgressOrderService: progressOrderService,
     private workAdvanceService: workAdvanceService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private confirmationService: ConfirmationService
   ) {
     this.progressAdvance =
       workAdvanceService.getItem<workProgressOrder>('progress');
@@ -55,9 +60,15 @@ export default class ProgressInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.progressAdvance?.state);
+    if (Number(this.progressAdvance?.state) === 3) {
+      localStorage.setItem('completed', 'true');
+    }
+    if (Number(this.progressAdvance?.state) === 2) {
+      this.statesOption = ['Completado'];
+    }
     const state = localStorage.getItem('state');
     const edit = localStorage.getItem('edit');
-    console.log(state);
     if (state === 'true' && edit === 'true') {
       console.log('avance editado');
       localStorage.removeItem('state');
@@ -103,6 +114,15 @@ export default class ProgressInfoComponent implements OnInit {
     });
   }
 
+  submitChangeState() {
+    if (this.selectedStates === 'En progreso') {
+      this.changeState();
+    }
+    if (this.selectedStates === 'Completado') {
+      this.confirm();
+    }
+  }
+
   changeState() {
     if (this.progressAdvance) {
       let data: any = {};
@@ -111,8 +131,17 @@ export default class ProgressInfoComponent implements OnInit {
         data = {
           status: 2,
         };
+        this.statesOption = ['Completado'];
       }
       if (this.selectedStates === 'Completado') {
+        if (this.progressAdvance?.work_advance.length === 0) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: `No puede completar el progreso de una orden sin al menos un avance`,
+          });
+          return;
+        }
         data = {
           status: 3,
         };
@@ -129,11 +158,11 @@ export default class ProgressInfoComponent implements OnInit {
             });
             this.selectedStates = '';
             console.log(response);
-            this.getProgress(); // Refresh the progress order after state change
+            this.getProgress();
           },
           error: (err) => {
             this.messageService.add({
-              severity: 'danger',
+              severity: 'error',
               summary: 'Error',
               detail: `Ha ocurrido un error, intentelo más tarde`,
             });
@@ -142,6 +171,7 @@ export default class ProgressInfoComponent implements OnInit {
         });
     }
   }
+
   getStateString(state: string | undefined): string {
     switch (Number(state)) {
       case 1:
@@ -167,6 +197,34 @@ export default class ProgressInfoComponent implements OnInit {
     localStorage.setItem('edit', 'true');
     localStorage.setItem('count', count.toString());
     this.router.navigate(['/progressOrder/info/create', id]);
+  }
+
+  close() {
+    localStorage.removeItem('code');
+    localStorage.removeItem('completed');
+    localStorage.removeItem('count');
+    this.workAdvanceService.removeItem('progress');
+  }
+
+  confirm() {
+    this.confirmationService.confirm({
+      message: '¿Está seguro que desea marcar la orden como completada?',
+      header: 'Confirmacion',
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.changeState();
+      },
+    });
   }
 
   filterStates(event: any) {

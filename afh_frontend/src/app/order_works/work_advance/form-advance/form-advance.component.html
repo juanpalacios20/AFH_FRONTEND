@@ -28,6 +28,7 @@
       <textarea
         pTextarea
         [(ngModel)]="advanceDescription"
+        [disabled]="disabled"
         rows="5"
         cols="30"
         variant="filled"
@@ -41,6 +42,7 @@
         class="relative border border-gray-300 rounded px-4 py-6 flex flex-col gap-4"
       >
         <button
+          [disabled]="disabled"
           class="absolute cursor-pointer top-1 right-1 text-red-500 hover:text-red-700 text-xl font-bold"
           (click)="deleteExhibit(i)"
           title="Eliminar anexo"
@@ -52,6 +54,7 @@
             >Descripción del anexo {{ i + 1 }}</label
           >
           <textarea
+            [disabled]="disabled"
             rows="3"
             class="border focus:border-black border-gray-300 rounded px-3 py-2 focus:outline-none"
             placeholder="Escriba una descripción..."
@@ -73,6 +76,7 @@
                 class="border rounded"
               />
               <button
+                [disabled]="disabled"
                 type="button"
                 class="absolute cursor-pointer top-0 right-0 bg-white text-gray-500 hover:text-gray-700 rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-80 hover:opacity-100"
                 (click)="removeImage(i, img)"
@@ -88,16 +92,22 @@
             name="images"
             accept="image/*"
             multiple="true"
+            [disabled]="disabled"
             chooseLabel="Seleccionar imágenes"
             [customUpload]="true"
             (onSelect)="onImagesSelected($event, i)"
           ></p-fileupload>
         </div>
       </div>
-      <p-button label="Agregar Anexo" fluid="true" (click)="addExhibit()" />
+      <p-button
+        label="Agregar Anexo"
+        [disabled]="disabled"
+        fluid="true"
+        (click)="addExhibit()"
+      />
     </div>
 
-    <div class="flex gap-4 justify-center mt-4">
+    <div class="flex gap-4 justify-center mt-4" *ngIf="disabled === false">
       <p-button
         label="Aceptar"
         [loading]="loading"
