@@ -54,10 +54,11 @@ export class HomeWorkCustomerComponent implements OnInit {
           console.log('Work progress fetched:', this.work_progress);
           switch(this.work_progress?.state) {
             case 2:
+              console.log('imagen', this.work_progress.work_advance[0].exhibits[0].images[0])
                 this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true }];
                 break;
             case 3:
-              this.events = [...this.events, {status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sidi finalizado con exito, prontamente recibira el acta de entrega con mas detalles de lo realizdo.', showButton: false}]
+              this.events = [...this.events, {status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sidi finalizado con exito, prontamente recibira el acta de entrega con mas detalles de lo realizdo.', showButton: false, image:this.work_progress.work_advance[0].exhibits[0].images[0]}]
           }
           console.log(this.events);
     }, error: (error) => {
@@ -71,7 +72,7 @@ export class HomeWorkCustomerComponent implements OnInit {
             case 1:
                 return 'Pendiente';
             case 2:
-                return 'Iniciado';
+                return 'En Progreso';
             case 3:
                 return 'Finalizado';
             case 4:

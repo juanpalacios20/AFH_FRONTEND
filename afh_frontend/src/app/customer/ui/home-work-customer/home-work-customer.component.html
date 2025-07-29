@@ -58,8 +58,8 @@
             <ng-template #content let-event>
                 <p-card [header]="event.status" [subheader]="event.date" styleClass="bg-gray-900 text-amber-50">
                     <img *ngIf="event.image"
-                        [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + event.image"
-                        [alt]="event.name" width="200" class="shadow" />
+                        [src]="event.image"
+                        [alt]="event.name" width="200" class="shadow flex" />
                     <p>
                         {{ event.description || 'Descripcion del evento' }}
                     </p>

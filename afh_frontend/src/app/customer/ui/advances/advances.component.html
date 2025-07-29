@@ -9,28 +9,32 @@
 </div>
 
 <!-- Contenido cuando sí hay work_advances -->
-<section class="mt-2 justify-items-center" *ngFor="let workAdvance of work_advances">
-    <h2 class="font-semibold font-oswald mb-2">Fecha: {{ workAdvance.date | date:'dd/M/yyyy' }}</h2>
-
-    <!-- Una galería por cada exhibit con su título -->
-    <div *ngFor="let exhibit of workAdvance.exhibits" class="mb-4">
-        <h3 class="font-medium font-oswald mb-2 text-center">{{ exhibit.tittle }}</h3>
-        <div class="card">
-            <p-galleria [value]="getFormattedImages(workAdvance.exhibits)" [responsiveOptions]="responsiveOptions"
-                [containerStyle]="{ 'max-width': '640px' }" [numVisible]="7" [circular]="true">
-                <ng-template #item let-item>
-                    <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
-                </ng-template>
-                <ng-template #thumbnail let-item>
-                    <img [src]="item.thumbnailImageSrc" />
-                </ng-template>
-            </p-galleria>
-        </div>
-        <section class="mt-3 justify-items-center">
-            <div class="font-black font-oswald">
-                <p>Descripción: {{ workAdvance.description }}</p>
+<div ng class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+    <section class="mt-2 justify-items-center" *ngFor="let workAdvance of work_advances">
+        <!-- Una galería por cada exhibit con su título -->
+        <div *ngFor="let exhibit of workAdvance.exhibits" class="mb-4">
+            <div class="card">
+                <p-galleria [value]="getFormattedImages(workAdvance.exhibits)" [showItemNavigators]="true"
+                    [showThumbnails]="false" [showIndicators]="true" [showItemNavigatorsOnHover]="true"
+                    [circular]="true" [responsiveOptions]="responsiveOptions"
+                    [containerStyle]="{ 'max-width': '640px' }">
+                    <ng-template #item let-item>
+                        <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                    </ng-template>
+                    <ng-template #thumbnail let-item>
+                        <img [src]="item.thumbnailImageSrc" style="display: block;" />
+                    </ng-template>
+                    <ng-template #caption let-item>
+                        <div class="text-xl mb-2 font-bold">{{ exhibit.tittle }} - {{workAdvance.date}}</div>
+                    </ng-template>
+                </p-galleria>
             </div>
-        </section>
-    </div>
+            <section class="mt-3 justify-items-center">
+                <div class="font-black font-oswald">
+                    <p>Descripción: {{ workAdvance.description }}</p>
+                </div>
+            </section>
+        </div>
 
-</section>
+    </section>
+</div>
