@@ -17,9 +17,9 @@
                 <p-galleria [value]="getFormattedImages(workAdvance.exhibits)" [showItemNavigators]="true"
                     [showThumbnails]="false" [showIndicators]="true" [showItemNavigatorsOnHover]="true"
                     [circular]="true" [responsiveOptions]="responsiveOptions"
-                    [containerStyle]="{ 'max-width': '640px' }">
+                    [containerStyle]="{ 'max-width': '600px' }">
                     <ng-template #item let-item>
-                        <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                        <img [src]="item.itemImageSrc" class="w-1/2 mx-auto block" />
                     </ng-template>
                     <ng-template #thumbnail let-item>
                         <img [src]="item.thumbnailImageSrc" style="display: block;" />
