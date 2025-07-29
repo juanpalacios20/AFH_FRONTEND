@@ -142,6 +142,7 @@ export default class ProgressInfoComponent implements OnInit {
           });
           return;
         }
+        localStorage.setItem('completed', 'true');
         data = {
           status: 3,
         };
