@@ -1,0 +1,130 @@
+<div class="relative h-screen">
+  <app-menu class="absolute top-0 left-0 p-4"></app-menu>
+  <p-toast position="top-right"></p-toast>
+  <div class="w-full p-5 pt-20">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">AFH: Seguimiento de trabajo</h1>
+    </div>
+
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <p-floatlabel variant="on" fluid="true" class="w-full">
+          <p-iconfield>
+            <p-inputicon class="pi pi-search" rounded="true" />
+            <input
+              fluid="true"
+              pInputText
+              id="on_label"
+              [(ngModel)]="workProgressOrderFound"
+              (input)="to?.filterGlobal(workProgressOrderFound, 'contains')"
+              autocomplete="off"
+            />
+          </p-iconfield>
+        </p-floatlabel>
+        <small id="search-help" class="text-gray-500 text-center">
+          Busca por codigo de orden</small
+        >
+      </div>
+    </div>
+
+    <p-table
+      #to
+      [rows]="20"
+      [paginator]="true"
+      [value]="workProgressOrder"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['work_order.quote.code']"
+    >
+      <ng-template #header *ngIf="workProgressOrder.length > 0">
+        <tr>
+          <th class="rounded-border text-primary-950 text-center">Código</th>
+          <th class="rounded-border text-primary-950 text-center">
+            Nombre cliente
+          </th>
+          <th class="rounded-border text-primary-950 text-center">
+            Nombre representante
+          </th>
+          <th class="rounded-border text-primary-950 text-center">Fecha</th>
+          <th class="rounded-border text-primary-950 text-center">Estado</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-progressWorkOrder>
+        <tr>
+          <td
+            class="cursor-pointer"
+            (click)="viewProgressOrder(progressWorkOrder)"
+            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+          >
+            <p class="text-center">
+              {{ progressWorkOrder.work_order.quote.code }}
+            </p>
+          </td>
+          <td
+            class="cursor-pointer"
+            (click)="viewProgressOrder(progressWorkOrder)"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
+          >
+            <p class="text-center">
+              {{ progressWorkOrder.work_order.quote.customer.name }}
+            </p>
+          </td>
+          <td
+            class="cursor-pointer"
+            (click)="viewProgressOrder(progressWorkOrder)"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
+          >
+            <p class="text-center">
+              {{
+                progressWorkOrder.work_order.quote.customer.representative ||
+                  progressWorkOrder.work_order.quote.customer.name
+              }}
+            </p>
+          </td>
+          <td
+            class="cursor-pointer"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
+            (click)="viewProgressOrder(progressWorkOrder)"
+          >
+            <p class="text-center">
+              {{ progressWorkOrder.work_order.start_date }}
+            </p>
+          </td>
+          <td
+            class="cursor-pointer text-primary font-bold"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
+            (click)="viewProgressOrder(progressWorkOrder)"
+          >
+            <p class="text-center">
+              {{ getStateString(progressWorkOrder.state) }}
+            </p>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="
+          workProgressOrder.length === 0 && loadingworkProgressOrder === false
+        "
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay seguimiento de trabajo para mostrar
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="
+          workProgressOrder.length === 0 && loadingworkProgressOrder === true
+        "
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

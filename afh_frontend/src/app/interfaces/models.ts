@@ -164,3 +164,15 @@ export interface WorkProgress {
   state: number;
 }
 
+export interface WorkAdvance {
+  id: number;
+  exhibits: exhibit[];
+  description: string;
+  date: string;
+}
+
+
+export interface WorkAdvanceResponse {
+  message: string;
+  id: number;
+}
