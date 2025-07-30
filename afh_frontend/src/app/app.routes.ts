@@ -21,7 +21,7 @@ import ProgressManagementComponent from './order_works/progress_order/management
 import ProgressInfoComponent from './order_works/progress_order/progress-info/progress-info.component';
 import { FormAdvanceComponent } from './order_works/work_advance/form-advance/form-advance.component';
 import { LoginCustomerComponent } from './customer/ui/login/login-customer/login-customer.component';
-import { HomeWorkCustomerComponent} from './customer/ui/home-work-customer/home-work-customer.component';
+import { HomeWorkCustomerComponent } from './customer/ui/home-work-customer/home-work-customer.component';
 import { AdvancesComponent } from './customer/ui/advances/advances.component';
 
 export const routes: Routes = [
@@ -85,9 +85,21 @@ export const routes: Routes = [
   { path: 'agenteai', component: ChatComponent, canActivate: [AuthGuard] },
   { path: 'login-customer', component: LoginCustomerComponent },
   { path: 'home-customer', component: HomeWorkCustomerComponent },
-  { path: 'work-advances', component: AdvancesComponent},
-  { path: 'progressOrder', component: ProgressManagementComponent },
-  { path: 'progressOrder/info/:id', component: ProgressInfoComponent },
-  { path: 'progressOrder/info/create/:id', component: FormAdvanceComponent },
+  { path: 'work-advances', component: AdvancesComponent },
+  {
+    path: 'progressOrder',
+    component: ProgressManagementComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'progressOrder/info/:id',
+    component: ProgressInfoComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'progressOrder/info/create/:id',
+    component: FormAdvanceComponent,
+    canActivate: [AuthGuard],
+  },
   { path: '**', redirectTo: 'login' },
 ];
