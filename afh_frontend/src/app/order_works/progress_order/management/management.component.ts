@@ -12,12 +12,12 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { MenuComponent } from '../../../shared/ui/menu/menu.component';
 import { ButtonModule } from 'primeng/button';
-import { workProgressOrder } from '../../../interfaces/models';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { progressOrderService } from '../../services/progress_work.service';
 import ProgressInfoComponent from '../progress-info/progress-info.component';
 import { RouterModule } from '@angular/router';
 import { workAdvanceService } from '../../services/work_advance.service';
+import { WorkProgress } from '../../../interfaces/models';
 
 @Component({
   selector: 'app-management',
@@ -40,10 +40,10 @@ import { workAdvanceService } from '../../services/work_advance.service';
   providers: [ConfirmationService, MessageService],
 })
 export default class ProgressManagementComponent {
-  workProgressOrder: workProgressOrder[] = [];
+  workProgressOrder: WorkProgress[] = [];
   loadingworkProgressOrder: boolean = false;
   workProgressOrderFound: string = '';
-  selectedWorkProgressOrder: workProgressOrder | null = null;
+  selectedWorkProgressOrder: WorkProgress | null = null;
   showView: boolean = false;
 
   constructor(
@@ -53,7 +53,7 @@ export default class ProgressManagementComponent {
     this.getWorkProgressOrders();
   }
 
-  viewProgressOrder(workProgressOrder: workProgressOrder) {
+  viewProgressOrder(workProgressOrder: WorkProgress) {
     this.selectedWorkProgressOrder = workProgressOrder;
     this.workAdvanceService.setItem('progress', workProgressOrder);
     this.showView = true;

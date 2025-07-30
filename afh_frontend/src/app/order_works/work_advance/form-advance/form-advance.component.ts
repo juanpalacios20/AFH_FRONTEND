@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import {
   exhibit,
   WorkAdvance,
-  workProgressOrder,
+  WorkProgress,
 } from '../../../interfaces/models';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { WorkReportService } from '../../../work_report/services/work_report.service';
@@ -53,7 +53,7 @@ export class FormAdvanceComponent {
   loading: boolean = false;
   titleAction: string = '';
   advanceToEdit: WorkAdvance | undefined = undefined;
-  progressToEdit: workProgressOrder | null = null;
+  progressToEdit: WorkProgress | null = null;
   anexosEliminados: number[] = [];
   disabled: boolean = false;
   errorMessage: string = '';
@@ -88,7 +88,7 @@ export class FormAdvanceComponent {
 
   action() {
     this.progressToEdit =
-      this.workAdvanceService.getItem<workProgressOrder>('progress');
+      this.workAdvanceService.getItem<WorkProgress>('progress');
     this.orderCode = this.progressToEdit?.work_order?.quote?.code ?? '';
     const completed = localStorage.getItem('completed');
     if (completed === 'true') {

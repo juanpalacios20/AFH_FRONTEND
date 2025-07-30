@@ -76,7 +76,7 @@
           pTooltip="Para esta acción es necesario estar en el estado 'en progreso'" showDelay="1000" hideDelay="300"
           [disabled]="progressAdvance?.state?.toString() !== '2'"
           [styleClass]="
-            progressAdvance?.state === '3' ? 'bg-primary-500' : 'bg-primary'
+            progressAdvance?.state === 3 ? 'bg-primary-500' : 'bg-primary'
           "
           [routerLink]="['/progressOrder/info/create', progressAdvance?.id]"
         />
