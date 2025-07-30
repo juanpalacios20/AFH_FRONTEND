@@ -54,7 +54,7 @@
           <td
             class="cursor-pointer"
             (click)="viewProgressOrder(progressWorkOrder)"
-            [routerLink]="['progressOrder/info/', progressWorkOrder.id]"
+            [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
           >
             <p class="text-center">
               {{ progressWorkOrder.work_order.quote.code }}
