@@ -14,12 +14,14 @@
         {{ progressAdvance?.work_order?.quote?.code }}
       </h1>
     </div>
-    <div class="flex flex-row justify-start gap-50 md:flex-row">
+    <div
+      class="flex flex-col gap-4 md:flex-row md:justify-between md:items-center w-full flex-wrap"
+    >
       <h1 class="text-lg">
         <span class="font-bold">Estado:</span>
         <span class="text-primary font-medium">
-          {{ getStateString(progressAdvance?.state) }}</span
-        >
+          {{ getStateString(progressAdvance?.state) }}
+        </span>
       </h1>
       <h1 class="text-lg">
         <span class="font-bold">Fecha:</span>
@@ -30,7 +32,7 @@
         {{ progressAdvance?.work_order?.quote?.customer?.name }}
       </h1>
       <h1 class="text-lg">
-        <span class="font-bold">Codigo:</span>
+        <span class="font-bold">Código:</span>
         {{ progressAdvance?.work_order?.quote?.code }}
       </h1>
     </div>
@@ -62,7 +64,9 @@
           *ngFor="let advance of progressAdvance?.work_advance; let i = index"
           class="bg-white border-2 border-solid border-gray-500 p-4 size-full rounded-lg shadow-md cursor-pointer"
         >
-          <p class="text-black font-medium truncate w-110 mx-auto">
+          <p
+            class="text-black font-medium truncate max-w-full md:max-w-[440px] mx-auto"
+          >
             {{ advance.description }}
           </p>
         </div>
@@ -73,7 +77,9 @@
         <p-button
           label="Agregar avance"
           fluid="true"
-          pTooltip="Para esta acción es necesario estar en el estado 'en progreso'" showDelay="1000" hideDelay="300"
+          pTooltip="Para esta acción es necesario estar en el estado 'en progreso'"
+          showDelay="1000"
+          hideDelay="300"
           [disabled]="progressAdvance?.state?.toString() !== '2'"
           [styleClass]="
             progressAdvance?.state === 3 ? 'bg-primary-500' : 'bg-primary'
