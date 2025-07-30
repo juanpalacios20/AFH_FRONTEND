@@ -9,12 +9,15 @@ import {
   WorkAdvance,
   workProgressOrder,
 } from '../../../interfaces/models';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { WorkReportService } from '../../../work_report/services/work_report.service';
 import { forkJoin, switchMap } from 'rxjs';
 import { workAdvanceService } from '../../services/work_advance.service';
 import { progressOrderService } from '../../services/progress_work.service';
 import { FileUpload } from 'primeng/fileupload';
+import { TextareaModule } from 'primeng/textarea';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-form-advance',
@@ -26,9 +29,13 @@ import { FileUpload } from 'primeng/fileupload';
     NgFor,
     FileUpload,
     NgIf,
+    TextareaModule,
+    CommonModule,
+    ToastModule,
   ],
   templateUrl: './form-advance.component.html',
   styleUrl: './form-advance.component.css',
+  providers: [MessageService],
 })
 export class FormAdvanceComponent {
   orderCode: string = '';
@@ -48,17 +55,35 @@ export class FormAdvanceComponent {
   advanceToEdit: WorkAdvance | undefined = undefined;
   progressToEdit: workProgressOrder | null = null;
   anexosEliminados: number[] = [];
-  disabled = false;
+  disabled: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private workReportService: WorkReportService,
     private workAdvanceService: workAdvanceService,
-    private workProgressOrderService: progressOrderService
+    private workProgressOrderService: progressOrderService,
+    private messageService: MessageService
   ) {
     this.progressOrderId = Number(this.route.snapshot.paramMap.get('id'));
     this.action();
+  }
+
+  verify() {
+    this.errorMessage = '';
+    const message = 'Campo requerido';
+    if (this.advanceDescription === '') {
+      this.errorMessage = message;
+    }
+    for (let i = 0; i < this.exhibits.length; i++) {
+      if (this.exhibits[i].tittle === '') {
+        this.errorMessage = message;
+      }
+      if (this.exhibits[i].images.length === 0) {
+        this.errorMessage = message;
+      }
+    }
   }
 
   action() {
@@ -94,6 +119,15 @@ export class FormAdvanceComponent {
   }
 
   submit() {
+    this.verify();
+    if (this.errorMessage !== '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: `Todos los campos son requeridos`,
+      });
+      return;
+    }
     if (localStorage.getItem('edit') === 'true') {
       this.updateWorkAdvance();
     } else {

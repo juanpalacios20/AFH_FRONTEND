@@ -8,6 +8,7 @@
       <i class="pi pi-arrow-left" pButtonIcon></i>
       <span pButtonLabel>Volver</span>
     </button>
+    <p-toast position="top-right"></p-toast>
   </div>
   <div class="w-full flex flex-col p-5 pt-20 gap-5">
     <h1 class="text-xl font-bold text-start">
@@ -28,12 +29,23 @@
       <textarea
         pTextarea
         [(ngModel)]="advanceDescription"
+        [ngClass]="{
+          'ng-invalid ng-dirty border-red-500':
+            errorMessage && advanceDescription === ''
+        }"
         [disabled]="disabled"
         rows="5"
         cols="30"
         variant="filled"
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-black"
       ></textarea>
+      <small
+        id="email-help"
+        class="text-red-600 mb-4"
+        *ngIf="errorMessage && advanceDescription === ''"
+      >
+        {{ errorMessage }}
+      </small>
     </div>
     <div class="flex flex-col gap-4">
       <h2 class="font-bold text-start">Anexos correspondientes</h2>
@@ -43,6 +55,7 @@
       >
         <button
           [disabled]="disabled"
+          *ngIf="exhibits.length > 1"
           class="absolute cursor-pointer top-1 right-1 text-red-500 hover:text-red-700 text-xl font-bold"
           (click)="deleteExhibit(i)"
           title="Eliminar anexo"
@@ -59,8 +72,19 @@
             class="border focus:border-black border-gray-300 rounded px-3 py-2 focus:outline-none"
             placeholder="Escriba una descripción..."
             [(ngModel)]="exhibit.tittle"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && exhibit.tittle === ''
+            }"
             name="descripcion{{ i }}"
           ></textarea>
+          <small
+            id="email-help"
+            class="text-red-600 mb-4"
+            *ngIf="errorMessage && exhibit.tittle === ''"
+          >
+            {{ errorMessage }}
+          </small>
         </div>
         <div class="flex flex-wrap gap-3 mt-3 relative">
           <div
@@ -74,6 +98,10 @@
                 width="100"
                 height="100"
                 class="border rounded"
+                [ngClass]="{
+                  'ng-invalid ng-dirty border-red-500':
+                    errorMessage && exhibit.images.length === 0
+                }"
               />
               <button
                 [disabled]="disabled"
@@ -98,6 +126,13 @@
             (onSelect)="onImagesSelected($event, i)"
           ></p-fileupload>
         </div>
+        <small
+          id="email-help"
+          class="text-red-600 mb-4"
+          *ngIf="errorMessage && exhibit.images.length === 0"
+        >
+          {{ errorMessage }}
+        </small>
       </div>
       <p-button
         label="Agregar Anexo"
