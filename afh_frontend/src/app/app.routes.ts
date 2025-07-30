@@ -20,6 +20,9 @@ import ChatComponent from './ai/ui/chat/chat.component';
 import ProgressManagementComponent from './order_works/progress_order/management/management.component';
 import ProgressInfoComponent from './order_works/progress_order/progress-info/progress-info.component';
 import { FormAdvanceComponent } from './order_works/work_advance/form-advance/form-advance.component';
+import { LoginCustomerComponent } from './customer/ui/login/login-customer/login-customer.component';
+import { HomeWorkCustomerComponent} from './customer/ui/home-work-customer/home-work-customer.component';
+import { AdvancesComponent } from './customer/ui/advances/advances.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -80,6 +83,9 @@ export const routes: Routes = [
   { path: 'finance', component: ManagementComponent, canActivate: [AuthGuard] },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: 'agenteai', component: ChatComponent, canActivate: [AuthGuard] },
+  { path: 'login-customer', component: LoginCustomerComponent },
+  { path: 'home-customer', component: HomeWorkCustomerComponent },
+  { path: 'work-advances', component: AdvancesComponent},
   { path: 'progressOrder', component: ProgressManagementComponent },
   { path: 'progressOrder/info/:id', component: ProgressInfoComponent },
   { path: 'progressOrder/info/create/:id', component: FormAdvanceComponent },
