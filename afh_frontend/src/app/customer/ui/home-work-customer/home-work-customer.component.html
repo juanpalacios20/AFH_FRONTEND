@@ -1,71 +1,182 @@
 <app-toolbar [name]="work_progress?.work_order?.quote?.customer?.representative || 'Cliente desconocido'"></app-toolbar>
-<section class="flex flex-col mt-4 w-full">
-    <div class="card flex w-full">
-        <div class="mb-4 p-8 flex-1">
-            <p-card styleClass="bg-gray-800">
-                <ng-template pTemplate="header">
-                    <div class="bg-gray-900 text-amber-50 p-4 font-semibold">
-                        Codigo Orden
-                    </div>
-                </ng-template>
-                <p class="m-0 text-amber-50">
-                    {{ work_progress?.work_order?.quote?.code || 'Nombre del trabajo' }}
-                </p>
-            </p-card>
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 lg:p-8">
+  <!-- Header Cards Section -->
+  <section class="max-w-7xl mx-auto">
+    <!-- Mobile: Stack vertically, Desktop: Grid layout -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+      <!-- Código Orden Card -->
+      <div class="group hover:scale-[1.02] transition-all duration-300">
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl border border-slate-200 overflow-hidden">
+          <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-white/20 rounded-lg">
+                <i class="pi pi-code text-white text-lg"></i>
+              </div>
+              <h3 class="text-white font-semibold text-sm uppercase tracking-wide">
+                Código Orden
+              </h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-slate-800 font-mono text-lg font-medium">
+              {{ work_progress?.work_order?.quote?.code || 'ORD-000000' }}
+            </p>
+          </div>
         </div>
-        <p-divider layout="vertical" />
-        <div class="mb-4 p-8 flex-1">
-            <p-card styleClass="bg-gray-800">
-                <ng-template pTemplate="header">
-                    <div class="bg-gray-900 text-amber-50 p-4 font-semibold">
-                        Estado de la orden
-                    </div>
-                </ng-template>
-                <p class="m-0 text-amber-50">
-                    {{ workProgressStatus }}
-                </p>
-            </p-card>
+      </div>
+
+      <!-- Estado Card -->
+      <div class="group hover:scale-[1.02] transition-all duration-300">
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl border border-slate-200 overflow-hidden">
+          <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-4">
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-white/20 rounded-lg">
+                <i class="pi pi-check-circle text-white text-lg"></i>
+              </div>
+              <h3 class="text-white font-semibold text-sm uppercase tracking-wide">
+                Estado
+              </h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+              <p class="text-slate-800 font-medium">
+                {{ workProgressStatus || 'En Progreso' }}
+              </p>
+            </div>
+          </div>
         </div>
-        <p-divider layout="vertical" />
-        <div class="mb-4 p-8 flex-1">
-            <p-card styleClass="bg-gray-800">
-                <ng-template pTemplate="header">
-                    <div class="bg-gray-900 text-amber-50 p-4 font-semibold">
-                        Fecha de finalizacion prevista
-                    </div>
-                </ng-template>
-                <p class="m-0 text-amber-50">
-                    {{ work_progress?.work_order?.end_date || 'Fecha de finalizacion' }}
-                </p>
-            </p-card>
+      </div>
+
+      <!-- Fecha Card -->
+      <div class="group hover:scale-[1.02] transition-all duration-300">
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl border border-slate-200 overflow-hidden">
+          <div class="bg-gradient-to-r from-amber-500 to-orange-600 p-4">
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-white/20 rounded-lg">
+                <i class="pi pi-calendar text-white text-lg"></i>
+              </div>
+              <h3 class="text-white font-semibold text-sm uppercase tracking-wide">
+                Fecha Límite
+              </h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-slate-800 font-medium">
+              {{ work_progress?.work_order?.end_date || '2024-12-31' }}
+            </p>
+          </div>
         </div>
+      </div>
     </div>
-</section>
-<section class="flex flex-col mt-4 w-full">
-    <div>
-        <h1 class="font-semibold text-2xl">Avance de su trabajo</h1>
+
+    <!-- Progress Section Header -->
+    <div class="mb-8">
+      <div class="text-center md:text-left">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
+          Progreso del Trabajo
+        </h1>
+        <p class="text-slate-600 max-w-2xl">
+          Sigue el avance de tu proyecto en tiempo real con actualizaciones detalladas
+        </p>
+      </div>
     </div>
-</section>
-<section>
-    <div class="card">
-        <p-timeline [value]="events" align="alternate" class="customized-timeline">
-            <ng-template #marker let-event>
-                <span class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm "
-                    [style]="{ 'background-color': event.color }">
-                    <i [class]="event.icon"></i>
-                </span>
-            </ng-template>
-            <ng-template #content let-event>
-                <p-card [header]="event.status" [subheader]="event.date" styleClass="bg-gray-900 text-amber-50">
-                    <img *ngIf="event.image"
-                        [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + event.image"
-                        [alt]="event.name" width="200" class="shadow" />
-                    <p>
-                        {{ event.description || 'Descripcion del evento' }}
+
+    <!-- Timeline Section -->
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+      <div class="p-4 sm:p-6 md:p-8">
+        <p-timeline [value]="events" align="alternate" class="custom-timeline">
+
+          <!-- Marker Template -->
+          <ng-template #marker let-event>
+            <div class="relative flex justify-center md:block">
+              <div
+                class="flex w-12 h-12 items-center justify-center text-white rounded-full shadow-lg z-10 transition-all duration-300 hover:scale-110"
+                [class]="getMarkerClasses(event)"
+                [style]="{ 'background': event.color || 'linear-gradient(135deg, #3b82f6, #1e40af)' }">
+                <i [class]="event.icon || 'pi pi-check'" class="text-lg"></i>
+              </div>
+              <!-- Connecting line for mobile -->
+              <div class="absolute top-12 left-1/2 w-0.5 h-8 bg-slate-200 transform -translate-x-1/2 md:hidden"
+                *ngIf="!isLastEvent(event)"></div>
+            </div>
+          </ng-template>
+
+          <!-- Content Template -->
+          <ng-template #content let-event>
+            <div class="group w-full md:w-auto max-w-xl mx-auto">
+              <div
+                class="bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-lg hover:shadow-xl border border-slate-100 overflow-hidden transition-all duration-300 hover:-translate-y-1">
+
+                <!-- Header -->
+                <div class="border-l-4 border-blue-500 bg-gradient-to-r from-slate-50 to-white p-4 sm:p-6">
+                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                      <h3 class="text-lg sm:text-xl font-bold text-slate-800 mb-1">
+                        {{ event.status || 'Estado del Proceso' }}
+                      </h3>
+                      <div class="flex items-center gap-2 text-slate-500 text-sm">
+                        <i class="pi pi-clock text-sm"></i>
+                        <span>{{ event.date || '2024-01-01' }}</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold uppercase tracking-wide">
+                        {{ getStatusBadge(event) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-4 sm:p-6 pt-0">
+
+                  <!-- Imagen si existe -->
+                  <div *ngIf="event.image" class="mb-4">
+                    <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                      <img [src]="event.image" [alt]="event.name"
+                        class="w-full h-48 sm:h-56 object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
+                        (click)="openImageModal(event.image)" />
+                    </div>
+                  </div>
+
+                  <!-- Descripción -->
+                  <div class="mb-4">
+                    <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
+                      {{ event.description || 'Descripción detallada del progreso en esta etapa del proyecto.' }}
                     </p>
-                    <p-button *ngIf="event.showButton" (click)="advances()" label="Ver más.." [text]="true"></p-button>
-                </p-card>
-            </ng-template>
+                  </div>
+
+                  <!-- Botón -->
+                  <div *ngIf="event.showButton" class="flex justify-end">
+                    <button (click)="advances()"
+                      class="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl group text-sm sm:text-base">
+                      <span>Ver detalles</span>
+                      <i class="pi pi-arrow-right group-hover:translate-x-1 transition-transform duration-200"></i>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
         </p-timeline>
+      </div>
     </div>
-</section>
+
+
+    <!-- Footer Info -->
+    <div class="mt-8 text-center">
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-md border border-slate-200">
+        <i class="pi pi-info-circle text-blue-600"></i>
+        <span class="text-sm text-slate-600">Última actualización: {{ getCurrentDate() }}</span>
+      </div>
+    </div>
+  </section>
+</div>

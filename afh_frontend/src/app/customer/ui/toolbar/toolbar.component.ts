@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-toolbar',
-  imports: [Toolbar, ButtonModule],
+  imports: [ ButtonModule],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.css'
 })
@@ -22,6 +22,7 @@ export class ToolbarComponent {
 
   }
   @Input() name: string = '';
+  showMobileMenu = false;
 
   logout(){
         this.cookiesService.delete('id', '/');
@@ -29,4 +30,10 @@ export class ToolbarComponent {
             this.cdRef.detectChanges();
         });
     }
+
+
+  toggleMobileMenu(): void {
+    this.showMobileMenu = !this.showMobileMenu;
+  }
+
 }
