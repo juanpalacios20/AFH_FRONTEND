@@ -20,6 +20,7 @@ import { WorkReportService } from '../../../work_report/services/work_report.ser
 import { FinanceService } from '../../services/finance.service';
 import ViewsComponent from '../views/views.component';
 import { GlobalService } from '../../../global.service';
+import { LocalStorageService } from '../../../localstorage.service';
 
 @Component({
   selector: 'app-management',
@@ -75,6 +76,7 @@ export default class ManagementComponent implements OnInit {
     private workReportService: WorkReportService,
     private messageService: MessageService,
     private financeService: FinanceService,
+    private localStorageService: LocalStorageService,
     private globalService: GlobalService
   ) {
     this.globalService.changeTitle('AFH: Finanzas');
@@ -86,24 +88,38 @@ export default class ManagementComponent implements OnInit {
 
   loadData() {
     console.log('recargando');
-    this.financeService.getIncomes().subscribe({
-      next: (response) => {
-        this.incomes = response;
-        console.log(response);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-    this.financeService.getEgress().subscribe({
-      next: (response) => {
-        this.expenses = response;
-        console.log(response);
-      },
-      error: (err) => {
-        console.log(err.error);
-      },
-    });
+    const incomesLS: income[] | null =
+      this.localStorageService.getItem('incomes');
+    const expenseLS: expense[] | null =
+      this.localStorageService.getItem('expenses');
+    if (incomesLS && incomesLS.length > 0) {
+      this.incomes = incomesLS;
+    } else {
+      this.financeService.getIncomes().subscribe({
+        next: (response) => {
+          this.incomes = response;
+          this.localStorageService.setItem('incomes', this.incomes);
+          console.log(response);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
+    if (expenseLS && expenseLS.length > 0) {
+      this.expenses = expenseLS;
+    } else {
+      this.financeService.getEgress().subscribe({
+        next: (response) => {
+          this.expenses = response;
+          this.localStorageService.setItem('expenses', this.expenses);
+          console.log(response);
+        },
+        error: (err) => {
+          console.log(err.error);
+        },
+      });
+    }
   }
 
   openEditIncome(income: income) {
@@ -119,6 +135,8 @@ export default class ManagementComponent implements OnInit {
   }
 
   closeEdit() {
+    this.localStorageService.removeItem('incomes');
+    this.localStorageService.removeItem('expenses');
     this.editExpenseVisible = false;
     this.editIncomeVisible = false;
     this.action = 0;
@@ -136,6 +154,8 @@ export default class ManagementComponent implements OnInit {
   }
 
   closeCreate() {
+    this.localStorageService.removeItem('incomes');
+    this.localStorageService.removeItem('expenses');
     this.createVisible = false;
     this.action = 0;
     this.loadData();

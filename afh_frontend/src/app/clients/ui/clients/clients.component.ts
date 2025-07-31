@@ -18,6 +18,8 @@ import FormClientsComponent from '../form-clients/form-clients.component';
 import { ClientService } from '../../services/client.service';
 import { GlobalService } from '../../../global.service';
 import { Title } from '@angular/platform-browser';
+import { LocalStorageService } from '../../../localstorage.service';
+import { Customer } from '../../../interfaces/models';
 
 interface Client {
   id: number;
@@ -70,6 +72,7 @@ export default class ClientsComponent implements OnInit {
     private messageService: MessageService,
     private clientService: ClientService,
     private globalService: GlobalService,
+    private localStorageService: LocalStorageService
   ) {
     this.globalService.changeTitle('AFH: Clientes');
   }
@@ -77,19 +80,39 @@ export default class ClientsComponent implements OnInit {
   ngOnInit() {
     this.getClients();
   }
+
   getClients() {
-    this.clientService.getClients().subscribe({
-      next: (response: any) => {
-        this.clients = response;
-      },
-      error: (error: any) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load clients',
-        });
-      },
-    });
+    const clientsLS: Customer[] | null =
+      this.localStorageService.getItem('clients');
+    if (clientsLS && clientsLS.length > 0) {
+      this.clients = clientsLS;
+    } else {
+      this.clientService.getClients().subscribe({
+        next: (response: any) => {
+          this.clients = response;
+          this.localStorageService.setItem('clients', this.clients);
+        },
+        error: (error: any) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load clients',
+          });
+        },
+      });
+    }
+  }
+
+  closeEdit() {
+    this.clientEditVisible = false;
+    this.localStorageService.removeItem('clients');
+    this.getClients();
+  }
+
+  closeCreate() {
+    this.clientDialogVisible = false;
+    this.localStorageService.removeItem('clients');
+    this.getClients();
   }
 
   showCreateClientDialog() {

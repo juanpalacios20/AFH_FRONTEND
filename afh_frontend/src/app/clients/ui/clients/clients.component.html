@@ -131,7 +131,7 @@
   <app-form-clients
     [visible]="clientDialogVisible"
     [action]="action"
-    (closeDialog)="clientDialogVisible = false"
+    (closeDialog)="closeCreate()"
     (onQuoteCreated)="handClientCreated()"
   >
   </app-form-clients>
@@ -144,7 +144,7 @@
     [phoneClient]="phone"
     [positionClient]="position"
     [representativeClient]="representative"
-    (closeDialog)="clientEditVisible = false"
+    (closeDialog)="closeEdit()"
     (isEdited)="handleIsEdited($event)"
     (onQuoteCreated)="handleClientEdit()"
   >

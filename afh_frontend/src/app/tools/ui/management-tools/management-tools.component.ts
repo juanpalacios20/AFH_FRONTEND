@@ -20,6 +20,7 @@ import { ToolService } from '../../services/tool.service';
 import { ViewToolComponent } from '../view-tool/view-tool.component';
 import { AuthService } from '../../../shared/auth/data_access/auth.service';
 import { GlobalService } from '../../../global.service';
+import { LocalStorageService } from '../../../localstorage.service';
 
 @Component({
   selector: 'app-management-tools',
@@ -64,7 +65,8 @@ export default class ManagementToolsComponent implements OnInit {
     private messageService: MessageService,
     private toolService: ToolService,
     private authService: AuthService,
-    private globalService: GlobalService
+    private globalService: GlobalService,
+    private localStorageService: LocalStorageService
   ) {
     this.globalService.changeTitle('AFH: Herramientas');
   }
@@ -86,15 +88,21 @@ export default class ManagementToolsComponent implements OnInit {
 
   loadTools() {
     this.loadingTools = true;
-    this.toolService.getTools().subscribe({
-      next: (data) => {
-        this.tools = data;
-        this.loadingTools = false;
-      },
-      error: (error) => {
-        this.loadingTools = false;
-      },
-    });
+    const toolsLS: any[] | null = this.localStorageService.getItem('tools');
+    if (toolsLS && toolsLS.length > 0) {
+      this.tools = toolsLS;
+    } else {
+      this.toolService.getTools().subscribe({
+        next: (data) => {
+          this.tools = data;
+          this.loadingTools = false;
+          this.localStorageService.setItem('tools', this.tools);
+        },
+        error: (error) => {
+          this.loadingTools = false;
+        },
+      });
+    }
   }
 
   getSeverity(

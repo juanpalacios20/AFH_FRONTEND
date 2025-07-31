@@ -128,18 +128,19 @@ export default class ManagementOrdersWorksComponent implements OnInit {
       this.localStorageService.getItem('orderWorks');
     if (orderWorksLS && orderWorksLS.length > 0) {
       this.orderWorks = orderWorksLS;
+    } else {
+      this.orderWorkService.getOrders().subscribe({
+        next: (response) => {
+          this.orderWorks = response;
+          this.localStorageService.setItem('orderWorks', this.orderWorks);
+          this.loadingOrderWorks = false;
+        },
+        error: (error) => {
+          console.error('Error fetching orders:', error);
+          this.loadingOrderWorks = false;
+        },
+      });
     }
-    this.orderWorkService.getOrders().subscribe({
-      next: (response) => {
-        this.orderWorks = response;
-        this.localStorageService.setItem('orderWorks', this.orderWorks);
-        this.loadingOrderWorks = false;
-      },
-      error: (error) => {
-        console.error('Error fetching orders:', error);
-        this.loadingOrderWorks = false;
-      },
-    });
   }
 
   ngOnInit() {

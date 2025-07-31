@@ -21,6 +21,7 @@ import { AuthService } from '../../../shared/auth/data_access/auth.service';
 import { Router } from '@angular/router';
 import { FooterComponent } from '../../../shared/ui/footer/footer.component';
 import { GlobalService } from '../../../global.service';
+import { LocalStorageService } from '../../../localstorage.service';
 
 interface Tool {
   id: number;
@@ -82,7 +83,7 @@ interface Ticket {
     ToastModule,
     CreateTicketComponent,
     ViewTicketComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: './management-tickets.component.html',
   styleUrl: './management-tickets.component.css',
@@ -112,9 +113,10 @@ export class ManagementTicketsComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private messageService: MessageService,
+    private localStorageService: LocalStorageService,
     private globalService: GlobalService
   ) {
-    this.globalService.changeTitle('AFH: Vales')
+    this.globalService.changeTitle('AFH: Vales');
   }
 
   showCreateTicketDialog() {
@@ -123,15 +125,26 @@ export class ManagementTicketsComponent implements OnInit {
 
   handleTicketCreated() {
     this.getTickets();
-    this.createTicketDialogVisible = false; 
+    this.createTicketDialogVisible = false;
   }
 
   handleStateChange() {
     this.getTickets();
   }
 
+  closeCreate() {
+    this.createTicketDialogVisible = false;
+    this.localStorageService.removeItem('ticket');
+    this.getTickets();
+  }
+
   getTickets() {
-    this.loadingTickets = true
+    this.loadingTickets = true;
+    const ticketsLS: Ticket[] | null =
+      this.localStorageService.getItem('ticket');
+    if (ticketsLS && ticketsLS) {
+      this.ticketsActivos = ticketsLS;
+    }
     this.ticketService.getTickets().subscribe({
       next: (data) => {
         this.tickets = data;
@@ -140,12 +153,12 @@ export class ManagementTicketsComponent implements OnInit {
           (ticket: Ticket) =>
             ticket.state === 1 || ticket.state === 2 || ticket.state === 3
         );
-
-        this.loadingTickets = false
+        this.localStorageService.setItem('ticket', this.ticketsActivos);
+        this.loadingTickets = false;
       },
       error: (error) => {
-        this.error()
-        this.loadingTickets = false
+        this.error();
+        this.loadingTickets = false;
       },
     });
   }
@@ -153,7 +166,7 @@ export class ManagementTicketsComponent implements OnInit {
   ngOnInit() {
     this.getTickets();
     this.currentUrl = this.router.url;
-    this.authService.isLoggedIn()
+    this.authService.isLoggedIn();
   }
 
   showViewTicketDialog(ticketId: number) {
@@ -167,7 +180,7 @@ export class ManagementTicketsComponent implements OnInit {
         this.responsible = data.responsible;
       },
       error: (error) => {
-        this.error()
+        this.error();
       },
     });
     this.viewTicketDialogVisible = true;
@@ -202,7 +215,7 @@ export class ManagementTicketsComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        this.error()
+        this.error();
       },
     });
   }
@@ -235,7 +248,7 @@ export class ManagementTicketsComponent implements OnInit {
         this.loadingInfo = false;
       },
       error: (error) => {
-        this.error()
+        this.error();
         this.loadingInfo = false;
       },
     });

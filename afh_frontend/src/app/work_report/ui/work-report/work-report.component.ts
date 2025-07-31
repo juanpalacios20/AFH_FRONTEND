@@ -128,21 +128,22 @@ export default class WorkReportComponent implements OnInit {
       this.localStorageService.getItem('reports');
     if (reportsLS && reportsLS.length > 0) {
       this.workReports = reportsLS;
+    } else {
+      this.workReportService.getWorkReports().subscribe({
+        next: (response) => {
+          this.workReports = response;
+          this.localStorageService.setItem('reports', this.workReports);
+          this.loadingWorkReports = false;
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load work reports',
+          });
+          this.loadingWorkReports = false;
+        },
+      });
     }
-    this.workReportService.getWorkReports().subscribe({
-      next: (response) => {
-        this.workReports = response;
-        this.localStorageService.setItem('reports', this.workReports);
-        this.loadingWorkReports = false;
-      },
-      error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load work reports',
-        });
-        this.loadingWorkReports = false;
-      },
-    });
   }
 }

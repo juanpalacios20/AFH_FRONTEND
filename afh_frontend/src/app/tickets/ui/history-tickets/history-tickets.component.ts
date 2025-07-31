@@ -18,6 +18,8 @@ import { ViewTicketComponent } from '../view-ticket/view-ticket.component';
 import { TicketsService } from '../../data_access/tickets.service';
 import { AuthService } from '../../../shared/auth/data_access/auth.service';
 import { GlobalService } from '../../../global.service';
+import { LocalStorageService } from '../../../localstorage.service';
+import { tick } from '@angular/core/testing';
 
 interface Tool {
   id: number;
@@ -76,7 +78,7 @@ interface Ticket {
     FormsModule,
     ConfirmDialog,
     ToastModule,
-    ViewTicketComponent
+    ViewTicketComponent,
   ],
   templateUrl: './history-tickets.component.html',
   styleUrl: './history-tickets.component.css',
@@ -89,7 +91,7 @@ export class HistoryTicketsComponent {
   tickets: Ticket[] = [];
   viewTicketDialogVisible: boolean = false;
   Ticket?: Ticket;
-  loadingTickets : boolean = false;
+  loadingTickets: boolean = false;
 
   id: number = 0;
   state: number = 0;
@@ -103,7 +105,8 @@ export class HistoryTicketsComponent {
     private ticketService: TicketsService,
     private authService: AuthService,
     private messageService: MessageService,
-    private globalService: GlobalService
+    private globalService: GlobalService,
+    private localStorageService: LocalStorageService
   ) {
     this.globalService.changeTitle('AFH: Historial Vales');
   }
@@ -113,22 +116,27 @@ export class HistoryTicketsComponent {
   }
 
   getTickets() {
-    this.loadingTickets = true
-    this.ticketService.getTickets().subscribe({
-      next: (data) => {
-        this.tickets = data;
+    this.loadingTickets = true;
+    const ticketsLS: Ticket[] | null =
+      this.localStorageService.getItem('historialTickets');
+    if (ticketsLS && ticketsLS.length > 0) {
+      this.tickets = ticketsLS;
+    } else {
+      this.ticketService.getTickets().subscribe({
+        next: (data) => {
+          this.tickets = data;
+          this.localStorageService.setItem('historialTickets', this.tickets);
+          this.ticketsFinalizados = data.filter(
+            (ticket: Ticket) => ticket.state === 4
+          );
 
-        this.ticketsFinalizados = data.filter(
-          (ticket: Ticket) =>
-            ticket.state === 4
-        );
-
-        this.loadingTickets = false
-      },
-      error: (error) => {
-        this.error()
-      },
-    });
+          this.loadingTickets = false;
+        },
+        error: (error) => {
+          this.error();
+        },
+      });
+    }
   }
 
   ngOnInit() {
@@ -144,7 +152,7 @@ export class HistoryTicketsComponent {
         this.description = data.description;
         this.state = data.state;
         this.tools = data.tools;
-        this.dateEnd = data.departure_date_formatted
+        this.dateEnd = data.departure_date_formatted;
       },
       error: (error) => {
         console.error('Error al obtener ticket', error);
@@ -196,11 +204,11 @@ export class HistoryTicketsComponent {
     return this.authService.whoIs();
   }
 
-  error(){
+  error() {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
       detail: 'Ha ocurrido un error',
-    })
+    });
   }
 }
