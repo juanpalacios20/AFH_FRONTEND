@@ -20,19 +20,6 @@ export class workAdvanceService extends BaseHttpService {
     });
   }
 
-  setItem(key: string, value: any): void {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-
-  getItem<T>(key: string): T | null {
-    const item = localStorage.getItem(key);
-    return item ? (JSON.parse(item) as T) : null;
-  }
-
-  removeItem(key: string): void {
-    localStorage.removeItem(key);
-  }
-
   createWorkAdvance(data: any): Observable<WorkAdvanceResponse> {
     return this.http.post<WorkAdvanceResponse>(
       `${this.apiUrl}workadvance/add/`,

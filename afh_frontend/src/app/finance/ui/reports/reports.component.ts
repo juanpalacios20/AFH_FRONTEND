@@ -21,6 +21,7 @@ import {
   element,
 } from '../../../interfaces/models';
 import { ButtonModule } from 'primeng/button';
+import { GlobalService } from '../../../global.service';
 
 @Component({
   selector: 'app-reports',
@@ -112,8 +113,11 @@ export default class ReportsComponent implements OnInit {
 
   constructor(
     private cd: ChangeDetectorRef,
-    private financeService: FinanceService
-  ) {}
+    private financeService: FinanceService,
+    private globalService: GlobalService
+  ) {
+    this.globalService.changeTitle('AFH: Reportes');
+  }
 
   //inicializador
   ngOnInit() {
