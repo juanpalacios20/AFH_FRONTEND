@@ -17,6 +17,8 @@ import { OrderWork } from '../../../interfaces/models';
 import FormOrderWorksComponent from '../form-order-works/form-order-works.component';
 import ViewOrdersWorkComponent from '../view-orders-work/view-orders-work.component';
 import { NgIf } from '@angular/common';
+import { LocalStorageService } from '../../../localstorage.service';
+import { GlobalService } from '../../../global.service';
 
 @Component({
   selector: 'app-management-orders-works',
@@ -33,7 +35,7 @@ import { NgIf } from '@angular/common';
     TagModule,
     ViewOrdersWorkComponent,
     FormOrderWorksComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: './management-orders-works.component.html',
   styleUrl: './management-orders-works.component.css',
@@ -55,8 +57,12 @@ export default class ManagementOrdersWorksComponent implements OnInit {
 
   constructor(
     private orderWorkService: OrderWorkService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private localStorageService: LocalStorageService,
+    private globalService: GlobalService
+  ) {
+    this.globalService.changeTitle('AFH: Ordenes de trabajo');
+  }
 
   showViewDialog(orderWork: OrderWork) {
     this.orderWorkToView = orderWork;
@@ -83,11 +89,15 @@ export default class ManagementOrdersWorksComponent implements OnInit {
   }
 
   closeCreateDialog() {
+    this.localStorageService.removeItem('orderWorks');
+    this.localStorageService.removeItem('progressOrders');
     this.OrderWorkDialogVisible = false;
     this.getOrders();
   }
 
   closeEditDialog() {
+    this.localStorageService.removeItem('orderWorks');
+    this.localStorageService.removeItem('progressOrders');
     this.showEditDialog = false;
     this.action = 0;
     this.getOrders();
@@ -112,17 +122,22 @@ export default class ManagementOrdersWorksComponent implements OnInit {
     });
   }
 
-
   getOrders() {
     this.loadingOrderWorks = true;
+    const orderWorksLS: OrderWork[] | null =
+      this.localStorageService.getItem('orderWorks');
+    if (orderWorksLS && orderWorksLS.length > 0) {
+      this.orderWorks = orderWorksLS;
+    }
     this.orderWorkService.getOrders().subscribe({
       next: (response) => {
         this.orderWorks = response;
-         this.loadingOrderWorks = false;
+        this.localStorageService.setItem('orderWorks', this.orderWorks);
+        this.loadingOrderWorks = false;
       },
       error: (error) => {
         console.error('Error fetching orders:', error);
-         this.loadingOrderWorks = false;
+        this.loadingOrderWorks = false;
       },
     });
   }

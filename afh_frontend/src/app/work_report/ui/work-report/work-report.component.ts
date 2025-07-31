@@ -16,6 +16,8 @@ import { WorkReportService } from '../../services/work_report.service';
 import { WorkReport } from '../../../interfaces/models';
 import { ViewWorkReportComponent } from '../view-work-report/view-work-report.component';
 import { NgIf } from '@angular/common';
+import { LocalStorageService } from '../../../localstorage.service';
+import { GlobalService } from '../../../global.service';
 
 @Component({
   selector: 'app-work-report',
@@ -33,7 +35,7 @@ import { NgIf } from '@angular/common';
     TagModule,
     FormWorkComponent,
     ViewWorkReportComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: './work-report.component.html',
   styleUrl: './work-report.component.css',
@@ -53,8 +55,12 @@ export default class WorkReportComponent implements OnInit {
 
   constructor(
     private workReportService: WorkReportService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private localStorageService: LocalStorageService,
+    private globalService: GlobalService
+  ) {
+    this.globalService.changeTitle('AFH: Actas de entrega');
+  }
 
   openView(report: WorkReport) {
     this.selectedReport = report;
@@ -68,9 +74,10 @@ export default class WorkReportComponent implements OnInit {
   }
 
   closeEditDialog() {
-    this.loadWorkReports();
+    this.localStorageService.removeItem('reports');
     this.action = 0;
     this.workEditVisible = false;
+    this.loadWorkReports();
     this.messageService.add({
       severity: 'success',
       summary: 'Éxito',
@@ -88,6 +95,7 @@ export default class WorkReportComponent implements OnInit {
   }
 
   closeWorkReportDialog() {
+    this.localStorageService.removeItem('reports');
     this.action = 0;
     this.workReportDialogVisible = false;
     this.loadWorkReports();
@@ -116,9 +124,15 @@ export default class WorkReportComponent implements OnInit {
 
   loadWorkReports() {
     this.loadingWorkReports = true;
+    const reportsLS: WorkReport[] | null =
+      this.localStorageService.getItem('reports');
+    if (reportsLS && reportsLS.length > 0) {
+      this.workReports = reportsLS;
+    }
     this.workReportService.getWorkReports().subscribe({
       next: (response) => {
         this.workReports = response;
+        this.localStorageService.setItem('reports', this.workReports);
         this.loadingWorkReports = false;
       },
       error: (error) => {

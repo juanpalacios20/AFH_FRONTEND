@@ -19,6 +19,7 @@ import FormComponent from '../form/form.component';
 import { WorkReportService } from '../../../work_report/services/work_report.service';
 import { FinanceService } from '../../services/finance.service';
 import ViewsComponent from '../views/views.component';
+import { GlobalService } from '../../../global.service';
 
 @Component({
   selector: 'app-management',
@@ -38,7 +39,7 @@ import ViewsComponent from '../views/views.component';
     DatePickerModule,
     FormComponent,
     ConfirmDialog,
-    ViewsComponent
+    ViewsComponent,
   ],
   templateUrl: './management.component.html',
   styleUrl: './management.component.css',
@@ -73,8 +74,11 @@ export default class ManagementComponent implements OnInit {
   constructor(
     private workReportService: WorkReportService,
     private messageService: MessageService,
-    private financeService: FinanceService
-  ) {}
+    private financeService: FinanceService,
+    private globalService: GlobalService
+  ) {
+    this.globalService.changeTitle('AFH: Finanzas');
+  }
 
   ngOnInit() {
     this.loadData();

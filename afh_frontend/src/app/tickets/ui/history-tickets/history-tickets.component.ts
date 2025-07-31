@@ -17,6 +17,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ViewTicketComponent } from '../view-ticket/view-ticket.component';
 import { TicketsService } from '../../data_access/tickets.service';
 import { AuthService } from '../../../shared/auth/data_access/auth.service';
+import { GlobalService } from '../../../global.service';
 
 interface Tool {
   id: number;
@@ -101,8 +102,11 @@ export class HistoryTicketsComponent {
   constructor(
     private ticketService: TicketsService,
     private authService: AuthService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private globalService: GlobalService
+  ) {
+    this.globalService.changeTitle('AFH: Historial Vales');
+  }
 
   showCreateTicketDialog() {
     this.createTicketDialogVisible = true;

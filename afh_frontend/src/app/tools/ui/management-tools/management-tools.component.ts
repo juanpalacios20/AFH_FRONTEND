@@ -19,6 +19,7 @@ import { CreateToolsComponent } from '../create-tools/create-tools.component';
 import { ToolService } from '../../services/tool.service';
 import { ViewToolComponent } from '../view-tool/view-tool.component';
 import { AuthService } from '../../../shared/auth/data_access/auth.service';
+import { GlobalService } from '../../../global.service';
 
 @Component({
   selector: 'app-management-tools',
@@ -62,24 +63,26 @@ export default class ManagementToolsComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private toolService: ToolService,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private globalService: GlobalService
+  ) {
+    this.globalService.changeTitle('AFH: Herramientas');
+  }
 
   ngOnInit(): void {
     this.loadTools();
-    this.authService.isLoggedIn()
+    this.authService.isLoggedIn();
   }
 
   handleToolCreated() {
     this.loadTools();
-    this.createDialogVisible = false; 
+    this.createDialogVisible = false;
   }
 
   handleToolEdited() {
     this.loadTools();
-    this.editDialogVisible = false; 
+    this.editDialogVisible = false;
   }
-
 
   loadTools() {
     this.loadingTools = true;
@@ -90,8 +93,8 @@ export default class ManagementToolsComponent implements OnInit {
       },
       error: (error) => {
         this.loadingTools = false;
-      }
-    })
+      },
+    });
   }
 
   getSeverity(
@@ -163,7 +166,7 @@ export default class ManagementToolsComponent implements OnInit {
         this.loadTools();
       },
       (error) => {
-        this.error()
+        this.error();
       }
     );
   }

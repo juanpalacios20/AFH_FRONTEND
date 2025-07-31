@@ -9,6 +9,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { OrderWork, Quote } from '../../../interfaces/models';
+import { LocalStorageService } from '../../../localstorage.service';
 
 @Component({
   selector: 'app-view-quotes',
@@ -56,7 +57,8 @@ export default class ViewQuotesComponent {
     private quoteService: QuoteService,
     private orderWorkService: OrderWorkService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private localStorageService: LocalStorageService
   ) {}
 
   showDialog() {
@@ -151,7 +153,9 @@ export default class ViewQuotesComponent {
       state: state,
     };
     this.quoteService.changeState(this.quote?.id || 0, data).subscribe({
-      next: (response) => {},
+      next: (response) => {
+        this.localStorageService.removeItem('quotes');
+      },
       error: (error) => {
         console.error('Error changing state:', error);
       },
@@ -171,6 +175,7 @@ export default class ViewQuotesComponent {
     if (this.orderWork) {
       this.orderWorkService.finishOrderWork(this.orderWork.id).subscribe({
         next: (response) => {
+          this.localStorageService.removeItem('quotes');
           const today = new Date();
           const year = today.getFullYear();
           const month = String(today.getMonth() + 1).padStart(2, '0'); // enero es 0

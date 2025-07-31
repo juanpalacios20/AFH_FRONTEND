@@ -16,6 +16,8 @@ import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import FormClientsComponent from '../form-clients/form-clients.component';
 import { ClientService } from '../../services/client.service';
+import { GlobalService } from '../../../global.service';
+import { Title } from '@angular/platform-browser';
 
 interface Client {
   id: number;
@@ -66,8 +68,11 @@ export default class ClientsComponent implements OnInit {
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private clientService: ClientService
-  ) {}
+    private clientService: ClientService,
+    private globalService: GlobalService,
+  ) {
+    this.globalService.changeTitle('AFH: Clientes');
+  }
 
   ngOnInit() {
     this.getClients();

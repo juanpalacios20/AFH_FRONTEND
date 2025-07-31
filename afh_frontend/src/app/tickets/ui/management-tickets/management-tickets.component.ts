@@ -20,6 +20,7 @@ import { ViewTicketComponent } from '../view-ticket/view-ticket.component';
 import { AuthService } from '../../../shared/auth/data_access/auth.service';
 import { Router } from '@angular/router';
 import { FooterComponent } from '../../../shared/ui/footer/footer.component';
+import { GlobalService } from '../../../global.service';
 
 interface Tool {
   id: number;
@@ -110,8 +111,11 @@ export class ManagementTicketsComponent implements OnInit {
     private ticketService: TicketsService,
     private authService: AuthService,
     private router: Router,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private globalService: GlobalService
+  ) {
+    this.globalService.changeTitle('AFH: Vales')
+  }
 
   showCreateTicketDialog() {
     this.createTicketDialogVisible = true;
