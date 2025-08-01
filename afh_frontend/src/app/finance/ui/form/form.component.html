@@ -4,6 +4,8 @@
   [style]="{ width: '60rem' }"
   [closable]="false"
 >
+  <p-toast />
+  <p-confirmdialog />
   <ng-template pTemplate="header">
     <div class="flex justify-between items-center w-full">
       <span>{{ this.actionTitle }}</span>
@@ -219,7 +221,7 @@
         <p-button styleClass="p-button-secondary"> Cancelar </p-button>
         <p-button
           styleClass="p-button-primary"
-          (onClick)="onSubmit()"
+          (click)="confirmEvent($event)"
           [loading]="loading"
           disabled="{{ loading }}"
         >

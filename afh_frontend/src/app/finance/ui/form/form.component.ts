@@ -21,6 +21,7 @@ import { ToastModule } from 'primeng/toast';
 import { FinanceService } from '../../services/finance.service';
 import { expense, income } from '../../../interfaces/models';
 import { InputNumber } from 'primeng/inputnumber';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-form',
@@ -39,9 +40,11 @@ import { InputNumber } from 'primeng/inputnumber';
     DatePickerModule,
     AutoComplete,
     InputNumber,
+    ConfirmDialog,
   ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css',
+  providers: [ConfirmationService, MessageService],
 })
 export default class FormComponent {
   @Input() visible: boolean = false;
@@ -71,13 +74,12 @@ export default class FormComponent {
   @Input() expenseToEdit: expense | null = null;
 
   constructor(
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
+    private messageService: MessageService,
     private financeService: FinanceService
   ) {}
 
   onSubmit() {
-    this.verify();
     if (this.action === 0) {
       this.onCreate();
     }
@@ -115,12 +117,6 @@ export default class FormComponent {
     if (this.selectedImage) {
       formData.append('voucher', this.selectedImage);
     }
-
-    console.log('FormData:');
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}:`, pair[1]);
-    }
-
     if (this.type === 'ingreso') {
       this.financeService.createIncomes(formData).subscribe({
         next: () => {
@@ -162,33 +158,27 @@ export default class FormComponent {
     }
     this.loading = true;
     const formData = new FormData();
-    console.log('paso 1');
     if (this.people !== this.incomeToEdit?.responsible) {
       formData.append('responsible', this.people);
     }
-    console.log('paso 2');
     if (this.date?.toISOString().split('T')[0] !== this.incomeToEdit?.date) {
       formData.append(
         'date',
         this.date ? this.date.toISOString().split('T')[0] : ''
       );
     }
-    console.log('paso 3');
     if (this.reason !== this.incomeToEdit?.reason) {
       formData.append('reason', this.reason);
     }
-    console.log('paso 4');
     if (this.account() !== this.incomeToEdit?.destination_account) {
       formData.append(
         this.type === 'ingreso' ? 'destination_account' : 'origin_account',
         this.account().toString()
       );
     }
-    console.log('paso 5');
     if (this.selectedPaymentMethod !== this.incomeToEdit?.payment_method) {
       formData.append('payment_method', this.selectedPaymentMethod);
     }
-    console.log('paso 6');
     if (this.observations) {
       if (this.observations !== this.incomeToEdit?.observations) {
         formData.append('observations', this.observations);
@@ -196,31 +186,20 @@ export default class FormComponent {
     } else {
       formData.append('observations', ' ');
     }
-    console.log('paso 7');
     if (this.selectedImage) {
       formData.append('voucher', this.selectedImage);
     }
-    console.log('paso 8');
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}:`, pair[1]);
-    }
-    console.log('paso 9');
     if (formData) {
-      console.log('paso 10', this.incomeToEdit?.id);
-      console.log('income', this.incomeToEdit);
       if (this.incomeToEdit?.id) {
-        console.log('paso 11');
         this.financeService
           .updateIncomes(formData, this.incomeToEdit.id)
           .subscribe({
             next: (response) => {
-              console.log('paso 12');
               this.close();
               this.onIncomeCreated.emit();
               this.loading = false;
             },
             error: (err) => {
-              console.log('paso ERROR');
               console.log(err);
               this.loading = false;
             },
@@ -274,7 +253,6 @@ export default class FormComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.loading);
     if (changes['visible'] && this.visible === true) {
       if (this.action === 0) {
         this.actionTitle = 'Crear nuevo' + ' ' + this.type;
@@ -283,7 +261,6 @@ export default class FormComponent {
       }
     }
     if (this.incomeToEdit && this.type === 'ingreso') {
-      console.log('income cambiao');
       this.people = this.incomeToEdit.responsible;
       this.amount = this.incomeToEdit.amount;
       this.reason = this.incomeToEdit.reason;
@@ -298,7 +275,6 @@ export default class FormComponent {
       this.selectedImagePreview = this.incomeToEdit.voucher;
     }
     if (this.expenseToEdit && this.type === 'egreso') {
-      console.log('expense cambiao');
       this.people = this.expenseToEdit.responsible;
       this.amount = this.expenseToEdit.amount;
       this.reason = this.expenseToEdit.reason;
@@ -384,6 +360,43 @@ export default class FormComponent {
   removeImage() {
     this.selectedImagePreview = null;
     this.selectedImage = null;
+  }
+
+  confirmEvent(event: Event) {
+    this.verify();
+    if (this.errorMessage !== '') {
+      return;
+    }
+    if (this.action === 1) {
+      this.onSubmit();
+      return;
+    }
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message:
+        '¿Está seguro que desea continuar? el valor del monto no se puede cambiar',
+      header: 'Confirmación',
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.onSubmit();
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Exito',
+          detail: 'Acción exitosa',
+        });
+      },
+      reject: () => {},
+    });
   }
 
   blockTyping(event: KeyboardEvent) {
