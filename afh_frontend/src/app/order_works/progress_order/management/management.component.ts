@@ -18,6 +18,8 @@ import ProgressInfoComponent from '../progress-info/progress-info.component';
 import { RouterModule } from '@angular/router';
 import { workAdvanceService } from '../../services/work_advance.service';
 import { WorkProgress } from '../../../interfaces/models';
+import { LocalStorageService } from '../../../localstorage.service';
+import { GlobalService } from '../../../global.service';
 
 @Component({
   selector: 'app-management',
@@ -48,14 +50,17 @@ export default class ProgressManagementComponent {
 
   constructor(
     private workProgressOrderService: progressOrderService,
-    private workAdvanceService: workAdvanceService
+    private workAdvanceService: workAdvanceService,
+    private localStorageService: LocalStorageService,
+    private globalService: GlobalService
   ) {
     this.getWorkProgressOrders();
+    this.globalService.changeTitle('AFH: Progreso Ordenes');
   }
 
   viewProgressOrder(workProgressOrder: WorkProgress) {
     this.selectedWorkProgressOrder = workProgressOrder;
-    this.workAdvanceService.setItem('progress', workProgressOrder);
+    this.localStorageService.setItem('progress', workProgressOrder);
     this.showView = true;
   }
 
@@ -66,15 +71,25 @@ export default class ProgressManagementComponent {
   }
 
   getWorkProgressOrders() {
-    this.workProgressOrderService.getProgress().subscribe({
-      next: (response) => {
-        this.workProgressOrder = response;
-        console.log(response);
-      },
-      error: (err) => {
-        console.error('Error fetching work progress orders:', err);
-      },
-    });
+    const progressOrderLS: WorkProgress[] | null =
+      this.localStorageService.getItem('progressOrders');
+    if (progressOrderLS && progressOrderLS.length > 0) {
+      this.workProgressOrder = progressOrderLS;
+    } else {
+      this.workProgressOrderService.getProgress().subscribe({
+        next: (response) => {
+          this.workProgressOrder = response;
+          this.localStorageService.setItem(
+            'progressOrders',
+            this.workProgressOrder
+          );
+          console.log(response);
+        },
+        error: (err) => {
+          console.error('Error fetching work progress orders:', err);
+        },
+      });
+    }
   }
 
   getStateString(state: number): string {

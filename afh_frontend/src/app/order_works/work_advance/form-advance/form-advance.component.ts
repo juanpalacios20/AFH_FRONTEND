@@ -18,6 +18,8 @@ import { FileUpload } from 'primeng/fileupload';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { LocalStorageService } from '../../../localstorage.service';
+import { GlobalService } from '../../../global.service';
 
 @Component({
   selector: 'app-form-advance',
@@ -64,10 +66,13 @@ export class FormAdvanceComponent {
     private workReportService: WorkReportService,
     private workAdvanceService: workAdvanceService,
     private workProgressOrderService: progressOrderService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private localStorageService: LocalStorageService,
+    private globalService: GlobalService
   ) {
     this.progressOrderId = Number(this.route.snapshot.paramMap.get('id'));
     this.action();
+    this.globalService.changeTitle('AFH: Avances');
   }
 
   verify() {
@@ -88,7 +93,7 @@ export class FormAdvanceComponent {
 
   action() {
     this.progressToEdit =
-      this.workAdvanceService.getItem<WorkProgress>('progress');
+      this.localStorageService.getItem<WorkProgress>('progress');
     this.orderCode = this.progressToEdit?.work_order?.quote?.code ?? '';
     const completed = localStorage.getItem('completed');
     if (completed === 'true') {
@@ -247,6 +252,7 @@ export class FormAdvanceComponent {
       })
       .then(() => {
         console.log('Avance actualizado exitosamente');
+        this.localStorageService.removeItem('progressOrders');
         localStorage.setItem('state', 'true');
         this.router.navigate(['/progressOrder/info/', this.progressToEdit?.id]);
       })
@@ -292,6 +298,7 @@ export class FormAdvanceComponent {
       .subscribe({
         next: (response) => {
           console.log('Avance creado y asignado al progreso:', response);
+          this.localStorageService.removeItem('progressOrders');
           this.loading = true;
           localStorage.setItem('state', 'true');
           this.router.navigate(['/progressOrder/info/', this.progressOrderId]);

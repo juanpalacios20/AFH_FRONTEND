@@ -16,6 +16,8 @@ import { workAdvanceService } from '../../services/work_advance.service';
 import { Tooltip } from 'primeng/tooltip';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { WorkProgress } from '../../../interfaces/models';
+import { LocalStorageService } from '../../../localstorage.service';
+import { GlobalService } from '../../../global.service';
 
 @Component({
   selector: 'app-progress-info',
@@ -49,14 +51,17 @@ export default class ProgressInfoComponent implements OnInit {
     private workAdvanceService: workAdvanceService,
     private messageService: MessageService,
     private router: Router,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private localStorageService: LocalStorageService,
+    private globalService: GlobalService
   ) {
     this.progressAdvance =
-      workAdvanceService.getItem<WorkProgress>('progress');
+      localStorageService.getItem<WorkProgress>('progress');
     console.log(this.progressAdvance);
     if (localStorage.getItem('edit') === 'true') {
       console.log('editado');
     }
+    this.globalService.changeTitle('AFH: Progreso Ordenes');
   }
 
   ngOnInit(): void {
@@ -102,10 +107,10 @@ export default class ProgressInfoComponent implements OnInit {
       next: (response) => {
         localStorage.removeItem('edit');
         this.workProgressOrder = response;
-        this.workAdvanceService.setItem('progress', this.workProgressOrder);
+        this.localStorageService.setItem('progress', this.workProgressOrder);
         console.log('actualizando informacion');
         this.progressAdvance =
-          this.workAdvanceService.getItem<WorkProgress>('progress');
+          this.localStorageService.getItem<WorkProgress>('progress');
         console.log(this.workProgressOrder);
       },
       error: (error) => {
@@ -152,6 +157,7 @@ export default class ProgressInfoComponent implements OnInit {
         .changeState(this.progressAdvance.id, data)
         .subscribe({
           next: (response) => {
+            this.localStorageService.removeItem('progressOrders');
             this.messageService.add({
               severity: 'success',
               summary: 'Estado actualizado',
@@ -204,7 +210,7 @@ export default class ProgressInfoComponent implements OnInit {
     localStorage.removeItem('code');
     localStorage.removeItem('completed');
     localStorage.removeItem('count');
-    this.workAdvanceService.removeItem('progress');
+    this.localStorageService.removeItem('progress');
   }
 
   confirm() {
