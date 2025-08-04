@@ -1,5 +1,7 @@
-<app-toolbar (noti)="showInfo()" [name]="work_progress.work_order.quote.customer.representative || 'Cliente desconocido'" *ngIf="work_progress !== null"></app-toolbar>
-  <p-toast />
+<app-toolbar (noti)="showInfo()"
+  [name]="work_progress.work_order.quote.customer.representative || 'Cliente desconocido'"
+  *ngIf="work_progress !== null"></app-toolbar>
+<p-toast />
 <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 lg:p-8">
   <!-- Header Cards Section -->
   <section class="max-w-7xl mx-auto">
@@ -83,6 +85,10 @@
           Sigue el avance de tu proyecto en tiempo real con actualizaciones detalladas
         </p>
       </div>
+    </div>
+
+    <div class="card mb-5">
+      <p-metergroup [value]="value" />
     </div>
 
     <!-- Timeline Section -->

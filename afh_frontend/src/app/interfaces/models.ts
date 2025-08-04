@@ -162,6 +162,7 @@ export interface WorkProgress {
   work_order: OrderWork;
   work_advance: workAdvance[];
   state: number;
+  progress_percentage: number;
 }
 
 export interface WorkAdvance {

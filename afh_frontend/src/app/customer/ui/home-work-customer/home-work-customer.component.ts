@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { NotificationService } from '../../service/notification.service';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
+import { MeterGroup } from 'primeng/metergroup';
 
 interface EventItem {
   status?: string;
@@ -26,7 +27,7 @@ interface EventItem {
 
 @Component({
   selector: 'app-home-work-customer',
-  imports: [DividerModule, CardModule, ToolbarComponent, Timeline, ButtonModule, CommonModule, Toast],
+  imports: [DividerModule, CardModule, ToolbarComponent, Timeline, ButtonModule, CommonModule, Toast, MeterGroup],
   templateUrl: './home-work-customer.component.html',
   styleUrl: './home-work-customer.component.css', 
   providers: [MessageService]
@@ -36,6 +37,7 @@ export class HomeWorkCustomerComponent implements OnInit {
   name_customer: string = 'Cliente';
   events: EventItem[];
   work_progress: WorkProgress | null = null;
+  value = [{}]
   
   
 
@@ -51,10 +53,12 @@ export class HomeWorkCustomerComponent implements OnInit {
       { status: 'Pendiente', date: this.work_progress?.work_order.start_date, icon: 'pi pi-spinner-dotted', color: 'blue', description: 'El trabajo esta pendiente de inicio', showButton: true },
     ]
   }
+
   ngOnInit(): void {
     this.fecthWorkProgress();
   }
 
+  
   showInfo() {
     this.messageService.add({ severity: 'info', summary: 'Tienes un nuevo avance del teabajo', detail: 'Revisa el nuevo avance'});
   }
@@ -75,11 +79,17 @@ export class HomeWorkCustomerComponent implements OnInit {
         }
 
         this.notification.setNotificationCount(this.work_progress?.id || 0)
+        this.value = [
+        { label: 'Porcentaje de avance', value: this.work_progress?.progress_percentage, color: 'var(--p-primary-color)' }
+    ];
+
       }, error: (error) => {
         console.error('Error fetching work progress:', error);
       }
     });
   }
+
+  
 
   get workProgressStatus(): string {
     switch (this.work_progress?.state) {
