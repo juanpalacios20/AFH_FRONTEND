@@ -40,7 +40,7 @@ export class HomeWorkCustomerComponent implements OnInit {
         private router: Router
     ) {
       this.events = [
-        { status: 'Pendiente', date: this.work_progress?.work_order.start_date, icon: 'pi pi-spinner-dotted', color: 'blue', description: 'El trabajo esta pendiente de inicio', showButton: false },
+        { status: 'Pendiente', date: this.work_progress?.work_order.start_date, icon: 'pi pi-spinner-dotted', color: 'blue', description: 'El trabajo esta pendiente de inicio', showButton: true},
       ]
     }
     ngOnInit(): void {
@@ -58,7 +58,9 @@ export class HomeWorkCustomerComponent implements OnInit {
                 this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image:this.work_progress.work_advance[0].exhibits[0].images[0]}];
                 break;
             case 3:
-              this.events = [...this.events, {status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sidi finalizado con exito, prontamente recibira el acta de entrega con mas detalles de lo realizdo.', showButton: false, image:this.work_progress.work_advance[0].exhibits[0].images[0]}]
+              this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image:this.work_progress.work_advance[0].exhibits[0].images[0]}];
+              this.events = [...this.events, {status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sidi finalizado con exito, prontamente recibira el acta de entrega con mas detalles de lo realizdo.', showButton: true, image:this.work_progress.work_advance[0].exhibits[0].images[0]}];
+              break;
           }
           console.log(this.events);
     }, error: (error) => {
