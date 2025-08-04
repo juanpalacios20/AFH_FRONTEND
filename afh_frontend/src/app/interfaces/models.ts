@@ -176,3 +176,8 @@ export interface WorkAdvanceResponse {
   message: string;
   id: number;
 }
+
+export interface Notification {
+  title: string;
+  content: string;
+}

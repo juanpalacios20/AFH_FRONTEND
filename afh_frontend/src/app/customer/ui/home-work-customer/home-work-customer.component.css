@@ -54,3 +54,18 @@
     margin-top: 0.5rem !important;
   }
 }
+
+:host ::ng-deep .p-toast {
+  position: fixed !important;
+  top: 1rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 90vw !important;
+  max-width: 300px !important;
+  z-index: 9999 !important;
+  pointer-events: none;
+}
+
+:host ::ng-deep .p-toast-message {
+  pointer-events: all;
+}
