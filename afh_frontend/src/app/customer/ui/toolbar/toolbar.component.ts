@@ -8,7 +8,6 @@ import { Popover, PopoverModule } from 'primeng/popover';
 import { CommonModule } from '@angular/common';
 import { Notification } from '../../../interfaces/models';
 import { MessageService } from 'primeng/api';
-import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-toolbar',
@@ -41,7 +40,7 @@ export class ToolbarComponent {
       this.id_work_progress = value;
     });
     this.notification.suscribirse((this.id_work_progress).toString(), 'Nuevo avance registrado', (data) => {
-      console.log('notificacio recibida', data),
+      console.log('notificación recibida', data),
         this.notifications.push({ title: data.title, content: data.content })
       this.count += 1
       this.cdRef.detectChanges()

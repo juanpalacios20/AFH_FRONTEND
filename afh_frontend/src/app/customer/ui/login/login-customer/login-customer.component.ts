@@ -47,7 +47,7 @@ export class LoginCustomerComponent {
   ){}
 
    showWarn() {
-        this.messageService.add({ severity: 'warn', summary: 'Error de inicio de sesion', detail: this.errorMessage });
+        this.messageService.add({ severity: 'warn', summary: 'Error de inicio de sesión', detail: this.errorMessage });
     }
 
 
