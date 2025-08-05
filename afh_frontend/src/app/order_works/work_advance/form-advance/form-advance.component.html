@@ -9,6 +9,7 @@
       <span pButtonLabel>Volver</span>
     </button>
     <p-toast position="top-right"></p-toast>
+    <p-confirmdialog />
   </div>
   <div class="w-full flex flex-col p-5 pt-20 gap-5">
     <h1 class="text-xl font-bold text-start">
@@ -45,6 +46,34 @@
         *ngIf="errorMessage && advanceDescription === ''"
       >
         {{ errorMessage }}
+      </small>
+    </div>
+    <div class="flex flex-col gap-2" *ngIf="disabledPercent === true">
+      <label class="font-bold text-start"
+        >Porcentaje perteneciente al avance:</label
+      >
+      <p-inputnumber
+        [(ngModel)]="percent"
+        inputId="percent"
+        [disabled]="disabled"
+        fluid="true"
+        prefix="%"
+      />
+      <small class="text-gray-500 mb-4">
+        Porcentaje actual: {{ progressToEdit?.progress_percentage }}
+      </small>
+      <small
+        id="email-help"
+        class="text-red-600 mb-4"
+        *ngIf="
+          (errorMessage && (percent === null || 0)) ||
+          (invalidPercentMessage &&
+            percent &&
+            progressToEdit &&
+            percent < progressToEdit.progress_percentage)
+        "
+      >
+        {{ errorMessage || invalidPercentMessage }}
       </small>
     </div>
     <div class="flex flex-col gap-4">

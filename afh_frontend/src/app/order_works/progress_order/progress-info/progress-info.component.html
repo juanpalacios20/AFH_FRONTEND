@@ -40,6 +40,10 @@
       <span class="font-bold">Descripción del trabajo:</span>
       {{ progressAdvance?.work_order?.description }}
     </h1>
+    <div class="flex flex-col gap-4">
+      <h1 class="text-lg font-bold">Progreso del trabajo</h1>
+      <p-progressbar [value]="progressAdvance?.progress_percentage" />
+    </div>
     <div class="flex flex-col gap-5">
       <!-- Título -->
       <div>

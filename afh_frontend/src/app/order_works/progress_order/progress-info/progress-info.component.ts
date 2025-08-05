@@ -18,6 +18,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { WorkProgress } from '../../../interfaces/models';
 import { LocalStorageService } from '../../../localstorage.service';
 import { GlobalService } from '../../../global.service';
+import { ProgressBar } from 'primeng/progressbar';
 
 @Component({
   selector: 'app-progress-info',
@@ -32,6 +33,7 @@ import { GlobalService } from '../../../global.service';
     ToastModule,
     Tooltip,
     ConfirmDialog,
+    ProgressBar,
   ],
   templateUrl: './progress-info.component.html',
   styleUrl: './progress-info.component.css',
@@ -66,6 +68,7 @@ export default class ProgressInfoComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.progressAdvance?.state);
+    console.log(this.progressAdvance?.id);
     if (this.progressAdvance?.state === 3) {
       localStorage.setItem('completed', 'true');
     }
@@ -201,6 +204,10 @@ export default class ProgressInfoComponent implements OnInit {
       });
     }
     this.idToEdit = id;
+    console.log(count + 1, this.progressAdvance?.work_advance.length);
+    if (count + 1 === this.progressAdvance?.work_advance.length) {
+      localStorage.setItem('editPercent', 'true');
+    }
     localStorage.setItem('edit', 'true');
     localStorage.setItem('count', count.toString());
     this.router.navigate(['/progressOrder/info/create', id]);

@@ -4,11 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import {
-  exhibit,
-  WorkAdvance,
-  WorkProgress,
-} from '../../../interfaces/models';
+import { exhibit, WorkAdvance, WorkProgress } from '../../../interfaces/models';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { WorkReportService } from '../../../work_report/services/work_report.service';
 import { forkJoin, switchMap } from 'rxjs';
@@ -17,9 +13,11 @@ import { progressOrderService } from '../../services/progress_work.service';
 import { FileUpload } from 'primeng/fileupload';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { LocalStorageService } from '../../../localstorage.service';
 import { GlobalService } from '../../../global.service';
+import { InputNumber } from 'primeng/inputnumber';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-form-advance',
@@ -34,14 +32,18 @@ import { GlobalService } from '../../../global.service';
     TextareaModule,
     CommonModule,
     ToastModule,
+    FormsModule,
+    InputNumber,
+    ConfirmDialog,
   ],
   templateUrl: './form-advance.component.html',
   styleUrl: './form-advance.component.css',
-  providers: [MessageService],
+  providers: [ConfirmationService, MessageService],
 })
 export class FormAdvanceComponent {
   orderCode: string = '';
   advanceDescription: string = '';
+  percent: number | null = null;
   exhibits = [
     {
       id: 0,
@@ -58,7 +60,9 @@ export class FormAdvanceComponent {
   progressToEdit: WorkProgress | null = null;
   anexosEliminados: number[] = [];
   disabled: boolean = false;
+  disabledPercent: boolean = false;
   errorMessage: string = '';
+  invalidPercentMessage: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -66,6 +70,7 @@ export class FormAdvanceComponent {
     private workReportService: WorkReportService,
     private workAdvanceService: workAdvanceService,
     private workProgressOrderService: progressOrderService,
+    private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private localStorageService: LocalStorageService,
     private globalService: GlobalService
@@ -77,8 +82,13 @@ export class FormAdvanceComponent {
 
   verify() {
     this.errorMessage = '';
+    this.invalidPercentMessage = '';
     const message = 'Campo requerido';
-    if (this.advanceDescription === '') {
+    if (
+      this.advanceDescription === '' ||
+      this.percent === null ||
+      this.percent === 0
+    ) {
       this.errorMessage = message;
     }
     for (let i = 0; i < this.exhibits.length; i++) {
@@ -89,9 +99,24 @@ export class FormAdvanceComponent {
         this.errorMessage = message;
       }
     }
+    if (
+      !localStorage.getItem('edit') &&
+      this.progressToEdit?.progress_percentage &&
+      this.percent &&
+      this.percent < this.progressToEdit.progress_percentage
+    ) {
+      this.invalidPercentMessage =
+        'El porcentaje debe ser mayor al porcentaje del trabajo actual' +
+        ' ' +
+        this.progressToEdit.progress_percentage;
+    }
   }
 
   action() {
+    let editPercent = localStorage.getItem('editPercent');
+    if (editPercent === 'true') {
+      this.disabledPercent = true;
+    }
     this.progressToEdit =
       this.localStorageService.getItem<WorkProgress>('progress');
     this.orderCode = this.progressToEdit?.work_order?.quote?.code ?? '';
@@ -105,18 +130,13 @@ export class FormAdvanceComponent {
       this.advanceToEdit = this.progressToEdit?.work_advance[Number(count)];
       if (this.advanceToEdit) {
         this.advanceDescription = this.advanceToEdit.description;
+        this.percent = this.progressToEdit?.progress_percentage ?? null;
         this.exhibits = this.advanceToEdit.exhibits.map((exhibit) => ({
           id: exhibit.id,
           tittle: exhibit.tittle,
           images: exhibit.images,
           files: [],
         }));
-        console.log(
-          'lo que se muestra',
-          this.exhibits,
-          'lo que llega',
-          this.advanceToEdit
-        );
       }
     } else {
       this.titleAction = 'Crear avance';
@@ -125,7 +145,7 @@ export class FormAdvanceComponent {
 
   submit() {
     this.verify();
-    if (this.errorMessage !== '') {
+    if (this.errorMessage !== '' || this.invalidPercentMessage !== '') {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -134,7 +154,11 @@ export class FormAdvanceComponent {
       return;
     }
     if (localStorage.getItem('edit') === 'true') {
-      this.updateWorkAdvance();
+      if (this.percent) {
+        this.confirmationChangePercent();
+      } else {
+        this.updateWorkAdvance();
+      }
     } else {
       this.createAdvance();
     }
@@ -148,6 +172,23 @@ export class FormAdvanceComponent {
 
     this.loading = true;
 
+    //logia para cambiar el porcentaje
+    let dataPercent: any = {};
+    if (this.percent) {
+      dataPercent.percentage = this.percent;
+    }
+    if (dataPercent !== null && this.progressToEdit?.id) {
+      this.workProgressOrderService
+        .changePercentage(this.progressToEdit.id, dataPercent)
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+    }
     // 🟡 Inicializa la variable de anexos eliminados
     this.anexosEliminados = this.anexosEliminados || [];
 
@@ -276,7 +317,6 @@ export class FormAdvanceComponent {
       .pipe(
         switchMap((exhibitResponses: any[]) => {
           const exhibit_ids = exhibitResponses.map((res) => res.exhibit_id);
-          console.log('ids', exhibit_ids);
           const workAdvanceData = {
             description: this.advanceDescription,
             exhibits_ids: exhibit_ids,
@@ -297,7 +337,21 @@ export class FormAdvanceComponent {
       )
       .subscribe({
         next: (response) => {
-          console.log('Avance creado y asignado al progreso:', response);
+          if (this.progressToEdit) {
+            const data = {
+              percentage: this.percent,
+            };
+            this.workProgressOrderService
+              .changePercentage(this.progressToEdit?.id, data)
+              .subscribe({
+                next: (response) => {
+                  console.log(response);
+                },
+                error: (err) => {
+                  console.log(err);
+                },
+              });
+          }
           this.localStorageService.removeItem('progressOrders');
           this.loading = true;
           localStorage.setItem('state', 'true');
@@ -314,6 +368,7 @@ export class FormAdvanceComponent {
 
   close() {
     localStorage.removeItem('edit');
+    localStorage.removeItem('editPercent');
     this.advanceDescription = '';
     this.exhibits = [
       {
@@ -327,6 +382,7 @@ export class FormAdvanceComponent {
 
   resetForm() {
     this.advanceDescription = '';
+    this.percent = null;
     this.exhibits = [
       {
         id: 0,
@@ -337,6 +393,7 @@ export class FormAdvanceComponent {
     ];
     this.imagenesEliminadas = {};
   }
+
   addExhibit() {
     this.exhibits.push({
       id: 0,
@@ -376,5 +433,26 @@ export class FormAdvanceComponent {
       }
       this.imagenesEliminadas[anexo.id].push(imgUrl);
     }
+  }
+
+  confirmationChangePercent() {
+    this.confirmationService.confirm({
+      message:
+        'Se detectan cambios en el porcentaje ¿Está seguro que desea continuar?',
+      header: '¡Advertencia! Lea con atención.',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Aceptar',
+      },
+      accept: () => {
+        this.updateWorkAdvance();
+      },
+    });
   }
 }

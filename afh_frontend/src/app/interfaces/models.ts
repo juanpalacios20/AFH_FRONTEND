@@ -1,6 +1,3 @@
-
-
-
 export interface Item {
   id: number;
   description: string;
@@ -144,14 +141,14 @@ export interface balanceMoreInfoMP {
   cantidad: number;
 }
 
-export interface balanceMoreInfoOA{
+export interface balanceMoreInfoOA {
   origin_account: number;
   total: number;
   cantidad: number;
 }
 
 export interface workAdvance {
-  id:number;
+  id: number;
   exhibits: exhibit[];
   description: string;
   date: string;
@@ -162,6 +159,7 @@ export interface WorkProgress {
   work_order: OrderWork;
   work_advance: workAdvance[];
   state: number;
+  progress_percentage: number;
 }
 
 export interface WorkAdvance {
@@ -170,7 +168,6 @@ export interface WorkAdvance {
   description: string;
   date: string;
 }
-
 
 export interface WorkAdvanceResponse {
   message: string;
