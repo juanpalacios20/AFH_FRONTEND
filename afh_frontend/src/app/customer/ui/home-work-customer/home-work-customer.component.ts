@@ -72,8 +72,8 @@ export class HomeWorkCustomerComponent implements OnInit {
             this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true }];
             break;
           case 3: 
-            this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: '/resource/worker.jpg' }];
-            this.events = [...this.events, { status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sido finalizado con éxito, prontamente recibirá el acta de entrega con mas detalles de lo realizado.', showButton: true, image: 'resource/work2.jpg'}];
+            this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: 'afh_frontend\public\resource\worker.jpg' }];
+            this.events = [...this.events, { status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sido finalizado con éxito, prontamente recibirá el acta de entrega con mas detalles de lo realizado.', showButton: true, image: 'afh_frontend\public\resource\work2.jpg'}];
             break;
         }
 
