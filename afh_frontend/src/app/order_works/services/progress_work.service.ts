@@ -49,11 +49,12 @@ export class progressOrderService extends BaseHttpService {
   }
 
   changePercentage(id: number, data: any) {
+    const headers = this.getHeaders();
     return this.http.put(
       `${this.apiUrl}workprogress/change_percentage/${id}/`,
       data,
       {
-        headers: this.getHeaders(),
+        headers,
       }
     );
   }
