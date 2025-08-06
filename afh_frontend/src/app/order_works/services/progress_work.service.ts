@@ -33,6 +33,7 @@ export class progressOrderService extends BaseHttpService {
 
   advanceToProgress(idAdvance: number, idProgress: number) {
     const headers = this.getHeaders();
+    console.log(headers);
     return this.http.put(
       `${this.apiUrl}workprogress/add/${idProgress}/${idAdvance}/`,
       {
