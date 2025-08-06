@@ -69,12 +69,11 @@ export class HomeWorkCustomerComponent implements OnInit {
         this.work_progress = response;
         switch (this.work_progress?.state) {
           case 2:
-            console.log('imagen', this.work_progress.work_advance[0].exhibits[0].images[0])
             this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: this.work_progress.work_advance[0].exhibits[0].images[0] }];
             break;
           case 3:
             this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: this.work_progress.work_advance[0].exhibits[0].images[0] }];
-            this.events = [...this.events, { status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sido finalizado con éxito, prontamente recibirá el acta de entrega con mas detalles de lo realizado.', showButton: true, image: this.work_progress.work_advance[0].exhibits[0].images[0] }];
+            this.events = [...this.events, { status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sido finalizado con éxito, prontamente recibirá el acta de entrega con mas detalles de lo realizado.', showButton: true, image: this.work_progress.work_advance[1].exhibits[0].images[0] }];
             break;
         }
 
@@ -88,7 +87,7 @@ export class HomeWorkCustomerComponent implements OnInit {
       }
     });
   }
-
+  
   
 
   get workProgressStatus(): string {
