@@ -21,28 +21,32 @@ export class workAdvanceService extends BaseHttpService {
   }
 
   createWorkAdvance(data: any): Observable<WorkAdvanceResponse> {
+    const headers = this.getHeaders();
     return this.http.post<WorkAdvanceResponse>(
       `${this.apiUrl}workadvance/add/`,
       data,
       {
-        headers: this.getHeaders(),
+        headers,
       }
     );
   }
 
   updateWorkAdvance(data: any, id: number) {
+    const headers = this.getHeaders();
     return this.http.patch(
       `${this.apiUrl}workadvance/update/${id}`,
       data,
       {
-        headers: this.getHeaders(),
+        headers,
       }
     );
   }
 
   getAdvanceById(id: number) {
+    const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}workadvance/get/${id}`, {
-      headers: this.getHeaders(),
+      headers,
     });
   }
+  
 }

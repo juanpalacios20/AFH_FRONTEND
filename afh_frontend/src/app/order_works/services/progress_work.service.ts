@@ -18,32 +18,36 @@ export class progressOrderService extends BaseHttpService {
   }
 
   getProgress() {
+    const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}workprogress/get_all/`, {
-      headers: this.getHeaders(),
+      headers,
     });
   }
 
   getProgressById(id: number) {
+    const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}workprogress/get/${id}`, {
-      headers: this.getHeaders(),
+      headers,
     });
   }
 
   advanceToProgress(idAdvance: number, idProgress: number) {
+    const headers = this.getHeaders();
     return this.http.put(
       `${this.apiUrl}workprogress/add/${idProgress}/${idAdvance}/`,
       {
-        headers: this.getHeaders(),
+        headers,
       }
     );
   }
 
   changeState(id: number, data: any) {
+    const headers = this.getHeaders();
     return this.http.put(
       `${this.apiUrl}workprogress/change_status/${id}/`,
       data,
       {
-        headers: this.getHeaders(),
+        headers,
       }
     );
   }
