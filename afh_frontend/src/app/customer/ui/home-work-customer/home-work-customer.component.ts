@@ -69,11 +69,11 @@ export class HomeWorkCustomerComponent implements OnInit {
         this.work_progress = response;
         switch (this.work_progress?.state) {
           case 2:
-            this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: this.work_progress.work_advance[0].exhibits[0].images[0] || "https://www.afhmetalmecanico.com/wp-glass/wp-content/uploads/2017/04/logoafme3.png" }];
+            this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true }];
             break;
-          case 3:
-            this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: this.work_progress.work_advance[0].exhibits[0].images[0] }];
-            this.events = [...this.events, { status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sido finalizado con éxito, prontamente recibirá el acta de entrega con mas detalles de lo realizado.', showButton: true, image: this.work_progress.work_advance[1].exhibits[0].images[0] }];
+          case 3: 
+            this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: '/resource/worker.jpg' }];
+            this.events = [...this.events, { status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sido finalizado con éxito, prontamente recibirá el acta de entrega con mas detalles de lo realizado.', showButton: true, image: 'resource/work2.jpg'}];
             break;
         }
 
