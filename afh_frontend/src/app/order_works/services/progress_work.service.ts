@@ -37,9 +37,8 @@ export class progressOrderService extends BaseHttpService {
     console.log('headers', headers);
     return this.http.put(
       `${this.apiUrl}workprogress/add/${idProgress}/${idAdvance}/`,
-      {
-        headers,
-      }
+      {}, 
+      { headers }
     );
   }
 
