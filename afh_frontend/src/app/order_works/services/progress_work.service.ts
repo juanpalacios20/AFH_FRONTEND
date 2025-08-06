@@ -12,6 +12,7 @@ export class progressOrderService extends BaseHttpService {
   }
 
   private getHeaders(): HttpHeaders {
+    console.log(this.cookieService.get('token'));
     return new HttpHeaders({
       Authorization: `Token ${this.cookieService.get('token')}`,
     });
