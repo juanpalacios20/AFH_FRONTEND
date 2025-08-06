@@ -14,6 +14,7 @@ import { Popover } from 'primeng/popover';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { AuthService } from '../../../shared/auth/data_access/auth.service';
+import { LocalStorageService } from '../../../localstorage.service';
 
 interface Tool {
   id: number;
@@ -61,7 +62,8 @@ export class ViewTicketComponent {
     private ticketService: TicketsService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private localStorageService: LocalStorageService
   ) {}
 
   close() {
@@ -111,6 +113,7 @@ export class ViewTicketComponent {
   changeState(id: number, state: number) {
     this.ticketService.changeState(id, state).subscribe({
       next: (data) => {
+        this.localStorageService.removeItem('ticket');
         this.messageService.add({
           severity: 'success',
           summary: 'Estado cambiado',
@@ -205,7 +208,7 @@ export class ViewTicketComponent {
       },
       acceptButtonProps: {
         label: 'Aceptar',
-        severity: 'primary'
+        severity: 'primary',
       },
       accept: () => {
         this.changeState(id, 2);
@@ -235,7 +238,6 @@ export class ViewTicketComponent {
       accept: () => {
         this.changeState(id, 4);
         this.change = true;
-        
       },
     });
   }

@@ -1,0 +1,71 @@
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .custom-timeline ::ng-deep .p-timeline-event-opposite {
+    display: none;
+  }
+  
+  .custom-timeline ::ng-deep .p-timeline-event-content {
+    width: 100%;
+    margin-left: 1.5rem;
+  }
+}
+
+/* Smooth animations */
+.group:hover .group-hover\:translate-x-1 {
+  transform: translateX(0.25rem);
+}
+
+.group:hover .group-hover\:scale-105 {
+  transform: scale(1.05);
+}
+
+/* Loading animation for status indicators */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media (max-width: 768px) {
+  .custom-timeline ::ng-deep .p-timeline-event-opposite {
+    display: none !important;
+  }
+
+  .custom-timeline ::ng-deep .p-timeline-event-connector {
+    display: none !important; /* Oculta la línea vertical */
+  }
+
+  .custom-timeline ::ng-deep .p-timeline-event-content {
+    width: 100% !important;
+    margin-left: 1.5rem !important;
+  }
+
+  .custom-timeline ::ng-deep .p-timeline-event {
+    flex-direction: row !important;
+    align-items: flex-start;
+    margin-bottom: 2rem !important; /* Aumenta espacio entre eventos */
+  }
+
+  .custom-timeline ::ng-deep .p-timeline-event-marker {
+    margin-top: 0.5rem !important;
+  }
+}
+
+:host ::ng-deep .p-toast {
+  position: fixed !important;
+  top: 1rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 90vw !important;
+  max-width: 300px !important;
+  z-index: 9999 !important;
+  pointer-events: none;
+}
+
+:host ::ng-deep .p-toast-message {
+  pointer-events: all;
+}

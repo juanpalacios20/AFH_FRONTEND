@@ -16,6 +16,9 @@ import ViewQuotesComponent from '../view-quotes/view-quotes.component';
 import { QuoteService } from '../../services/quote.service';
 import { Quote } from '../../../interfaces/models';
 import { NgIf } from '@angular/common';
+import { LocalStorageService } from '../../../localstorage.service';
+import { GlobalService } from '../../../global.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-quotes',
@@ -33,7 +36,7 @@ import { NgIf } from '@angular/common';
     CreateQuoteComponent,
     TagModule,
     ViewQuotesComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: './quotes.component.html',
   styleUrl: './quotes.component.css',
@@ -62,15 +65,25 @@ export default class QuotesComponent {
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private quoteService: QuoteService
-  ) {}
+    private quoteService: QuoteService,
+    private localStorageService: LocalStorageService,
+    private globalService: GlobalService,
+    private titleService: Title
+  ) {
+    this.globalService.changeTitle('AFH: Cotizaciones');
+  }
 
   loadQuotes() {
     this.loadingQuotes = true;
+    const quotesLS: Quote[] | null = this.localStorageService.getItem('quotes');
+    if (quotesLS && quotesLS.length > 0) {
+      this.quotes = quotesLS;
+    }
     this.quoteService.getQuotes().subscribe({
       next: (response) => {
         this.quotes = response;
-         this.loadingQuotes = false;
+        this.localStorageService.setItem('quotes', this.quotes);
+        this.loadingQuotes = false;
       },
       error: (error) => {
         console.error('Error loading quotes:', error);
@@ -79,7 +92,7 @@ export default class QuotesComponent {
           summary: 'Error',
           detail: 'No se pudieron cargar las cotizaciones.',
         });
-         this.loadingQuotes = false;
+        this.loadingQuotes = false;
       },
     });
   }
@@ -94,13 +107,13 @@ export default class QuotesComponent {
   }
 
   closeCreateQuoteDialog() {
-    this.loadQuotes();
+    this.localStorageService.removeItem('quotes');
     this.quoteCreateDialogVisible = false;
+    this.loadQuotes();
   }
 
   handleQuoteCreated() {
     this.closeCreateQuoteDialog();
-    this.loadQuotes();
     this.messageService.add({
       severity: 'success',
       summary: 'Éxito',
@@ -115,12 +128,12 @@ export default class QuotesComponent {
   }
 
   closeEditQuoteDialog() {
+    this.localStorageService.removeItem('quotes');
     this.quoteEditDialogVisible = false;
     this.loadQuotes();
   }
 
   handleQuoteEdited() {
-    this.loadQuotes();
     this.closeEditQuoteDialog();
     this.quoteAction = 0;
     this.messageService.add({

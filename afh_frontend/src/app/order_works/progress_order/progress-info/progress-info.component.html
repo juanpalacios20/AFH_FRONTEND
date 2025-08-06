@@ -1,0 +1,119 @@
+<div class="relative h-screen">
+  <div class="card flex absolute top-0 left-0 p-4">
+    <button pButton [routerLink]="['/progressOrder']" (click)="close()">
+      <i class="pi pi-arrow-left" pButtonIcon></i>
+      <span pButtonLabel>Volver</span>
+    </button>
+    <p-toast position="top-right"></p-toast>
+    <p-confirmdialog />
+  </div>
+  <div class="w-full flex flex-col p-5 pt-20 gap-5">
+    <div class="flex justify-between items-center mb-5 md:flex-row">
+      <h1 class="text-xl font-bold">
+        AFH: Seguimiento de trabajo -> información de la orden
+        {{ progressAdvance?.work_order?.quote?.code }}
+      </h1>
+    </div>
+    <div
+      class="flex flex-col gap-4 md:flex-row md:justify-between md:items-center w-full flex-wrap"
+    >
+      <h1 class="text-lg">
+        <span class="font-bold">Estado:</span>
+        <span class="text-primary font-medium">
+          {{ getStateString(progressAdvance?.state) }}
+        </span>
+      </h1>
+      <h1 class="text-lg">
+        <span class="font-bold">Fecha:</span>
+        {{ progressAdvance?.work_order?.start_date }}
+      </h1>
+      <h1 class="text-lg">
+        <span class="font-bold">Cliente:</span>
+        {{ progressAdvance?.work_order?.quote?.customer?.name }}
+      </h1>
+      <h1 class="text-lg">
+        <span class="font-bold">Código:</span>
+        {{ progressAdvance?.work_order?.quote?.code }}
+      </h1>
+    </div>
+    <h1 class="text-lg">
+      <span class="font-bold">Descripción del trabajo:</span>
+      {{ progressAdvance?.work_order?.description }}
+    </h1>
+    <div class="flex flex-col gap-4">
+      <h1 class="text-lg font-bold">Progreso del trabajo</h1>
+      <p-progressbar [value]="progressAdvance?.progress_percentage" />
+    </div>
+    <div class="flex flex-col gap-5">
+      <!-- Título -->
+      <div>
+        <h1 class="text-lg font-bold">Avances del trabajo</h1>
+      </div>
+
+      <!-- Mensaje si no hay avances -->
+      <div
+        *ngIf="progressAdvance?.work_advance?.length === 0"
+        class="flex justify-center"
+      >
+        <h1 class="text-lg text-gray-500">-No hay avances para mostrar-</h1>
+      </div>
+
+      <!-- Grid de cards -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-4"
+        *ngIf="(progressAdvance?.work_advance?.length ?? 0) > 0"
+      >
+        <div
+          (click)="toEdit(advance?.id || 0, i)"
+          *ngFor="let advance of progressAdvance?.work_advance; let i = index"
+          class="bg-white border-2 border-solid border-gray-500 p-4 size-full rounded-lg shadow-md cursor-pointer"
+        >
+          <p
+            class="text-black font-medium truncate max-w-full md:max-w-[440px] mx-auto"
+          >
+            {{ advance.description }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <div class="mt-4">
+        <p-button
+          label="Agregar avance"
+          fluid="true"
+          pTooltip="Para esta acción es necesario estar en el estado 'en progreso'"
+          showDelay="1000"
+          hideDelay="300"
+          [disabled]="progressAdvance?.state?.toString() !== '2'"
+          [styleClass]="
+            progressAdvance?.state === 3 ? 'bg-primary-500' : 'bg-primary'
+          "
+          [routerLink]="['/progressOrder/info/create', progressAdvance?.id]"
+        />
+      </div>
+    </div>
+
+    <div
+      class="flex flex-col gap-2"
+      *ngIf="progressAdvance?.state?.toString() !== '3'"
+    >
+      <h1 class="text-lg font-bold">Cambiar estado</h1>
+      <p-autocomplete
+        [(ngModel)]="selectedStates"
+        [suggestions]="filteredStates"
+        (completeMethod)="filterStates($event)"
+        (keydown)="blockTyping($event)"
+        [dropdown]="true"
+        fluid="true"
+        class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+      ></p-autocomplete>
+      <div class="mt-4" *ngIf="selectedStates !== ''">
+        <p-button
+          label="Cambiar estado"
+          fluid="true"
+          (onClick)="submitChangeState()"
+        />
+      </div>
+    </div>
+  </div>
+</div>

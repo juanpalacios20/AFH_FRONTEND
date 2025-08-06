@@ -1,0 +1,103 @@
+::ng-deep .custom-galleria {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+::ng-deep .custom-galleria .p-galleria-content {
+  height: 100% !important;
+}
+
+::ng-deep .custom-galleria .p-galleria-item-wrapper {
+  height: 100% !important;
+}
+
+::ng-deep .custom-galleria .p-galleria-item-container {
+  height: 100% !important;
+}
+
+/* Navigation buttons styling */
+::ng-deep .custom-galleria .p-galleria-item-prev,
+::ng-deep .custom-galleria .p-galleria-item-next {
+  background: rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 3rem !important;
+  height: 3rem !important;
+  margin: 0.5rem !important;
+}
+
+::ng-deep .custom-galleria .p-galleria-item-prev:hover,
+::ng-deep .custom-galleria .p-galleria-item-next:hover {
+  background: rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.1);
+}
+
+/* Indicators styling */
+::ng-deep .custom-galleria .p-galleria-indicators {
+  padding: 1rem !important;
+}
+
+::ng-deep .custom-galleria .p-galleria-indicator button {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: 2px solid white !important;
+  border-radius: 50% !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  margin: 0 0.25rem !important;
+}
+
+::ng-deep .custom-galleria .p-galleria-indicator.p-highlight button {
+  background: white !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  ::ng-deep .custom-galleria .p-galleria-item-prev,
+  ::ng-deep .custom-galleria .p-galleria-item-next {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+}
+
+/* Animation classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Hover effects */
+.group:hover .group-hover\:scale-\[1\.02\] {
+  transform: scale(1.02);
+}
+
+.group:hover .group-hover\:-translate-x-1 {
+  transform: translateX(-0.25rem);
+}
+
+/* Focus states */
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Pulse animation for status indicators */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+

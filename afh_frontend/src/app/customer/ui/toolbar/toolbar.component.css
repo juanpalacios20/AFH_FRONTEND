@@ -1,0 +1,70 @@
+@media (min-width: 475px) {
+  .xs\:inline {
+    display: inline;
+  }
+}
+
+/* Smooth mobile menu animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile menu animation */
+.mobile-menu-enter {
+  animation: slideDown 0.2s ease-out;
+}
+
+/* Hover effects */
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.1);
+}
+
+.group:hover .group-hover\:rotate-90 {
+  transform: rotate(90deg);
+}
+
+.group:hover .group-hover\:-translate-x-1 {
+  transform: translateX(-0.25rem);
+}
+
+/* Focus states for accessibility */
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Ensure proper text truncation */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 640px) {
+  /* Reduce padding and margins for mobile */
+  .mobile-compact {
+    padding: 0.5rem;
+  }
+  
+  /* Ensure buttons are touch-friendly */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Backdrop blur fallback */
+@supports not (backdrop-filter: blur(12px)) {
+  .backdrop-blur-sm {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+}
+
