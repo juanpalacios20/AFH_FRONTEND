@@ -16,17 +16,17 @@ import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login-customer',
-  imports: [FocusTrapModule, 
-    ButtonModule, 
-    FormsModule, 
-    InputTextModule, 
-    CheckboxModule, 
-    IconFieldModule, 
-    InputIconModule, 
-    AutoFocusModule, 
-    Toast, 
+  imports: [FocusTrapModule,
+    ButtonModule,
+    FormsModule,
+    InputTextModule,
+    CheckboxModule,
+    IconFieldModule,
+    InputIconModule,
+    AutoFocusModule,
+    Toast,
     Ripple],
-  
+
   providers: [MessageService],
 
   templateUrl: './login-customer.component.html',
@@ -37,21 +37,21 @@ export class LoginCustomerComponent {
   email: string = '';
   loading: boolean = false;
   errorMessage = '';
-  
+
 
   constructor(
     private customerService: CustomerService,
     private router: Router,
     private messageService: MessageService,
     private cookiesService: CookieService
-  ){}
+  ) { }
 
-   showWarn() {
-        this.messageService.add({ severity: 'warn', summary: 'Error de inicio de sesión', detail: this.errorMessage });
-    }
+  showWarn() {
+    this.messageService.add({ severity: 'warn', summary: 'Error de inicio de sesión', detail: this.errorMessage });
+  }
 
 
-  login (){
+  login() {
     this.loading = true;
 
     this.customerService.loginCustomer(this.email, this.code).subscribe({
@@ -62,6 +62,7 @@ export class LoginCustomerComponent {
       }, error: (err) => {
         console.error('Error during customer login:', err);
         this.errorMessage = "Por favor, verifica tus credenciales.";
+        this.showWarn();
         this.loading = false;
       }
     })

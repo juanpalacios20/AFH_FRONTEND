@@ -14,6 +14,8 @@ import { NotificationService } from '../../service/notification.service';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { MeterGroup } from 'primeng/metergroup';
+import { LocalStorageService } from '../../../localstorage.service';
+
 
 interface EventItem {
   status?: string;
@@ -29,7 +31,7 @@ interface EventItem {
   selector: 'app-home-work-customer',
   imports: [DividerModule, CardModule, ToolbarComponent, Timeline, ButtonModule, CommonModule, Toast, MeterGroup],
   templateUrl: './home-work-customer.component.html',
-  styleUrl: './home-work-customer.component.css', 
+  styleUrl: './home-work-customer.component.css',
   providers: [MessageService]
 })
 export class HomeWorkCustomerComponent implements OnInit {
@@ -38,8 +40,8 @@ export class HomeWorkCustomerComponent implements OnInit {
   events: EventItem[];
   work_progress: WorkProgress | null = null;
   value = [{}]
-  
-  
+
+
 
 
   constructor(
@@ -47,7 +49,8 @@ export class HomeWorkCustomerComponent implements OnInit {
     private cookiesService: CookieService,
     private router: Router,
     private notification: NotificationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private localStorageService: LocalStorageService
   ) {
     this.events = [
       { status: 'Pendiente', date: this.work_progress?.work_order.start_date, icon: 'pi pi-spinner-dotted', color: 'blue', description: 'El trabajo esta pendiente de inicio', showButton: true },
@@ -55,40 +58,51 @@ export class HomeWorkCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fecthWorkProgress();
+    this.fetchWorkProgress();
   }
 
-  
+
   showInfo() {
-    this.messageService.add({ severity: 'info', summary: 'Tienes un nuevo avance del trabajó', detail: 'Revisa el nuevo avance'});
+    this.messageService.add({ severity: 'info', summary: 'Tienes un nuevo avance del trabajó', detail: 'Revisa el nuevo avance' });
   }
 
-  fecthWorkProgress() {
-    this.customerService.getWorkProgress(this.cookiesService.get('id')).subscribe({
-      next: (response) => {
-        this.work_progress = response;
-        switch (this.work_progress?.state) {
-          case 2:
-            this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true }];
-            break;
-          case 3: 
-            this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: 'afh_frontend\public\resource\worker.jpg' }];
-            this.events = [...this.events, { status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sido finalizado con éxito, prontamente recibirá el acta de entrega con mas detalles de lo realizado.', showButton: true, image: 'afh_frontend\public\resource\work2.jpg'}];
-            break;
+  fetchWorkProgress() {
+    const progressLs: WorkProgress | null = this.localStorageService.getItem('work_progress');
+    if (progressLs !== null) {
+      this.work_progress = progressLs;
+      this.setStatus()
+      return;
+    }
+    else {
+      this.customerService.getWorkProgress(this.cookiesService.get('id')).subscribe({
+        next: (response) => {
+          this.work_progress = response;
+          this.localStorageService.setItem('work_progress', this.work_progress);
+          this.setStatus()
+          this.notification.setNotificationCount(this.work_progress?.id || 0)
+          this.value = [
+            { label: 'Porcentaje de avance', value: this.work_progress?.progress_percentage, color: 'var(--p-primary-color)' }
+          ];
+        }, error: (error) => {
+          console.error('Error fetching work progress:', error);
         }
-
-        this.notification.setNotificationCount(this.work_progress?.id || 0)
-        this.value = [
-        { label: 'Porcentaje de avance', value: this.work_progress?.progress_percentage, color: 'var(--p-primary-color)' }
-    ];
-
-      }, error: (error) => {
-        console.error('Error fetching work progress:', error);
-      }
-    });
+      });
+    }
   }
-  
-  
+
+  setStatus() {
+    switch (this.work_progress?.state) {
+      case 2:
+        this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: '/resource/worker.jpg' }];
+        break;
+      case 3:
+        this.events = [...this.events, { status: 'En Progreso', date: this.work_progress.work_order.start_date, icon: 'pi pi-play', color: 'green', description: 'El trabajo ha comenzado, revisa los detalles', showButton: true, image: '/resource/worker.jpg' }];
+        this.events = [...this.events, { status: 'Finalizado', date: this.work_progress.work_order.end_date, icon: 'pi pi-check-circle', color: 'green', description: 'El ha trabajo ha sido finalizado con éxito, prontamente recibirá el acta de entrega con mas detalles de lo realizado.', showButton: true, image: '/resource/work2.jpg' }];
+        break;
+    }
+  }
+
+
 
   get workProgressStatus(): string {
     switch (this.work_progress?.state) {
