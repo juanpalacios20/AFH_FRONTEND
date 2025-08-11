@@ -22,12 +22,12 @@ export class FinanceService extends BaseHttpService {
 
   getIncomes(): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get(`${this.apiUrl}income/Income/`, { headers: headers });
+    return this.http.get(`${this.apiUrl}income/get/`, { headers: headers });
   }
 
   getEgress(): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get(`${this.apiUrl}egress/Egress/`, { headers: headers });
+    return this.http.get(`${this.apiUrl}egress/get/`, { headers: headers });
   }
 
   createIncomes(income: any): Observable<any> {

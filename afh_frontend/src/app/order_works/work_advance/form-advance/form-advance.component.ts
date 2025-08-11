@@ -113,10 +113,6 @@ export class FormAdvanceComponent {
   }
 
   action() {
-    let editPercent = localStorage.getItem('editPercent');
-    if (editPercent === 'true') {
-      this.disabledPercent = true;
-    }
     this.progressToEdit =
       this.localStorageService.getItem<WorkProgress>('progress');
     this.orderCode = this.progressToEdit?.work_order?.quote?.code ?? '';
@@ -125,6 +121,10 @@ export class FormAdvanceComponent {
       this.disabled = true;
     }
     if (localStorage.getItem('edit') === 'true') {
+      let editPercent = localStorage.getItem('editPercent');
+      if (editPercent === 'true') {
+        this.disabledPercent = true;
+      }
       this.titleAction = 'Editar avance';
       const count = localStorage.getItem('count');
       this.advanceToEdit = this.progressToEdit?.work_advance[Number(count)];
