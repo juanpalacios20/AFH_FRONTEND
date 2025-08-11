@@ -8,6 +8,7 @@ import { Popover, PopoverModule } from 'primeng/popover';
 import { CommonModule } from '@angular/common';
 import { Notification } from '../../../interfaces/models';
 import { MessageService } from 'primeng/api';
+import { LocalStorageService } from '../../../localstorage.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -22,7 +23,8 @@ export class ToolbarComponent {
     private cdRef: ChangeDetectorRef,
     private router: Router,
     private notification: NotificationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private localStorageService: LocalStorageService
   ) {
 
   }
@@ -58,6 +60,7 @@ export class ToolbarComponent {
     this.router.navigate(['/login-customer']).then(() => {
       this.cdRef.detectChanges();
     });
+    this.localStorageService.removeItem('work_progress');
   }
 
 
