@@ -1,5 +1,6 @@
-<div class="flex h-screen">
-  <div class="w-1/2 bg-gray-200 flex items-center justify-center">
+<div class="flex h-screen flex-col md:flex-row">
+  <!-- Imagen (oculta en móviles) -->
+  <div class="hidden md:flex md:w-1/2 bg-gray-200 items-center justify-center">
     <img
       src="resource/imagebg.png"
       alt="Imagen de fondo"
@@ -7,9 +8,12 @@
     />
   </div>
 
-  <div class="w-1/2 flex items-center justify-center bg-white">
-    <div class="w-3/4">
-      <div class="w-full mb-6 flex items-center">
+  <!-- Formulario -->
+  <div class="flex-1 flex items-center justify-center bg-white">
+    <div
+      class="w-11/12 sm:w-3/4 bg-gray-200 md:bg-white p-6 shadow-lg rounded-lg md:shadow-none md:rounded-none md:p-0"
+    >
+      <div class="w-full mb-6 flex flex-col md:flex-row gap-4">
         <p-button
           icon="pi pi-arrow-left"
           routerLink="/login"
@@ -35,14 +39,13 @@
             />
             <label for="on_label">Correo Electronico</label>
           </p-floatlabel>
-          <small id="email-help" class="text-gray-600"
-            >Confirme su corre electronico</small
-          >
+          <small id="email-help" class="text-gray-600">
+            Confirme su correo electronico
+          </small>
         </div>
         <div class="w-full mb-6">
           <p-button
             label="Enviar Codigo"
-            styleClass="w-full"
             [loading]="loading"
             type="submit"
             fluid="true"
