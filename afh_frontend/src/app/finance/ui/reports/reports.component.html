@@ -2,8 +2,11 @@
   <app-menu class="absolute top-0 left-0 p-4"></app-menu>
 
   <div class="w-full p-5 pt-20">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">AFH: Reportes</h1>
+    <!-- Encabezado -->
+    <div
+      class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4"
+    >
+      <h1 class="text-2xl font-bold text-center md:text-left">AFH: Reportes</h1>
       <p-button
         *ngIf="
           (charDayVisible ||
@@ -15,7 +18,7 @@
         fluid="true"
         label="Descargar informe"
         icon="pi pi-download"
-        styleClass="p-button-primary w-full mb-4"
+        styleClass="p-button-primary w-full md:w-auto"
         (onClick)="downloadPdf()"
         [loading]="loadingPDF"
         [disabled]="loadingPDF"
@@ -23,7 +26,8 @@
     </div>
   </div>
 
-  <div class="flex justify-center gap-4 mt-6">
+  <!-- Selectores -->
+  <div class="flex flex-col md:flex-row justify-center gap-4 mt-6">
     <!-- Selector principal -->
     <p-autocomplete
       [(ngModel)]="selectedFilter"
@@ -32,15 +36,16 @@
       (completeMethod)="filterOption($event)"
       [dropdown]="true"
       (keydown)="blockTyping($event)"
+      fluid="true"
       [forceSelection]="true"
       placeholder="Seleccione una opción"
-      class="w-60 bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+      class="w-full md:w-60 bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
     ></p-autocomplete>
 
-    <!-- Contenedor dinámico de filtros -->
+    <!-- Contenedor dinámico -->
     <div
       *ngIf="selectedFilter && selectedFilter !== 'MÁS INFORMACIÓN'"
-      class="flex flex-col w-80 bg-white rounded-lg"
+      class="flex flex-col w-full md:w-80 bg-white rounded-lg"
     >
       <!-- Personalizado -->
       <ng-container *ngIf="selectedFilter === 'PERSONALIZADO'">
@@ -54,7 +59,7 @@
           fluid="true"
           class="w-full py-3"
         ></p-datepicker>
-        <small>Seleccione un intervalo de fechas</small>
+        <small class="text-gray-500">Seleccione un intervalo de fechas</small>
       </ng-container>
 
       <!-- Año -->
@@ -86,7 +91,8 @@
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
       </ng-container>
-      <!-- Dia -->
+
+      <!-- Día -->
       <ng-container *ngIf="selectedFilter === 'DIA'">
         <p-datepicker
           [(ngModel)]="day"
@@ -94,24 +100,28 @@
           (ngModelChange)="onDayChange()"
           fluid="true"
           inputId="buttondisplay"
-          placeholder="Seleeccione un dia"
+          placeholder="Seleccione un día"
           dateFormat="dd/mm/yy"
           [showOnFocus]="false"
           class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
-        <small>Seleccione un mes</small>
+        <small class="text-gray-500">Seleccione un día</small>
       </ng-container>
     </div>
   </div>
 
-  <div class="mt-4" *ngIf="elements[0].value !== 0 || elements[1].value !== 0">
-    <h1 class="text pl-5 mt-4 mb-10">
-      <span class="font-medium text-gray-700">Reporte </span>
+  <!-- Cards resumen -->
+  <div
+    class="mt-6 px-4"
+    *ngIf="elements[0].value !== 0 || elements[1].value !== 0"
+  >
+    <h1 class="text pl-2 md:pl-5 mt-4 mb-6 text-center md:text-left">
+      <span class="font-medium text-gray-700">Reporte</span>
       <span class="font-bold text-black ml-1">{{
         nameMonth !== "" ? nameMonth : yearNumber
       }}</span>
     </h1>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <div
         class="bg-white rounded-2xl shadow-md p-6 flex flex-col"
         *ngFor="let element of elements"
@@ -125,22 +135,24 @@
           }}</span>
         </div>
         <div class="flex justify-end">
-          <span class="text-3xl font-bold text-gray-900">$ {{
-            element.value.valueOf() | number : "1.0-0" : "es-CO"
-          }}</span>
+          <span class="text-3xl font-bold text-gray-900"
+            >$ {{ element.value.valueOf() | number : "1.0-0" : "es-CO" }}</span
+          >
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Gráfico mensual -->
   <div
-    class="mt-10"
+    class="mt-10 px-4"
     *ngIf="
       (charMonthVisible || charCustomVisible || charDayVisible) &&
       (elements[0].value !== 0 || elements[1].value !== 0)
     "
   >
-    <h1 class="text pl-5 mt-4 mb-10">
-      <span class="font-medium text-gray-700">Finanzas en el mes </span>
+    <h1 class="text pl-2 md:pl-5 mt-4 mb-6 text-center md:text-left">
+      <span class="font-medium text-gray-700">Finanzas en el mes</span>
       <span class="font-bold text-black ml-1">{{ nameMonth }}</span>
     </h1>
     <div class="card flex justify-center">
@@ -152,27 +164,37 @@
       />
     </div>
   </div>
+
+  <!-- Gráfico anual -->
   <div
-    class="mt-10 mb-4"
+    class="mt-10 mb-4 px-4"
     *ngIf="
       charYearVisible && (elements[0].value !== 0 || elements[1].value !== 0)
     "
   >
-    <h1 class="text pl-5 mt-4 mb-10">
-      <span class="font-medium text-gray-700">Finanzas en el año </span>
+    <h1 class="text pl-2 md:pl-5 mt-4 mb-6 text-center md:text-left">
+      <span class="font-medium text-gray-700">Finanzas en el año</span>
       <span class="font-bold text-black ml-1">{{ yearNumber }}</span>
     </h1>
-    <div class="card flex justify-center p-5">
-      <p-chart
-        type="bar"
-        [data]="dataYear"
-        [options]="optionsYear"
-        class="h-[25rem] w-full mb-5"
-      />
+    <div class="card flex justify-center p-5 overflow-x-auto">
+      <div class="overflow-x-auto min-w-[700px] md:min-w-0 w-full">
+        <p-chart
+          type="bar"
+          [data]="dataYear"
+          [options]="optionsYear"
+          class="h-[25rem] w-full mb-5"
+        ></p-chart>
+      </div>
     </div>
   </div>
-  <div class="flex" *ngIf="moreInfoVisible === true">
-    <div class="mt-10 w-full md:w-2/3 mx-auto bg-white p-6">
+
+  <!-- Más información -->
+  <div
+    class="flex flex-col lg:flex-row gap-6 px-4"
+    *ngIf="moreInfoVisible === true"
+  >
+    <!-- Ingresos por cuenta -->
+    <div class="mt-6 w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md" *ngIf="listMoreInfoOA.length > 0">
       <h2 class="text-xl font-semibold text-gray-800 mb-6 pb-2">
         Ingresos por cuenta
       </h2>
@@ -192,12 +214,12 @@
         </div>
 
         <!-- Totales -->
-        <div class="flex-1 space-y-4">
+        <div class="flex-1 space-y-4 w-full">
           <div class="flex justify-between text-gray-700">
             <span class="font-medium">Cuenta bancaria:</span>
-            <span class="font-bold text-black">$ {{
-              bankAccount.valueOf() | number : "1.0-0" : "es-CO"
-            }}</span>
+            <span class="font-bold text-black"
+              >$ {{ bankAccount.valueOf() | number : "1.0-0" : "es-CO" }}</span
+            >
           </div>
           <div class="flex justify-between text-gray-700">
             <span class="font-medium">Caja principal:</span>
@@ -217,7 +239,8 @@
       </div>
     </div>
 
-    <div class="mt-10 w-full md:w-2/3 mx-auto bg-white p-6">
+    <!-- Ingresos por método de pago -->
+    <div class="mt-6 w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md" *ngIf="listMoreInfoMP.length > 0">
       <h2 class="text-xl font-semibold text-gray-800 mb-6 pb-2">
         Ingresos por método de pago
       </h2>
@@ -237,24 +260,24 @@
         </div>
 
         <!-- Totales -->
-        <div class="flex-1 space-y-4">
+        <div class="flex-1 space-y-4 w-full">
           <div class="flex justify-between text-gray-700">
             <span class="font-medium">Transferencia:</span>
-            <span class="font-bold text-black">$ {{
-              transfer.valueOf() | number : "1.0-0" : "es-CO"
-            }}</span>
+            <span class="font-bold text-black"
+              >$ {{ transfer.valueOf() | number : "1.0-0" : "es-CO" }}</span
+            >
           </div>
           <div class="flex justify-between text-gray-700">
             <span class="font-medium">Efectivo:</span>
-            <span class="font-bold text-black">$ {{
-              cash.valueOf() | number : "1.0-0" : "es-CO"
-            }}</span>
+            <span class="font-bold text-black"
+              >$ {{ cash.valueOf() | number : "1.0-0" : "es-CO" }}</span
+            >
           </div>
           <div class="flex justify-between text-gray-700">
             <span class="font-medium">Cheque:</span>
-            <span class="font-bold text-black">$ {{
-              check.valueOf() | number : "1.0-0" : "es-CO"
-            }}</span>
+            <span class="font-bold text-black"
+              >$ {{ check.valueOf() | number : "1.0-0" : "es-CO" }}</span
+            >
           </div>
         </div>
       </div>
@@ -269,15 +292,16 @@
     </div>
   </div>
 
+  <!-- Sin datos global -->
   <div
-    class="w-full h-full justify-center items-center flex mt-30"
+    class="w-full h-full justify-center items-center flex mt-10 px-4"
     *ngIf="
       elements[0].value === 0 &&
       elements[1].value === 0 &&
       moreInfoVisible === false
     "
   >
-    <h1 class="text-primary-950 font-medium">
+    <h1 class="text-primary-950 font-medium text-center">
       -No hay datos para el filtro actual-
     </h1>
   </div>

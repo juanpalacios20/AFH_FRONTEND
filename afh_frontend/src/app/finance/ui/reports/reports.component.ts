@@ -277,18 +277,13 @@ export default class ReportsComponent implements OnInit {
         },
         scales: {
           x: {
+            min: 0,
+            max: 11,
             ticks: {
               color: textColorSecondary,
-              font: {
-                weight: 500,
-              },
-              autoSkip: false, // 👈 IMPORTANTE: no saltar etiquetas
-              maxRotation: 0, // 👈 Si no quieres que roten
-              minRotation: 0,
-            },
-            grid: {
-              color: surfaceBorder,
-              drawBorder: false,
+              autoSkip: false,
+              maxRotation: window.innerWidth < 640 ? 45 : 0, // 👈 rotar en móviles
+              minRotation: window.innerWidth < 640 ? 45 : 0,
             },
           },
 
@@ -589,7 +584,6 @@ export default class ReportsComponent implements OnInit {
     this.financeService.getBalanceMoreInfo(1).subscribe({
       next: (response) => {
         this.listMoreInfoMP = response;
-        console.log('info MP', this.listMoreInfoMP);
         this.assignValuesToElements();
         this.initChartMethodPayment();
       },
@@ -600,7 +594,6 @@ export default class ReportsComponent implements OnInit {
     this.financeService.getBalanceMoreInfo(2).subscribe({
       next: (response) => {
         this.listMoreInfoOA = response;
-        console.log('info OA', this.listMoreInfoOA);
         this.assignValuesToElements();
         this.initChartAccount();
       },
@@ -623,8 +616,6 @@ export default class ReportsComponent implements OnInit {
   }
 
   assignValuesToElements() {
-    console.log('info MP2', this.listMoreInfoMP);
-    console.log('info OA2', this.listMoreInfoOA);
     for (let i = 0; i < this.listMoreInfoMP.length; i++) {
       if (this.listMoreInfoMP[i].payment_method === 'TRANSFERENCIA') {
         this.transfer = this.listMoreInfoMP[i].total;

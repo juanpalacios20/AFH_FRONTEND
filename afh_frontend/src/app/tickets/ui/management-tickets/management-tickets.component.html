@@ -1,10 +1,15 @@
 <div class="relative h-screen">
   <app-menu class="absolute top-0 left-0 p-4"></app-menu>
   <p-toast position="top-right"></p-toast>
-  <div class="w-full p-5 pt-20">
-    <div class="flex justify-between sitems-center mb-4">
-      <h1 class="text-2xl font-bold">AFH: Administración de Vales</h1>
 
+  <div class="w-full p-5 pt-20 space-y-4">
+    <!-- Título y botón de informe -->
+    <div
+      class="flex flex-col md:flex-row md:items-center md:justify-between gap-2"
+    >
+      <h1 class="text-2xl font-bold text-center md:text-left">
+        AFH: Administración de Vales
+      </h1>
       <button
         pButton
         icon="pi pi-download"
@@ -12,13 +17,16 @@
         [loading]="loadingInfo"
         label="Descargar informe"
         rounded="true"
-        styleClass="w-full"
+        styleClass="w-full md:w-auto"
       ></button>
     </div>
 
-    <div class="flex justify-between items-center mb-4">
-      <div>
-        <p-floatlabel variant="on">
+    <!-- Buscador y botón agregar -->
+    <div
+      class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+    >
+      <div class="w-full md:w-auto">
+        <p-floatlabel variant="on" class="w-full md:w-64">
           <p-iconfield>
             <p-inputicon class="pi pi-search" rounded="true" />
             <input
@@ -27,115 +35,148 @@
               [(ngModel)]="filter"
               (input)="tti?.filterGlobal(filter, 'contains')"
               autocomplete="off"
+              class="w-full"
             />
           </p-iconfield>
           <label for="on_label">Buscar vale</label>
         </p-floatlabel>
-        <small id="search-help" class="text-gray-500 text-center">
-          Busca por código y lugar destino</small
+        <small
+          id="search-help"
+          class="text-gray-500 block text-center md:text-left"
         >
+          Busca por código y lugar destino
+        </small>
       </div>
-      <button
-        pButton
-        icon="pi pi-plus"
-        (click)="showCreateTicketDialog()"
-        label="Agregar vale"
-        rounded="true"
-        styleClass="w-full"
-      ></button>
+
+      <div class="w-full md:w-auto flex flex-col md:justify-center">
+        <button
+          pButton
+          icon="pi pi-plus"
+          (click)="showCreateTicketDialog()"
+          label="Agregar vale"
+          rounded="true"
+          styleClass="w-full md:w-auto"
+        ></button>
+      </div>
     </div>
 
-    <!-- Confirmación de eliminación (solo una instancia) -->
+    <!-- Confirmación de eliminación -->
     <p-confirmdialog></p-confirmdialog>
 
-    <p-table
-      #tti
-      [value]="ticketsActivos"
-      [rows]="20"
-      [paginator]="true"
-      [tableStyle]="{ 'min-width': '50rem' }"
-      [rowsPerPageOptions]="[20, 50, 100]"
-      [globalFilterFields]="['id', 'place']"
-    >
-      <ng-template #header *ngIf="ticketsActivos.length > 0">
-        <tr>
-          <th class="rounded-border text-primary-950 text-center">Código</th>
-          <th class="rounded-border text-primary-950 text-center">
-            Lugar Destino
-          </th>
-          <th class="rounded-border text-primary-950 text-center">Fecha</th>
-          <th class="rounded-border text-primary-950 text-center">
-            Responsable
-          </th>
-          <th class="rounded-border text-primary-950 text-center">Estado</th>
-          <th class="rounded-border text-primary-950 text-center">Opciones</th>
-        </tr>
-      </ng-template>
-      <ng-template #body let-ticket>
-        <tr>
-          <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
-            <p class="text-center">{{ ticket.id }}</p>
-          </td>
-          <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
-            <p class="text-center">{{ ticket.place }}</p>
-          </td>
-          <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
-            <p class="text-center">{{ ticket.entry_date_formatted }}</p>
-          </td>
-          <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
-            <p class="text-center">
-              {{ ticket.responsible || "Sin responsable asignado" }}
-            </p>
-          </td>
-          <td class="cursor-pointer" (click)="showViewTicketDialog(ticket.id)">
-            <div class="flex justify-center">
-              <p-tag
-                class="justify-center"
-                [value]="getStateString(ticket.state)"
-                [severity]="getSeverity(ticket.state)"
-              ></p-tag>
-            </div>
-          </td>
-          <td>
-            <div class="card flex justify-center gap-2">
-              <p-button
-                icon="pi pi-download"
-                severity="primary"
-                *ngIf="ticket.state === 3"
-                [loading]="loading"
-                (click)="getPDF(ticket.id, ticket.place)"
-              />
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template
-        #emptymessage
-        *ngIf="ticketsActivos.length === 0 && loadingTickets === false"
+    <!-- Tabla -->
+    <div class="overflow-x-auto">
+      <p-table
+        #tti
+        [value]="ticketsActivos"
+        [rows]="20"
+        [paginator]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowsPerPageOptions]="[20, 50, 100]"
+        [globalFilterFields]="['id', 'place']"
       >
-        <tr>
-          <td colspan="5" class="text-center text-gray-600">
-            No hay vales activos
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template
-        #emptymessage
-        *ngIf="ticketsActivos.length === 0 && loadingTickets === true"
-      >
-        <tr>
-          <td colspan="5" class="text-center text-gray-600">
-            Cargando información...
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template #header *ngIf="ticketsActivos.length > 0">
+          <tr>
+            <th class="rounded-border text-primary-950 text-center">Código</th>
+            <th class="rounded-border text-primary-950 text-center">
+              Lugar Destino
+            </th>
+            <th class="rounded-border text-primary-950 text-center">Fecha</th>
+            <th class="rounded-border text-primary-950 text-center">
+              Responsable
+            </th>
+            <th class="rounded-border text-primary-950 text-center">Estado</th>
+            <th class="rounded-border text-primary-950 text-center">
+              Opciones
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-ticket>
+          <tr>
+            <td
+              class="cursor-pointer"
+              (click)="showViewTicketDialog(ticket.id)"
+            >
+              <p class="text-center">{{ ticket.id }}</p>
+            </td>
+            <td
+              class="cursor-pointer"
+              (click)="showViewTicketDialog(ticket.id)"
+            >
+              <p class="text-center">{{ ticket.place }}</p>
+            </td>
+            <td
+              class="cursor-pointer"
+              (click)="showViewTicketDialog(ticket.id)"
+            >
+              <p class="text-center">{{ ticket.entry_date_formatted }}</p>
+            </td>
+            <td
+              class="cursor-pointer"
+              (click)="showViewTicketDialog(ticket.id)"
+            >
+              <p class="text-center">
+                {{ ticket.responsible || "Sin responsable asignado" }}
+              </p>
+            </td>
+            <td
+              class="cursor-pointer"
+              (click)="showViewTicketDialog(ticket.id)"
+            >
+              <div class="flex justify-center">
+                <p-tag
+                  class="justify-center"
+                  [value]="getStateString(ticket.state)"
+                  [severity]="getSeverity(ticket.state)"
+                ></p-tag>
+              </div>
+            </td>
+            <td>
+              <div class="card flex justify-center gap-2">
+                <p-button
+                  icon="pi pi-download"
+                  severity="primary"
+                  *ngIf="ticket.state === 3"
+                  [loading]="loading"
+                  (click)="getPDF(ticket.id, ticket.place)"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template
+          #emptymessage
+          *ngIf="ticketsActivos.length === 0 && loadingTickets === false"
+        >
+          <tr>
+            <td colspan="6" class="text-center text-gray-600">
+              No hay vales activos
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template
+          #emptymessage
+          *ngIf="ticketsActivos.length === 0 && loadingTickets === true"
+        >
+          <tr>
+            <td colspan="6" class="text-center text-gray-600">
+              Cargando información...
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
+
+  <!-- Dialogs -->
   <app-create-ticket
     [visible]="createTicketDialogVisible"
     (closeDialog)="closeCreate()"
     (onTicketCreated)="handleTicketCreated()"
   ></app-create-ticket>
+
   <app-view-ticket
     [state]="state"
     [date]="date"
