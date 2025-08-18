@@ -6,7 +6,9 @@
       <h1 class="text-2xl font-bold">AFH: Administración de Cotizaciones</h1>
     </div>
 
-    <div class="flex justify-between items-center mb-4">
+    <div
+      class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-4"
+    >
       <div>
         <p-floatlabel variant="on">
           <p-iconfield>
@@ -21,9 +23,9 @@
           </p-iconfield>
           <label for="on_label">Buscar cotización</label>
         </p-floatlabel>
-        <small id="search-help" class="text-gray-500 text-center">
-          Busca por código de la cotización o nombre de cliente</small
-        >
+        <small id="search-help" class="text-gray-500 text-center block">
+          Busca por código de la cotización o nombre de cliente
+        </small>
       </div>
       <button
         pButton
@@ -31,11 +33,11 @@
         label="Crear nueva cotización"
         (click)="showCreateQuoteDialog()"
         rounded="true"
-        styleClass="w-full"
+        styleClass="w-full md:w-auto"
       ></button>
     </div>
 
-    <!-- Confirmación de eliminación (solo una instancia) -->
+    <!-- Confirmación de eliminación -->
     <p-confirmdialog></p-confirmdialog>
 
     <p-table
@@ -94,16 +96,12 @@
               <p-button
                 icon="pi pi-pencil"
                 (click)="showEditQuoteDialog(quote)"
-                [disabled]="
-                  quote.state === 2 || quote.state === 3 ? true : false
-                "
+                [disabled]="quote.state === 2 || quote.state === 3"
               />
               <p-button
                 icon="pi pi-trash"
                 (click)="confirmationDelete(quote.id)"
-                [disabled]="
-                  quote.state === 2 || quote.state === 3 ? true : false
-                "
+                [disabled]="quote.state === 2 || quote.state === 3"
                 severity="danger"
               />
             </div>
@@ -132,21 +130,22 @@
       </ng-template>
     </p-table>
   </div>
+
   <app-create-quote
     [visible]="quoteCreateDialogVisible"
     [action]="quoteAction"
     (closeDialog)="quoteCreateDialogVisible = false"
     (onQuoteCreated)="handleQuoteCreated()"
-  >
-  </app-create-quote>
+  ></app-create-quote>
+
   <app-create-quote
     [visible]="quoteEditDialogVisible"
     [action]="quoteAction"
     [quoteToEdit]="quoteToEdit"
     (closeDialog)="quoteEditDialogVisible = false"
     (onQuoteCreated)="handleQuoteEdited()"
-  >
-  </app-create-quote>
+  ></app-create-quote>
+
   <app-view-quotes
     [visible]="viewQuoteDialogVisible"
     [quote]="viewQuote"

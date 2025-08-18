@@ -1,15 +1,21 @@
 <div class="relative h-screen">
   <app-menu class="absolute top-0 left-0 p-4"></app-menu>
   <p-toast position="top-right"></p-toast>
-  <div class="w-full p-5 pt-20">
+
+  <!-- Contenedor adaptable -->
+  <div
+    class="w-full p-5 pt-20 md:pt-20 md:shadow-none md:rounded-none md:max-w-full bg-white md:bg-transparent shadow-lg rounded-lg mx-auto mt-8 md:mt-0 max-w-sm"
+  >
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-bold">
         AFH: Administración de Ordenes de trabajo
       </h1>
     </div>
 
-    <div class="flex justify-between items-center mb-4">
-      <div>
+    <div
+      class="flex justify-between items-center mb-4 flex-col md:flex-row gap-4 md:gap-0"
+    >
+      <div class="w-full md:w-auto">
         <p-floatlabel variant="on" fluid="true" class="w-full">
           <p-iconfield>
             <p-inputicon class="pi pi-search" rounded="true" />
@@ -24,20 +30,20 @@
           </p-iconfield>
           <label for="on_label">Buscar orden de trabajo</label>
         </p-floatlabel>
-        <small id="search-help" class="text-gray-500 text-center">
-          Busca por nombre de cliente y fecha de orden de trabajo</small
-        >
+        <small id="search-help" class="text-gray-500 text-center block">
+          Busca por nombre de cliente y fecha de orden de trabajo
+        </small>
       </div>
+
       <button
         pButton
         icon="pi pi-plus"
         label="Generar nueva orden de trabajo"
         (click)="showCreateOrderWorkDialog()"
         rounded="true"
-        styleClass="w-full"
+        styleClass="w-full md:w-auto"
       ></button>
     </div>
-
 
     <p-table
       #to
@@ -122,6 +128,7 @@
       </ng-template>
     </p-table>
   </div>
+
   <app-view-orders-work
     [visible]="showDialog"
     [orderWork]="orderWorkToView"
@@ -132,14 +139,12 @@
     [action]="action"
     (closeDialog)="OrderWorkDialogVisible = false"
     (onOrderWorkCreated)="handleOrderWorkCreated()"
-  >
-  </app-form-order-works>
+  ></app-form-order-works>
   <app-form-order-works
     [visible]="showEditDialog"
     [orderWorkToEdit]="orderWorkToEdit"
     [action]="action"
     (closeDialog)="closeEditDialog()"
     (onOrderWorkCreated)="handleOrderWorkEdited()"
-  >
-  </app-form-order-works>
+  ></app-form-order-works>
 </div>
