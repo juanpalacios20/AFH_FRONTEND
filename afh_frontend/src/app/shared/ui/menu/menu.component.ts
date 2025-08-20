@@ -15,9 +15,8 @@ interface MenuItem {
   icon: string;
   route?: string;
   action?: () => void;
+  adminOnly?: boolean; // 👈 nuevo
 }
-
-
 
 @Component({
   selector: 'app-menu',
@@ -29,7 +28,7 @@ interface MenuItem {
     AvatarModule,
     StyleClass,
     RouterLink,
-    NgFor
+    NgFor,
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
@@ -38,7 +37,12 @@ export class MenuComponent implements OnInit {
   isAdmin: boolean = false;
   @ViewChild('drawerRef') drawerRef!: Drawer;
   @Input() visible: boolean = false;
-  menuSections: { label: string; icon: string; visible: boolean; items: MenuItem[] }[] = [
+  menuSections: {
+    label: string;
+    icon: string;
+    visible: boolean;
+    items: MenuItem[];
+  }[] = [
     {
       label: 'Secciones',
       icon: 'pi pi-chevron-down',
@@ -48,6 +52,7 @@ export class MenuComponent implements OnInit {
           label: 'Herramientas',
           icon: 'pi pi-hammer',
           route: '/management-tools',
+          adminOnly: true,
         },
         { label: 'Clientes', icon: 'pi pi-users', route: '/clients' },
         { label: 'Finanzas', icon: 'pi pi-wallet', route: '/finance' },
@@ -128,14 +133,23 @@ export class MenuComponent implements OnInit {
   }
 
   get visibleSections() {
-    return this.menuSections.filter((section) => section.visible);
+    return this.menuSections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) => {
+          if (item.adminOnly && !this.isAdmin) {
+            return false;
+          }
+          return true;
+        }),
+      }))
+      .filter((section) => section.items.length > 0);
   }
 
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-        this.cookieService.delete('token');
-        this.cookieService.delete('csrf_token');
+        localStorage.clear();
         this.router.navigate(['/login']);
       },
       error: (err) => console.error('Error al cerrar sesión', err),
