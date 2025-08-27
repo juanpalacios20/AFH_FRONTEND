@@ -3,16 +3,16 @@
   [(visible)]="visible"
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-  [style]="{ width: '60vw' }"
+  [style]="{ width: '60vw', 'color': '#2f7d3a' }"
   [draggable]="false"
   [resizable]="false"
   [closable]="true"
   (onHide)="close()"
 >
   <!-- ======= Información general ======= -->
-  <div class="flex w-full mb-2">
+  <div class="flex w-full mb-2 serenityBlue">
     <p>
-      <span class="font-semibold text-black">Responsable:</span>
+      <span class="font-semibold">Responsable:</span>
       {{ type === "ingreso" ? income?.responsible : expense?.responsible }}
     </p>
   </div>
@@ -24,39 +24,39 @@
           : 'font-semibold text-red-600'
       "
     >
-      <span class="font-semibold text-black">Cantidad:</span>
+      <span class="font-semibold serenityBlue">Cantidad:</span>
       {{
         type === "ingreso"
           ? '+' + income?.amount_formatted
           : '-' + expense?.amount_formatted
       }}
     </p>
-    <p>
-      <span class="font-semibold text-black">Cuenta:</span>
+    <p class="serenityBlue">
+      <span class="font-semibold ">Cuenta:</span>
       {{ account() }}
     </p>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-    <p>
-      <span class="font-semibold text-black">Fecha:</span>
+    <p class="serenityBlue">
+      <span class="font-semibold ">Fecha:</span>
       {{ type === "ingreso" ? income?.date : expense?.date }}
     </p>
-    <p>
-      <span class="font-semibold text-black">Metodo de pago:</span>
+    <p class="serenityBlue">
+      <span class="font-semibold ">Metodo de pago:</span>
       {{
         type === "ingreso" ? income?.payment_method : expense?.payment_method
       }}
     </p>
   </div>
   <div class="flex w-full mb-2">
-    <p>
-      <span class="font-semibold text-black">Motivo o concepto:</span>
+    <p class="serenityBlue">
+      <span class="font-semibold ">Motivo o concepto:</span>
       {{ type === "ingreso" ? income?.reason : expense?.reason }}
     </p>
   </div>
   <div class="flex w-full mb-2">
-    <p>
-      <span class="font-semibold text-black">Observaciones</span>
+    <p class="serenityBlue">
+      <span class="font-semibold ">Observaciones</span>
       {{
         type === "ingreso"
           ? income?.observations || "Sin observaciones adicionales"

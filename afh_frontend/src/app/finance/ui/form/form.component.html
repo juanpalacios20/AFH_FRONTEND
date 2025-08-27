@@ -7,7 +7,7 @@
   <p-toast />
   <p-confirmdialog />
   <ng-template pTemplate="header">
-    <div class="flex justify-between items-center w-full">
+    <div class="flex justify-between serenityGreen items-center w-full">
       <span>{{ this.actionTitle }}</span>
       <button
         type="button"
@@ -18,7 +18,7 @@
       </button>
     </div>
   </ng-template>
-  <div class="w-full mx-auto rounded-xl justify-center mt-2">
+  <div class="w-full mx-auto rounded-xl serenityBlue justify-center mt-2">
     <div class="mb-4">
       <p-floatlabel class="mt-2" variant="on" required="true">
         <input
@@ -28,9 +28,9 @@
           [ngClass]="{
             'border-red-500 ng-invalid ng-dirty': errorMessage && people === ''
           }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         />
-        <label
+        <label class="serenityBlue"
           >{{
             type === "ingreso"
               ? "Persona que hace el ingreso"
@@ -54,12 +54,12 @@
             }"
             [class]="
               this.action === 1
-                ? 'w-full bg-gray-300 text-gray-700 font-medium rounded-lg transition focus:ring-2 focus:ring-primary-500'
-                : 'w-full bg-white text-black font-medium rounded-lg transition focus:ring-2 focus:ring-primary-500'
+                ? 'w-full bg-gray-300 text-gray-700 font-medium rounded-lg transition focus:ring-2 focus:ring-primary-900'
+                : 'w-full bg-white serenityBlue font-medium rounded-lg transition focus:ring-2 focus:ring-primary-900'
             "
             size="large"
           />
-          <label for="on_label">Monto</label>
+          <label for="on_label" class="serenityBlue">Monto</label>
         </p-floatlabel>
         <small class="text-red-600" *ngIf="errorMessage && amount === 0">
           {{ errorMessage }}
@@ -79,6 +79,7 @@
           dateFormat="dd/mm/yy"
           fluid="true"
           size="large"
+          styleClass="serenityBlue"
           [placeholder]="
             type === 'ingreso' ? 'Fecha del ingreso' : 'Fecha del egreso'
           "
@@ -100,9 +101,9 @@
             'border-red-500 ng-invalid ng-dirty': errorMessage && reason === ''
           }"
           [ngModelOptions]="{ standalone: true }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         ></textarea>
-        <label>Motivo o concepto</label>
+        <label class="serenityBlue">Motivo o concepto</label>
       </p-floatlabel>
       <small class="text-red-600" *ngIf="errorMessage && reason === ''">
         {{ errorMessage }}
@@ -125,7 +126,7 @@
           [placeholder]="
             type === 'ingreso' ? 'Cuenta destino' : 'Cuenta origen'
           "
-          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         ></p-autocomplete>
         <small
           class="text-red-600"
@@ -148,7 +149,7 @@
           }"
           fluid="true"
           placeholder="Forma de pago"
-          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         ></p-autocomplete>
         <small
           class="text-red-600"
@@ -167,14 +168,14 @@
           type="text"
           [(ngModel)]="observations"
           [ngModelOptions]="{ standalone: true }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         ></textarea>
-        <label>Observaciones (Opcional)</label>
+        <label class="serenityBlue">Observaciones (Opcional)</label>
       </p-floatlabel>
     </div>
     <div>
       <div>
-        <h2 class="mb-2 font-medium">Comprobante</h2>
+        <h2 class="mb-2 font-medium serenityBlue">Comprobante</h2>
 
         <div class="mb-6 relative bg-white p-3 rounded-md shadow-md">
           <div
@@ -193,7 +194,7 @@
 
                 <button
                   type="button"
-                  class="absolute top-0 right-0 p-1 text-black cursor-pointer rounded-full transition"
+                  class="absolute top-0 right-0 p-1 serenityBlue cursor-pointer rounded-full transition"
                   (click)="removeImage()"
                   title="Eliminar imagen"
                 >
@@ -206,6 +207,7 @@
           <div class="flex justify-center mt-4">
             <p-fileupload
               mode="basic"
+              styleClass="upload-green"
               name="images"
               accept="image/*"
               multiple="false"
@@ -220,7 +222,7 @@
       <div class="flex justify-end gap-2 mt-10">
         <p-button styleClass="p-button-secondary"> Cancelar </p-button>
         <p-button
-          styleClass="p-button-primary"
+          styleClass="bg-lightSerenityGreen font-medium"
           (click)="confirmEvent($event)"
           [loading]="loading"
           disabled="{{ loading }}"

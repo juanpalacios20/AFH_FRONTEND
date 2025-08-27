@@ -125,11 +125,10 @@ export class HistoryTicketsComponent {
       this.ticketService.getTickets().subscribe({
         next: (data) => {
           this.tickets = data;
-          this.localStorageService.setItem('historialTickets', this.tickets);
           this.ticketsFinalizados = data.filter(
             (ticket: Ticket) => ticket.state === 4
           );
-
+          this.localStorageService.setItem('historialTickets', this.ticketsFinalizados);
           this.loadingTickets = false;
         },
         error: (error) => {

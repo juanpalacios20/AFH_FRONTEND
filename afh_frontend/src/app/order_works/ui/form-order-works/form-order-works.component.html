@@ -6,7 +6,7 @@
 >
   <ng-template pTemplate="header">
     <div class="flex justify-between items-center w-full">
-      <span>
+      <span class="serenityGreen font-bold text-xl">
         {{
           this.action === 1
             ? this.actionTittle + " " + orderWorkToEdit?.quote?.code
@@ -22,7 +22,7 @@
       </button>
     </div>
   </ng-template>
-  <div class="w-full mx-auto rounded-xl justify-center mt-4">
+  <div class="w-full serenityBlue mx-auto rounded-xl justify-center mt-4">
     <div
       [ngClass]="{
         'w-full': !validQuote && this.action === 0,
@@ -300,7 +300,7 @@
       <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()">
         Cancelar
       </p-button>
-      <p-button styleClass="p-button-primary" (onClick)="submit()">
+      <p-button styleClass="createButton-lightSerenityGreen" [loading]="loading" (onClick)="submit()">
         {{ this.actionTittle }}
       </p-button>
     </div>

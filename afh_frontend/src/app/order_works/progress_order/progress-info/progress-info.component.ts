@@ -46,6 +46,7 @@ export default class ProgressInfoComponent implements OnInit {
   statesOption = ['En progreso'];
   idToEdit: number | null = null;
   progressAdvance: WorkProgress | null = null;
+  loading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -132,6 +133,7 @@ export default class ProgressInfoComponent implements OnInit {
   }
 
   changeState() {
+    this.loading = true;
     if (this.progressAdvance) {
       let data: any = {};
       console.log(this.selectedStates);
@@ -148,6 +150,7 @@ export default class ProgressInfoComponent implements OnInit {
             summary: 'Error',
             detail: `No puede completar el progreso de una orden sin al menos un avance`,
           });
+          this.loading = false;
           return;
         }
         localStorage.setItem('completed', 'true');
@@ -167,7 +170,7 @@ export default class ProgressInfoComponent implements OnInit {
               detail: `El estado ha sido cambiado a ${this.selectedStates}`,
             });
             this.selectedStates = '';
-            console.log(response);
+            this.loading = false;
             this.getProgress();
           },
           error: (err) => {

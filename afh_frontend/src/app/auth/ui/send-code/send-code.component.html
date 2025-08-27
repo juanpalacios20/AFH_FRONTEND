@@ -2,32 +2,32 @@
   <!-- Imagen (oculta en móviles) -->
   <div class="hidden md:flex md:w-1/2 bg-gray-200 items-center justify-center">
     <img
-      src="resource/imagebg.png"
+      src="resource/logo.png"
       alt="Imagen de fondo"
       class="w-full h-full object-cover"
     />
   </div>
 
   <!-- Formulario -->
-  <div class="flex-1 flex items-center justify-center bg-white">
+  <div class="flex-1 flex items-center justify-center bg-blueSerenity">
     <div
-      class="w-11/12 sm:w-3/4 bg-gray-200 md:bg-white p-6 shadow-lg rounded-lg md:shadow-none md:rounded-none md:p-0"
+      class="w-11/12 sm:w-3/4 bg-blueSerenity md:bg-white p-6 shadow-lg rounded-lg md:shadow-none md:rounded-none md:p-0"
     >
       <div class="w-full mb-6 flex flex-col md:flex-row gap-4">
         <p-button
           icon="pi pi-arrow-left"
           routerLink="/login"
           size="small"
-          class="mr-4"
+          styleClass="mr-4 bg-lightSerenityGreen"
         />
         <div class="w-full text-center">
-          <h2 class="text-black font-bold text-2xl">Recuperar Contraseña</h2>
+          <h2 class="lightSerenityGreen font-bold text-2xl">Recuperar Contraseña</h2>
         </div>
       </div>
 
       <form class="w-full" (submit)="sendCode()">
         <div class="w-full mb-6">
-          <p-floatlabel variant="on">
+          <p-floatlabel variant="in">
             <input
               pInputText
               [(ngModel)]="email"
@@ -35,11 +35,11 @@
               required="true"
               id="on_label"
               autocomplete="on"
-              class="w-full bg-white text-black font-medium py-3 rounded-lg transition"
+              class="w-full text-black font-medium py-3 rounded-lg transition"
             />
             <label for="on_label">Correo Electronico</label>
           </p-floatlabel>
-          <small id="email-help" class="text-gray-600">
+          <small id="email-help" class="text-gray-300">
             Confirme su correo electronico
           </small>
         </div>
@@ -50,7 +50,7 @@
             type="submit"
             fluid="true"
             rounded="true"
-            styleClass="w-full"
+            styleClass="w-full bg-lightSerenityGreen"
           />
           <p class="text-red-600" *ngIf="errorMessage">{{ errorMessage }}</p>
         </div>

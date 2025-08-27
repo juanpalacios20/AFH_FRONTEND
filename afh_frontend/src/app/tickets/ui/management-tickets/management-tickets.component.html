@@ -7,18 +7,17 @@
     <div
       class="flex flex-col md:flex-row md:items-center md:justify-between gap-2"
     >
-      <h1 class="text-2xl font-bold text-center md:text-left">
+      <h1 class="text-2xl font-bold text-center md:text-left serenityGreen">
         AFH: Administración de Vales
       </h1>
-      <button
-        pButton
+      <p-button
         icon="pi pi-download"
-        (click)="getInfo()"
+        (onClick)="getInfo()"
         [loading]="loadingInfo"
         label="Descargar informe"
         rounded="true"
-        styleClass="w-full md:w-auto"
-      ></button>
+        styleClass="w-full md:w-auto createButton-lightSerenityGreen"
+      ></p-button>
     </div>
 
     <!-- Buscador y botón agregar -->
@@ -35,10 +34,10 @@
               [(ngModel)]="filter"
               (input)="tti?.filterGlobal(filter, 'contains')"
               autocomplete="off"
-              class="w-full"
+              class="w-full serenityBlue focus:ring-2 focus:ring-primary-900"
             />
           </p-iconfield>
-          <label for="on_label">Buscar vale</label>
+          <label for="on_label" class="serenityBlue">Buscar vale</label>
         </p-floatlabel>
         <small
           id="search-help"
@@ -49,14 +48,13 @@
       </div>
 
       <div class="w-full md:w-auto flex flex-col md:justify-center">
-        <button
-          pButton
+        <p-button
           icon="pi pi-plus"
           (click)="showCreateTicketDialog()"
           label="Agregar vale"
           rounded="true"
-          styleClass="w-full md:w-auto"
-        ></button>
+          styleClass="w-full md:w-auto createButton-lightSerenityGreen"
+        ></p-button>
       </div>
     </div>
 
@@ -76,16 +74,16 @@
       >
         <ng-template #header *ngIf="ticketsActivos.length > 0">
           <tr>
-            <th class="rounded-border text-primary-950 text-center">Código</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">Código</th>
+            <th class="rounded-border serenityBlue text-center">
               Lugar Destino
             </th>
-            <th class="rounded-border text-primary-950 text-center">Fecha</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">Fecha</th>
+            <th class="rounded-border serenityBlue text-center">
               Responsable
             </th>
-            <th class="rounded-border text-primary-950 text-center">Estado</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">Estado</th>
+            <th class="rounded-border serenityBlue text-center">
               Opciones
             </th>
           </tr>
@@ -94,28 +92,28 @@
         <ng-template #body let-ticket>
           <tr>
             <td
-              class="cursor-pointer"
+              class="cursor-pointer serenityBlue"
               (click)="showViewTicketDialog(ticket.id)"
             >
-              <p class="text-center">{{ ticket.id }}</p>
+              <p class="text-center serenityBlue">{{ ticket.id }}</p>
+            </td>
+            <td
+              class="cursor-pointer serenityBlue"
+              (click)="showViewTicketDialog(ticket.id)"
+            >
+              <p class="text-center serenityBlue">{{ ticket.place }}</p>
+            </td>
+            <td
+              class="cursor-pointer serenityBlue"
+              (click)="showViewTicketDialog(ticket.id)"
+            >
+              <p class="text-center serenityBlue">{{ ticket.entry_date_formatted }}</p>
             </td>
             <td
               class="cursor-pointer"
               (click)="showViewTicketDialog(ticket.id)"
             >
-              <p class="text-center">{{ ticket.place }}</p>
-            </td>
-            <td
-              class="cursor-pointer"
-              (click)="showViewTicketDialog(ticket.id)"
-            >
-              <p class="text-center">{{ ticket.entry_date_formatted }}</p>
-            </td>
-            <td
-              class="cursor-pointer"
-              (click)="showViewTicketDialog(ticket.id)"
-            >
-              <p class="text-center">
+              <p class="text-center serenityBlue">
                 {{ ticket.responsible || "Sin responsable asignado" }}
               </p>
             </td>
@@ -135,7 +133,7 @@
               <div class="card flex justify-center gap-2">
                 <p-button
                   icon="pi pi-download"
-                  severity="primary"
+                  styleClass="createButton-lightSerenityGreen"
                   *ngIf="ticket.state === 3"
                   [loading]="loading"
                   (click)="getPDF(ticket.id, ticket.place)"
@@ -183,6 +181,7 @@
     [description]="description"
     [place]="place"
     [id]="id"
+    [responsible]="responsible"
     [visible]="viewTicketDialogVisible"
     (closeDialog)="viewTicketDialogVisible = false"
     (stateChange)="handleStateChange()"

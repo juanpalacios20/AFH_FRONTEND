@@ -3,7 +3,7 @@
   <p-toast position="top-right"></p-toast>
   <div class="w-full p-5 pt-20">
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">AFH: Administración de Cotizaciones</h1>
+      <h1 class="text-2xl font-bold serenityGreen">AFH: Administración de Cotizaciones</h1>
     </div>
 
     <div
@@ -19,22 +19,22 @@
               [(ngModel)]="quoteToFind"
               (input)="tq?.filterGlobal(quoteToFind, 'contains')"
               autocomplete="off"
+              class="serenityBlue focus:ring-2 focus:ring-primary-900 w-full"
             />
           </p-iconfield>
-          <label for="on_label">Buscar cotización</label>
+          <label for="on_label" class="serenityBlue">Buscar cotización</label>
         </p-floatlabel>
         <small id="search-help" class="text-gray-500 text-center block">
           Busca por código de la cotización o nombre de cliente
         </small>
       </div>
-      <button
-        pButton
+      <p-button
         icon="pi pi-plus"
         label="Crear nueva cotización"
         (click)="showCreateQuoteDialog()"
         rounded="true"
-        styleClass="w-full md:w-auto"
-      ></button>
+        styleClass="w-full md:w-auto createButton-lightSerenityGreen"
+      ></p-button>
     </div>
 
     <!-- Confirmación de eliminación -->
@@ -51,36 +51,36 @@
     >
       <ng-template #header *ngIf="quotes.length > 0">
         <tr>
-          <th class="rounded-border text-primary-950 text-center">Código</th>
-          <th class="rounded-border text-primary-950 text-center">
+          <th class="rounded-border serenityBlue text-center">Código</th>
+          <th class="rounded-border serenityBlue text-center">
             Nombre cliente
           </th>
-          <th class="rounded-border text-primary-950 text-center">
+          <th class="rounded-border serenityBlue text-center">
             Descripcion
           </th>
-          <th class="rounded-border text-primary-950 text-center">Fecha</th>
-          <th class="rounded-border text-primary-950 text-center">Estado</th>
-          <th class="rounded-border text-primary-950 text-center">Opciones</th>
+          <th class="rounded-border serenityBlue text-center">Fecha</th>
+          <th class="rounded-border serenityBlue text-center">Estado</th>
+          <th class="rounded-border serenityBlue text-center">Opciones</th>
         </tr>
       </ng-template>
       <ng-template #body let-quote>
         <tr>
           <td class="cursor-pointer" (click)="showViewComponent(quote)">
-            <p class="text-center">{{ quote.code }}</p>
+            <p class="text-center serenityBlue">{{ quote.code }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewComponent(quote)">
-            <p class="text-center">{{ quote.customer.name }}</p>
+            <p class="text-center serenityBlue">{{ quote.customer.name }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewComponent(quote)">
             <p
-              class="text-center truncate w-52 mx-auto"
+              class="text-center truncate w-52 mx-auto serenityBlue"
               title="{{ quote.description }}"
             >
               {{ quote.description }}
             </p>
           </td>
           <td class="cursor-pointer" (click)="showViewComponent(quote)">
-            <p class="text-center">{{ quote.issue_date }}</p>
+            <p class="text-center serenityBlue">{{ quote.issue_date }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewComponent(quote)">
             <div class="flex justify-center">
@@ -96,6 +96,7 @@
               <p-button
                 icon="pi pi-pencil"
                 (click)="showEditQuoteDialog(quote)"
+                styleClass="createButton-lightSerenityGreen"
                 [disabled]="quote.state === 2 || quote.state === 3"
               />
               <p-button

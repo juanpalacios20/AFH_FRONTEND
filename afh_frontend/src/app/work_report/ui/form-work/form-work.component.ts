@@ -427,10 +427,10 @@ export default class FormWorkComponent {
     if (changes['visible']) {
       this.loadOrderWorks();
       if (this.action === 0) {
-        this.actionTittle = 'generar acta de entrega';
+        this.actionTittle = 'Generar acta de entrega';
       }
       if (this.action === 1) {
-        this.actionTittle = 'editar acta de entrega';
+        this.actionTittle = 'Editar acta de entrega';
       }
     }
     if (this.workReportToEdit && this.action === 1) {
