@@ -4,11 +4,11 @@
 
   <div class="flex-1 w-full p-5 pt-24">
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">AFH: Seguimiento de trabajo</h1>
+      <h1 class="text-2xl font-bold serenityGreen">AFH: Seguimiento de trabajo</h1>
     </div>
 
     <div class="flex justify-between items-center mb-4 flex-wrap gap-4">
-      <div class="flex-1 min-w-[250px]">
+      <div class="w-full md:w-auto">
         <p-floatlabel variant="on" fluid="true" class="w-full">
           <p-iconfield>
             <p-inputicon class="pi pi-search" rounded="true" />
@@ -19,6 +19,7 @@
               [(ngModel)]="workProgressOrderFound"
               (input)="to?.filterGlobal(workProgressOrderFound, 'contains')"
               autocomplete="off"
+              class="w-full serenityBlue focus:ring-2 focus:ring-primary-900"
             />
           </p-iconfield>
         </p-floatlabel>
@@ -39,16 +40,16 @@
         [globalFilterFields]="['work_order.quote.code']"
       >
         <ng-template #header *ngIf="workProgressOrder.length > 0">
-          <tr>
-            <th class="rounded-border text-primary-950 text-center">Código</th>
-            <th class="rounded-border text-primary-950 text-center">
+          <tr class="serenityBlue">
+            <th class="rounded-border text-center">Código</th>
+            <th class="rounded-border text-center">
               Nombre cliente
             </th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border text-center">
               Nombre representante
             </th>
-            <th class="rounded-border text-primary-950 text-center">Fecha</th>
-            <th class="rounded-border text-primary-950 text-center">Estado</th>
+            <th class="rounded-border text-center">Fecha</th>
+            <th class="rounded-border text-center">Estado</th>
           </tr>
         </ng-template>
 
@@ -59,7 +60,7 @@
               (click)="viewProgressOrder(progressWorkOrder)"
               [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
             >
-              <p class="text-center">
+              <p class="text-center serenityBlue">
                 {{ progressWorkOrder.work_order.quote.code }}
               </p>
             </td>
@@ -68,7 +69,7 @@
               (click)="viewProgressOrder(progressWorkOrder)"
               [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
             >
-              <p class="text-center">
+              <p class="text-center serenityBlue">
                 {{ progressWorkOrder.work_order.quote.customer.name }}
               </p>
             </td>
@@ -77,7 +78,7 @@
               (click)="viewProgressOrder(progressWorkOrder)"
               [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
             >
-              <p class="text-center">
+              <p class="text-center serenityBlue">
                 {{
                   progressWorkOrder.work_order.quote.customer.representative ||
                     progressWorkOrder.work_order.quote.customer.name
@@ -89,12 +90,12 @@
               [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
               (click)="viewProgressOrder(progressWorkOrder)"
             >
-              <p class="text-center">
+              <p class="text-center serenityBlue">
                 {{ progressWorkOrder.work_order.start_date }}
               </p>
             </td>
             <td
-              class="cursor-pointer text-primary font-bold"
+              class="cursor-pointer serenityGreen font-bold"
               [routerLink]="['/progressOrder/info/', progressWorkOrder.id]"
               (click)="viewProgressOrder(progressWorkOrder)"
             >

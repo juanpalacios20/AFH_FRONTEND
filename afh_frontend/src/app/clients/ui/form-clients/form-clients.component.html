@@ -15,9 +15,9 @@
           [(ngModel)]="name"
           [ngModelOptions]="{ standalone: true }"
           [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessageName }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         />
-        <label>Nombre del cliente </label>
+        <label class="serenityBlue">Nombre del cliente </label>
       </p-floatlabel>
       <small id="email-help" class="text-red-600" *ngIf="errorMessageName">
         {{ errorMessageName }}
@@ -33,9 +33,9 @@
           [ngClass]="{
             'ng-invalid ng-dirty border-red-500': errorMessagerepresentative
           }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         />
-        <label>Nombre del representante </label>
+        <label class="serenityBlue">Nombre del representante </label>
       </p-floatlabel>
       <small
         id="email-help"
@@ -55,9 +55,9 @@
           [ngClass]="{
             'ng-invalid ng-dirty border-red-500': errorMessagePosition
           }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         />
-        <label>Cargo del representante</label>
+        <label class="serenityBlue">Cargo del representante</label>
       </p-floatlabel>
       <small id="email-help" class="text-red-600" *ngIf="errorMessagePosition">
         {{ errorMessagePosition }}
@@ -73,9 +73,9 @@
           [ngClass]="{
             'ng-invalid ng-dirty border-red-500': errorMessagePhone
           }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         />
-        <label>Numero del representante</label>
+        <label class="serenityBlue">Numero del representante</label>
       </p-floatlabel>
       <small id="email-help" class="text-red-600" *ngIf="errorMessagePhone">
         {{ errorMessagePhone }}
@@ -91,9 +91,9 @@
           [ngClass]="{
             'ng-invalid ng-dirty border-red-500': errorMessagePhone
           }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         />
-        <label>Correo electronico del representante</label>
+        <label class="serenityBlue">Correo electronico del representante</label>
       </p-floatlabel>
       <small id="email-help" class="text-red-600" *ngIf="errorMessageEmail">
         {{ errorMessageEmail }}
@@ -103,7 +103,7 @@
       <p-button styleClass="p-button-secondary" (click)="close()">
         Cancelar
       </p-button>
-      <p-button styleClass="p-button-primary" (click)="handleAction()">
+      <p-button styleClass="bg-lightSerenityGreen" (click)="handleAction()">
         {{ this.actionTittle }}
       </p-button>
     </div>

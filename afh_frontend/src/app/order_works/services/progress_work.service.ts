@@ -12,7 +12,6 @@ export class progressOrderService extends BaseHttpService {
   }
 
   private getHeaders(): HttpHeaders {
-    console.log('token', this.cookieService.get('token'));
     return new HttpHeaders({
       Authorization: `Token ${this.cookieService.get('token')}`,
     });
@@ -34,7 +33,6 @@ export class progressOrderService extends BaseHttpService {
 
   advanceToProgress(idAdvance: number, idProgress: number) {
     const headers = this.getHeaders();
-    console.log('headers', headers);
     return this.http.put(
       `${this.apiUrl}workprogress/add/${idProgress}/${idAdvance}/`,
       {}, 

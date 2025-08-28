@@ -3,7 +3,7 @@
   [(visible)]="visible"
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-  [style]="{ width: '50vw' }"
+  [style]="{ width: '50vw', 'color': '#2f7d3a' }"
   [draggable]="false"
   [resizable]="false"
   [closable]="true"
@@ -12,17 +12,17 @@
   <div
     class="card flex flex-col items-startS mb-4"
   >
-    <p class="text-gray-700 font-semibold text-lg mb-1">
-      <span class="text-black font-bold">Nombre:</span> {{ tool.name }}
+    <p class="serenityBlue font-semibold text-lg mb-1">
+      <span class="font-bold">Nombre:</span> {{ tool.name }}
     </p>
-    <p class="text-gray-700 font-semibold text-lg mb-1">
-      <span class="text-black font-bold">Código:</span> {{ tool.code }}
+    <p class="serenityBlue font-semibold text-lg mb-1">
+      <span class="font-bold">Código:</span> {{ tool.code }}
     </p>
-    <p class="text-gray-700 font-semibold text-lg">
-      <span class="text-black font-bold">Estado:</span> {{ this.state }}
+    <p class="serenityBlue font-semibold text-lg">
+      <span class="font-bold">Estado:</span> {{ this.state }}
     </p>
-    <p class="text-gray-700 font-semibold text-lg">
-      <span class="text-black font-bold">Marca:</span> {{ tool.marca }}
+    <p class="serenityBlue font-semibold text-lg">
+      <span class="font-bold">Marca:</span> {{ tool.marca }}
     </p>
   </div>
 

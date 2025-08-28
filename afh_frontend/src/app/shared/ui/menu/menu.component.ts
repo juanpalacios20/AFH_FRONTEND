@@ -7,16 +7,7 @@ import { StyleClass } from 'primeng/styleclass';
 import { Drawer } from 'primeng/drawer';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth/data_access/auth.service';
-import { NgFor, NgIf } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
-
-interface MenuItem {
-  label: string;
-  icon: string;
-  route?: string;
-  action?: () => void;
-  adminOnly?: boolean; // 👈 nuevo
-}
 
 @Component({
   selector: 'app-menu',
@@ -27,8 +18,7 @@ interface MenuItem {
     Ripple,
     AvatarModule,
     StyleClass,
-    RouterLink,
-    NgFor,
+    RouterLink
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
@@ -37,79 +27,6 @@ export class MenuComponent implements OnInit {
   isAdmin: boolean = false;
   @ViewChild('drawerRef') drawerRef!: Drawer;
   @Input() visible: boolean = false;
-  menuSections: {
-    label: string;
-    icon: string;
-    visible: boolean;
-    items: MenuItem[];
-  }[] = [
-    {
-      label: 'Secciones',
-      icon: 'pi pi-chevron-down',
-      visible: true, //this.isAdmin, // Solo admins
-      items: [
-        {
-          label: 'Herramientas',
-          icon: 'pi pi-hammer',
-          route: '/management-tools',
-          adminOnly: true,
-        },
-        { label: 'Clientes', icon: 'pi pi-users', route: '/clients' },
-        { label: 'Finanzas', icon: 'pi pi-wallet', route: '/finance' },
-        { label: 'Reportes', icon: 'pi pi-chart-bar', route: '/reports' },
-        { label: 'Agente IA', icon: 'pi pi-sparkles', route: '/agenteai' },
-      ],
-    },
-    {
-      label: 'Gestión de Vales',
-      icon: 'pi pi-chevron-down',
-      visible: true,
-      items: [
-        { label: 'Vales', icon: 'pi pi-clipboard', route: '/management-vales' },
-        {
-          label: 'Historial Vales',
-          icon: 'pi pi-clipboard',
-          route: '/history-tickets',
-        },
-      ],
-    },
-    {
-      label: 'Gestión de Ordenes de Trabajo',
-      icon: 'pi pi-chevron-down',
-      visible: true,
-      items: [
-        { label: 'Cotizaciones', icon: 'pi pi-clipboard', route: '/quotes' },
-        {
-          label: 'Ordenes de Trabajo',
-          icon: 'pi pi-clipboard',
-          route: '/management-orders-works',
-        },
-        {
-          label: 'Progreso ordenes',
-          icon: 'pi pi-sync',
-          route: '/progressOrder',
-        },
-        {
-          label: 'Actas de entrega',
-          icon: 'pi pi-clipboard',
-          route: '/work-report',
-        },
-      ],
-    },
-    {
-      label: 'Más',
-      icon: 'pi pi-chevron-down',
-      visible: true,
-      items: [
-        {
-          label: 'Cerrar Sesión',
-          icon: 'pi pi-sign-out',
-          action: () => this.logout(),
-        },
-      ],
-    },
-  ];
-
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -130,20 +47,6 @@ export class MenuComponent implements OnInit {
 
   closeDrawer() {
     this.visible = false;
-  }
-
-  get visibleSections() {
-    return this.menuSections
-      .map((section) => ({
-        ...section,
-        items: section.items.filter((item) => {
-          if (item.adminOnly && !this.isAdmin) {
-            return false;
-          }
-          return true;
-        }),
-      }))
-      .filter((section) => section.items.length > 0);
   }
 
   logout() {

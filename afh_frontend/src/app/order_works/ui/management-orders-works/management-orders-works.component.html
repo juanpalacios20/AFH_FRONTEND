@@ -7,7 +7,7 @@
     class="w-full p-5 pt-20 md:pt-20 md:shadow-none md:rounded-none md:max-w-full bg-white md:bg-transparent shadow-lg rounded-lg mx-auto mt-8 md:mt-0 max-w-sm"
   >
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">
+      <h1 class="text-2xl font-bold serenityGreen">
         AFH: Administración de Ordenes de trabajo
       </h1>
     </div>
@@ -25,24 +25,25 @@
               id="on_label"
               [(ngModel)]="orderWorkFound"
               (input)="to?.filterGlobal(orderWorkFound, 'contains')"
+              class="w-full serenityBlue focus:ring-2 focus:ring-primary-900"
               autocomplete="off"
             />
           </p-iconfield>
-          <label for="on_label">Buscar orden de trabajo</label>
+          <label for="on_label" class="serenityBlue">Buscar orden de trabajo</label>
         </p-floatlabel>
         <small id="search-help" class="text-gray-500 text-center block">
           Busca por nombre de cliente y fecha de orden de trabajo
         </small>
       </div>
 
-      <button
-        pButton
+      <p-button
+        id="create"
         icon="pi pi-plus"
         label="Generar nueva orden de trabajo"
         (click)="showCreateOrderWorkDialog()"
         rounded="true"
-        styleClass="w-full md:w-auto"
-      ></button>
+        styleClass="w-full md:w-auto createButton-lightSerenityGreen"
+      ></p-button>
     </div>
 
     <p-table
@@ -56,32 +57,32 @@
     >
       <ng-template #header *ngIf="orderWorks.length > 0">
         <tr>
-          <th class="rounded-border text-primary-950 text-center">Código</th>
-          <th class="rounded-border text-primary-950 text-center">
+          <th class="rounded-border serenityBlue text-center">Código</th>
+          <th class="rounded-border serenityBlue text-center">
             Nombre cliente
           </th>
-          <th class="rounded-border text-primary-950 text-center">
+          <th class="rounded-border serenityBlue text-center">
             Cantidad de personal
           </th>
-          <th class="rounded-border text-primary-950 text-center">
+          <th class="rounded-border serenityBlue text-center">
             Fecha de inicio
           </th>
-          <th class="rounded-border text-primary-950 text-center">
+          <th class="rounded-border serenityBlue text-center">
             Fecha de finalización
           </th>
-          <th class="rounded-border text-primary-950 text-center">Opciones</th>
+          <th class="rounded-border serenityBlue text-center">Opciones</th>
         </tr>
       </ng-template>
       <ng-template #body let-orderWork>
         <tr>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
-            <p class="text-center">{{ orderWork.quote.code }}</p>
+            <p class="text-center serenityBlue">{{ orderWork.quote.code }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
-            <p class="text-center">{{ orderWork.quote.customer.name }}</p>
+            <p class="text-center serenityBlue">{{ orderWork.quote.customer.name }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
-            <p class="text-center">
+            <p class="text-center serenityBlue">
               {{
                 orderWork.number_technicians +
                   orderWork.number_officers +
@@ -91,15 +92,16 @@
             </p>
           </td>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
-            <p class="text-center">{{ orderWork.start_date }}</p>
+            <p class="text-center serenityBlue">{{ orderWork.start_date }}</p>
           </td>
           <td class="cursor-pointer" (click)="showViewDialog(orderWork)">
-            <p class="text-center">{{ orderWork.end_date }}</p>
+            <p class="text-center serenityBlue">{{ orderWork.end_date }}</p>
           </td>
           <td>
             <div class="card flex justify-center gap-2">
               <p-button
                 icon="pi pi-pencil"
+                styleClass="createButton-lightSerenityGreen"
                 (click)="showEditOrderWorkDialog(orderWork)"
               />
             </div>

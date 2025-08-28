@@ -1,10 +1,153 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap");
 @import "tailwindcss";
 @import "tailwindcss-primeui";
 @import "primeicons/primeicons.css";
 
-
 .font-oswald {
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
+}
+
+@theme {
+  --color-darkGreen: #2f7d3a;
+  --color-lightGreen: #98e63c;
+  --color-darkBlue: #0b2239;
+  --color-fuchsia: #eb018d;
+  --color-brown: #472D37
+}
+
+.serenityGreen {
+  color: #2f7d3a; /* Example serenity green color */
+}
+
+.lightSerenityGreen {
+  color: #98e63c;
+}
+
+.text-lightSerenityGreen {
+  color: #98e63c;
+}
+
+.bg-lightSerenityGreen {
+  background-color: #98e63c;
+  border-color: #98e63c;
+  color: #0b2239;
+}
+
+.createButton-lightSerenityGreen {
+  background-color: #98e63c;
+  border-color: #98e63c;
+  color: #0b2239;
+}
+
+
+.brownSerenity {
+  color:  #472D37;
+}
+
+.bg-blueSerenity {
+  background-color: #0B233B;
+}
+
+.bg-greenSerenity {
+  background-color: #2f7d3a;
+}
+
+.serenityFuchsia {
+  color: #eb018d;
+}
+
+.serenityBlue {
+  color: #0b2239;
+}
+
+.button-serenityBlue {
+  color: #ffffff;
+  background-color: #0b2239;
+}
+
+.upload-lightSerenityGreen.button {
+  background-color: #98e63c !important;
+  border-color: #98e63c !important;
+  color: #0b2239 !important;
+}
+
+/* Estilo utilizado para los botones donde se suben archivos (imagenes) */
+.upload-green .p-fileupload-choose-button {
+  background-color: #98e63c;
+  border-color: #98e63c;
+  color: #0b2239;
+  width: 100%;              /* w-full */
+}
+
+@media (min-width: 768px) {
+  .upload-green .p-fileupload-choose-button {
+    width: auto;            /* md:w-auto */
+  }
+}
+
+/* Asegura que el ícono y label hereden bien */
+.upload-green .p-fileupload-choose-button .p-button-label,
+.upload-green .p-fileupload-choose-button .p-button-icon {
+  color: #0b2239;
+}
+
+/* borde del checkbox en estado normal (sin seleccionar)*/
+.p-checkbox .p-checkbox-box {
+  border: 2px solid #98e63c !important;
+}
+
+/* hover del checkbox */
+.p-checkbox:not(.p-disabled) .p-checkbox-box:hover {
+  border-color: #98e63c !important;
+}
+
+/* cuando se selecciona el checkbox, este tiene un color verde */
+.p-checkbox.p-highlight .p-checkbox-box,
+.p-checkbox.p-checkbox-checked .p-checkbox-box,
+.p-checkbox[data-p-checked="true"] .p-checkbox-box {
+  background-color: #98e63c !important;
+  border-color: #98e63c !important;
+}
+
+/* color del icono (uso de color + fill por compatibilidad) */
+.p-checkbox.p-highlight .p-checkbox-icon,
+.p-checkbox.p-checkbox-checked .p-checkbox-icon,
+.p-checkbox[data-p-checked="true"] .p-checkbox-icon {
+  color: #0b2239 !important;        /* afecta svg por currentColor */
+}
+
+/* por si el navegador/tema no toma color en svg, forzamos el fill del path */
+.p-checkbox.p-highlight .p-checkbox-icon svg path,
+.p-checkbox.p-checkbox-checked .p-checkbox-icon svg path,
+.p-checkbox[data-p-checked="true"] .p-checkbox-icon svg path {
+  fill: #0b2239 !important;
+}
+
+/* enfoque */
+.p-checkbox.p-focus .p-checkbox-box {
+  box-shadow: 0 0 0 3px rgba(152, 231, 60, 0.18) !important;
+}
+
+/* Barra de progreso con el verde oscuro */
+.serenityGreen .p-progressbar-value {
+  background-color: #4CAF50 !important; /* verde serenity */
+  border-radius: 8px; /* opcional, esquinas redondeadas */
+}
+
+/* Cambiar color del texto dentro de la barra */
+.serenityGreen .p-progressbar-label {
+  color: white !important;
+  font-weight: bold;
+}
+
+
+/* Cambiar color del texto para los botones de los dialogos de confirmacion */
+.p-confirmdialog .p-confirmdialog-accept-button:not(.p-button-danger) {
+  color: #0b2239 !important;
+}
+
+/* Cambiar color del texto para los botones de los dialogos de confirmacion (aceptar)*/
+.p-confirmdialog .p-confirmdialog-accept-button.p-button-danger {
+  color: #ffffff !important;
 }
 

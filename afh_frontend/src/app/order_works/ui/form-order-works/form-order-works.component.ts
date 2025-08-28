@@ -84,7 +84,7 @@ export default class FormOrderWorksComponent {
     'ATS (análisis de trabajo)',
   ];
   start_date: Date | undefined;
-  loading: boolean = true;
+  loading: boolean = false;
   errorMessage: string = '';
   quoteInvalidMessage: string = '';
   scheduledExecutionTime: number = 0;
@@ -259,7 +259,7 @@ export default class FormOrderWorksComponent {
 
     this.orderWorkService.createWorkOrder(data).subscribe({
       next: (response) => {
-        this.loading = true;
+        this.loading = false;
         this.onOrderWorkCreated.emit();
         this.closeDialog.emit();
         this.close();
@@ -333,7 +333,7 @@ export default class FormOrderWorksComponent {
         .updateOrderWork(quoteData, this.orderWorkToEdit.id)
         .subscribe({
           next: (response) => {
-            this.loading = true;
+            this.loading = false;
             this.onOrderWorkCreated.emit();
             this.closeDialog.emit();
             this.close();

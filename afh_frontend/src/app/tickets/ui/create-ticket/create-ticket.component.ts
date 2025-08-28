@@ -134,6 +134,7 @@ export class CreateTicketComponent {
 
   resetForm() {
     this.place = '';
+    this.responsible = '';
     this.description = '';
     this.selectedTools = [];
     this.selectedToolsIds = [];

@@ -45,7 +45,5 @@ export default class ViewsComponent {
     if (this.visibleExpense) {
       this.visible = true;
     }
-    console.log(this.income);
-    console.log(this.visible);
   }
 }

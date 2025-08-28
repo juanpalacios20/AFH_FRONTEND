@@ -17,10 +17,10 @@
           'ng-invalid ng-dirty border-red-500': errorMessage && tool.name === ''
         }"
         [ngModelOptions]="{ standalone: true }"
-        class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         autocomplete="on"
       />
-      <label for="nombre">Nombre</label>
+      <label for="nombre" class="serenityBlue">Nombre</label>
     </p-floatlabel>
     <small
       id="email-help"
@@ -39,10 +39,10 @@
         id="codigo"
         [(ngModel)]="tool.code"
         [ngModelOptions]="{ standalone: true }"
-        class="w-full bg-white text-gray font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        class="w-full bg-gray-200 serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         autocomplete="on"
       />
-      <label for="codigo">Código</label>
+      <label for="codigo" class="serenityBlue">Código</label>
     </p-floatlabel>
   </div>
 
@@ -57,10 +57,10 @@
           'ng-invalid ng-dirty border-red-500':
             errorMessage && !tool.marca
         }"
-        class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+        class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         autocomplete="on"
       />
-      <label for="marca">Marca</label>
+      <label for="marca" class="serenityBlue">Marca</label>
     </p-floatlabel>
     <small
       id="email-help"
@@ -81,9 +81,9 @@
         }"
         [ngModelOptions]="{ standalone: true }"
         optionLabel="name"
-        class="w-full md:w-56"
+        class="w-full md:w-56 serenityBlue"
       />
-      <label for="on_label">Cambiar Estado</label>
+      <label for="on_label" class="serenityBlue">Cambiar Estado</label>
     </p-floatlabel>
     <small
       id="email-help"
@@ -114,6 +114,7 @@
   <div class="justify-center mb-6">
     <p-fileupload
       #fu
+      styleClass="upload-green"
       mode="basic"
       chooseLabel="Actualizar imagen"
       chooseIcon="pi pi-upload"
@@ -135,14 +136,14 @@
   <div class="flex justify-end gap-2">
     <button
       (click)="closeDialog.emit()"
-      class="w-32 bg-gray-300 text-black font-medium py-2 rounded-lg transition hover:bg-gray-400 cursor-pointer"
+      class="w-32 bg-white text-black font-medium py-2 rounded-lg transition hover:bg-gray-200 cursor-pointer"
     >
       Cancelar
     </button>
     <p-button
       [loading]="loadingEdit"
       (click)="showSuccess()"
-      styleClass="w-32 bg-primary-500 text-white font-medium py-2 rounded-lg transition hover:bg-primary-600 cursor-pointer"
+      styleClass="w-32 createButton-lightSerenityGreen font-medium py-2 rounded-lg transition hover:bg-primary-600 cursor-pointer"
     >
       Guardar
     </p-button>

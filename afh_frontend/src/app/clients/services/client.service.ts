@@ -33,7 +33,6 @@ export class ClientService extends BaseHttpService {
     formData.append('post', post);
     formData.append('representative', representative);
 
-    console.log(formData);
     return this.http
       .post(`${this.apiUrl}customer/addcustomer/`, formData, {
         headers: headers,

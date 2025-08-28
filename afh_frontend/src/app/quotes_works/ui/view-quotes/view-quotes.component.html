@@ -7,7 +7,7 @@
   [(visible)]="visible"
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-  [style]="{ width: '60vw' }"
+  [style]="{ width: '60vw', color: '#2f7d3a' }"
   [draggable]="false"
   [resizable]="false"
   [closable]="true"
@@ -17,21 +17,21 @@
   <p-confirmdialog></p-confirmdialog>
 
   <!-- ======= Información general ======= -->
-  <h2 class="text-primary-900 font-bold text-xl mb-2">Información general</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+  <h2 class="serenityBlue font-bold text-xl mb-2">Información general</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 serenityBlue">
     <p>
-      <span class="font-semibold text-black">Código:</span> {{ quote?.code }}
+      <span class="font-semibold">Código:</span> {{ quote?.code }}
     </p>
     <p>
-      <span class="font-semibold text-black">Cliente:</span>
+      <span class="font-semibold">Cliente:</span>
       {{ quote?.customer?.name }}
     </p>
     <p *ngIf="quote?.construction">
-      <span class="font-semibold text-black">Constructora:</span>
+      <span class="font-semibold">Constructora:</span>
       {{ quote?.construction }}
     </p>
     <p>
-      <span class="font-semibold text-black">Estado:</span>
+      <span class="font-semibold">Estado:</span>
       <p-tag
         class="ml-2"
         [value]="this.temporalState === '' ? state : this.temporalState"
@@ -41,34 +41,34 @@
       ></p-tag>
     </p>
     <p class="md:col-span-2">
-      <span class="font-semibold text-black">Descripción:</span>
+      <span class="font-semibold">Descripción:</span>
       {{ quote?.description }}
     </p>
     <p>
-      <span class="font-semibold text-black">Plan de pago:</span>
+      <span class="font-semibold">Plan de pago:</span>
       {{ quote?.method_of_payment }}
     </p>
     <p>
-      <span class="font-semibold text-black">Plazo de entrega:</span>
+      <span class="font-semibold">Plazo de entrega:</span>
       {{ quote?.delivery_time }}
     </p>
 
     <p *ngIf="!orderWork">
-      <span class="font-semibold text-black">Fecha:</span>
+      <span class="font-semibold">Fecha:</span>
       {{ quote?.issue_date }}
     </p>
     <p *ngIf="orderWork">
-      <span class="font-semibold text-black">Fecha de inicio:</span>
+      <span class="font-semibold">Fecha de inicio:</span>
       {{ orderWork.start_date }}
     </p>
     <p *ngIf="orderWork">
-      <span class="font-semibold text-black">Fecha de finalización:</span>
+      <span class="font-semibold">Fecha de finalización:</span>
       {{ orderWork.end_date || "No definida" }}
     </p>
   </div>
 
   <!-- ======= Acciones ======= -->
-  <h2 class="text-primary-900 font-bold text-xl mb-2">Acciones disponibles</h2>
+  <h2 class="font-bold text-xl mb-2 serenityBlue">Acciones disponibles</h2>
   <div class="w-full mb-4">
     <p-button
       fluid="true"
@@ -102,7 +102,7 @@
           (state === 'APROBADO' || state === 'PROCESO')) ||
         (temporalState !== '' &&
           (temporalState === 'APROBADO' || temporalState === 'PROCESO'))
-          ? 'p-button-primary'
+          ? 'createButton-lightSerenityGreen'
           : 'p-button-secondary'
       "
       (onClick)="confirmationConfirm()"
@@ -144,11 +144,11 @@
     }}"
     icon="pi pi-check"
     [disabled]="orderWork.end_date ? true : false"
-    styleClass="p-button-primary w-full mb-6"
+    styleClass="createButton-lightSerenityGreen w-full mb-6"
     (onClick)="confirmationComplete()"
   ></p-button>
 
-  <h2 class="text-primary-900 font-bold text-xl mb-2">
+  <h2 class="serenityBlue font-bold text-xl mb-2">
     Corre por cuenta del contratiante:
   </h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -156,13 +156,13 @@
       *ngFor="let contracting of quote?.contracting_materials; let i = index"
       class="p-4 bg-gray-50 border rounded-lg"
     >
-      <p>
+      <p class="serenityBlue">
         {{ contracting }}
       </p>
     </div>
   </div>
 
-  <h2 class="text-primary-900 font-bold text-xl mb-2">
+  <h2 class="serenityBlue font-bold text-xl mb-2">
     Corre por cuenta del contratista:
   </h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -170,27 +170,27 @@
       *ngFor="let contractor of quote?.contractor_materials; let i = index"
       class="p-4 bg-gray-50 border rounded-lg"
     >
-      <p>
+      <p class="serenityBlue">
         {{ contractor }}
       </p>
     </div>
   </div>
 
   <!-- ======= Tareas ======= -->
-  <h2 class="text-primary-900 font-bold text-xl mb-2">Tareas</h2>
+  <h2 class="serenityBlue font-bold text-xl mb-2">Tareas</h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <div
       *ngFor="let task of quote?.tasks; let i = index"
       class="p-4 bg-gray-50 border rounded-lg"
     >
-      <p>
-        <strong>Tarea {{ i + 1 }}:</strong> {{ task }}
+      <p class="serenityBlue">
+        <strong class="serenityBlue">Tarea {{ i + 1 }}:</strong> {{ task }}
       </p>
     </div>
   </div>
 
   <!-- ======= Opciones de la Cotización ======= -->
-  <h2 class="text-primary-900 font-bold text-xl mb-2">
+  <h2 class="serenityBlue font-bold text-xl mb-2">
     Opciones de la Cotización
   </h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -204,14 +204,14 @@
       }"
       class="p-4 bg-gray-50 border rounded-lg"
     >
-      <p><strong>Descripción:</strong> {{ item.description }}</p>
-      <p><strong>Cantidad:</strong> {{ item.amount }}</p>
-      <p><strong>Unidad de medida:</strong> {{ item.units }}</p>
-      <p>
+      <p class="serenityBlue"><strong>Descripción:</strong> {{ item.description }}</p>
+      <p class="serenityBlue"><strong>Cantidad:</strong> {{ item.amount }}</p>
+      <p class="serenityBlue"><strong>Unidad de medida:</strong> {{ item.units }}</p>
+      <p class="serenityBlue">
         <strong>Valor Unitario:</strong>
         {{ item.unit_value | currency : "COP" : "symbol" : "1.0-0" : "es-CO" }}
       </p>
-      <p>
+      <p class="serenityBlue">
         <strong>Precio:</strong>
         {{ item.total_value | currency : "COP" : "symbol" : "1.0-0" : "es-CO" }}
       </p>
@@ -222,25 +222,25 @@
   <div class="text-right font-semibold text-lg">
     <p>
       Subtotal:
-      <span class="text-primary-700">{{ quote?.options?.subtotal }}</span>
+      <span class="serenityBlue">{{ quote?.options?.subtotal }}</span>
     </p>
     <p>
       Administración:
-      <span class="text-primary-700">{{ quote?.administration_value }}</span>
+      <span class="serenityBlue">{{ quote?.administration_value }}</span>
     </p>
     <p>
       Imprevistos:
-      <span class="text-primary-700">{{ quote?.unforeseen_value }}</span>
+      <span class="serenityBlue">{{ quote?.unforeseen_value }}</span>
     </p>
     <p>
-      Utilidad: <span class="text-primary-700">{{ quote?.utility_value }}</span>
+      Utilidad: <span class="serenityBlue">{{ quote?.utility_value }}</span>
     </p>
     <p>
-      IVA: <span class="text-primary-700">{{ quote?.iva_value }}</span>
+      IVA: <span class="serenityBlue">{{ quote?.iva_value }}</span>
     </p>
     <p class="text-xl mt-2">
       Total:
-      <span class="text-primary-700">{{ quote?.total_value }}</span>
+      <span class="serenityBlue">{{ quote?.total_value }}</span>
     </p>
   </div>
 </p-dialog>

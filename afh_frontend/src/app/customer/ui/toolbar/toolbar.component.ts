@@ -42,11 +42,9 @@ export class ToolbarComponent {
       this.id_work_progress = value;
     });
     this.notification.suscribirse((this.id_work_progress).toString(), 'Nuevo avance registrado', (data) => {
-      console.log('notificación recibida', data),
         this.notifications.push({ title: data.title, content: data.content })
       this.count += 1
       this.cdRef.detectChanges()
-      console.log('notis', this.notifications)
       this.noti.emit();
     })
   }

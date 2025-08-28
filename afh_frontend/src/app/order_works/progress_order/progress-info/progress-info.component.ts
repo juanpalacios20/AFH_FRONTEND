@@ -46,6 +46,7 @@ export default class ProgressInfoComponent implements OnInit {
   statesOption = ['En progreso'];
   idToEdit: number | null = null;
   progressAdvance: WorkProgress | null = null;
+  loading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -59,16 +60,10 @@ export default class ProgressInfoComponent implements OnInit {
   ) {
     this.progressAdvance =
       localStorageService.getItem<WorkProgress>('progress');
-    console.log(this.progressAdvance);
-    if (localStorage.getItem('edit') === 'true') {
-      console.log('editado');
-    }
     this.globalService.changeTitle('AFH: Progreso Ordenes');
   }
 
   ngOnInit(): void {
-    console.log(this.progressAdvance?.state);
-    console.log(this.progressAdvance?.id);
     if (this.progressAdvance?.state === 3) {
       localStorage.setItem('completed', 'true');
     }
@@ -78,7 +73,6 @@ export default class ProgressInfoComponent implements OnInit {
     const state = localStorage.getItem('state');
     const edit = localStorage.getItem('edit');
     if (state === 'true' && edit === 'true') {
-      console.log('avance editado');
       localStorage.removeItem('state');
       localStorage.removeItem('edit');
       this.getProgress();
@@ -91,7 +85,6 @@ export default class ProgressInfoComponent implements OnInit {
       }, 0);
     }
     if (state === 'true' && edit !== 'true') {
-      console.log('avance creado');
       localStorage.removeItem('state');
       this.getProgress();
       setTimeout(() => {
@@ -111,10 +104,8 @@ export default class ProgressInfoComponent implements OnInit {
         localStorage.removeItem('edit');
         this.workProgressOrder = response;
         this.localStorageService.setItem('progress', this.workProgressOrder);
-        console.log('actualizando informacion');
         this.progressAdvance =
           this.localStorageService.getItem<WorkProgress>('progress');
-        console.log(this.workProgressOrder);
       },
       error: (error) => {
         console.error('Error fetching progress order:', error);
@@ -132,9 +123,9 @@ export default class ProgressInfoComponent implements OnInit {
   }
 
   changeState() {
+    this.loading = true;
     if (this.progressAdvance) {
       let data: any = {};
-      console.log(this.selectedStates);
       if (this.selectedStates === 'En progreso') {
         data = {
           status: 2,
@@ -148,6 +139,7 @@ export default class ProgressInfoComponent implements OnInit {
             summary: 'Error',
             detail: `No puede completar el progreso de una orden sin al menos un avance`,
           });
+          this.loading = false;
           return;
         }
         localStorage.setItem('completed', 'true');
@@ -155,7 +147,6 @@ export default class ProgressInfoComponent implements OnInit {
           status: 3,
         };
       }
-      console.log(data);
       this.workProgressOrderService
         .changeState(this.progressAdvance.id, data)
         .subscribe({
@@ -167,7 +158,7 @@ export default class ProgressInfoComponent implements OnInit {
               detail: `El estado ha sido cambiado a ${this.selectedStates}`,
             });
             this.selectedStates = '';
-            console.log(response);
+            this.loading = false;
             this.getProgress();
           },
           error: (err) => {
@@ -204,7 +195,6 @@ export default class ProgressInfoComponent implements OnInit {
       });
     }
     this.idToEdit = id;
-    console.log(count + 1, this.progressAdvance?.work_advance.length);
     if (count + 1 === this.progressAdvance?.work_advance.length) {
       localStorage.setItem('editPercent', 'true');
     }

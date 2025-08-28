@@ -2,7 +2,7 @@
   header="Crear Vale"
   [modal]="true"
   [(visible)]="visible"
-  [style]="{ width: '30rem' }"
+  [style]="{ width: '30rem', color: '#2f7d3a'}"
   [closable]="true"
   (onHide)="close()"
 >
@@ -15,7 +15,7 @@
         optionLabel="name"
         placeholder="Herramientas a arrendar"
         [maxSelectedLabels]="3"
-        styleClass="w-full bg-white text-black font-medium rounded-lg"
+        styleClass="w-full bg-white serenityBlue font-medium rounded-lg"
       ></p-multiselect>
       <small
         id="tool-help"
@@ -36,10 +36,10 @@
             'ng-invalid ng-dirty border-red-500': responsibleErrorMessage
           }"
           [ngModelOptions]="{ standalone: true }"
-          class="w-full bg-white text-gray font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           required
         />
-        <label for="responsible">Responsable de la herramienta</label>
+        <label for="responsible" class="serenityBlue">Responsable de la herramienta</label>
       </p-floatlabel>
       <small
         id="tool-help"
@@ -58,10 +58,10 @@
           [disabled]="true"
           [(ngModel)]="this.email"
           [ngModelOptions]="{ standalone: true }"
-          class="w-full bg-white text-gray font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           required
         />
-        <label for="email">Correo Electronico</label>
+        <label for="email" class="serenityBlue">Correo Electronico</label>
       </p-floatlabel>
     </div>
 
@@ -75,10 +75,10 @@
           [ngClass]="{
             'ng-invalid ng-dirty border-red-500': placeErrorMessage
           }"
-          class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           required
         />
-        <label for="placeFinal">Lugar Destino</label>
+        <label for="placeFinal" class="serenityBlue">Lugar Destino</label>
       </p-floatlabel>
       <small
         id="place-help"
@@ -102,9 +102,9 @@
           cols="30"
           style="resize: none"
           fluid="true"
-          class="h-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="h-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         ></textarea>
-        <label for="description">Descripción</label>
+        <label for="description" class="serenityBlue">Descripción</label>
       </p-floatlabel>
       <small
         id="description-help"
@@ -122,7 +122,7 @@
       <p-button
         (click)="addTicket()"
         [loading]="loading"
-        styleClass="p-button-primary"
+        styleClass="createButton-lightSerenityGreen"
       >
         Crear
       </p-button>
