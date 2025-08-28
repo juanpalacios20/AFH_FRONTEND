@@ -59,6 +59,7 @@ interface Ticket {
   state: number;
   entry_date_formatted: string;
   departure_date_formatted: string;
+  responsible: string;
 }
 
 @Component({
@@ -99,6 +100,7 @@ export class HistoryTicketsComponent {
   date: string = '';
   description: string = '';
   dateEnd: string = '';
+  responsible: string = '';
   tools: Tool[] = [];
 
   constructor(
@@ -152,6 +154,7 @@ export class HistoryTicketsComponent {
         this.state = data.state;
         this.tools = data.tools;
         this.dateEnd = data.departure_date_formatted;
+        this.responsible = data.responsible;
       },
       error: (error) => {
         console.error('Error al obtener ticket', error);
