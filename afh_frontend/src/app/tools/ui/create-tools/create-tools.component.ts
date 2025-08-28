@@ -120,6 +120,7 @@ export class CreateToolsComponent {
           this.resetForm();
           this.onToolCreated.emit();
           this.loadingTool = false;
+          localStorage.removeItem('tools');
         },
         error: (err) => {
           this.loadingTool = false;

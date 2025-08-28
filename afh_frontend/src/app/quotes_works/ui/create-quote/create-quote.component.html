@@ -5,8 +5,8 @@
   [closable]="false"
 >
   <ng-template pTemplate="header">
-    <div class="flex justify-between items-center w-full">
-      <span>
+    <div class="flex justify-between serenityGreen items-center w-full">
+      <span class="font-bold text-xl">
         {{ this.actionTittle }}
       </span>
       <button
@@ -19,7 +19,7 @@
     </div>
   </ng-template>
   <p-toast position="top-right"></p-toast>
-  <div class="flex flex-col gap-5">
+  <div class="flex flex-col gap-5 serenityBlue">
     <div
       [ngClass]="{
         'w-full': !clientValid && this.action === 0,
@@ -46,7 +46,7 @@
             placeholder="Nombre del representante"
             [suggestions]="filteredCustomers ?? []"
             (completeMethod)="filterCustomer($event)"
-            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
             optionLabel="representative"
             fluid="true"
           />
@@ -96,7 +96,7 @@
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
-            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="description">Descripción</label>
         </p-floatlabel>
@@ -140,7 +140,7 @@
               this.action === 1 && this.quoteToEdit?.construction === null
             "
             fluid="true"
-            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="construction_company">Nombre constructora:</label>
         </p-floatlabel>
@@ -175,13 +175,13 @@
                 (errorMessagePercent &&
                   administration > 100 &&
                   !!construction_company),
-              'bg-white text-black': !!construction_company,
+              'bg-white serenityBlue': !!construction_company,
               ' bg-gray-200 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
-            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="description">% administración </label>
         </p-floatlabel>
@@ -230,13 +230,13 @@
                 (errorMessagePercent &&
                   unexpected > 100 &&
                   !!construction_company),
-              'bg-white text-black': construction_company,
+              'bg-white serenityBlue': construction_company,
               ' bg-gray-200 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
-            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="description">% imprevistos </label>
         </p-floatlabel>
@@ -283,13 +283,13 @@
                 (errorMessagePercent &&
                   utility > 100 &&
                   !!construction_company),
-              'bg-white text-black': construction_company,
+              'bg-white serenityBlue': construction_company,
               ' bg-gray-200 text-gray-500': !construction_company,
               'w-full font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500': true
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
-            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="description">% utilidad </label>
         </p-floatlabel>
@@ -327,7 +327,7 @@
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
-            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="method_of_payment">Plan de pago</label>
         </p-floatlabel>
@@ -353,7 +353,7 @@
             }"
             [ngModelOptions]="{ standalone: true }"
             fluid="true"
-            class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
           />
           <label for="method_of_payment">Plazo de entrega</label>
         </p-floatlabel>
@@ -394,7 +394,7 @@
                 }"
                 [ngModelOptions]="{ standalone: true }"
                 fluid="true"
-                class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+                class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
               />
               <label for="desc-{{ i }}">
                 Descripción del aporte {{ i + 1 }}
@@ -427,7 +427,7 @@
         <p-button
           label="Agregar aporte contratista"
           icon="pi pi-plus"
-          styleClass="p-button-primary"
+          styleClass="createButton-lightSerenityGreen"
           fluid="true"
           (onClick)="addContractorContribution()"
         ></p-button>
@@ -462,7 +462,7 @@
                 }"
                 [ngModelOptions]="{ standalone: true }"
                 fluid="true"
-                class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+                class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
               />
               <label for="desc-{{ i }}">
                 Descripción de la tarea {{ i + 1 }}
@@ -495,7 +495,7 @@
         <p-button
           label="Agregar aporte contratante"
           icon="pi pi-plus"
-          styleClass="p-button-primary"
+          styleClass="createButton-lightSerenityGreen"
           fluid="true"
           (onClick)="addContractingContribution()"
         ></p-button>
@@ -530,7 +530,7 @@
                 }"
                 [ngModelOptions]="{ standalone: true }"
                 fluid="true"
-                class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+                class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
               />
               <label for="desc-{{ i }}">
                 Descripción de la tarea {{ i + 1 }}
@@ -563,7 +563,7 @@
         <p-button
           label="Agregar tarea"
           icon="pi pi-plus"
-          styleClass="p-button-primary"
+          styleClass="createButton-lightSerenityGreen"
           fluid="true"
           (onClick)="addTask()"
         ></p-button>
@@ -601,7 +601,7 @@
                   errorMessage && item.description === ''
               }"
               [ngModelOptions]="{ standalone: true }"
-              class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             ></textarea>
             <label for="desc{{ j }}">Descripción ítem {{ j + 1 }}</label>
           </p-floatlabel>
@@ -622,7 +622,7 @@
               [dropdown]="true"
               [suggestions]="filteredUnits"
               (completeMethod)="search($event)"
-              class="mb-2 bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="mb-2 bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
               fluid="true"
             />
             <label>Unidad de medida</label></p-float-label
@@ -645,7 +645,7 @@
                   errorMessage && item.amount === null
               }"
               (ngModelChange)="updatePrice()"
-              class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
             <label for="cantidad{{ j }}">Cantidad</label>
           </p-floatlabel>
@@ -670,7 +670,7 @@
               }"
               (ngModelChange)="updatePrice()"
               [ngModelOptions]="{ standalone: true }"
-              class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+              class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
             />
             <label for="valor{{ j }}">Valor unitario</label>
           </p-floatlabel>
@@ -719,7 +719,7 @@
         <p-button
           label="Agregar ítem"
           icon="pi pi-plus"
-          styleClass="p-button-primary"
+          styleClass="createButton-lightSerenityGreen"
           fluid="true"
           (onClick)="addItem()"
         ></p-button>
@@ -737,7 +737,7 @@
         Cancelar
       </p-button>
       <p-button
-        styleClass="p-button-primary"
+        styleClass="createButton-lightSerenityGreen font-medium"
         [loading]="loading"
         (onClick)="submit()"
       >

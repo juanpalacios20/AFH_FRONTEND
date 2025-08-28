@@ -83,7 +83,6 @@ export default class ProgressManagementComponent {
             'progressOrders',
             this.workProgressOrder
           );
-          console.log(response);
         },
         error: (err) => {
           console.error('Error fetching work progress orders:', err);

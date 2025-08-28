@@ -130,7 +130,6 @@ export default class ReportsComponent implements OnInit {
         this.elements[0].value = this.income;
         this.elements[1].value = this.expense;
         this.elements[2].value = this.balance;
-        console.log(this.income, this.expense, this.balance);
         this.initChart();
       },
       error: (err) => {
@@ -402,7 +401,6 @@ export default class ReportsComponent implements OnInit {
         this.elements[0].value = this.income;
         this.elements[1].value = this.expense;
         this.elements[2].value = this.balance;
-        console.log(this.income, this.expense, this.balance);
         this.initChart();
       },
       error: (err) => {
@@ -503,7 +501,6 @@ export default class ReportsComponent implements OnInit {
             this.elements[0].value = this.income;
             this.elements[1].value = this.expense;
             this.elements[2].value = this.balance;
-            console.log(this.income, this.expense, this.balance);
             this.initChart();
           },
           error: (err) => {
@@ -527,8 +524,6 @@ export default class ReportsComponent implements OnInit {
       );
       const start = new Date(this.year);
       const end = new Date(lastDay);
-      console.log('start', start.toISOString().split('T')[0]);
-      console.log('end', end.toISOString().split('T')[0]);
       this.getBalanceMonths(
         start.toISOString().split('T')[0],
         end.toISOString().split('T')[0]
@@ -550,7 +545,6 @@ export default class ReportsComponent implements OnInit {
     this.financeService.getBalanceMonthDates(start, end).subscribe(
       (data) => {
         this.balanceMonths = data;
-        console.log('Balance mensual completo:', this.balanceMonths);
         this.initChartYear();
         this.getFinanceYear();
       },
@@ -625,7 +619,6 @@ export default class ReportsComponent implements OnInit {
         this.check = this.listMoreInfoMP[i].total;
       }
     }
-    console.log('metodos de pago', this.transfer, this.cash, this.check);
     for (let i = 0; i < this.listMoreInfoOA.length; i++) {
       if (this.listMoreInfoOA[i].origin_account === 1) {
         this.bankAccount = this.listMoreInfoOA[i].total;
@@ -633,7 +626,6 @@ export default class ReportsComponent implements OnInit {
         this.mainBox = this.listMoreInfoOA[i].total;
       }
     }
-    console.log('cuentas', this.bankAccount, this.mainBox);
   }
 
   //Demas metodos para el correcto funcionamiento del componente

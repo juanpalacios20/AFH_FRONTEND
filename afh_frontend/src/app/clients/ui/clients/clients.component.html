@@ -7,10 +7,10 @@
     <div
       class="flex flex-col md:flex-row md:items-center md:justify-between gap-2"
     >
-      <h1 class="text-2xl font-bold text-center md:text-left">
+      <h1 class="text-2xl font-bold text-center md:text-left serenityGreen">
         AFH: Administración de Clientes
       </h1>
-      <p class="rounded-border text-primary-950 font-semibold text-center">
+      <p class="rounded-border text-primary-950 font-semibold text-center serenityGreen">
         Total clientes: {{ clients.length }}
       </p>
     </div>
@@ -29,10 +29,10 @@
               [(ngModel)]="searchClient"
               (input)="tc?.filterGlobal(searchClient, 'contains')"
               autocomplete="off"
-              class="w-full"
+              class="w-full serenityBlue focus:ring-2 focus:ring-primary-900"
             />
           </p-iconfield>
-          <label for="on_label">Buscar cliente</label>
+          <label for="on_label" class="serenityBlue">Buscar cliente</label>
         </p-floatlabel>
         <small
           id="search-help"
@@ -42,14 +42,13 @@
         </small>
       </div>
 
-      <button
-        pButton
+      <p-button
         icon="pi pi-plus"
         (click)="showCreateClientDialog()"
         label="Agregar nuevo cliente"
         rounded="true"
-        styleClass="w-full md:w-auto"
-      ></button>
+        styleClass="w-full md:w-auto createButton-lightSerenityGreen"
+      ></p-button>
     </div>
 
     <!-- Confirmación -->
@@ -69,20 +68,20 @@
         <ng-template #header>
           <tr>
             <th class="rounded-border text-primary-950 text-center"></th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">
               Nombre Empresa
             </th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">
               Representante
             </th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">
               Correo electrónico
             </th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">
               Número telefónico
             </th>
-            <th class="rounded-border text-primary-950 text-center">Cargo</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">Cargo</th>
+            <th class="rounded-border serenityBlue text-center">
               Opciones
             </th>
           </tr>
@@ -90,12 +89,12 @@
 
         <ng-template #body let-client let-i="rowIndex">
           <tr>
-            <td class="text-center">{{ i + 1 }}</td>
+            <td class="text-center serenityBlue">{{ i + 1 }}</td>
             <td>
-              <p class="text-center">{{ client.name }}</p>
+              <p class="text-center serenityBlue">{{ client.name }}</p>
             </td>
             <td>
-              <p class="text-center">
+              <p class="text-center serenityBlue">
                 {{
                   client.representative !== " "
                     ? client.representative
@@ -104,18 +103,19 @@
               </p>
             </td>
             <td>
-              <p class="text-center">{{ client.email }}</p>
+              <p class="text-center serenityBlue">{{ client.email }}</p>
             </td>
             <td>
-              <p class="text-center">{{ client.phone }}</p>
+              <p class="text-center serenityBlue">{{ client.phone }}</p>
             </td>
             <td>
-              <p class="text-center">{{ client.post }}</p>
+              <p class="text-center serenityBlue">{{ client.post }}</p>
             </td>
             <td>
               <div class="flex justify-center gap-2">
                 <p-button
                   icon="pi pi-pencil"
+                  styleClass="bg-lightSerenityGreen"
                   (click)="
                     showEditClientDialog(
                       client.id,

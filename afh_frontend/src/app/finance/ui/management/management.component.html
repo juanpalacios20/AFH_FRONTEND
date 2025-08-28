@@ -5,7 +5,7 @@
   <div class="w-full p-5 pt-20 space-y-4">
     <!-- Título -->
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">AFH: Finanzas</h1>
+      <h1 class="text-2xl font-bold serenityGreen">AFH: Finanzas</h1>
     </div>
 
     <!-- Filtro y botón -->
@@ -28,15 +28,14 @@
         </small>
       </div>
 
-      <button
+      <p-button
         *ngIf="value"
-        pButton
         icon="pi pi-plus"
         [label]="value === 'ingreso' ? 'Crear Ingreso' : 'Crear Egreso'"
         (click)="openCreate()"
         rounded="true"
-        class="w-full md:w-auto"
-      ></button>
+        styleClass="w-full md:w-auto createButton-lightSerenityGreen"
+      ></p-button>
     </div>
 
     <!-- Botones de estado -->
@@ -68,16 +67,16 @@
       >
         <ng-template #header *ngIf="incomes.length > 0">
           <tr>
-            <th class="rounded-border text-primary-950 text-center"></th>
-            <th class="rounded-border text-primary-950 text-center">Monto</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center"></th>
+            <th class="rounded-border serenityBlue text-center">Monto</th>
+            <th class="rounded-border serenityBlue text-center">
               Forma de pago
             </th>
-            <th class="rounded-border text-primary-950 text-center">Fecha</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">Fecha</th>
+            <th class="rounded-border serenityBlue text-center">
               {{ value === "ingreso" ? "Cuenta destino" : "Cuenta origen" }}
             </th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">
               Opciones
             </th>
           </tr>
@@ -85,7 +84,7 @@
         <ng-template #body let-income let-i="rowIndex">
           <tr>
             <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center">{{ i + 1 }}</p>
+              <p class="text-center serenityBlue">{{ i + 1 }}</p>
             </td>
             <td class="cursor-pointer" (click)="openViewIncome(income)">
               <p class="text-center text-green-600">
@@ -93,13 +92,13 @@
               </p>
             </td>
             <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center">{{ income.payment_method }}</p>
+              <p class="text-center serenityBlue">{{ income.payment_method }}</p>
             </td>
             <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center">{{ income.date }}</p>
+              <p class="text-center serenityBlue">{{ income.date }}</p>
             </td>
             <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center">
+              <p class="text-center serenityBlue">
                 {{ account(income.destination_account) }}
               </p>
             </td>
@@ -107,6 +106,7 @@
               <div class="card flex justify-center gap-2">
                 <p-button
                   icon="pi pi-pencil"
+                  styleClass="bg-lightSerenityGreen"
                   (onClick)="openEditIncome(income)"
                 />
               </div>
@@ -187,6 +187,7 @@
               <div class="card flex justify-center gap-2">
                 <p-button
                   icon="pi pi-pencil"
+                  styleClass="bg-lightSerenityGreen"
                   (onClick)="openEditExpense(expense)"
                 />
               </div>

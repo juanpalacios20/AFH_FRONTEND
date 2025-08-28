@@ -5,7 +5,7 @@
   <div class="w-full p-5 pt-20 space-y-4">
     <!-- Título -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-      <h1 class="text-2xl font-bold text-center md:text-left">
+      <h1 class="text-2xl font-bold text-center md:text-left serenityGreen">
         AFH: Historial de Vales
       </h1>
     </div>
@@ -24,10 +24,10 @@
               [(ngModel)]="code"
               (input)="tti?.filterGlobal(code, 'contains')"
               autocomplete="off"
-              class="w-full"
+              class="w-full serenityBlue focus:ring-2 focus:ring-primary-900"
             />
           </p-iconfield>
-          <label for="search">Buscar vale</label>
+          <label for="search" class="serenityBlue">Buscar vale</label>
         </p-floatlabel>
         <small
           id="search-help"
@@ -54,34 +54,34 @@
       >
         <ng-template #header *ngIf="ticketsFinalizados.length > 0">
           <tr>
-            <th class="rounded-border text-primary-950 text-center">Código</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="rounded-border serenityBlue text-center">Código</th>
+            <th class="rounded-border serenityBlue text-center">
               Lugar Destino
             </th>
-            <th class="rounded-border text-primary-950 text-center">Fecha</th>
-            <th class="rounded-border text-primary-950 text-center">Estado</th>
+            <th class="rounded-border serenityBlue text-center">Fecha</th>
+            <th class="rounded-border serenityBlue text-center">Estado</th>
           </tr>
         </ng-template>
 
         <ng-template #body let-ticket>
           <tr>
             <td
-              class="cursor-pointer"
+              class="cursor-pointer serenityBlue"
               (click)="showViewTicketDialog(ticket.id)"
             >
-              <p class="text-center">{{ ticket.id }}</p>
+              <p class="text-center serenityBlue">{{ ticket.id }}</p>
             </td>
             <td
-              class="cursor-pointer"
+              class="cursor-pointer serenityBlue"
               (click)="showViewTicketDialog(ticket.id)"
             >
-              <p class="text-center">{{ ticket.place }}</p>
+              <p class="text-center serenityBlue">{{ ticket.place }}</p>
             </td>
             <td
-              class="cursor-pointer"
+              class="cursor-pointer serenityBlue"
               (click)="showViewTicketDialog(ticket.id)"
             >
-              <p class="text-center">{{ ticket.entry_date_formatted }}</p>
+              <p class="text-center serenityBlue">{{ ticket.entry_date_formatted }}</p>
             </td>
             <td
               class="cursor-pointer"

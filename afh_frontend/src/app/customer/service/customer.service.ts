@@ -20,7 +20,6 @@ export class CustomerService extends BaseHttpService{
         formData.append('email', email);
         formData.append('code', code);
 
-        console.log(formData);
         return this.http.post(`${this.apiUrl}workprogress/validate_customer/`, formData, {
         }).pipe(tap((response: any) => {
             this.cookieService.set('id', response.id, 1, '/');
@@ -30,7 +29,6 @@ export class CustomerService extends BaseHttpService{
     getWorkProgress(id: string): Observable<any>{
         return this.http.get(`${this.apiUrl}workprogress/get/${id}/`).pipe(
             tap((response: any) => {
-                console.log('Work progress fetched:', response);
             }
         ))
     }

@@ -1,6 +1,6 @@
 <div class="relative h-screen">
   <div class="card flex absolute top-0 left-0 p-4">
-    <button pButton [routerLink]="['/progressOrder']" (click)="close()">
+    <button pButton [routerLink]="['/progressOrder']" class="bg-lightSerenityGreen" (click)="close()">
       <i class="pi pi-arrow-left" pButtonIcon></i>
       <span pButtonLabel>Volver</span>
     </button>
@@ -9,45 +9,45 @@
   </div>
   <div class="w-full flex flex-col p-5 pt-20 gap-5">
     <div class="flex justify-between items-center mb-5 md:flex-row">
-      <h1 class="text-xl font-bold">
+      <h1 class="text-xl font-bold serenityGreen">
         AFH: Seguimiento de trabajo -> información de la orden
         {{ progressAdvance?.work_order?.quote?.code }}
       </h1>
     </div>
     <div
-      class="flex flex-col gap-4 md:flex-row md:justify-between md:items-center w-full flex-wrap"
+      class="flex flex-col gap-4 md:flex-row md:justify-between md:items-center serenityBlue w-full flex-wrap"
     >
       <h1 class="text-lg">
-        <span class="font-bold">Estado:</span>
-        <span class="text-primary font-medium">
+        <span class="font-bold serenityBlue">Estado:</span>
+        <span class="serenityBlue font-medium">
           {{ getStateString(progressAdvance?.state) }}
         </span>
       </h1>
-      <h1 class="text-lg">
-        <span class="font-bold">Fecha:</span>
+      <h1 class="text-lg serenityBlue">
+        <span class="font-bold serenityBlue">Fecha:</span>
         {{ progressAdvance?.work_order?.start_date }}
       </h1>
-      <h1 class="text-lg">
-        <span class="font-bold">Cliente:</span>
+      <h1 class="text-lg serenityBlue">
+        <span class="font-bold serenityBlue">Cliente:</span>
         {{ progressAdvance?.work_order?.quote?.customer?.name }}
       </h1>
-      <h1 class="text-lg">
-        <span class="font-bold">Código:</span>
+      <h1 class="text-lg serenityBlue">
+        <span class="font-bold serenityGrserenityBlueeen">Código:</span>
         {{ progressAdvance?.work_order?.quote?.code }}
       </h1>
     </div>
-    <h1 class="text-lg">
-      <span class="font-bold">Descripción del trabajo:</span>
+    <h1 class="text-lg serenityBlue">
+      <span class="font-bold serenityBlue">Descripción del trabajo:</span>
       {{ progressAdvance?.work_order?.description }}
     </h1>
     <div class="flex flex-col gap-4">
-      <h1 class="text-lg font-bold">Progreso del trabajo</h1>
-      <p-progressbar [value]="progressAdvance?.progress_percentage" />
+      <h1 class="text-lg font-bold serenityBlue">Progreso del trabajo</h1>
+      <p-progressbar [value]="progressAdvance?.progress_percentage" styleClass="serenityGreen" />
     </div>
     <div class="flex flex-col gap-5">
       <!-- Título -->
       <div>
-        <h1 class="text-lg font-bold">Avances del trabajo</h1>
+        <h1 class="text-lg font-bold serenityBlue">Avances del trabajo</h1>
       </div>
 
       <!-- Mensaje si no hay avances -->
@@ -69,7 +69,7 @@
           class="bg-white border-2 border-solid border-gray-500 p-4 size-full rounded-lg shadow-md cursor-pointer"
         >
           <p
-            class="text-black font-medium truncate max-w-full md:max-w-[440px] mx-auto"
+            class="serenityBlue font-medium truncate max-w-full md:max-w-[440px] mx-auto"
           >
             {{ advance.description }}
           </p>
@@ -86,7 +86,7 @@
           hideDelay="300"
           [disabled]="progressAdvance?.state?.toString() !== '2'"
           [styleClass]="
-            progressAdvance?.state === 3 ? 'bg-primary-500' : 'bg-primary'
+            progressAdvance?.state === 3 ? 'bg-lightSerenityGreen' : 'bg-lightSerenityGreen'
           "
           [routerLink]="['/progressOrder/info/create', progressAdvance?.id]"
         />
@@ -111,6 +111,8 @@
         <p-button
           label="Cambiar estado"
           fluid="true"
+          [loading]="loading"
+          styleClass="bg-lightSerenityGreen"
           (onClick)="submitChangeState()"
         />
       </div>

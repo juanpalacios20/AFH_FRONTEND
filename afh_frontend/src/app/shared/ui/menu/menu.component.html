@@ -1,15 +1,11 @@
 <div class="card flex justify-start">
   <p-drawer #drawerRef [(visible)]="visible">
     <ng-template #headless>
-      <div class="flex flex-col h-full">
+      <div class="flex flex-col h-full bg-blueSerenity text-white">
         <!-- Header -->
         <div class="flex items-center justify-between px-6 pt-4 shrink-0">
           <span class="inline-flex items-center gap-2">
-            <img
-              src="resource/imageAFH-removebg-preview.png"
-              alt="AFH Logo"
-              class="w-8 h-8"
-            />
+            <img src="resource/logo4.png" alt="AFH Logo" class="w-8 h-8" />
             <span class="font-semibold text-2xl">AFH</span>
           </span>
           <p-button
@@ -18,15 +14,15 @@
             icon="pi pi-times"
             rounded="true"
             outlined="true"
-            styleClass="h-8 w-8"
+            styleClass="h-8 w-8 text-white border-white hover:bg-white/10"
           ></p-button>
         </div>
 
         <!-- Body -->
         <div class="overflow-y-auto">
+          <!-- Secciones -->
           <ul class="list-none p-4 m-0">
-            <li *ngFor="let section of visibleSections">
-              <!-- Section Header -->
+            <li>
               <div
                 pRipple
                 pStyleClass="@next"
@@ -34,25 +30,190 @@
                 enterActiveClass="animate-slidedown"
                 leaveToClass="hidden"
                 leaveActiveClass="animate-slideup"
-                class="p-4 flex items-center justify-between cursor-pointer p-ripple"
+                class="p-4 flex items-center justify-between cursor-pointer p-ripple hover:bg-white/10 rounded-lg"
               >
-                <span class="font-medium">{{ section.label }}</span>
-                <i [class]="section.icon"></i>
+                <span class="font-medium">Secciones</span>
+                <i class="pi pi-chevron-down"></i>
               </div>
-
-              <!-- Section Items -->
               <ul class="list-none p-0 m-0 overflow-hidden">
-                <li
-                  *ngFor="let item of section.items"
-                  [routerLink]="item.route"
-                  (click)="item.action ? item.action() : null"
-                >
+                <li>
                   <a
+                    [routerLink]="'/management-tools'"
                     pRipple
-                    class="flex items-center cursor-pointer p-4 rounded-border text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-200 duration-150 transition-colors p-ripple"
+                    class="flex items-center cursor-pointer p-4 rounded-border hover:bg-white/10 duration-150 transition-colors p-ripple"
                   >
-                    <i [class]="item.icon + ' mr-2'"></i>
-                    <span class="font-medium">{{ item.label }}</span>
+                    <i class="pi pi-hammer mr-2"></i>
+                    <span class="font-medium">Herramientas</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/clients'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-users mr-2"></i>
+                    <span class="font-medium">Clientes</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/finance'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-wallet mr-2"></i>
+                    <span class="font-medium">Finanzas</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/reports'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-chart-bar mr-2"></i>
+                    <span class="font-medium">Reportes</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/agenteai'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-sparkles mr-2"></i>
+                    <span class="font-medium">Agente IA</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <!-- Gestión de Vales -->
+          <ul class="list-none p-4 m-0">
+            <li>
+              <div
+                pRipple
+                pStyleClass="@next"
+                enterFromClass="hidden"
+                enterActiveClass="animate-slidedown"
+                leaveToClass="hidden"
+                leaveActiveClass="animate-slideup"
+                class="p-4 flex items-center justify-between cursor-pointer p-ripple hover:bg-white/10 rounded-lg"
+              >
+                <span class="font-medium">Gestión de Vales</span>
+                <i class="pi pi-chevron-down"></i>
+              </div>
+              <ul class="list-none p-0 m-0 overflow-hidden">
+                <li>
+                  <a
+                    [routerLink]="'/management-vales'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-clipboard mr-2"></i>
+                    <span class="font-medium">Vales</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/history-tickets'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-clipboard mr-2"></i>
+                    <span class="font-medium">Historial Vales</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <!-- Gestión de Ordenes de Trabajo -->
+          <ul class="list-none p-4 m-0">
+            <li>
+              <div
+                pRipple
+                pStyleClass="@next"
+                enterFromClass="hidden"
+                enterActiveClass="animate-slidedown"
+                leaveToClass="hidden"
+                leaveActiveClass="animate-slideup"
+                class="p-4 flex items-center justify-between cursor-pointer p-ripple hover:bg-white/10 rounded-lg"
+              >
+                <span class="font-medium">Gestión de Órdenes de Trabajo</span>
+                <i class="pi pi-chevron-down"></i>
+              </div>
+              <ul class="list-none p-0 m-0 overflow-hidden">
+                <li>
+                  <a
+                    [routerLink]="'/quotes'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-clipboard mr-2"></i>
+                    <span class="font-medium">Cotizaciones</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/management-orders-works'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-clipboard mr-2"></i>
+                    <span class="font-medium">Órdenes de Trabajo</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/progressOrder'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-sync mr-2"></i>
+                    <span class="font-medium">Progreso Órdenes</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/work-report'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-clipboard mr-2"></i>
+                    <span class="font-medium">Actas de Entrega</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <!-- Más -->
+          <ul class="list-none p-4 m-0">
+            <li>
+              <div
+                pRipple
+                pStyleClass="@next"
+                enterFromClass="hidden"
+                enterActiveClass="animate-slidedown"
+                leaveToClass="hidden"
+                leaveActiveClass="animate-slideup"
+                class="p-4 flex items-center justify-between cursor-pointer p-ripple hover:bg-white/10 rounded-lg"
+              >
+                <span class="font-medium">Más</span>
+                <i class="pi pi-chevron-down"></i>
+              </div>
+              <ul class="list-none p-0 m-0 overflow-hidden">
+                <li>
+                  <a
+                    (click)="logout()"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-sign-out mr-2"></i>
+                    <span class="font-medium">Cerrar Sesión</span>
                   </a>
                 </li>
               </ul>
@@ -62,5 +223,10 @@
       </div>
     </ng-template>
   </p-drawer>
-  <p-button (click)="visible = true" icon="pi pi-bars" />
+
+  <p-button
+    (click)="visible = true"
+    icon="pi pi-bars"
+    styleClass="createButton-lightSerenityGreen"
+  />
 </div>

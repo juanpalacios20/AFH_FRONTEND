@@ -5,7 +5,7 @@
   [closable]="false"
 >
   <ng-template pTemplate="header">
-    <div class="flex justify-between items-center w-full">
+    <div class="flex justify-between items-center w-full serenityGreen font-bold text-lg">
       <span>{{ this.actionTittle }}</span>
       <button
         type="button"
@@ -17,7 +17,7 @@
     </div>
   </ng-template>
   <p-toast position="top-right"></p-toast>
-  <div class="w-full mx-auto rounded-xl justify-center mt-2">
+  <div class="w-full mx-auto rounded-xl justify-center mt-2 serenityBlue">
     <div class="mb-4">
       <h1 class="mb-4 font-medium">
         Ingrese el codigo de la orden de trabajo.
@@ -42,7 +42,7 @@
               selectedOrderWork === null &&
               errorOrderInvalidMessage
           }"
-          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           optionLabel="quote.code"
           fluid="true"
         />
@@ -79,7 +79,7 @@
                 errorMessage && description === ''
             }"
             [ngModelOptions]="{ standalone: true }"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           ></textarea>
           <label>Descripción </label>
         </p-floatlabel>
@@ -104,7 +104,7 @@
                 errorMessage && development === ''
             }"
             [ngModelOptions]="{ standalone: true }"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           ></textarea>
           <label>Desarrollo</label>
         </p-floatlabel>
@@ -127,7 +127,7 @@
               'ng-invalid ng-dirty border-red-500':
                 errorMessage && observations === ''
             }"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           />
           <label>Observaciones</label>
         </p-floatlabel>
@@ -150,7 +150,7 @@
                 errorMessage && recommendations === ''
             }"
             [ngModelOptions]="{ standalone: true }"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           />
           <label>Recomendaciones </label>
         </p-floatlabel>
@@ -178,7 +178,7 @@
                 errorMessage && in_charge === ''
             }"
             [ngModelOptions]="{ standalone: true }"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           />
           <label>Encargado de la orden </label>
         </p-floatlabel>
@@ -201,7 +201,7 @@
                 errorMessage && post === ''
             }"
             [ngModelOptions]="{ standalone: true }"
-            class="w-full bg-white text-black font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+            class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
           />
           <label>Cargo del encargado </label>
         </p-floatlabel>
@@ -245,7 +245,7 @@
               'ng-invalid ng-dirty border-red-500':
                 errorMessage && anexo.descripcion === ''
             }"
-            class="w-full pr-10"
+            class="w-full pr-10 serenityBlue focus:ring-2 focus:ring-primary-900"
             fluid="true"
           />
           <label>Descripción del anexo</label>
@@ -289,6 +289,7 @@
             accept="image/*"
             multiple="true"
             chooseLabel="Seleccionar imágenes"
+            styleClass="upload-green"
             [customUpload]="true"
             (onSelect)="onImagesSelected($event, i)"
           ></p-fileupload>
@@ -307,7 +308,7 @@
         label="Agregar otro anexo"
         icon="pi pi-plus"
         fluid="true"
-        styleClass="p-button-primary mb-4"
+        styleClass="p-button-primary mb-4 createButton-lightSerenityGreen"
         (onClick)="
           anexos.push({ id: 0, descripcion: '', imagenes: [], files: [] })
         "
@@ -324,7 +325,7 @@
           Cancelar
         </p-button>
         <p-button
-          styleClass="p-button-primary"
+          styleClass="createButton-lightSerenityGreen font-semibold"
           [loading]="loading"
           (onClick)="onSubmit()"
         >

@@ -2,46 +2,48 @@
   <!-- Imagen (oculta en móviles) -->
   <div class="hidden md:flex md:w-1/2 bg-gray-200 items-center justify-center">
     <img
-      src="resource/imagebg.png"
+      src="resource/logo.png"
       alt="Imagen de fondo"
       class="w-full h-full object-cover"
     />
   </div>
 
   <!-- Formulario -->
-  <div class="flex-1 flex items-center justify-center bg-white">
+  <div class="flex-1 flex items-center justify-center bg-blueSerenity">
     <div
-      class="w-11/12 sm:w-3/4 bg-gray-200 md:bg-white p-6 shadow-lg rounded-lg md:shadow-none md:rounded-none md:p-0"
+      class="w-11/12 sm:w-3/4 bg-blueSerenity p-6 shadow-lg rounded-lg md:shadow-none md:rounded-none md:p-0"
     >
-      <h2 class="text-black font-bold text-2xl mb-6 text-center">
+      <h2 class="serenityGreen font-bold text-2xl mb-6 text-center lightSerenityGreen">
         Iniciar Sesión
       </h2>
-      <form (submit)="login()" class="w-full">
-        <div class="w-full mb-6">
-          <p-floatlabel variant="on">
+      <form (submit)="login()" class="w-full bg-blueSerenity">
+        <div class="w-full mb-6 bg-blueSerenity">
+          <p-floatlabel variant="in">
             <input
               pInputText
               [(ngModel)]="email"
               [ngModelOptions]="{ standalone: true }"
               required="true"
-              id="on_label"
+              id="in_label"
+              size="large"
               autocomplete="on"
-              class="w-full bg-white text-black font-medium py-3 rounded-lg transition"
+              class="w-full bg-white text-black font-medium rounded-lg transition"
             />
-            <label for="on_label">Correo Electronico</label>
+            <label for="in_label">Correo Electronico</label>
           </p-floatlabel>
-          <small id="email-help" class="text-gray-600"
+          <small id="email-help" class="text-gray-300"
             >Correo válido como ejemplo&#64;dominio.com</small
           >
         </div>
 
         <div class="w-full mb-6">
-          <p-floatlabel variant="on">
+          <p-floatlabel variant="in">
             <p-password
               [(ngModel)]="password"
               [feedback]="false"
               [toggleMask]="true"
               fluid="true"
+              size="small"
               class="w-full font-medium"
               required="true"
               [ngModelOptions]="{ standalone: true }"
@@ -57,13 +59,13 @@
             fluid="true"
             [loading]="loading"
             rounded="true"
-            styleClass="w-full"
+            styleClass="w-full bg-lightSerenityGreen"
           />
           <p class="text-red-600" *ngIf="errorMessage">{{ errorMessage }}</p>
         </div>
-        <p class="text-sm text-center font-size text-gray-600">
+        <p class="text-sm text-center font-size text-gray-300">
           ¿Olvidaste tu contraseña?
-          <a routerLink="/send-code" class="text-blue-600"
+          <a routerLink="/send-code" class="text-lightSerenityGreen text-sm text-center font-size"
             >Reestablecela aquí</a
           >
         </p>

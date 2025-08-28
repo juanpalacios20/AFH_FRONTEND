@@ -2,20 +2,20 @@
   <!-- Imagen (oculta en móviles) -->
   <div class="hidden md:flex md:w-1/2 bg-gray-200 items-center justify-center">
     <img
-      src="resource/imagebg.png"
+      src="resource/logo.png"
       alt="Imagen de fondo"
       class="w-full h-full object-cover"
     />
   </div>
 
   <!-- Formulario -->
-  <div class="flex-1 flex items-center justify-center bg-white">
+  <div class="flex-1 flex items-center justify-center bg-blueSerenity">
     <div
-      class="w-11/12 sm:w-3/4 bg-gray-200 md:bg-white p-6 shadow-lg rounded-lg md:shadow-none md:rounded-none md:p-0"
+      class="w-11/12 sm:w-3/4 bg-blueSerenity md:bg-blueSerenity p-6 shadow-lg rounded-lg md:shadow-none md:rounded-none md:p-0"
     >
       <div class="w-full mb-6 flex items-center">
         <div class="w-full text-center">
-          <h2 class="text-black font-bold text-2xl">
+          <h2 class="lightSerenityGreen font-bold text-2xl">
             Ingresa el código de verificación
           </h2>
         </div>
@@ -26,7 +26,7 @@
           <p-inputotp
             [(ngModel)]="code"
             [ngModelOptions]="{ standalone: true }"
-            class="max-w-xs w-full bg-gray-200 md:bg-white text-black font-medium py-3 rounded-lg transition justify-center"
+            class="max-w-xs w-full bg-blueSerenity md:bg-blueSerenity text-black font-medium py-3 rounded-lg transition justify-center"
           />
         </div>
         <div class="w-full mb-6">
@@ -35,7 +35,7 @@
             type="submit"
             fluid="true"
             rounded="true"
-            styleClass="w-full"
+            styleClass="w-full bg-lightSerenityGreen"
           />
         </div>
       </form>

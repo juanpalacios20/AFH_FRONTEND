@@ -120,14 +120,6 @@ export default class FormClientsComponent implements OnChanges {
     ) {
       return;
     }
-    console.log(
-      'datos',
-      this.name,
-      this.email,
-      this.phone,
-      this.position,
-      this.representative
-    );
     this.clientService
       .createClient(
         this.name,
