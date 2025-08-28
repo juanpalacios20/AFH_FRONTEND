@@ -181,9 +181,7 @@ export class FormAdvanceComponent {
       this.workProgressOrderService
         .changePercentage(this.progressToEdit.id, dataPercent)
         .subscribe({
-          next: (response) => {
-            console.log(response);
-          },
+          next: (response) => {},
           error: (err) => {
             console.log(err);
           },
@@ -221,9 +219,7 @@ export class FormAdvanceComponent {
               filename: `old_image_${anexoIndex}_${index}.jpg`,
             }))
         );
-      console.log('vamos bien 1');
       return Promise.all(urlFetches).then((blobs) => {
-        console.log('vamos bien 2');
         if (anexo.id !== 0) {
           blobs.forEach(({ blob, filename }) => {
             formData.append('image', blob, filename);
@@ -231,7 +227,6 @@ export class FormAdvanceComponent {
         }
 
         if (anexo.id === 0) {
-          console.log('vamos bien 3');
           (anexo.files || []).forEach((file: File) => {
             formData.append('images', file);
           });
@@ -243,7 +238,6 @@ export class FormAdvanceComponent {
             .then((res) => res.exhibit_id);
         } else {
           // Actualizar anexo existente
-          console.log('vamos bien 4', anexo.id);
           return this.workReportService
             .updateExhibit(formData, anexo.id)
             .toPromise()
@@ -251,7 +245,6 @@ export class FormAdvanceComponent {
         }
       });
     });
-    console.log('vamos bien 5');
 
     // 🟢 Procesar todos los cambios
     Promise.all([...exhibitUpdatePromises])
@@ -282,17 +275,19 @@ export class FormAdvanceComponent {
         }
 
         if (Object.keys(data).length === 0) {
-          console.log('Sin cambios de descripción ni anexos');
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: `Sin cambios para actualizar`,
+          });
           return;
         }
 
-        console.log(data);
         return this.workAdvanceService
           .updateWorkAdvance(data, advanceId)
           .toPromise();
       })
       .then(() => {
-        console.log('Avance actualizado exitosamente');
         this.localStorageService.removeItem('progressOrders');
         localStorage.setItem('state', 'true');
         this.router.navigate(['/progressOrder/info/', this.progressToEdit?.id]);
@@ -322,7 +317,6 @@ export class FormAdvanceComponent {
             exhibits_ids: exhibit_ids,
             date: new Date().toISOString().split('T')[0],
           };
-          console.log('workAdvanceData', workAdvanceData);
           return this.workAdvanceService.createWorkAdvance(workAdvanceData);
         }),
         switchMap((workAdvanceResponse: any) => {
@@ -345,7 +339,7 @@ export class FormAdvanceComponent {
               .changePercentage(this.progressToEdit?.id, data)
               .subscribe({
                 next: (response) => {
-                  console.log(response);
+                  console.log(" ");
                 },
                 error: (err) => {
                   console.log(err);

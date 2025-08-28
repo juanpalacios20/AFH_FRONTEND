@@ -87,7 +87,6 @@ export default class ManagementComponent implements OnInit {
   }
 
   loadData() {
-    console.log('recargando');
     const incomesLS: income[] | null =
       this.localStorageService.getItem('incomes');
     const expenseLS: expense[] | null =
@@ -99,7 +98,6 @@ export default class ManagementComponent implements OnInit {
         next: (response) => {
           this.incomes = response;
           this.localStorageService.setItem('incomes', this.incomes);
-          console.log(response);
         },
         error: (err) => {
           console.log(err);
@@ -113,7 +111,6 @@ export default class ManagementComponent implements OnInit {
         next: (response) => {
           this.expenses = response;
           this.localStorageService.setItem('expenses', this.expenses);
-          console.log(response);
         },
         error: (err) => {
           console.log(err.error);
@@ -167,7 +164,6 @@ export default class ManagementComponent implements OnInit {
   }
 
   openViewIncome(income: income) {
-    console.log(income);
     this.incomeToView = income;
     this.visibleViewIncome = true;
   }
@@ -217,7 +213,6 @@ export default class ManagementComponent implements OnInit {
       this.table.clear(); // Limpia filtros si la fecha se borra
     } else {
       const formattedDate = this.formatDate(this.dateFilter);
-      console.log('fecha', formattedDate);
       this.table.filterGlobal(formattedDate, 'contains');
     }
   }

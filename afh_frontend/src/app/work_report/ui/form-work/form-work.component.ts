@@ -108,7 +108,6 @@ export default class FormWorkComponent {
       this.in_charge === ''
     ) {
       this.errorMessage = 'Campo requerido';
-      console.log('error otros datos');
     }
     for (let i = 0; i < this.anexos.length; i++) {
       if (
@@ -244,7 +243,6 @@ export default class FormWorkComponent {
 
     // 3. Procesar anexos
     this.anexos.forEach((anexo, anexoIndex) => {
-      console.log('id_anexo', anexo.id);
       const hasTitle = anexo.descripcion?.trim() !== '';
       const hasFiles =
         (anexo.files && anexo.files.length > 0) ||
@@ -289,7 +287,6 @@ export default class FormWorkComponent {
 
           // 4. Actualizar o crear anexo
           if (anexo.id !== 0) {
-            console.log('anexo a actualizar', anexo.id);
             this.workReportService.updateExhibit(formData, anexo.id).subscribe({
               next: (res) => console.log(''),
               error: (err) =>
@@ -317,9 +314,8 @@ export default class FormWorkComponent {
     });
     // 5. Eliminar anexos completos
     this.anexosEliminados.forEach((anexoId) => {
-      console.log('anexo a eliminar', anexoId);
       this.workReportService.deleteExhibit(anexoId).subscribe({
-        next: () => console.log('anexo eliminado', anexoId),
+        next: () => console.log(''),
         error: (err) =>
           console.error(`Error al eliminar anexo ${anexoId}:`, err),
       });
