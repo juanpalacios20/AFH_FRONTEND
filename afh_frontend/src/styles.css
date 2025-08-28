@@ -7,6 +7,14 @@
   font-family: "Oswald", sans-serif;
 }
 
+@theme {
+  --color-darkGreen: #2f7d3a;
+  --color-lightGreen: #98e63c;
+  --color-darkBlue: #0b2239;
+  --color-fuchsia: #eb018d;
+  --color-brown: #472D37
+}
+
 .serenityGreen {
   color: #2f7d3a; /* Example serenity green color */
 }
@@ -63,7 +71,7 @@
   color: #0b2239 !important;
 }
 
-/* Estiliza solo el botón de este fileupload */
+/* Estilo utilizado para los botones donde se suben archivos (imagenes) */
 .upload-green .p-fileupload-choose-button {
   background-color: #98e63c;
   border-color: #98e63c;
@@ -83,17 +91,17 @@
   color: #0b2239;
 }
 
-/* borde en estado normal */
+/* borde del checkbox en estado normal (sin seleccionar)*/
 .p-checkbox .p-checkbox-box {
   border: 2px solid #98e63c !important;
 }
 
-/* hover */
+/* hover del checkbox */
 .p-checkbox:not(.p-disabled) .p-checkbox-box:hover {
   border-color: #98e63c !important;
 }
 
-/* fondo y borde cuando está seleccionado (observa que la clase p-highlight está en .p-checkbox) */
+/* cuando se selecciona el checkbox, este tiene un color verde */
 .p-checkbox.p-highlight .p-checkbox-box,
 .p-checkbox.p-checkbox-checked .p-checkbox-box,
 .p-checkbox[data-p-checked="true"] .p-checkbox-box {
@@ -115,12 +123,12 @@
   fill: #0b2239 !important;
 }
 
-/* enfoque (opcional) */
+/* enfoque */
 .p-checkbox.p-focus .p-checkbox-box {
   box-shadow: 0 0 0 3px rgba(152, 231, 60, 0.18) !important;
 }
 
-/* Aplica solo a tu progressbar con la clase serenityGreen */
+/* Barra de progreso con el verde oscuro */
 .serenityGreen .p-progressbar-value {
   background-color: #4CAF50 !important; /* verde serenity */
   border-radius: 8px; /* opcional, esquinas redondeadas */
@@ -130,5 +138,16 @@
 .serenityGreen .p-progressbar-label {
   color: white !important;
   font-weight: bold;
+}
+
+
+/* Cambiar color del texto para los botones de los dialogos de confirmacion */
+.p-confirmdialog .p-confirmdialog-accept-button:not(.p-button-danger) {
+  color: #0b2239 !important;
+}
+
+/* Cambiar color del texto para los botones de los dialogos de confirmacion (aceptar)*/
+.p-confirmdialog .p-confirmdialog-accept-button.p-button-danger {
+  color: #ffffff !important;
 }
 
