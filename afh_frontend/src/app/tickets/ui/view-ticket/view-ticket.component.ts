@@ -114,6 +114,7 @@ export class ViewTicketComponent {
     this.ticketService.changeState(id, state).subscribe({
       next: (data) => {
         this.localStorageService.removeItem('ticket');
+        this.localStorageService.removeItem('tools');
         this.messageService.add({
           severity: 'success',
           summary: 'Estado cambiado',
@@ -188,8 +189,12 @@ export class ViewTicketComponent {
       },
       accept: () => {
         this.changeState(id, 1);
+        this.localStorageService.removeItem('historialTickets');
         this.closeDialog.emit();
         this.change = true;
+      },
+      reject: () => {
+        this.loadingComplete = false;
       },
     });
   }
@@ -215,6 +220,9 @@ export class ViewTicketComponent {
         this.closeDialog.emit();
         this.change = true;
       },
+      reject: () => {
+        this.loadingComplete = false;
+      },
     });
   }
 
@@ -238,6 +246,9 @@ export class ViewTicketComponent {
       accept: () => {
         this.changeState(id, 4);
         this.change = true;
+      },
+      reject: () => {
+        this.loadingComplete = false;
       },
     });
   }
