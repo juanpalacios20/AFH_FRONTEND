@@ -12,6 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { TicketsService } from '../../data_access/tickets.service';
 import { TextareaModule } from 'primeng/textarea';
 import { MessageService } from 'primeng/api';
+import { LocalStorageService } from '../../../localstorage.service';
 
 interface Tool {
   id: number;
@@ -59,7 +60,8 @@ export class CreateTicketComponent {
     private cookieService: CookieService,
     private ticketService: TicketsService,
     private toolService: ToolService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
@@ -119,6 +121,8 @@ export class CreateTicketComponent {
             summary: 'Creada',
             detail: 'La herramienta ha sido creada con éxito',
           });
+          this.localStorageService.removeItem('ticket');
+          this.localStorageService.removeItem('tools');
           this.closeDialog.emit();
           this.onTicketCreated.emit();
           this.resetForm();
