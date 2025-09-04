@@ -178,3 +178,20 @@ export interface Notification {
   title: string;
   content: string;
 }
+
+export interface Tool {
+  id: number;
+  name: string;
+  code: string;
+  state: number;
+  brand: string;
+}
+
+export interface ToolsMaintenance {
+  id: number;
+  tool: Tool;
+  start_date: string;
+  observations: string;
+  responsable: string;
+  tipo: number;
+}
