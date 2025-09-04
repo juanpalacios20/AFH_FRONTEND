@@ -10,10 +10,16 @@
 @theme {
   --color-darkGreen: #2f7d3a;
   --color-lightGreen: #98e63c;
-  --color-darkBlue: #0b2239;
+  --color-darkBlue: #0B233B;
   --color-fuchsia: #eb018d;
   --color-brown: #472D37
 }
+
+/* styles.css */
+.table-header {
+  @apply border border-lightGreen text-center text-lightGreen bg-darkBlue;
+}
+
 
 .serenityGreen {
   color: #2f7d3a; /* Example serenity green color */

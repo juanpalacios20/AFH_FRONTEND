@@ -67,16 +67,16 @@
       >
         <ng-template #header *ngIf="incomes.length > 0">
           <tr>
-            <th class="rounded-border serenityBlue text-center"></th>
-            <th class="rounded-border serenityBlue text-center">Monto</th>
-            <th class="rounded-border serenityBlue text-center">
+            <th class="table-header">Codigo</th>
+            <th class="table-header">Monto</th>
+            <th class="table-header">
               Forma de pago
             </th>
-            <th class="rounded-border serenityBlue text-center">Fecha</th>
-            <th class="rounded-border serenityBlue text-center">
+            <th class="table-header">Fecha</th>
+            <th class="table-header">
               {{ value === "ingreso" ? "Cuenta destino" : "Cuenta origen" }}
             </th>
-            <th class="rounded-border serenityBlue text-center">
+            <th class="table-header">
               Opciones
             </th>
           </tr>
@@ -150,16 +150,16 @@
       >
         <ng-template #header *ngIf="expenses.length > 0">
           <tr>
-            <th class="rounded-border text-primary-950 text-center">Código</th>
-            <th class="rounded-border text-primary-950 text-center">Monto</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="table-header">Código</th>
+            <th class="table-header">Monto</th>
+            <th class="table-header">
               Forma de pago
             </th>
-            <th class="rounded-border text-primary-950 text-center">Fecha</th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="table-header">Fecha</th>
+            <th class="table-header">
               Cuenta Origen
             </th>
-            <th class="rounded-border text-primary-950 text-center">
+            <th class="table-header">
               Opciones
             </th>
           </tr>
