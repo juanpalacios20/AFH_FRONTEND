@@ -8,12 +8,12 @@
       class="flex flex-col md:flex-row md:items-center md:justify-between gap-2"
     >
       <h1 class="text-2xl font-bold text-center md:text-left text-darkGreen">
-        AFH: Administración de Herramientas
+        AFH: Administración de herramientas en mantenimiento
       </h1>
       <p
         class="rounded-border text-primary-950 font-semibold text-center md:text-left serenityGreen"
       >
-        Total herramientas: {{ tools.length }}
+        Total herramientas en mantenimiento: {{ tools.length }}
       </p>
     </div>
 
@@ -25,12 +25,7 @@
         <p-floatlabel variant="on" class="w-full md:w-64">
           <p-iconfield>
             <p-inputicon class="pi pi-search" rounded="true" />
-            <input
-              pInputText
-              id="on_label"
-              autocomplete="off"
-              class="w-full"
-            />
+            <input pInputText id="on_label" autocomplete="off" class="w-full" />
           </p-iconfield>
           <label for="on_label" class="serenityBlue">Buscar herramienta</label>
         </p-floatlabel>
@@ -39,7 +34,8 @@
       <div class="w-full md:w-auto flex flex-col md:justify-center">
         <p-button
           icon="pi pi-plus"
-          label="Agregar herramienta"
+          (click)="showCreateDialog()"
+          label="Generar nuevo matenimiento"
           rounded="true"
           styleClass="w-full md:w-auto bg-lightSerenityGreen"
         ></p-button>
@@ -67,41 +63,53 @@
             <th class="table-header">Imagen</th>
             <th class="table-header">Tipo</th>
             <th class="table-header">Encargado</th>
-            <th class="table-header">
-              Opciones
-            </th>
+            <th class="table-header">Opciones</th>
           </tr>
         </ng-template>
-        <ng-template #body let-tool>
+        <ng-template #body let-tool let-i="rowIndex">
           <tr>
-            <td class="cursor-pointer serenityBlue">
-              <p class="text-center">{{ tool.code }}</p>
+            <td
+              class="cursor-pointer serenityBlue"
+              (click)="showViewDialog(tool)"
+            >
+              <p class="text-center">{{ i + 1 }}</p>
             </td>
-            <td class="cursor-pointer serenityBlue">
-              <p class="text-center">{{ tool.name }}</p>
+            <td
+              class="cursor-pointer serenityBlue"
+              (click)="showViewDialog(tool)"
+            >
+              <p class="text-center">{{ tool.tool.name }}</p>
             </td>
             <td
               class="flex justify-center cursor-pointer"
+              (click)="showViewDialog(tool)"
             >
               <img
-                [src]="tool.image"
-                [alt]="tool.name"
+                [src]="tool.tool.image"
+                [alt]="tool.tool.name"
                 class="w-16 h-16 rounded"
               />
             </td>
-            <td class="cursor-pointer">
+            <td class="cursor-pointer" (click)="showViewDialog(tool)">
               <div class="flex justify-center">
                 <p-tag
                   class="justify-center"
-                  value="getStateString(tool.state)"
-                  severity="danger"
+                  [value]="getStateString(tool.type)"
+                  [severity]="getSeverity(tool.type)"
                 ></p-tag>
               </div>
+            </td>
+            <td
+              class="cursor-pointer serenityBlue"
+              (click)="showViewDialog(tool)"
+            >
+              <p class="text-center">{{ tool.maintenance_technician_name }}</p>
             </td>
             <td>
               <div class="card flex justify-center gap-2">
                 <p-button
                   icon="pi pi-pencil"
+                  (onClick)="showEditDialog(tool)"
                   styleClass="createButton-lightSerenityGreen"
                 />
                 <p-button
@@ -137,4 +145,22 @@
       </p-table>
     </div>
   </div>
+  <app-form
+    [visible]="createDialogVisible"
+    [action]="0"
+    (closeDialog)="createDialogVisible = false"
+    (onToolCreated)="handleToolCreated()"
+  ></app-form>
+  <app-form
+    [visible]="editDialogVisible"
+    [action]="1"
+    [toolMaintenance]="toolToEdit"
+    (closeDialog)="editDialogVisible = false"
+    (onEditCreated)="handleToolEdited()"
+  ></app-form>
+  <app-view-maintenance
+    [visible]="viewDialog"
+    [maintenance]="this.maintenanceToView"
+    (closeDialog)="viewDialog = false"
+  ></app-view-maintenance>
 </div>

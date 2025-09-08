@@ -1,0 +1,86 @@
+<p-dialog
+  header="Mantenimiento de la herramienta '{{ maintenance?.tool?.name }}'"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw', color: '#2f7d3a' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col gap-2">
+        <span class="font-medium text-darkBlue"
+          >Informacion de la herramienta</span
+        >
+        <div class="flex flex-col gap-4">
+          <span class="font-normal text-darkBlue"
+            >{{ maintenance?.tool?.name }}
+          </span>
+          <p-image
+            [src]="maintenance?.tool?.image"
+            alt="Imagen de la herramienta"
+            width="250"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col">
+          <span class="font-medium text-darkBlue"
+            >Encargado de realizar el mantenimiento</span
+          >
+          <span class="font-normal text-darkBlue"
+            >{{ maintenance?.maintenance_technician_name }}
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-medium text-darkBlue">Fecha de inicio</span>
+          <span class="font-normal text-darkBlue"
+            >{{ maintenance?.date }}
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-medium text-darkBlue"
+            >Fecha de finalizacion aproximada</span
+          >
+          <span class="font-normal text-darkBlue"
+            >{{ maintenance?.delivery_date }}
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-medium text-darkBlue">Proximo mantenimiento</span>
+          <span class="font-normal text-darkBlue"
+            >{{ maintenance?.next_maintenance_date }}
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-medium text-darkBlue"
+            >Quien agendó el mantenimiento</span
+          >
+          <span class="font-normal text-darkBlue"
+            >{{ maintenance?.user_delivery?.user?.first_name }}
+            {{ maintenance?.user_delivery?.user?.last_name }}
+          </span>
+        </div>
+      </div>
+      <div class="flex flex-col col-span-2">
+        <span class="font-medium text-darkBlue">Observaciones adicionales</span>
+        <span class="font-normal text-darkBlue"
+          >{{ maintenance?.observations }}
+        </span>
+      </div>
+    </div>
+    <div class="w-full">
+      <p-button
+        (onClick)="getPDF()"
+        styleClass="createButton-lightSerenityGreen font-medium py-2 rounded-lg transition hover:bg-primary-600 cursor-pointer col-span-2"
+        fluid="true"
+        [loading]="loadingPDF"
+      >
+        Descargar ticket
+      </p-button>
+    </div>
+  </div>
+</p-dialog>
