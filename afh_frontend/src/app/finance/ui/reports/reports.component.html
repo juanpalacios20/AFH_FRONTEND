@@ -6,7 +6,9 @@
     <div
       class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4"
     >
-      <h1 class="text-2xl font-bold text-center text-darkGreen md:text-left">AFH: Reportes</h1>
+      <h1 class="text-2xl font-bold text-center text-darkGreen md:text-left">
+        AFH: Reportes
+      </h1>
       <p-button
         *ngIf="
           (charDayVisible ||
@@ -26,7 +28,7 @@
     </div>
   </div>
 
-  <!-- Selectores -->
+  <!-- Contenedor principal -->
   <div class="flex flex-col md:flex-row justify-center gap-4 mt-6">
     <!-- Selector principal -->
     <p-autocomplete
@@ -67,13 +69,13 @@
         <p-datepicker
           [(ngModel)]="year"
           view="year"
-          (ngModelChange)="onYearChange($event)"
+          (ngModelChange)="onYearChange()"
           fluid="true"
           placeholder="Seleccione un año"
           [readonlyInput]="true"
           [showIcon]="true"
           dateFormat="yy"
-          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white text-black font-normal mt-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
       </ng-container>
 
@@ -82,13 +84,13 @@
         <p-datepicker
           [(ngModel)]="month"
           view="month"
-          (ngModelChange)="onMonthChange($event)"
+          (ngModelChange)="onMonthChange()"
           fluid="true"
           placeholder="Seleccione un mes"
           [readonlyInput]="true"
           [showIcon]="true"
           dateFormat="mm/yy"
-          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white text-black font-normal mt-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
       </ng-container>
 
@@ -103,11 +105,25 @@
           placeholder="Seleccione un día"
           dateFormat="dd/mm/yy"
           [showOnFocus]="false"
-          class="w-full bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+          class="w-full bg-white text-black font-normal mt-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
         />
         <small class="text-gray-500">Seleccione un día</small>
       </ng-container>
     </div>
+
+    <!-- Selector de cuenta -->
+    <p-autocomplete
+      [(ngModel)]="selectedTargetAccount"
+      [suggestions]="filteredTargetAccount"
+      (completeMethod)="filterTargetAccount($event)"
+      (ngModelChange)="onAccountChange()"
+      [dropdown]="true"
+      (keydown)="blockTyping($event)"
+      fluid="true"
+      [field]="'name'"
+      placeholder="Seleccione la cuenta"
+      class="w-full md:w-60 bg-white text-black font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-500"
+    ></p-autocomplete>
   </div>
 
   <!-- Cards resumen -->
@@ -194,7 +210,10 @@
     *ngIf="moreInfoVisible === true"
   >
     <!-- Ingresos por cuenta -->
-    <div class="mt-6 w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md" *ngIf="listMoreInfoOA.length > 0">
+    <div
+      class="mt-6 w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md"
+      *ngIf="listMoreInfoOA.length > 0"
+    >
       <h2 class="text-xl font-semibold text-gray-800 mb-6 pb-2">
         Ingresos por cuenta
       </h2>
@@ -240,7 +259,10 @@
     </div>
 
     <!-- Ingresos por método de pago -->
-    <div class="mt-6 w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md" *ngIf="listMoreInfoMP.length > 0">
+    <div
+      class="mt-6 w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md"
+      *ngIf="listMoreInfoMP.length > 0"
+    >
       <h2 class="text-xl font-semibold text-gray-800 mb-6 pb-2">
         Ingresos por método de pago
       </h2>

@@ -67,18 +67,18 @@ export class FinanceService extends BaseHttpService {
   }
   fillMissingMonths(data: BalanceMonth[]): BalanceMonth[] {
     const allMonths = [
-      'enero',
-      'febrero',
-      'marzo',
-      'abril',
-      'mayo',
-      'junio',
-      'julio',
-      'agosto',
-      'septiembre',
-      'octubre',
-      'noviembre',
-      'diciembre',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
 
     return allMonths.map((mes) => {
@@ -94,10 +94,13 @@ export class FinanceService extends BaseHttpService {
     });
   }
 
-  getBalanceMonthDates(start: string, end: string) {
+  getBalanceMonthDates(start: string, end: string, id_account: number) {
     const headers = this.getHeaders();
-    const params = new HttpParams().set('start', start).set('end', end);
-
+    const params = new HttpParams()
+      .set('start', start)
+      .set('end', end)
+      .set('account_id', id_account);
+    console.log(id_account);
     return this.http
       .get<BalanceMonth[]>(`${this.apiUrl}balans/get_balans_monthly/`, {
         headers: headers,
@@ -106,9 +109,12 @@ export class FinanceService extends BaseHttpService {
       .pipe(map((response) => this.fillMissingMonths(response)));
   }
 
-  getBalanceMonth(start: string, end: string) {
+  getBalanceMonth(start: string, end: string, id_account: number) {
     const headers = this.getHeaders();
-    const params = new HttpParams().set('start', start).set('end', end);
+    const params = new HttpParams()
+      .set('start', start)
+      .set('end', end)
+      .set('account_id', id_account);
 
     return this.http.get<BalanceResponse>(`${this.apiUrl}balans/get/`, {
       headers: headers,
@@ -116,9 +122,12 @@ export class FinanceService extends BaseHttpService {
     });
   }
 
-  pdfYear(start: string, end: string) {
+  pdfYear(start: string, end: string, id_account: number) {
     const headers = this.getHeaders();
-    const params = new HttpParams().set('start', start).set('end', end);
+    let params = new HttpParams().set('start', start).set('end', end);
+    if (id_account !== 0) {
+      params.set('account_id', id_account);
+    }
 
     return this.http.get(`${this.apiUrl}balans/getpdf/`, {
       headers: headers,
@@ -160,12 +169,8 @@ export class FinanceService extends BaseHttpService {
 
   updateAccount(data: any, accountId: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.patch(
-      `${this.apiUrl}account/update/${accountId}`,
-      data,
-      {
-        headers: headers,
-      }
-    );
+    return this.http.patch(`${this.apiUrl}account/update/${accountId}`, data, {
+      headers: headers,
+    });
   }
 }

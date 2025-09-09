@@ -113,7 +113,7 @@ export default class FormComponent {
     formData.append('reason', this.reason);
     formData.append('payment_method', this.selectedPaymentMethod);
     formData.append('observations', this.observations);
-    console.log("id de la cuenta",this.selectedTargetAccount?.id);
+    console.log('id de la cuenta', this.selectedTargetAccount?.id);
     formData.append(
       this.type === 'ingreso' ? 'destination_account' : 'origin_account',
       this.selectedTargetAccount?.id.toString() || '0'
@@ -247,7 +247,6 @@ export default class FormComponent {
   }
 
   initAccountsOptions() {
-    console.log('buscando las cuentas');
     const accountsLS: account[] | null =
       this.localStorageService.getItem('accounts');
     if (accountsLS) {
@@ -257,8 +256,9 @@ export default class FormComponent {
 
   filterTargetAccount(event: any) {
     const query = event.query.toLowerCase();
-    this.filteredTargetAccount = this.target_accountTypeOptions
-      .filter((option) => option.name.toLowerCase().includes(query));
+    this.filteredTargetAccount = this.target_accountTypeOptions.filter(
+      (option) => option.name.toLowerCase().includes(query)
+    );
   }
 
   filterPaymentMethod(event: any) {
@@ -270,6 +270,7 @@ export default class FormComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['visible'] && this.visible === true) {
+      this.initAccountsOptions();
       if (this.action === 0) {
         this.actionTitle = 'Crear nuevo' + ' ' + this.type;
       } else if (this.action === 1) {

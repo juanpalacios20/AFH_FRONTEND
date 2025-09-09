@@ -15,6 +15,7 @@ import { ChartModule } from 'primeng/chart';
 import { AutoComplete } from 'primeng/autocomplete';
 import { FinanceService } from '../../services/finance.service';
 import {
+  account,
   BalanceMonth,
   balanceMoreInfoMP,
   balanceMoreInfoOA,
@@ -22,6 +23,7 @@ import {
 } from '../../../interfaces/models';
 import { ButtonModule } from 'primeng/button';
 import { GlobalService } from '../../../global.service';
+import { LocalStorageService } from '../../../localstorage.service';
 
 @Component({
   selector: 'app-reports',
@@ -79,7 +81,7 @@ export default class ReportsComponent implements OnInit {
   month: Date | undefined;
   year: Date | undefined;
   yearNumber: Number = 0;
-  filterOptions = ['DIA', 'MES', 'AÑO', 'PERSONALIZADO', 'MÁS INFORMACIÓN'];
+  filterOptions = ['DIA', 'MES', 'AÑO', 'PERSONALIZADO'];
   filteredOptions: string[] = [];
   selectedFilter: string = '';
   balanceMonths: BalanceMonth[] = [];
@@ -111,33 +113,66 @@ export default class ReportsComponent implements OnInit {
   listMoreInfoMP: balanceMoreInfoMP[] = [];
   listMoreInfoOA: balanceMoreInfoOA[] = [];
 
+  target_accountTypeOptions: account[] = [];
+  filteredTargetAccount: account[] = [];
+  selectedTargetAccount: account | undefined;
+  accounts: account[] = [];
+
   constructor(
     private cd: ChangeDetectorRef,
     private financeService: FinanceService,
-    private globalService: GlobalService
+    private globalService: GlobalService,
+    private localStorageService: LocalStorageService
   ) {
     this.globalService.changeTitle('AFH: Reportes');
+    this.initAccountsOptions();
   }
 
   //inicializador
   ngOnInit() {
     const { start, end } = this.getMonthStartEnd();
-    this.financeService.getBalanceMonth(start, end).subscribe({
-      next: (response) => {
-        this.income = response.ingresos;
-        this.expense = response.egresos;
-        this.balance = response.balance;
-        this.elements[0].value = this.income;
-        this.elements[1].value = this.expense;
-        this.elements[2].value = this.balance;
-        this.initChart();
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    this.financeService
+      .getBalanceMonth(start, end, this.selectedTargetAccount?.id || 0)
+      .subscribe({
+        next: (response) => {
+          this.income = response.ingresos;
+          this.expense = response.egresos;
+          this.balance = response.balance;
+          this.elements[0].value = this.income;
+          this.elements[1].value = this.expense;
+          this.elements[2].value = this.balance;
+          this.initChart();
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 
+  initAccountsOptions() {
+    const accountsLS: account[] | null =
+      this.localStorageService.getItem('accounts');
+    if (accountsLS) {
+      this.target_accountTypeOptions = accountsLS;
+    } else {
+      this.financeService.getAccounts().subscribe({
+        next: (response) => {
+          this.accounts = response;
+          this.localStorageService.setItem('accounts', this.accounts);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
+  }
+
+  filterTargetAccount(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredTargetAccount = this.target_accountTypeOptions.filter(
+      (option) => option.name.toLowerCase().includes(query)
+    );
+  }
   //Los graficos
   initChart() {
     if (isPlatformBrowser(this.platformId)) {
@@ -387,12 +422,13 @@ export default class ReportsComponent implements OnInit {
     if (this.rangeDates) {
       this.getInfoCustom(
         this.rangeDates[0].toISOString().split('T')[0],
-        this.rangeDates[1].toISOString().split('T')[0]
+        this.rangeDates[1].toISOString().split('T')[0],
+        this.selectedTargetAccount?.id || 0
       );
     }
   }
-  getInfoCustom(start: string, end: string) {
-    this.financeService.getBalanceMonth(start, end).subscribe({
+  getInfoCustom(start: string, end: string, id_account: number) {
+    this.financeService.getBalanceMonth(start, end, id_account).subscribe({
       next: (response) => {
         this.nameMonth = start + ' - ' + end;
         this.income = response.ingresos;
@@ -418,15 +454,16 @@ export default class ReportsComponent implements OnInit {
     this.charYearVisible = false;
     this.year = new Date();
     this.month = new Date();
-    this.getInfoDay();
+    this.getInfoDay(this.selectedTargetAccount?.id || 0);
   }
-  getInfoDay() {
+  getInfoDay(id_account: number) {
     this.charDayVisible = true;
     if (this.day) {
       this.financeService
         .getBalanceMonth(
           this.day.toISOString().split('T')[0],
-          this.day.toISOString().split('T')[0]
+          this.day.toISOString().split('T')[0],
+          id_account
         )
         .subscribe({
           next: (response) => {
@@ -449,7 +486,7 @@ export default class ReportsComponent implements OnInit {
   }
 
   //Por mes
-  onMonthChange(value: Date) {
+  onMonthChange() {
     this.moreInfoVisible = false;
     this.yearNumber = 0;
     this.year = new Date();
@@ -460,7 +497,7 @@ export default class ReportsComponent implements OnInit {
     if (this.month) {
       this.getNameMonth(this.month.getMonth(), this.month.getFullYear());
     }
-    this.getInfoMonth();
+    this.getInfoMonth(this.selectedTargetAccount?.id || 0);
   }
   getMonthStartEnd(): { start: string; end: string } {
     this.charMonthVisible = true;
@@ -479,7 +516,7 @@ export default class ReportsComponent implements OnInit {
       end: format(lastDay),
     };
   }
-  getInfoMonth() {
+  getInfoMonth(id_account: number) {
     if (this.month) {
       const lastDay = new Date(
         this.month.getFullYear(),
@@ -491,7 +528,8 @@ export default class ReportsComponent implements OnInit {
       this.financeService
         .getBalanceMonth(
           start.toISOString().split('T')[0],
-          end.toISOString().split('T')[0]
+          end.toISOString().split('T')[0],
+          id_account
         )
         .subscribe({
           next: (response) => {
@@ -511,7 +549,7 @@ export default class ReportsComponent implements OnInit {
   }
 
   //Por año
-  getInfo() {
+  getInfo(id_account: number) {
     if (this.year) {
       this.yearNumber = this.year.getFullYear();
     }
@@ -524,13 +562,17 @@ export default class ReportsComponent implements OnInit {
       );
       const start = new Date(this.year);
       const end = new Date(lastDay);
+      console.log('entramos4');
       this.getBalanceMonths(
         start.toISOString().split('T')[0],
-        end.toISOString().split('T')[0]
+        end.toISOString().split('T')[0],
+        id_account
       );
     }
   }
-  onYearChange(value: Date) {
+
+  onYearChange() {
+    console.log('entramos3');
     this.moreInfoVisible = false;
     this.nameMonth = '';
     this.month = new Date();
@@ -539,10 +581,11 @@ export default class ReportsComponent implements OnInit {
     this.charMonthVisible = false;
     this.charCustomVisible = false;
     this.charDayVisible = false;
-    this.getInfo();
+    this.getInfo(this.selectedTargetAccount?.id || 0);
   }
-  getBalanceMonths(start: string, end: string) {
-    this.financeService.getBalanceMonthDates(start, end).subscribe(
+
+  getBalanceMonths(start: string, end: string, id_account: number) {
+    this.financeService.getBalanceMonthDates(start, end, id_account).subscribe(
       (data) => {
         this.balanceMonths = data;
         this.initChartYear();
@@ -555,6 +598,8 @@ export default class ReportsComponent implements OnInit {
   }
   getFinanceYear() {
     if (this.balanceMonths) {
+      this.income = 0;
+      this.expense = 0;
       for (let i = 0; i < this.balanceMonths.length; i++) {
         this.income = this.income + this.balanceMonths[i].ingresos;
         this.expense = this.expense + this.balanceMonths[i].egresos;
@@ -655,6 +700,7 @@ export default class ReportsComponent implements OnInit {
   blockTyping(event: KeyboardEvent) {
     event.preventDefault();
   }
+
   downloadPdf() {
     this.loadingPDF = true;
     let { start, end } = this.getMonthStartEnd();
@@ -694,35 +740,51 @@ export default class ReportsComponent implements OnInit {
       start = this.rangeDates[0].toISOString().split('T')[0];
       end = this.rangeDates[1].toISOString().split('T')[0];
     }
+    this.financeService
+      .pdfYear(start, end, this.selectedTargetAccount?.id || 0)
+      .subscribe({
+        next: (response) => {
+          // Crear el blob desde la respuesta solo si response.body no es null
+          if (response.body) {
+            const blob = new Blob([response.body], { type: 'application/pdf' });
 
-    this.financeService.pdfYear(start, end).subscribe({
-      next: (response) => {
-        // Crear el blob desde la respuesta solo si response.body no es null
-        if (response.body) {
-          const blob = new Blob([response.body], { type: 'application/pdf' });
+            // Crear una URL para el blob
+            const url = window.URL.createObjectURL(blob);
 
-          // Crear una URL para el blob
-          const url = window.URL.createObjectURL(blob);
-
-          // Crear un enlace temporal para descargar
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `reporte-${start}-to-${end}.pdf`; // Nombre del archivo
-          link.click();
-          window.open(url, '_blank'); // Abre en nueva pestaña
-          window.URL.revokeObjectURL(url);
-          // Liberar la URL temporal
-          window.URL.revokeObjectURL(url);
+            // Crear un enlace temporal para descargar
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `reporte-${start}-to-${end}.pdf`; // Nombre del archivo
+            link.click();
+            window.open(url, '_blank'); // Abre en nueva pestaña
+            window.URL.revokeObjectURL(url);
+            // Liberar la URL temporal
+            window.URL.revokeObjectURL(url);
+            this.loadingPDF = false;
+          } else {
+            console.error('La respuesta no contiene datos PDF.');
+            this.loadingPDF = false;
+          }
+        },
+        error: (err) => {
+          console.error('Error al descargar PDF:', err);
           this.loadingPDF = false;
-        } else {
-          console.error('La respuesta no contiene datos PDF.');
-          this.loadingPDF = false;
-        }
-      },
-      error: (err) => {
-        console.error('Error al descargar PDF:', err);
-        this.loadingPDF = false;
-      },
-    });
+        },
+      });
+  }
+
+  onAccountChange() {
+    if (this.selectedFilter === 'AÑO') {
+      this.onYearChange();
+    }
+    if (this.selectedFilter === 'MES') {
+      this.onMonthChange();
+    }
+    if (this.selectedFilter === 'DIA') {
+      this.onDayChange();
+    }
+    if (this.selectedFilter === 'PERSONALIZADO') {
+      this.onCustomChange();
+    }
   }
 }
