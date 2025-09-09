@@ -127,6 +127,7 @@ export default class FormComponent implements OnInit {
           maintenanceLS = [...maintenanceLS, data];
           this.localStorageService.setItem('maintenances', maintenanceLS);
         }
+        this.visible = false;
         this.onToolCreated.emit();
         this.close();
       },

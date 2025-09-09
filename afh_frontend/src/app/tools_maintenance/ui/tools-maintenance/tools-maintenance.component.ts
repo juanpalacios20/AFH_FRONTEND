@@ -116,6 +116,7 @@ export default class ToolsMaintenanceComponent implements OnInit {
         this.loadingTools = false;
       },
     });
+    console.log('las fackin herramientas', this.tools);
   }
 
   getSeverity(

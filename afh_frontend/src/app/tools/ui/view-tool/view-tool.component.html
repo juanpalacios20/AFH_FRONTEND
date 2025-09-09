@@ -35,6 +35,7 @@
   <div class="flex justify-end">
     <p-button
       (click)="showCreate()"
+      *ngIf="tool.state !== 5"
       styleClass="createButton-lightSerenityGreen font-medium py-2 rounded-lg transition hover:bg-primary-600 cursor-pointer"
     >
       Generar nuevo mantenimiento
