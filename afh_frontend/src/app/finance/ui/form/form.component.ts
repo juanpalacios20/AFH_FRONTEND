@@ -19,9 +19,10 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { FinanceService } from '../../services/finance.service';
-import { expense, income } from '../../../interfaces/models';
+import { account, expense, income } from '../../../interfaces/models';
 import { InputNumber } from 'primeng/inputnumber';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { LocalStorageService } from '../../../localstorage.service';
 
 @Component({
   selector: 'app-form',
@@ -62,9 +63,9 @@ export default class FormComponent {
   amount: number = 0;
   date: Date | undefined;
   observations: string = '';
-  target_accountTypeOptions = ['CAJA PRINCIPAL', 'CUENTA BANCARIA'];
-  filteredTargetAccount: string[] = [];
-  selectedTargetAccount: string = '';
+  target_accountTypeOptions: account[] = [];
+  filteredTargetAccount: account[] = [];
+  selectedTargetAccount: account | undefined;
   paymentMethodTypeOptions = ['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE'];
   filteredPaymentMethod: string[] = [];
   selectedPaymentMethod: string = '';
@@ -76,8 +77,11 @@ export default class FormComponent {
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private financeService: FinanceService
-  ) {}
+    private financeService: FinanceService,
+    private localStorageService: LocalStorageService
+  ) {
+    this.initAccountsOptions();
+  }
 
   onSubmit() {
     if (this.action === 0) {
@@ -109,9 +113,10 @@ export default class FormComponent {
     formData.append('reason', this.reason);
     formData.append('payment_method', this.selectedPaymentMethod);
     formData.append('observations', this.observations);
+    console.log("id de la cuenta",this.selectedTargetAccount?.id);
     formData.append(
       this.type === 'ingreso' ? 'destination_account' : 'origin_account',
-      this.account().toString()
+      this.selectedTargetAccount?.id.toString() || '0'
     );
 
     if (this.selectedImage) {
@@ -170,10 +175,13 @@ export default class FormComponent {
     if (this.reason !== this.incomeToEdit?.reason) {
       formData.append('reason', this.reason);
     }
-    if (this.account() !== this.incomeToEdit?.destination_account) {
+    if (
+      this.selectedTargetAccount?.id.toString() !==
+      this.incomeToEdit?.destination_account
+    ) {
       formData.append(
         this.type === 'ingreso' ? 'destination_account' : 'origin_account',
-        this.account().toString()
+        this.selectedTargetAccount?.id.toString() || '0'
       );
     }
     if (this.selectedPaymentMethod !== this.incomeToEdit?.payment_method) {
@@ -229,7 +237,7 @@ export default class FormComponent {
       this.amount === 0 ||
       this.date === undefined ||
       this.reason === '' ||
-      this.selectedTargetAccount === '' ||
+      this.selectedTargetAccount === undefined ||
       this.selectedPaymentMethod === ''
     ) {
       this.errorMessage = 'Campo requerido';
@@ -238,11 +246,19 @@ export default class FormComponent {
     }
   }
 
+  initAccountsOptions() {
+    console.log('buscando las cuentas');
+    const accountsLS: account[] | null =
+      this.localStorageService.getItem('accounts');
+    if (accountsLS) {
+      this.target_accountTypeOptions = accountsLS;
+    }
+  }
+
   filterTargetAccount(event: any) {
     const query = event.query.toLowerCase();
-    this.filteredTargetAccount = this.target_accountTypeOptions.filter(
-      (option) => option.toLowerCase().includes(query)
-    );
+    this.filteredTargetAccount = this.target_accountTypeOptions
+      .filter((option) => option.name.toLowerCase().includes(query));
   }
 
   filterPaymentMethod(event: any) {
@@ -267,10 +283,7 @@ export default class FormComponent {
       this.observations = this.incomeToEdit.observations;
       this.date = new Date(this.incomeToEdit.date + 'T00:00:00');
       this.selectedPaymentMethod = this.incomeToEdit.payment_method;
-      this.selectedTargetAccount =
-        this.incomeToEdit.destination_account === 1
-          ? 'CUENTA BANCARIA'
-          : 'CAJA PRINCIPAL';
+      this.selectedTargetAccount = this.incomeToEdit.destination_account_info;
       this.observations = this.incomeToEdit.observations;
       this.selectedImagePreview = this.incomeToEdit.voucher;
     }
@@ -281,10 +294,7 @@ export default class FormComponent {
       this.observations = this.expenseToEdit.observations;
       this.date = new Date(this.expenseToEdit.date + 'T00:00:00');
       this.selectedPaymentMethod = this.expenseToEdit.payment_method;
-      this.selectedTargetAccount =
-        this.expenseToEdit.origin_account === 1
-          ? 'CUENTA BANCARIA'
-          : 'CAJA PRINCIPAL';
+      this.selectedTargetAccount = this.expenseToEdit.origin_account_info;
       this.observations = this.expenseToEdit.observations;
       this.selectedImagePreview = this.expenseToEdit.voucher;
     }
@@ -304,7 +314,7 @@ export default class FormComponent {
     this.selectedImage = null;
     this.selectedImagePreview = null;
     this.selectedPaymentMethod = '';
-    this.selectedTargetAccount = '';
+    this.selectedTargetAccount = undefined;
   }
 
   close() {
@@ -331,16 +341,6 @@ export default class FormComponent {
         this.close();
       },
     });
-  }
-
-  account(): number {
-    if (this.selectedTargetAccount === 'CUENTA BANCARIA') {
-      return 1;
-    }
-    if (this.selectedTargetAccount === 'CAJA PRINCIPAL') {
-      return 2;
-    }
-    return 0;
   }
 
   onImageSelect(event: any) {

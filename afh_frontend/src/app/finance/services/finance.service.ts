@@ -138,4 +138,34 @@ export class FinanceService extends BaseHttpService {
       }
     );
   }
+
+  createQuote(quote: any) {
+    const headers = this.getHeaders();
+    return this.http.post<any>(`${this.apiUrl}quote/addquote/`, quote, {
+      headers,
+    });
+  }
+
+  getAccounts(): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.get(`${this.apiUrl}account/get/`, { headers: headers });
+  }
+
+  createAccounts(data: any) {
+    const headers = this.getHeaders();
+    return this.http.post(`${this.apiUrl}account/create/`, data, {
+      headers: headers,
+    });
+  }
+
+  updateAccount(data: any, accountId: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.patch(
+      `${this.apiUrl}account/update/${accountId}`,
+      data,
+      {
+        headers: headers,
+      }
+    );
+  }
 }

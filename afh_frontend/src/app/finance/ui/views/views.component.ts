@@ -18,20 +18,6 @@ export default class ViewsComponent {
   @Output() closeDialog = new EventEmitter<void>();
   visible: boolean = false;
 
-  account(): string {
-    const account =
-      this.type === 'ingreso'
-        ? this.income?.destination_account
-        : this.expense?.origin_account;
-    if (account === 1) {
-      return 'CUENTA BANCARIA';
-    }
-    if (account === 2) {
-      return 'CAJA PRINCIPAL';
-    }
-    return 'No se encontro la cuenta';
-  }
-
   close() {
     this.visibleIncome = false;
     this.visibleExpense = false;
@@ -43,7 +29,7 @@ export default class ViewsComponent {
       this.visible = true;
     }
     if (this.visibleExpense) {
-      this.visible = true;
+      this.visible = true; 
     }
   }
 }

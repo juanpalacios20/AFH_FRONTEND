@@ -30,7 +30,7 @@
           }"
           class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         />
-        <label class="serenityBlue"
+        <label class="serenityBlue/10"
           >{{
             type === "ingreso"
               ? "Persona que hace el ingreso"
@@ -59,7 +59,7 @@
             "
             size="large"
           />
-          <label for="on_label" class="serenityBlue">Monto</label>
+          <label for="on_label" class="serenityBlue/10">Monto</label>
         </p-floatlabel>
         <small class="text-red-600" *ngIf="errorMessage && amount === 0">
           {{ errorMessage }}
@@ -103,7 +103,7 @@
           [ngModelOptions]="{ standalone: true }"
           class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         ></textarea>
-        <label class="serenityBlue">Motivo o concepto</label>
+        <label class="serenityBlue/10">Motivo o concepto</label>
       </p-floatlabel>
       <small class="text-red-600" *ngIf="errorMessage && reason === ''">
         {{ errorMessage }}
@@ -117,9 +117,13 @@
           (completeMethod)="filterTargetAccount($event)"
           [dropdown]="true"
           (keydown)="blockTyping($event)"
+          [field]="'name'"
+          [disabled]="action === 1"
           [ngClass]="{
             'border-red-500 ng-invalid ng-dirty':
-              errorMessage && selectedTargetAccount === ''
+              errorMessage && selectedTargetAccount == null,
+            'w-full bg-gray-300 text-gray-700 font-medium rounded-lg transition focus:ring-2 focus:ring-primary-900':
+              action === 1
           }"
           fluid="true"
           size="large"
@@ -127,14 +131,17 @@
             type === 'ingreso' ? 'Cuenta destino' : 'Cuenta origen'
           "
           class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
-        ></p-autocomplete>
+        >
+        </p-autocomplete>
+
         <small
           class="text-red-600"
-          *ngIf="errorMessage && selectedTargetAccount === ''"
+          *ngIf="errorMessage && selectedTargetAccount === undefined"
         >
           {{ errorMessage }}
         </small>
       </div>
+
       <div class="mb-4">
         <p-autocomplete
           [(ngModel)]="selectedPaymentMethod"
@@ -170,7 +177,7 @@
           [ngModelOptions]="{ standalone: true }"
           class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         ></textarea>
-        <label class="serenityBlue">Observaciones (Opcional)</label>
+        <label class="serenityBlue/10">Observaciones (Opcional)</label>
       </p-floatlabel>
     </div>
     <div>

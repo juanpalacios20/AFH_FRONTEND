@@ -11,8 +11,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { expense, income } from '../../../interfaces/models';
-import { NgIf } from '@angular/common';
+import { account, expense, income } from '../../../interfaces/models';
+import { NgFor, NgIf } from '@angular/common';
 import { SelectButton } from 'primeng/selectbutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import FormComponent from '../form/form.component';
@@ -21,6 +21,7 @@ import { FinanceService } from '../../services/finance.service';
 import ViewsComponent from '../views/views.component';
 import { GlobalService } from '../../../global.service';
 import { LocalStorageService } from '../../../localstorage.service';
+import FormAccountComponent from '../form-account/form-account.component';
 
 @Component({
   selector: 'app-management',
@@ -41,6 +42,7 @@ import { LocalStorageService } from '../../../localstorage.service';
     FormComponent,
     ConfirmDialog,
     ViewsComponent,
+    FormAccountComponent,
   ],
   templateUrl: './management.component.html',
   styleUrl: './management.component.css',
@@ -49,28 +51,37 @@ import { LocalStorageService } from '../../../localstorage.service';
 export default class ManagementComponent implements OnInit {
   @ViewChild('tf') table!: Table;
   loadingData: boolean = false;
+  //crear
   createVisible: boolean = false;
+  createAccountVisible: boolean = false;
   action: number = 0;
   dateFilter: string = '';
   stateOptions: any[] = [
     { label: 'Ingresos', value: 'ingreso' },
     { label: 'Egresos', value: 'egreso' },
+    { label: 'Cuentas', value: 'cuenta' },
   ];
   value: string = '';
   data: income[] | expense[] = [];
-  type: number = 0; //0 income, 1 exprense
+  type: number = 0; //0 income, 1 exprense, 2 account
   incomes: income[] = [];
   expenses: expense[] = [];
+  accounts: account[] = [];
   //editar
   editIncomeVisible: boolean = false;
+  editAccountVisible: boolean = false;
   editExpenseVisible: boolean = false;
   incomeToEdit: income | null = null;
   expenseToEdit: expense | null = null;
+  accountToEdit: account | undefined;
   //visualizar
   visibleViewIncome: boolean = false;
   visibleViewExpense: boolean = false;
   incomeToView: income | null = null;
   expenseToView: expense | null = null;
+  tittleAction: string | undefined;
+  infoData: any[] = [];
+  displayedColumns: { field: string; header: string }[] = [];
 
   constructor(
     private workReportService: WorkReportService,
@@ -91,6 +102,8 @@ export default class ManagementComponent implements OnInit {
       this.localStorageService.getItem('incomes');
     const expenseLS: expense[] | null =
       this.localStorageService.getItem('expenses');
+    const accountLS: account[] | null =
+      this.localStorageService.getItem('accounts');
     if (incomesLS && incomesLS.length > 0) {
       this.incomes = incomesLS;
     } else {
@@ -117,6 +130,19 @@ export default class ManagementComponent implements OnInit {
         },
       });
     }
+    if (accountLS && accountLS.length > 0) {
+      this.accounts = accountLS;
+    } else {
+      this.financeService.getAccounts().subscribe({
+        next: (response) => {
+          this.accounts = response;
+          this.localStorageService.setItem('accounts', this.accounts);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
   }
 
   openEditIncome(income: income) {
@@ -131,11 +157,17 @@ export default class ManagementComponent implements OnInit {
     this.action = 1;
   }
 
+  openEditAccount(account: account) {
+    this.editAccountVisible = true;
+    this.accountToEdit = account;
+  }
+
   closeEdit() {
     this.localStorageService.removeItem('incomes');
     this.localStorageService.removeItem('expenses');
     this.editExpenseVisible = false;
     this.editIncomeVisible = false;
+    this.createAccountVisible = false;
     this.action = 0;
     this.messageService.add({
       severity: 'success',
@@ -146,13 +178,19 @@ export default class ManagementComponent implements OnInit {
   }
 
   openCreate() {
-    this.createVisible = true;
-    this.action = 0;
+    if (this.type === 0 || this.type === 1) {
+      this.createVisible = true;
+      this.action = 0;
+    }
+    if (this.type === 2) {
+      this.createAccountVisible = true;
+    }
   }
 
   closeCreate() {
     this.localStorageService.removeItem('incomes');
     this.localStorageService.removeItem('expenses');
+    this.localStorageService.removeItem('accounts');
     this.createVisible = false;
     this.action = 0;
     this.loadData();
@@ -180,24 +218,45 @@ export default class ManagementComponent implements OnInit {
     this.visibleViewExpense = false;
   }
 
-  account(number: number): string {
-    if (number === 1) {
-      return 'CUENTA BANCARIA';
-    }
-    if (number === 2) {
-      return 'CAJA PRINCIPAL';
-    }
-    return '';
+  closeActionAccount() {
+    this.localStorageService.removeItem('accounts');
+    this.createAccountVisible = false;
+    this.editAccountVisible = false;
+    this.loadData();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Acción realizada con exito',
+    });
+  }
+
+  closeEditAccount() {
+    this.localStorageService.removeItem('accounts');
+    this.editAccountVisible = false;
+    this.loadData();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Creado con éxito',
+    });
   }
 
   changeData() {
     this.dateFilter = '';
     if (this.value) {
       if (this.value === 'ingreso') {
+        this.tittleAction = 'Crear ingreso';
         this.type = 0;
+        this.infoData = this.incomes;
       }
       if (this.value === 'egreso') {
+        this.tittleAction = 'Crear egreso';
         this.type = 1;
+        this.infoData = this.expenses;
+      }
+      if (this.value === 'cuenta') {
+        this.tittleAction = 'Ingresar cuenta';
+        this.type = 2;
       }
     } else {
       this.data = [];

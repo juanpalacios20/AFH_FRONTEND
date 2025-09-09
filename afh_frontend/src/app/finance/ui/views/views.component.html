@@ -33,7 +33,7 @@
     </p>
     <p class="serenityBlue">
       <span class="font-semibold ">Cuenta:</span>
-      {{ account() }}
+      {{ type === 'ingreso' ? income?.destination_account?.name : expense?.origin_account?.name }}
     </p>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">

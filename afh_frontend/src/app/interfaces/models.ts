@@ -96,7 +96,8 @@ export interface income {
   amount: number;
   reason: string;
   payment_method: string;
-  destination_account: number;
+  destination_account: account;
+  destination_account_info: account;
   observations: string;
   date: string;
   voucher: string;
@@ -109,11 +110,22 @@ export interface expense {
   amount: number;
   reason: string;
   payment_method: string;
-  origin_account: number;
+  origin_account: account;
+  origin_account_info: account;
   observations: string;
   date: string;
   voucher: string;
   amount_formatted: string;
+}
+
+export interface account {
+  id: number;
+  name: string;
+  type: number;
+  type_display: string;
+  initial_amount: number;
+  initial_amount_formatted: string;
+  created_at: string;
 }
 
 export interface element {

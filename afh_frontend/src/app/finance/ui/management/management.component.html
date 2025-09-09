@@ -31,7 +31,7 @@
       <p-button
         *ngIf="value"
         icon="pi pi-plus"
-        [label]="value === 'ingreso' ? 'Crear Ingreso' : 'Crear Egreso'"
+        [label]="tittleAction"
         (click)="openCreate()"
         rounded="true"
         styleClass="w-full md:w-auto createButton-lightSerenityGreen"
@@ -54,190 +54,249 @@
     <p-confirmdialog></p-confirmdialog>
 
     <!-- Tabla ingresos -->
-    <div class="overflow-x-auto">
-      <p-table
-        #tf
-        [rows]="20"
-        *ngIf="value === 'ingreso'"
-        [paginator]="true"
-        [value]="incomes"
-        [tableStyle]="{ 'min-width': '50rem' }"
-        [rowsPerPageOptions]="[20, 50, 100]"
-        [globalFilterFields]="['date']"
+    <p-table
+      #tf
+      [rows]="20"
+      *ngIf="value === 'ingreso'"
+      [paginator]="true"
+      [value]="incomes"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['date']"
+    >
+      <ng-template #header *ngIf="incomes.length > 0">
+        <tr>
+          <th class="table-header">Codigo</th>
+          <th class="table-header">Monto</th>
+          <th class="table-header">Forma de pago</th>
+          <th class="table-header">Fecha</th>
+          <th class="table-header">
+            {{ value === "ingreso" ? "Cuenta destino" : "Cuenta origen" }}
+          </th>
+          <th class="table-header">Opciones</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-income let-i="rowIndex">
+        <tr>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center serenityBlue">{{ i + 1 }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center text-green-600">
+              {{ "+" + income.amount_formatted }}
+            </p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center serenityBlue">
+              {{ income.payment_method }}
+            </p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center serenityBlue">{{ income.date }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(income)">
+            <p class="text-center serenityBlue">
+              {{ income.destination_account_info.name }}
+            </p>
+          </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                styleClass="bg-lightSerenityGreen"
+                (onClick)="openEditIncome(income)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="incomes.length === 0 && loadingData === false"
       >
-        <ng-template #header *ngIf="incomes.length > 0">
-          <tr>
-            <th class="table-header">Codigo</th>
-            <th class="table-header">Monto</th>
-            <th class="table-header">
-              Forma de pago
-            </th>
-            <th class="table-header">Fecha</th>
-            <th class="table-header">
-              {{ value === "ingreso" ? "Cuenta destino" : "Cuenta origen" }}
-            </th>
-            <th class="table-header">
-              Opciones
-            </th>
-          </tr>
-        </ng-template>
-        <ng-template #body let-income let-i="rowIndex">
-          <tr>
-            <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center serenityBlue">{{ i + 1 }}</p>
-            </td>
-            <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center text-green-600">
-                {{ "+" + income.amount_formatted }}
-              </p>
-            </td>
-            <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center serenityBlue">{{ income.payment_method }}</p>
-            </td>
-            <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center serenityBlue">{{ income.date }}</p>
-            </td>
-            <td class="cursor-pointer" (click)="openViewIncome(income)">
-              <p class="text-center serenityBlue">
-                {{ account(income.destination_account) }}
-              </p>
-            </td>
-            <td>
-              <div class="card flex justify-center gap-2">
-                <p-button
-                  icon="pi pi-pencil"
-                  styleClass="bg-lightSerenityGreen"
-                  (onClick)="openEditIncome(income)"
-                />
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template
-          #emptymessage
-          *ngIf="incomes.length === 0 && loadingData === false"
-        >
-          <tr>
-            <td colspan="5" class="text-center text-gray-600">
-              No hay ingresos disponibles
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template
-          #emptymessage
-          *ngIf="incomes.length !== 0 && loadingData === true"
-        >
-          <tr>
-            <td colspan="5" class="text-center text-gray-600">
-              Cargando información...
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay ingresos disponibles
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="incomes.length !== 0 && loadingData === true"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
 
     <!-- Tabla egresos -->
-    <div class="overflow-x-auto">
-      <p-table
-        #tf
-        [rows]="20"
-        [paginator]="true"
-        *ngIf="value === 'egreso'"
-        [value]="expenses"
-        [tableStyle]="{ 'min-width': '50rem' }"
-        [rowsPerPageOptions]="[20, 50, 100]"
-        [globalFilterFields]="['date']"
+    <p-table
+      #tf
+      [rows]="20"
+      [paginator]="true"
+      *ngIf="value === 'egreso'"
+      [value]="expenses"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['date']"
+    >
+      <ng-template #header *ngIf="expenses.length > 0">
+        <tr>
+          <th class="table-header">Código</th>
+          <th class="table-header">Monto</th>
+          <th class="table-header">Forma de pago</th>
+          <th class="table-header">Fecha</th>
+          <th class="table-header">Cuenta Origen</th>
+          <th class="table-header">Opciones</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-expense let-i="rowIndex">
+        <tr>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center">{{ i + 1 }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center text-red-600">
+              {{ "-" + expense.amount_formatted }}
+            </p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center">{{ expense.payment_method }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center">{{ expense.date }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewExpense(expense)">
+            <p class="text-center">{{ expense.origin_account_info.name }}</p>
+          </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                styleClass="bg-lightSerenityGreen"
+                (onClick)="openEditExpense(expense)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="expenses.length === 0 && loadingData === false"
       >
-        <ng-template #header *ngIf="expenses.length > 0">
-          <tr>
-            <th class="table-header">Código</th>
-            <th class="table-header">Monto</th>
-            <th class="table-header">
-              Forma de pago
-            </th>
-            <th class="table-header">Fecha</th>
-            <th class="table-header">
-              Cuenta Origen
-            </th>
-            <th class="table-header">
-              Opciones
-            </th>
-          </tr>
-        </ng-template>
-        <ng-template #body let-expense let-i="rowIndex">
-          <tr>
-            <td class="cursor-pointer" (click)="openViewExpense(expense)">
-              <p class="text-center">{{ i + 1 }}</p>
-            </td>
-            <td class="cursor-pointer" (click)="openViewExpense(expense)">
-              <p class="text-center text-red-600">
-                {{ "-" + expense.amount_formatted }}
-              </p>
-            </td>
-            <td class="cursor-pointer" (click)="openViewExpense(expense)">
-              <p class="text-center">{{ expense.payment_method }}</p>
-            </td>
-            <td class="cursor-pointer" (click)="openViewExpense(expense)">
-              <p class="text-center">{{ expense.date }}</p>
-            </td>
-            <td class="cursor-pointer" (click)="openViewExpense(expense)">
-              <p class="text-center">{{ account(expense.origin_account) }}</p>
-            </td>
-            <td>
-              <div class="card flex justify-center gap-2">
-                <p-button
-                  icon="pi pi-pencil"
-                  styleClass="bg-lightSerenityGreen"
-                  (onClick)="openEditExpense(expense)"
-                />
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template
-          #emptymessage
-          *ngIf="expenses.length === 0 && loadingData === false"
-        >
-          <tr>
-            <td colspan="5" class="text-center text-gray-600">
-              No hay egresos disponibles
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template
-          #emptymessage
-          *ngIf="expenses.length !== 0 && loadingData === true"
-        >
-          <tr>
-            <td colspan="5" class="text-center text-gray-600">
-              Cargando información...
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay egresos disponibles
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="expenses.length !== 0 && loadingData === true"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
 
-    <!-- Tabla sin selección -->
-    <div class="overflow-x-auto">
-      <p-table
-        #to
-        [rows]="20"
-        *ngIf="value === '' || value === null"
-        [paginator]="true"
-        [tableStyle]="{ 'min-width': '50rem' }"
-        [rowsPerPageOptions]="[20, 50, 100]"
-        [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+    <!-- Tabla cuentas -->
+    <p-table
+      #tf
+      [rows]="20"
+      *ngIf="value === 'cuenta'"
+      [paginator]="true"
+      [value]="accounts"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      [globalFilterFields]="['date']"
+    >
+      <ng-template #header *ngIf="accounts.length > 0">
+        <tr>
+          <th class="table-header">Codigo</th>
+          <th class="table-header">Nombre</th>
+          <th class="table-header">Tipo de cuenta</th>
+          <th class="table-header">Monto inicial</th>
+          <th class="table-header">Opciones</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-account let-i="rowIndex">
+        <tr>
+          <td class="cursor-pointer" (click)="openViewIncome(account)">
+            <p class="text-center serenityBlue">{{ i + 1 }}</p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(account)">
+            <p class="text-center text-darkBlue">
+              {{ account.name }}
+            </p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(account)">
+            <p class="text-center serenityBlue">
+              {{ account.type === 1 ? "BANCO" : "CAJA" }}
+            </p>
+          </td>
+          <td class="cursor-pointer" (click)="openViewIncome(account)">
+            <p class="text-center text-darkBlue">
+              {{ "+" + account.initial_amount_formatted }}
+            </p>
+          </td>
+          <td>
+            <div class="card flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                styleClass="bg-lightSerenityGreen"
+                (onClick)="openEditAccount(account)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="accounts.length === 0 && loadingData === false"
       >
-        <ng-template #emptymessage *ngIf="value === '' || value === null">
-          <tr>
-            <td colspan="5" class="text-center text-gray-600">
-              Seleccione lo que quiere ver
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            No hay ingresos disponibles
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        #emptymessage
+        *ngIf="accounts.length !== 0 && loadingData === true"
+      >
+        <tr>
+          <td colspan="5" class="text-center text-gray-600">
+            Cargando información...
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
+
+  <!-- Tabla sin selección -->
+  <p-table
+    #to
+    [rows]="20"
+    *ngIf="value === '' || value === null"
+    [paginator]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rowsPerPageOptions]="[20, 50, 100]"
+    [globalFilterFields]="['start_date', 'Quotes.customer.name']"
+  >
+    <ng-template #emptymessage *ngIf="value === '' || value === null">
+      <tr>
+        <td colspan="5" class="text-center text-gray-600">
+          Seleccione lo que quiere ver
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 
   <!-- Formularios y vistas -->
   <app-form
@@ -263,6 +322,19 @@
     (closeDialog)="editExpenseVisible = false"
     (onEgressCreated)="closeEdit()"
   ></app-form>
+  <app-form-account
+    [visible]="createAccountVisible"
+    [action]="0"
+    (closeDialog)="createAccountVisible = false"
+    (actionFinished)="closeActionAccount()"
+  ></app-form-account>
+  <app-form-account
+    [visible]="editAccountVisible"
+    [action]="1"
+    [accountToEdit]="accountToEdit"
+    (closeDialog)="editAccountVisible = false"
+    (actionFinished)="closeActionAccount()"
+  ></app-form-account>
   <app-views
     [visibleIncome]="visibleViewIncome"
     [income]="incomeToView || undefined"
