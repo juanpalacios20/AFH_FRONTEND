@@ -40,10 +40,20 @@ export class ToolsMaintenanceService extends BaseHttpService {
   pdfMaintenance(maintenance_id: number) {
     const headers = this.getHeaders();
 
-    return this.http.get(`${this.apiUrl}maintenance/get_pdf/${maintenance_id}/`, {
+    return this.http.get(
+      `${this.apiUrl}maintenance/get_pdf/${maintenance_id}/`,
+      {
+        headers: headers,
+        observe: 'response',
+        responseType: 'blob',
+      }
+    );
+  }
+
+  finishMaintenance(maintenance_id: number) {
+    const headers = this.getHeaders();
+    return this.http.put(`${this.apiUrl}maintenance/end/${maintenance_id}/`, {
       headers: headers,
-      observe: 'response',
-      responseType: 'blob',
     });
   }
 }

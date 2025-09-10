@@ -87,6 +87,11 @@ export default class ToolsMaintenanceComponent implements OnInit {
     this.viewDialog = true;
   }
 
+  closeViewDialog(){
+    this.getMainenanceTools();
+    this.viewDialog = false;
+  }
+
   ngOnInit(): void {
     this.getMainenanceTools();
   }

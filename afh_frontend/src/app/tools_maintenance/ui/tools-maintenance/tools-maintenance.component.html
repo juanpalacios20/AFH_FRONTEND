@@ -119,11 +119,6 @@
                   (onClick)="showEditDialog(tool)"
                   styleClass="createButton-lightSerenityGreen"
                 />
-                <p-button
-                  icon="pi pi-trash"
-                  severity="danger"
-                  [disabled]="tool.state === 3 || tool.state === 4"
-                />
               </div>
             </td>
           </tr>
@@ -168,6 +163,6 @@
   <app-view-maintenance
     [visible]="viewDialog"
     [maintenance]="this.maintenanceToView"
-    (closeDialog)="viewDialog = false"
+    (closeDialog)="closeViewDialog()"
   ></app-view-maintenance>
 </div>

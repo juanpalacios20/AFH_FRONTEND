@@ -120,6 +120,7 @@ export default class FormComponent implements OnInit {
       next: (response) => {
         this.localStorageService.removeItem('maintenances');
         this.localStorageService.removeItem('tools');
+        this.localStorageService.removeItem('toolsAvailable');
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
