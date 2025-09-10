@@ -63,18 +63,15 @@
     <div class="mb-4">
       <p-floatlabel variant="on">
         <p-inputnumber
-          [disabled]="this.action === 1"
+          *ngIf="action === 0"
           inputId="integeronly"
+          fluid="true"
           [(ngModel)]="initial_amount"
           [ngClass]="{
             'border-red-500 ng-invalid ng-dirty':
               errorMessage && initial_amount === 0
           }"
-          [class]="
-            this.action === 1
-              ? 'w-full bg-gray-300 text-gray-700 font-medium rounded-lg transition focus:ring-2 focus:ring-primary-900'
-              : 'w-full bg-white serenityBlue font-medium rounded-lg transition focus:ring-2 focus:ring-primary-900'
-          "
+          class="'w-full bg-white serenityBlue font-medium rounded-lg transition focus:ring-2 focus:ring-primary-900'"
           size="large"
         />
         <label for="on_label" class="serenityBlue/10">Monto inicial</label>
@@ -89,7 +86,9 @@
     </div>
 
     <div class="flex justify-end gap-2 mt-10">
-      <p-button styleClass="p-button-secondary" (onClick)="close()"> Cancelar </p-button>
+      <p-button styleClass="p-button-secondary" (onClick)="close()">
+        Cancelar
+      </p-button>
       <p-button
         styleClass="bg-lightSerenityGreen font-medium"
         (onClick)="onSubmit()"

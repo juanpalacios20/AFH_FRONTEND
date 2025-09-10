@@ -77,8 +77,10 @@ export default class ManagementComponent implements OnInit {
   //visualizar
   visibleViewIncome: boolean = false;
   visibleViewExpense: boolean = false;
+  visibleViewAccount: boolean = false;
   incomeToView: income | null = null;
   expenseToView: expense | null = null;
+  accountToView: account | null = null;
   tittleAction: string | undefined;
   infoData: any[] = [];
   displayedColumns: { field: string; header: string }[] = [];
@@ -211,11 +213,18 @@ export default class ManagementComponent implements OnInit {
     this.visibleViewExpense = true;
   }
 
+  openViewAccount(account: account) {
+    this.accountToView = account;
+    this.visibleViewAccount = true;
+  }
+
   closeView() {
     this.incomeToView = null;
     this.expenseToView = null;
+    this.accountToView = null;
     this.visibleViewIncome = false;
     this.visibleViewExpense = false;
+    this.visibleViewAccount = false;
   }
 
   closeActionAccount() {

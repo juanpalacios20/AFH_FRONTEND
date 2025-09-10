@@ -175,15 +175,6 @@ export default class FormComponent {
     if (this.reason !== this.incomeToEdit?.reason) {
       formData.append('reason', this.reason);
     }
-    if (
-      this.selectedTargetAccount?.id.toString() !==
-      this.incomeToEdit?.destination_account
-    ) {
-      formData.append(
-        this.type === 'ingreso' ? 'destination_account' : 'origin_account',
-        this.selectedTargetAccount?.id.toString() || '0'
-      );
-    }
     if (this.selectedPaymentMethod !== this.incomeToEdit?.payment_method) {
       formData.append('payment_method', this.selectedPaymentMethod);
     }

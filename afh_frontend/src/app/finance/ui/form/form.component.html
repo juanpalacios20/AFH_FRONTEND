@@ -227,7 +227,7 @@
       </div>
 
       <div class="flex justify-end gap-2 mt-10">
-        <p-button styleClass="p-button-secondary"> Cancelar </p-button>
+        <p-button styleClass="p-button-secondary" (onClick)="confirmationClose()"> Cancelar </p-button>
         <p-button
           styleClass="bg-lightSerenityGreen font-medium"
           (click)="confirmEvent($event)"

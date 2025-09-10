@@ -221,26 +221,26 @@
           <th class="table-header">Codigo</th>
           <th class="table-header">Nombre</th>
           <th class="table-header">Tipo de cuenta</th>
-          <th class="table-header">Monto inicial</th>
+          <th class="table-header">Monto de la cuenta</th>
           <th class="table-header">Opciones</th>
         </tr>
       </ng-template>
       <ng-template #body let-account let-i="rowIndex">
         <tr>
-          <td class="cursor-pointer" (click)="openViewIncome(account)">
+          <td class="cursor-pointer" (click)="openViewAccount(account)">
             <p class="text-center serenityBlue">{{ i + 1 }}</p>
           </td>
-          <td class="cursor-pointer" (click)="openViewIncome(account)">
+          <td class="cursor-pointer" (click)="openViewAccount(account)">
             <p class="text-center text-darkBlue">
               {{ account.name }}
             </p>
           </td>
-          <td class="cursor-pointer" (click)="openViewIncome(account)">
+          <td class="cursor-pointer" (click)="openViewAccount(account)">
             <p class="text-center serenityBlue">
               {{ account.type === 1 ? "BANCO" : "CAJA" }}
             </p>
           </td>
-          <td class="cursor-pointer" (click)="openViewIncome(account)">
+          <td class="cursor-pointer" (click)="openViewAccount(account)">
             <p class="text-center text-darkBlue">
               {{ "+" + account.initial_amount_formatted }}
             </p>
@@ -344,6 +344,12 @@
   <app-views
     [visibleExpense]="visibleViewExpense"
     [expense]="expenseToView || undefined"
+    [type]="value"
+    (closeDialog)="closeView()"
+  ></app-views>
+  <app-views
+    [visibleAccount]="visibleViewAccount"
+    [account]="accountToView || undefined"
     [type]="value"
     (closeDialog)="closeView()"
   ></app-views>

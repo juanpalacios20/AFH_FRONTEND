@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -42,6 +42,7 @@ import { TitleStrategy } from '@angular/router';
     AutoComplete,
     InputNumber,
     ConfirmDialog,
+    NgIf
   ],
   templateUrl: './form-account.component.html',
   styleUrl: './form-account.component.css',
