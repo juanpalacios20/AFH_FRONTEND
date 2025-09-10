@@ -25,7 +25,14 @@
         <p-floatlabel variant="on" class="w-full md:w-64">
           <p-iconfield>
             <p-inputicon class="pi pi-search" rounded="true" />
-            <input pInputText id="on_label" autocomplete="off" class="w-full" />
+            <input
+              pInputText
+              id="on_label"
+              [(ngModel)]="searchMaintenance"
+              (input)="tt?.filterGlobal(searchMaintenance, 'contains')"
+              autocomplete="off"
+              class="w-full"
+            />
           </p-iconfield>
           <label for="on_label" class="serenityBlue">Buscar herramienta</label>
         </p-floatlabel>
@@ -54,7 +61,7 @@
         [paginator]="true"
         [tableStyle]="{ 'min-width': '50rem' }"
         [rowsPerPageOptions]="[20, 50, 100]"
-        [globalFilterFields]="['name', 'code']"
+        [globalFilterFields]="['tool.name', 'tool.code']"
       >
         <ng-template #header *ngIf="tools.length > 0">
           <tr>
@@ -72,7 +79,7 @@
               class="cursor-pointer serenityBlue"
               (click)="showViewDialog(tool)"
             >
-              <p class="text-center">{{ i + 1 }}</p>
+              <p class="text-center">{{ tool.tool.code }}</p>
             </td>
             <td
               class="cursor-pointer serenityBlue"

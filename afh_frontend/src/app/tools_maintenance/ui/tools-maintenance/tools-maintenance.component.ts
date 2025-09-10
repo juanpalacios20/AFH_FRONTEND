@@ -53,6 +53,7 @@ export default class ToolsMaintenanceComponent implements OnInit {
   viewDialog: boolean = false;
   toolToEdit: ToolsMaintenance | undefined;
   maintenanceToView: ToolsMaintenance | undefined;
+  searchMaintenance: string = '';
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -69,7 +70,6 @@ export default class ToolsMaintenanceComponent implements OnInit {
   }
 
   handleToolEdited() {
-    this.localStorageService.removeItem('maintenances');
     this.getMainenanceTools();
   }
 

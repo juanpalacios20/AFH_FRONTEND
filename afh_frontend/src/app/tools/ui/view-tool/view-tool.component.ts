@@ -4,10 +4,11 @@ import { Dialog } from 'primeng/dialog';
 import { ToolService } from '../../services/tool.service';
 import { Image } from 'primeng/image';
 import { Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-view-tool',
-  imports: [Dialog, ButtonModule, Image],
+  imports: [Dialog, ButtonModule, Image, NgIf],
   templateUrl: './view-tool.component.html',
   styleUrl: './view-tool.component.css',
 })

@@ -102,6 +102,7 @@ export default class FormComponent implements OnInit {
   }
 
   createToolMaintenance() {
+    this.loadingTool = true;
     let maintenanceLS: any[] | null =
       this.localStorageService.getItem('maintenances');
     let data = {
@@ -117,16 +118,14 @@ export default class FormComponent implements OnInit {
     console.log('data', data);
     this.maintenanceService.createToolMaintenance(data).subscribe({
       next: (response) => {
-        console.log('response', response);
+        this.localStorageService.removeItem('maintenances');
+        this.localStorageService.removeItem('tools');
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
           detail: 'Mantenimiento de herramienta creado exitosamente',
         });
-        if (maintenanceLS) {
-          maintenanceLS = [...maintenanceLS, data];
-          this.localStorageService.setItem('maintenances', maintenanceLS);
-        }
+        this.loadingTool = false;
         this.visible = false;
         this.onToolCreated.emit();
         this.close();
@@ -142,6 +141,7 @@ export default class FormComponent implements OnInit {
   }
 
   editToolMaintenance() {
+    this.loadingTool = true;
     let data: any = {};
     if (this.selectedTool && this.toolMaintenance) {
       if (this.selectedTool.id !== this.toolMaintenance.tool.id) {
@@ -159,15 +159,10 @@ export default class FormComponent implements OnInit {
       if (this.observations !== this.toolMaintenance.observations) {
         data.observations = this.observations;
       }
-      console.log(
-        this.next_date?.toISOString().split('T')[0],
-        this.toolMaintenance.next_maintenance_date
-      );
       if (
         this.next_date?.toISOString().split('T')[0] !==
         this.toolMaintenance.next_maintenance_date
       ) {
-        console.log('editando la proxima fecha');
         data.next_maintenance_date = this.next_date
           ?.toISOString()
           .split('T')[0];
@@ -184,11 +179,14 @@ export default class FormComponent implements OnInit {
         .editMaintenance(data, this.toolMaintenance.id)
         .subscribe({
           next: (response) => {
+            this.localStorageService.removeItem('maintenances');
+        this.localStorageService.removeItem('tools');
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
               detail: 'Mantenimiento de herramienta editado exitosamente',
             });
+            this.loadingTool = false;
             this.onEditCreated.emit();
             this.close();
           },

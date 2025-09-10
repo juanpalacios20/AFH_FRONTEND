@@ -11,7 +11,7 @@
 >
   <div class="flex flex-col gap-4">
     <div class="grid grid-cols-2 gap-4">
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
         <span class="font-medium text-darkBlue"
           >Informacion de la herramienta</span
         >
@@ -24,6 +24,14 @@
             alt="Imagen de la herramienta"
             width="250"
           />
+        </div>
+        <div class="flex flex-col">
+          <span class="font-medium text-darkBlue"
+            >Observaciones adicionales</span
+          >
+          <span class="font-normal text-darkBlue"
+            >{{ maintenance?.observations }}
+          </span>
         </div>
       </div>
       <div class="flex flex-col gap-4">
@@ -64,22 +72,29 @@
             {{ maintenance?.user_delivery?.user?.last_name }}
           </span>
         </div>
-      </div>
-      <div class="flex flex-col col-span-2">
-        <span class="font-medium text-darkBlue">Observaciones adicionales</span>
-        <span class="font-normal text-darkBlue"
-          >{{ maintenance?.observations }}
-        </span>
+        <div class="flex flex-col">
+          <span class="font-medium text-darkBlue">Tipo de mantenimiento</span>
+          <span class="font-normal text-darkBlue"
+            >{{ maintenance?.type === 1 ? "Correctivo" : "Preventivo" }}
+          </span>
+        </div>
       </div>
     </div>
-    <div class="w-full">
+    <div class="w-full grid grid-cols-2 gap-4">
       <p-button
         (onClick)="getPDF()"
-        styleClass="createButton-lightSerenityGreen font-medium py-2 rounded-lg transition hover:bg-primary-600 cursor-pointer col-span-2"
+        styleClass=" font-medium py-2 rounded-lg transition border-lightGreen text-darkBlue bg-gray-200 hover:bg-gray-400 cursor-pointer col-span-2"
         fluid="true"
         [loading]="loadingPDF"
       >
         Descargar ticket
+      </p-button>
+      <p-button
+        styleClass="createButton-lightSerenityGreen font-medium py-2 rounded-lg transition hover:bg-primary-800 cursor-pointer col-span-2"
+        fluid="true"
+        [loading]="loadingPDF"
+      >
+        Finalizar mantenimiento
       </p-button>
     </div>
   </div>
