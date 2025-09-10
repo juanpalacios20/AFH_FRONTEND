@@ -32,4 +32,11 @@ export class CustomerService extends BaseHttpService{
             }
         ))
     }
+
+    getActa(id: number): Observable<Blob> {
+        return this.http.get(`${this.apiUrl}deliverycertificate/pdf/${id}/`, {
+          responseType: 'blob' 
+        });
+      }
+      
 }
