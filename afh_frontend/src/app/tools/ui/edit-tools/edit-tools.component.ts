@@ -69,10 +69,9 @@ export class EditToolsComponent implements OnInit {
 
   verify() {
     if (
-      !this.tool.name ||
-      !this.tool.marca ||
-      this.tool.state === null ||
-      !this.selectedFile
+      this.tool.name === '' ||
+      this.tool.marca === '' ||
+      this.tool.state === null
     ) {
       this.errorMessage = 'todos los campos son requeridos';
     } else {
@@ -81,6 +80,7 @@ export class EditToolsComponent implements OnInit {
   }
 
   showSuccess() {
+    console.log('herramienta a editar', this.tool);
     this.verify();
     if (this.errorMessage !== '') {
       this.messageService.add({
@@ -128,6 +128,7 @@ export class EditToolsComponent implements OnInit {
             summary: 'Actualizado',
             detail: 'La herramienta ha sido actualizada con éxito',
           });
+          localStorage.removeItem('tools');
           this.closeDialog.emit();
           this.onToolEdited.emit();
           this.loadingEdit = false;

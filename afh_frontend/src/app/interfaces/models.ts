@@ -1,3 +1,10 @@
+export interface User {
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
 export interface Item {
   id: number;
   description: string;
@@ -189,4 +196,43 @@ export interface WorkAdvanceResponse {
 export interface Notification {
   title: string;
   content: string;
+}
+
+export interface Tool {
+  id: number;
+  name: string;
+  code: string;
+  state: number;
+  image: string;
+  marca: string;
+}
+
+export interface ToolsMaintenance {
+  id: number;
+  tool: Tool;
+  tool_id: number;
+  date: string;
+  maintenance_days: number;
+  next_maintenance_date: string;
+  observations: string;
+  maintenance_technician_name: string;
+  type: number;
+  email_user: string;
+  user_delivery: userDelivery;
+  delivery_date: string;
+}
+
+export interface userDelivery {
+  id: number;
+  user: User;
+  role: number;
+}
+
+export interface MaintenanceData {
+  maintenance_technician_name: string;
+  tool_id: number;
+  date?: string; // opcional si usas auto_now_add
+  maintenance_days: number;
+  observations?: string;
+  next_maintenance_date: string;
 }

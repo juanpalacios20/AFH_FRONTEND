@@ -21,6 +21,9 @@ import { ViewToolComponent } from '../view-tool/view-tool.component';
 import { AuthService } from '../../../shared/auth/data_access/auth.service';
 import { GlobalService } from '../../../global.service';
 import { LocalStorageService } from '../../../localstorage.service';
+import { Router } from '@angular/router';
+import FormComponent from '../../../tools_maintenance/ui/form/form.component';
+import { Tool } from '../../../interfaces/models';
 
 @Component({
   selector: 'app-management-tools',
@@ -43,6 +46,7 @@ import { LocalStorageService } from '../../../localstorage.service';
     EditToolsComponent,
     CreateToolsComponent,
     ViewToolComponent,
+    FormComponent
   ],
   templateUrl: './management-tools.component.html',
   styleUrl: './management-tools.component.css',
@@ -59,6 +63,8 @@ export default class ManagementToolsComponent implements OnInit {
   timestamp = Date.now();
   loadingTools = false;
   errorDelete: boolean = false;
+  showCreateMaintenanceDialog: boolean = false;
+  toolToMaintenance: Tool | undefined;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -66,7 +72,8 @@ export default class ManagementToolsComponent implements OnInit {
     private toolService: ToolService,
     private authService: AuthService,
     private globalService: GlobalService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private router: Router
   ) {
     this.globalService.changeTitle('AFH: Herramientas');
   }
@@ -124,6 +131,8 @@ export default class ManagementToolsComponent implements OnInit {
         return 'warn';
       case 4:
         return 'secondary';
+      case 5:
+        return 'warn';
       default:
         return 'secondary'; // Map "unknown" to a valid type
     }
@@ -139,6 +148,8 @@ export default class ManagementToolsComponent implements OnInit {
         return 'EN USO';
       case 4:
         return 'EN RESERVA';
+      case 5:
+        return 'EN MANTENIMIENTO';
       default:
         return 'Estado desconocido';
     }
@@ -211,5 +222,15 @@ export default class ManagementToolsComponent implements OnInit {
       summary: 'Ha ocurrido un error',
       detail: 'Ha ocurrido un error, intente nuevamente',
     });
+  }
+
+  handleNewMaintenance(tool: Tool) {
+    this.toolToMaintenance = tool;
+    this.showCreateMaintenanceDialog = true;
+  }
+
+  handleMaintenanceCreated() {
+    this.showCreateMaintenanceDialog = false;
+    this.router.navigate(['/management-tools-maintenance']);
   }
 }

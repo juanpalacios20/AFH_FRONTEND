@@ -12,6 +12,8 @@ import { ToastModule } from 'primeng/toast';
 import { ToolService } from '../../services/tool.service';
 import { Router } from '@angular/router';
 import { Image } from 'primeng/image';
+import { LocalStorageService } from '../../../localstorage.service';
+import { Tool } from '../../../interfaces/models';
 
 interface State {
   name: string;
@@ -54,12 +56,15 @@ export class CreateToolsComponent {
   errorBrandMessage: string = '';
   errorImageMessage: string = '';
   loadingTool: boolean = false;
+  tools: Tool[] | undefined;
+  tools_Available: Tool[] | undefined;
 
   constructor(
     private confirmationService: ConfirmationService,
     private router: Router,
     private messageService: MessageService,
-    private toolService: ToolService
+    private toolService: ToolService,
+    private localStorageService: LocalStorageService
   ) {}
 
   close() {
@@ -116,11 +121,12 @@ export class CreateToolsComponent {
             summary: 'Creada',
             detail: 'La herramienta ha sido creada con éxito',
           });
+          localStorage.removeItem('tools');
+          this.localStorageService.removeItem('toolsAvailable');
           this.closeDialog.emit();
           this.resetForm();
           this.onToolCreated.emit();
           this.loadingTool = false;
-          localStorage.removeItem('tools');
         },
         error: (err) => {
           this.loadingTool = false;
