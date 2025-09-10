@@ -1,40 +1,29 @@
-import { NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { expense, income } from '../../../interfaces/models';
+import { account, expense, income } from '../../../interfaces/models';
 import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-views',
-  imports: [NgIf, Dialog],
+  imports: [NgIf, Dialog, DatePipe],
   templateUrl: './views.component.html',
   styleUrl: './views.component.css',
 })
 export default class ViewsComponent {
   @Input() visibleIncome: boolean = false;
   @Input() visibleExpense: boolean = false;
+  @Input() visibleAccount: boolean = false;
   @Input() income?: income;
   @Input() expense?: expense;
+  @Input() account?: account;
   @Input() type: string = '';
   @Output() closeDialog = new EventEmitter<void>();
   visible: boolean = false;
 
-  account(): string {
-    const account =
-      this.type === 'ingreso'
-        ? this.income?.destination_account
-        : this.expense?.origin_account;
-    if (account === 1) {
-      return 'CUENTA BANCARIA';
-    }
-    if (account === 2) {
-      return 'CAJA PRINCIPAL';
-    }
-    return 'No se encontro la cuenta';
-  }
-
   close() {
     this.visibleIncome = false;
     this.visibleExpense = false;
+    this.visibleAccount = false;
     this.closeDialog.emit();
   }
 
@@ -43,7 +32,10 @@ export default class ViewsComponent {
       this.visible = true;
     }
     if (this.visibleExpense) {
-      this.visible = true;
+      this.visible = true; 
+    }
+    if (this.visibleAccount) {
+      this.visible = true; 
     }
   }
 }
