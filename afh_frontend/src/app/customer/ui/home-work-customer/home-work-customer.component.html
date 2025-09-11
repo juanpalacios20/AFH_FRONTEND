@@ -91,6 +91,16 @@
       <p-metergroup [value]="value" />
     </div>
 
+    <section class="mb-5 p-4 rounded-3xl shadow-xl border border-slate-200 overflow-hidden mt-5 flex justify-center items-center text-center" *ngIf="work_progress?.state === 3 && work_progress?.progress_percentage === 100">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="text-lg font-bold serenityBlue">Acta de entrega</h1>
+          <p class="text-sm text-gray-500">El trabajo ha sido finalizado con éxito, a continuación podrás descargar el acta de entrega.</p>
+          <p-button label="Descargar acta" icon="pi pi-download" (onClick)="downloadActa()" />
+        </div>
+      </div>
+    </section>
+
     <!-- Timeline Section -->
     <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
       <div class="p-4 sm:p-6 md:p-8">
@@ -174,6 +184,8 @@
         </p-timeline>
       </div>
     </div>
+
+
 
 
     <!-- Footer Info -->
