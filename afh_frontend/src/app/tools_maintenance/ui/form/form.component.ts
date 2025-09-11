@@ -17,7 +17,7 @@ import { Tool, ToolsMaintenance } from '../../../interfaces/models';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FluidModule } from 'primeng/fluid';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { InputNumber, InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { LocalStorageService } from '../../../localstorage.service';
@@ -46,6 +46,7 @@ interface typeMaintenance {
     InputNumberModule,
     TextareaModule,
     SelectModule,
+    InputNumber,
   ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css',
@@ -93,6 +94,16 @@ export default class FormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.verifyForm();
+    if (this.errorMessage !== '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Todos los campos son requeridos',
+      });
+      return;
+    }
+
     if (this.action === 0) {
       this.createToolMaintenance();
     }
@@ -181,7 +192,7 @@ export default class FormComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.localStorageService.removeItem('maintenances');
-        this.localStorageService.removeItem('tools');
+            this.localStorageService.removeItem('tools');
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
@@ -230,7 +241,6 @@ export default class FormComponent implements OnInit {
   ngTypesChanges() {
     if (this.selectedType.length > 1) {
       this.selectedType.splice(0, 1);
-      console.log('info', this.selectedType);
     }
   }
 
@@ -250,13 +260,6 @@ export default class FormComponent implements OnInit {
   }
 
   loadEditData() {
-    console.log(
-      'fecha',
-      this.toolMaintenance?.next_maintenance_date,
-      this.toolMaintenance?.next_maintenance_date
-        ? new Date(this.toolMaintenance.next_maintenance_date)
-        : undefined
-    );
     if (this.toolMaintenance) {
       this.selectedTool = this.toolMaintenance.tool;
       this.responsible = this.toolMaintenance.maintenance_technician_name;
@@ -295,6 +298,22 @@ export default class FormComponent implements OnInit {
         this.actionTittle = 'Editar matenimiento';
         this.loadEditData();
       }
+    }
+  }
+
+  verifyForm() {
+    this.errorMessage = '';
+    if (
+      this.selectedTool === undefined ||
+      this.responsible === '' ||
+      this.next_date === undefined ||
+      this.start_date === undefined ||
+      this.duration === null ||
+      this.observations === '' ||
+      this.selectedType.length === 0 ||
+      this.selectedType === undefined
+    ) {
+      this.errorMessage = 'Campo requerido';
     }
   }
 }

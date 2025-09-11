@@ -42,7 +42,7 @@ import { TitleStrategy } from '@angular/router';
     AutoComplete,
     InputNumber,
     ConfirmDialog,
-    NgIf
+    NgIf,
   ],
   templateUrl: './form-account.component.html',
   styleUrl: './form-account.component.css',
@@ -70,6 +70,15 @@ export default class FormAccountComponent implements OnInit {
   ) {}
 
   onSubmit() {
+    this.verifyForm();
+    if (this.errorMessage !== '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Todos los campos son requeridos',
+      });
+      return;
+    }
     if (this.action === 0) {
       this.createAccount();
     }
@@ -182,7 +191,16 @@ export default class FormAccountComponent implements OnInit {
     }
   }
 
-  verifyForm() {}
+  verifyForm() {
+    this.errorMessage = '';
+    if (
+      this.nameAccount === '' ||
+      this.selectedTargetAccount === '' ||
+      this.initial_amount === 0
+    ) {
+      this.errorMessage = 'Campo requerido';
+    }
+  }
 
   ngOnInit() {
     if (this.action === 0) {
@@ -203,6 +221,10 @@ export default class FormAccountComponent implements OnInit {
   resetForm() {
     this.actionTitle = '';
     this.visible = false;
+    this.nameAccount = '';
+    this.selectedTargetAccount = '';
+    this.filteredTargetAccount = [];
+    this.initial_amount = undefined;
   }
 
   close() {
