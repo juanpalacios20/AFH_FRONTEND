@@ -27,13 +27,13 @@
           [(ngModel)]="nameAccount"
           [ngClass]="{
             'border-red-500 ng-invalid ng-dirty':
-              errorMessage && nameAccount === ''
+              errorMessage && nameAccount === undefined
           }"
           class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         />
         <label class="serenityBlue/10">Nombre de la cuenta </label>
       </p-floatlabel>
-      <small class="text-red-600" *ngIf="errorMessage && nameAccount === ''">
+      <small class="text-red-600" *ngIf="errorMessage && nameAccount === undefined">
         {{ errorMessage }}
       </small>
     </div>
@@ -60,27 +60,29 @@
         {{ errorMessage }}
       </small>
     </div>
-    <div class="mb-4">
+    <div class="mb-4" *ngIf="action === 0">
       <p-floatlabel variant="on">
         <p-inputnumber
-          *ngIf="action === 0"
           inputId="integeronly"
           fluid="true"
           [(ngModel)]="initial_amount"
           [ngClass]="{
             'border-red-500 ng-invalid ng-dirty':
-              errorMessage && initial_amount === 0
+              errorMessage && (initial_amount ?? 0) < 1
           }"
           class="'w-full bg-white serenityBlue font-medium rounded-lg transition focus:ring-2 focus:ring-primary-900'"
           size="large"
         />
         <label for="on_label" class="serenityBlue/10">Monto inicial</label>
       </p-floatlabel>
-      <small class="text-darkBlue font-medium">
+      <small class="text-darkBlue font-medium" *ngIf="errorMessage === ''">
         Atención: el monto inicial no se puede cambiar posteriormente a la
         creacion de la cuenta.
       </small>
-      <small class="text-red-600" *ngIf="errorMessage && initial_amount === 0">
+      <small
+        class="text-red-600"
+        *ngIf="errorMessage && (initial_amount ?? 0) < 1"
+      >
         {{ errorMessage }}
       </small>
     </div>

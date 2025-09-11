@@ -20,6 +20,10 @@
           filterBy="name"
           [showClear]="true"
           placeholder="Seleccione la herramienta"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && selectedTool === undefined
+          }"
           class="w-full"
           fluid="true"
         >
@@ -45,6 +49,13 @@
           </ng-template>
         </p-select>
       </div>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && selectedTool === undefined"
+      >
+        {{ errorMessage }}
+      </small>
     </div>
     <div class="flex flex-col gap-4">
       <label for="icondisplay" class="font-bold block">
@@ -57,11 +68,22 @@
             name="group"
             [value]="type"
             [(ngModel)]="selectedType"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && selectedType.length === 0
+            }"
             (ngModelChange)="ngTypesChanges()"
           />
           <label [for]="type.key" class="ml-2"> {{ type.name }} </label>
         </div>
       </div>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && selectedType.length === 0"
+      >
+        {{ errorMessage }}
+      </small>
     </div>
     <div class="justify-center">
       <label for="marca" class="font-bold block"
@@ -72,18 +94,10 @@
         id="email"
         [(ngModel)]="email"
         [ngModelOptions]="{ standalone: true }"
-        [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessage }"
         class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         autocomplete="on"
         required="true"
       />
-      <small
-        id="email-help"
-        class="text-red-600 serenityBlue"
-        *ngIf="errorMessage"
-      >
-        {{ errorMessage }}
-      </small>
     </div>
     <div class="flex flex-col gap-4 md:flex-grap">
       <div class="justify-center">
@@ -95,12 +109,20 @@
             [(ngModel)]="start_date"
             [iconDisplay]="'input'"
             [showIcon]="true"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && start_date === undefined
+            }"
             inputId="icondisplay"
             fluid="true"
             dateFormat="dd/mm/yy"
           />
         </div>
-        <small id="email-help" class="text-red-600" *ngIf="errorMessage">
+        <small
+          id="email-help"
+          class="text-red-600"
+          *ngIf="errorMessage && start_date === undefined"
+        >
           {{ errorMessage }}
         </small>
       </div>
@@ -111,11 +133,22 @@
         <p-inputnumber
           [(ngModel)]="duration"
           inputId="minmax"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && (duration === null || duration === 0)
+          }"
           mode="decimal"
           [min]="0"
           [max]="100"
         />
       </div>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && (duration === null  || duration === 0)"
+      >
+        {{ errorMessage }}
+      </small>
     </div>
 
     <div class="justify-center">
@@ -127,15 +160,18 @@
         id="responsible"
         [(ngModel)]="responsible"
         [ngModelOptions]="{ standalone: true }"
-        [ngClass]="{ 'ng-invalid ng-dirty border-red-500': errorMessage }"
+        [ngClass]="{
+          'ng-invalid ng-dirty border-red-500':
+            errorMessage && responsible === ''
+        }"
         class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
         autocomplete="on"
         required="true"
       />
       <small
         id="email-help"
-        class="text-red-600 serenityBlue"
-        *ngIf="errorMessage"
+        class="text-red-600"
+        *ngIf="errorMessage && responsible === ''"
       >
         {{ errorMessage }}
       </small>
@@ -149,12 +185,20 @@
           [(ngModel)]="next_date"
           [iconDisplay]="'input'"
           [showIcon]="true"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && next_date === undefined
+          }"
           inputId="icondisplay"
           fluid="true"
           dateFormat="dd/mm/yy"
         />
       </div>
-      <small id="email-help" class="text-red-600" *ngIf="errorMessage">
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && next_date === undefined"
+      >
         {{ errorMessage }}
       </small>
     </div>
@@ -167,11 +211,19 @@
           rows="5"
           cols="30"
           pTextarea
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && observations === ''
+          }"
           [(ngModel)]="observations"
           fluid="true"
         ></textarea>
       </div>
-      <small id="email-help" class="text-red-600" *ngIf="errorMessage">
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && observations === ''"
+      >
         {{ errorMessage }}
       </small>
     </div>
