@@ -236,3 +236,35 @@ export interface MaintenanceData {
   observations?: string;
   next_maintenance_date: string;
 }
+
+// Interfaces para el Home
+export interface HomeAccount {
+  id: number;
+  name: string;
+  type: string;
+  balance: number;
+  balanceFormatted: string;
+}
+
+export interface HomeWorkProgress {
+  id: number;
+  workOrder: OrderWork;
+  progressPercentage: number;
+  state: number;
+  description: string;
+}
+
+export interface HomeTool {
+  id: number;
+  name: string;
+  code: string;
+  marca: string;
+  image: string;
+  state: number;
+}
+
+export interface HomeData {
+  accounts: HomeAccount[];
+  workProgress: HomeWorkProgress[];
+  tools: HomeTool[];
+}

@@ -4,6 +4,7 @@ import { AuthService } from '../../../shared/auth/data_access/auth.service';
 import { HomeService } from '../../service/home.service';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonModule } from '@angular/common';
+import { HomeData } from '../../../interfaces/models';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,7 @@ import { CommonModule } from '@angular/common';
 export class HomeComponent implements OnInit {
 
   name: string = '';
-  homeData: any = null;
+  homeData: HomeData | null = null;
   loading: boolean = true;
 
   constructor(

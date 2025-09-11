@@ -6,6 +6,7 @@ import { map } from "rxjs/operators";
 import { FinanceService } from "../../finance/services/finance.service";
 import { progressOrderService } from "../../order_works/services/progress_work.service";
 import { ToolService } from "../../tools/services/tool.service";
+import { HomeData, HomeAccount, HomeWorkProgress, HomeTool } from "../../interfaces/models";
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class HomeService extends BaseHttpService {
     super();
   }
 
-  getHomeData(): Observable<any> {
+  getHomeData(): Observable<HomeData> {
     return forkJoin({
       accounts: this.financeService.getAccounts(),
       workProgress: this.progressService.getProgress(),
@@ -30,20 +31,20 @@ export class HomeService extends BaseHttpService {
     );
   }
 
-  private processHomeData(data: any): any {
+  private processHomeData(data: any): HomeData {
     const accounts = data.accounts || [];
     const workProgress = data.workProgress || [];
     const tools = data.tools || [];
 
     return {
-      accounts: accounts.map((account: any) => ({
+      accounts: accounts.map((account: any): HomeAccount => ({
         id: account.id,
         name: account.name,
         type: account.type_display,
         balance: account.initial_amount,
         balanceFormatted: account.initial_amount_formatted
       })),
-      workProgress: workProgress.map((progress: any) => ({
+      workProgress: workProgress.map((progress: any): HomeWorkProgress => ({
         id: progress.id,
         workOrder: progress.work_order,
         progressPercentage: progress.progress_percentage,
@@ -51,8 +52,8 @@ export class HomeService extends BaseHttpService {
         description: progress.work_order?.description || 'Sin descripción'
       })),
       tools: tools
-        .filter((tool: any) => tool.state === 3) // Solo herramientas en estado 1
-        .map((tool: any) => ({
+        .filter((tool: any) => tool.state === 3) // Solo herramientas en estado 3
+        .map((tool: any): HomeTool => ({
           id: tool.id,
           name: tool.name,
           code: tool.code,
