@@ -5,6 +5,7 @@ import { HomeService } from '../../service/home.service';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonModule } from '@angular/common';
 import { HomeData } from '../../../interfaces/models';
+import { LocalStorageService } from '../../../localstorage.service';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private homeService: HomeService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private localStorageService: LocalStorageService
   ) {
     this.name = cookieService.get('name');
   }
@@ -31,9 +33,16 @@ export class HomeComponent implements OnInit {
 
   loadHomeData() {
     this.loading = true;
+    const homeDataLS: HomeData | null = this.localStorageService.getItem('homeData');
+    if (homeDataLS !== null) {
+      this.homeData = homeDataLS;
+      this.loading = false;
+      return;
+    }
     this.homeService.getHomeData().subscribe({
       next: (data) => {
         this.homeData = data;
+        this.localStorageService.setItem('homeData', this.homeData);
         this.loading = false;
       },
       error: (error) => {
@@ -54,7 +63,7 @@ export class HomeComponent implements OnInit {
   getProgressColor(percentage: number): string {
     if (percentage < 30) return 'bg-red-500';
     if (percentage < 70) return 'bg-yellow-500';
-    return 'bg-green-500';
+    return 'bg-lightGreen';
   }
 
   getStateText(state: number): string {
@@ -68,9 +77,9 @@ export class HomeComponent implements OnInit {
 
   getStateColor(state: number): string {
     switch(state) {
-      case 1: return 'bg-blue-100 text-blue-800';
+      case 1: return 'bg-lightGreen text-darkBlue';
       case 2: return 'bg-yellow-100 text-yellow-800';
-      case 3: return 'bg-green-100 text-green-800';
+      case 3: return 'bg-lightGreen text-darkBlue';
       default: return 'bg-gray-100 text-gray-800';
     }
   }

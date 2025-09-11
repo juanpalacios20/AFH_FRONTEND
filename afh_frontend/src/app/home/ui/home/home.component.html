@@ -3,15 +3,18 @@
     
     <!-- Sección de Bienvenida -->
     <section class="pt-20 px-6 mb-8">
-        <div class="welcome-section section-card fade-in rounded-lg shadow-sm p-8 text-center">
-            <h1 class="text-3xl font-bold text-darkBlue mb-2">¡Bienvenido a AFH Metalmecánicos!</h1>
-            <p class="text-lg text-gray-600">Hola {{name}}, aquí tienes un resumen de tu empresa</p>
+        <div class="welcome-section section-card fade-in rounded-lg shadow-sm p-8 text-center bg-gradient-to-r from-darkBlue to-blue-800">
+            <div class="flex flex-col items-center">
+                <img src="resource/logoazul.png" alt="AFH Metalmecánicos Logo" class="w-24 h-24 mb-4 object-contain">
+                <h1 class="text-3xl font-bold text-darkBlue mb-2">¡Bienvenido a AFH Metalmecánicos!</h1>
+                <p class="text-lg text-darkBlue">Hola {{name}}, aquí tienes un resumen de tu empresa</p>
+            </div>
         </div>
     </section>
 
     <!-- Loading State -->
     <div *ngIf="loading" class="flex justify-center items-center py-20">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lightGreen"></div>
     </div>
 
     <!-- Contenido Principal -->
@@ -20,8 +23,8 @@
         <!-- Sección de Progreso de Trabajos -->
         <section>
             <div class="section-card fade-in bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h2 class="text-2xl font-bold text-darkBlue mb-6 flex items-center">
+                    <svg class="w-6 h-6 text-lightGreen mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Progreso de Trabajos
@@ -36,12 +39,12 @@
                          class="progress-card border border-gray-200 rounded-lg p-4">
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-900 mb-1">
+                                <h3 class="font-semibold text-darkBlue mb-1">
                                     Trabajo para {{progress.workOrder.quote.customer.name}}
                                 </h3>
                                 <p class="text-sm text-gray-600">{{progress.description}}</p>
                             </div>
-                            <span class="status-badge px-2 py-1 text-xs rounded-full" [class]="getStateColor(progress.state)">
+                            <span class="status-badge px-2 py-1 text-xs rounded-full font-semibold" [class]="getStateColor(progress.state)">
                                 {{getStateText(progress.state)}}
                             </span>
                         </div>
@@ -67,8 +70,8 @@
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Sección de Cuentas -->
             <div class="section-card fade-in bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h2 class="text-2xl font-bold text-darkBlue mb-6 flex items-center">
+                    <svg class="w-6 h-6 text-lightGreen mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                     Cuentas Financieras
@@ -82,12 +85,12 @@
                     <div *ngFor="let account of homeData.accounts | slice:0:3" 
                          class="account-card border border-gray-200 rounded-lg p-4">
                         <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-semibold text-gray-900">{{account.name}}</h3>
-                            <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+                            <h3 class="font-semibold text-darkBlue">{{account.name}}</h3>
+                            <span class="text-xs px-2 py-1 bg-lightGreen text-darkBlue rounded-full font-semibold">
                                 {{account.type}}
                             </span>
                         </div>
-                        <div class="text-2xl font-bold text-green-600">
+                        <div class="text-2xl font-bold text-lightGreen">
                             {{formatCurrency(account.balance)}}
                         </div>
                     </div>
@@ -96,8 +99,8 @@
 
             <!-- Sección de Vales de Herramientas -->
             <div class="section-card fade-in bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <svg class="w-6 h-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h2 class="text-2xl font-bold text-darkBlue mb-6 flex items-center">
+                    <svg class="w-6 h-6 text-lightGreen mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
@@ -113,9 +116,9 @@
                          class="tool-card border border-gray-200 rounded-lg p-4">
                         <div class="flex items-start justify-between mb-3">
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-900 mb-1">{{tool.name}}</h3>
+                                <h3 class="font-semibold text-darkBlue mb-1">{{tool.name}}</h3>
                                 <p class="text-sm text-gray-600 mb-2">{{tool.marca}}</p>
-                                <span class="text-xs px-2 py-1 bg-orange-100 text-orange-800 rounded-full">
+                                <span class="text-xs px-2 py-1 bg-lightGreen text-darkBlue rounded-full font-semibold">
                                     Código: {{tool.code}}
                                 </span>
                             </div>
@@ -130,7 +133,7 @@
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-xs text-gray-500">Estado: Activo</span>
-                            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                            <span class="text-xs px-2 py-1 bg-lightGreen text-darkBlue rounded-full font-semibold">
                                 Disponible
                             </span>
                         </div>
