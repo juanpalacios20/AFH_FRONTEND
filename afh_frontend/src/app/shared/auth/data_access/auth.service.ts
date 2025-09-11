@@ -24,6 +24,7 @@ export class AuthService extends BaseHttpService {
         this.cookieService.set('csrf_token', response.csrf_token, 1, '/');
         this.cookieService.set('role', response.role, 1, '/');
         this.cookieService.set('email', email, 1, '/');
+        this.cookieService.set('name', response.user.user.first_name, 1, '/');
         this.authStatus.next(true);
       })
     );
@@ -40,6 +41,7 @@ export class AuthService extends BaseHttpService {
         this.cookieService.delete('csrf_token', '/');
         this.cookieService.delete('role', '/');
         this.cookieService.delete('email', '/');
+        this.cookieService.delete('name', '/');
         this.authStatus.next(false);
       }));
   }
