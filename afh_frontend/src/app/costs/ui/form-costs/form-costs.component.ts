@@ -105,6 +105,7 @@ export default class FormCostsComponent {
     'Docenas',
     'Cajas',
     'Pares',
+    'Otro',
   ];
 
   constructor(
@@ -357,7 +358,7 @@ export default class FormCostsComponent {
   }
 
   loadOrderWorks() {
-    this.workReportService.getQuotesWithoutReport().subscribe({
+    this.costService.getCostsWithoutCosts().subscribe({
       next: (response) => {
         this.orderWorks = response;
       },

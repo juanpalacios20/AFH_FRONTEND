@@ -22,6 +22,14 @@ export class CostService extends BaseHttpService {
     return this.http.get<any>(`${this.apiUrl}costs/get/`, { headers });
   }
 
+  getCostsWithoutCosts() {
+    const headers = this.getHeaders();
+    return this.http.get<any>(
+      `${this.apiUrl}workorder/getworkorderwhitoutcosts/`,
+      { headers }
+    );
+  }
+
   createCosts(data: any) {
     const headers = this.getHeaders();
     return this.http.post(`${this.apiUrl}costs/add/`, data, {
