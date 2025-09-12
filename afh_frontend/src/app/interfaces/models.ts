@@ -237,6 +237,7 @@ export interface MaintenanceData {
   next_maintenance_date: string;
 }
 
+
 // Interfaces para el Home
 export interface HomeAccount {
   id: number;
@@ -268,3 +269,12 @@ export interface HomeData {
   workProgress: HomeWorkProgress[];
   tools: HomeTool[];
 }
+
+export interface Costs {
+  id: number;
+  items: Option
+  work_order: OrderWork
+  total_value: number
+  get_total_value_formatted: string;
+}
+

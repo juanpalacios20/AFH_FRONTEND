@@ -25,6 +25,8 @@ import { HomeWorkCustomerComponent } from './customer/ui/home-work-customer/home
 import { AdvancesComponent } from './customer/ui/advances/advances.component';
 import ToolsMaintenanceComponent from './tools_maintenance/ui/tools-maintenance/tools-maintenance.component';
 import { HomeComponent } from './home/ui/home/home.component';
+import ManagementCostsComponent from './costs/ui/management-costs/management-costs.component';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -108,5 +110,10 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'home', component: HomeComponent },
+  {
+    path: 'management-costs',
+    component: ManagementCostsComponent,
+    canActivate: [AuthGuard],
+  },
   { path: '**', redirectTo: 'login' },
 ];
