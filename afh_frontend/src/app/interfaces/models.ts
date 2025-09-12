@@ -236,3 +236,11 @@ export interface MaintenanceData {
   observations?: string;
   next_maintenance_date: string;
 }
+
+export interface Costs {
+  id: number;
+  items: Option
+  work_order: OrderWork
+  total_value: number
+  get_total_value_formatted: string;
+}

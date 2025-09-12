@@ -1,0 +1,152 @@
+<div class="relative min-h-screen flex flex-col">
+  <app-menu class="absolute top-0 left-0 p-4"></app-menu>
+  <p-toast position="top-right"></p-toast>
+
+  <div class="flex-1 w-full p-5 pt-24">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold serenityGreen">
+        AFH: Administración de los costos de una orden
+      </h1>
+    </div>
+
+    <div class="flex justify-between items-center mb-4 flex-wrap gap-4">
+      <div class="w-full md:w-auto">
+        <p-floatlabel variant="on" fluid="true" class="w-full">
+          <p-iconfield>
+            <p-inputicon class="pi pi-search" rounded="true" />
+            <input
+              fluid="true"
+              pInputText
+              id="on_label"
+              [(ngModel)]="costToSearch"
+              (input)="tr?.filterGlobal(costToSearch, 'contains')"
+              class="w-full serenityBlue focus:ring-2 focus:ring-primary-900"
+              autocomplete="off"
+            />
+          </p-iconfield>
+          <label for="on_label">Buscar orden generada</label>
+        </p-floatlabel>
+        <small id="search-help" class="text-gray-500">
+          Busca por codigo de orden a la que pertenece
+        </small>
+      </div>
+
+      <div>
+        <p-button
+          icon="pi pi-plus"
+          label="Generar nuevo costo"
+          (click)="showCreateNewCost()"
+          rounded="true"
+          styleClass="w-full createButton-lightSerenityGreen"
+        ></p-button>
+      </div>
+    </div>
+
+    <!-- Confirmación de eliminación -->
+    <p-confirmdialog></p-confirmdialog>
+
+    <div class="overflow-auto">
+      <p-table
+        #tr
+        [rows]="20"
+        [paginator]="true"
+        [value]="costs"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowsPerPageOptions]="[20, 50, 100]"
+        [globalFilterFields]="[
+          'work_order.start_date',
+          'work_order.Quotes.customer.name'
+        ]"
+      >
+        <ng-template #header *ngIf="costs.length > 0">
+          <tr>
+            <th class="table-header">Orden a la que pertenece</th>
+            <th class="table-header">Costo total</th>
+            <th class="table-header">Valor total de la orden</th>
+            <th class="table-header">Balance</th>
+            <th class="table-header">Opciones</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-cost let-i="rowIndex">
+          <tr>
+            <td class="cursor-pointer" (click)="openView(cost)">
+              <p class="text-center serenityBlue">
+                {{ cost.work_order.quote.code }}
+              </p>
+            </td>
+            <td class="cursor-pointer" (click)="openView(cost)">
+              <p class="text-center serenityBlue">
+                {{ cost.items.subtotal }}
+              </p>
+            </td>
+            <td class="cursor-pointer" (click)="openView(cost)">
+              <p class="text-center serenityBlue">
+                {{ cost.work_order.quote.total_value }}
+              </p>
+            </td>
+            <td class="cursor-pointer" (click)="openView(cost)">
+              <p class="text-center serenityBlue">
+                {{
+                  balance(
+                    cost.items.subtotal,
+                    cost.work_order.quote.total_value
+                  )
+                }}
+              </p>
+            </td>
+            <td>
+              <div class="card flex justify-center gap-2">
+                <p-button
+                  icon="pi pi-pencil"
+                  styleClass="createButton-lightSerenityGreen"
+                  (click)="showEditDialog(cost)"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template
+          #emptymessage
+          *ngIf="costs.length === 0 && loadingCost === false"
+        >
+          <tr>
+            <td colspan="5" class="text-center text-gray-600">
+              No hay información para mostrar
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template
+          #emptymessage
+          *ngIf="costs.length === 0 && loadingCost === true"
+        >
+          <tr>
+            <td colspan="5" class="text-center text-gray-600">
+              Cargando información...
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <app-form-costs
+    [visible]="createVisible"
+    [action]="0"
+    (closeDialog)="createVisible = false"
+    (handleCreated)="closeCreateNewCost()"
+  />
+  <app-form-costs
+    [visible]="editVisible"
+    [action]="1"
+    [costToEdit]="costToEdit"
+    (closeDialog)="editVisible = false"
+    (handleCreated)="closeCreateNewCost()"
+  />
+  <app-view-costs
+    [visible]="viewVisible"
+    [cost]="costToView"
+    (closeDialog)="viewVisible = false"
+  />
+</div>

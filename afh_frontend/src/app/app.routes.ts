@@ -24,6 +24,7 @@ import { LoginCustomerComponent } from './customer/ui/login/login-customer/login
 import { HomeWorkCustomerComponent } from './customer/ui/home-work-customer/home-work-customer.component';
 import { AdvancesComponent } from './customer/ui/advances/advances.component';
 import ToolsMaintenanceComponent from './tools_maintenance/ui/tools-maintenance/tools-maintenance.component';
+import ManagementCostsComponent from './costs/ui/management-costs/management-costs.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -104,6 +105,11 @@ export const routes: Routes = [
   {
     path: 'progressOrder/info/create/:id',
     component: FormAdvanceComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'management-costs',
+    component: ManagementCostsComponent,
     canActivate: [AuthGuard],
   },
   { path: '**', redirectTo: 'login' },
