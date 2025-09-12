@@ -1,0 +1,100 @@
+<p-dialog
+  [header]="'Información del costo ' + cost?.work_order?.quote?.code"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '60vw', color: '#2f7d3a' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <!-- ======= Opciones de la Cotización ======= -->
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-3 gap-4">
+      <div class="flex flex-wrap">
+        <a class="text-darkBlue"
+          ><span class="font-medium text-darkBlue">Codigo de la orden: </span>
+          {{ cost?.work_order?.quote?.code }}</a
+        >
+      </div>
+      <div class="flex flex-wrap">
+        <a class="text-darkBlue"
+          ><span class="font-medium text-darkBlue">Cliente: </span>
+          {{ cost?.work_order?.quote?.customer?.name }}</a
+        >
+      </div>
+      <div class="flex flex-wrap">
+        <a class="text-darkBlue"
+          ><span class="font-medium text-darkBlue">Representante: </span>
+          {{ cost?.work_order?.quote?.customer?.representative }}</a
+        >
+      </div>
+      <div class="flex flex-wrap col-span-3">
+        <a class="text-darkBlue"
+          ><span class="font-medium text-darkBlue"
+            >Descripcion de la orden:
+          </span>
+          {{ cost?.work_order?.description }}</a
+        >
+      </div>
+    </div>
+    <div class="flex flex-col gap-4"></div>
+    <h2 class="serenityBlue font-bold text-xl">Opciones de la Cotización</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div
+        *ngFor="let item of cost?.items?.items; let j = index"
+        [ngClass]="{
+          'col-span-3':
+            (cost?.items?.items?.length || 0) === 1 ||
+            ((cost?.items?.items?.length || 0) % 3 === 1 &&
+              j === (cost?.items?.items?.length || 0) - 1)
+        }"
+        class="p-4 bg-gray-50 border rounded-lg"
+      >
+        <p class="serenityBlue">
+          <strong>Descripción:</strong> {{ item.description }}
+        </p>
+        <p class="serenityBlue"><strong>Cantidad:</strong> {{ item.amount }}</p>
+        <p class="serenityBlue">
+          <strong>Unidad de medida:</strong> {{ item.units }}
+        </p>
+        <p class="serenityBlue">
+          <strong>Valor Unitario:</strong>
+          {{
+            item.unit_value | currency : "COP" : "symbol" : "1.0-0" : "es-CO"
+          }}
+        </p>
+        <p class="serenityBlue">
+          <strong>Precio:</strong>
+          {{
+            item.total_value | currency : "COP" : "symbol" : "1.0-0" : "es-CO"
+          }}
+        </p>
+      </div>
+    </div>
+
+    <!-- ======= Totales ======= -->
+    <div class="text-right font-semibold">
+      <p>
+        Total costo:
+        <span class="serenityBlue">{{ cost?.items?.subtotal }}</span>
+      </p>
+      <p class="">
+        Total orden:
+        <span class="serenityBlue">{{
+          cost?.work_order?.quote?.total_value
+        }}</span>
+      </p>
+      <p class="">
+        Balance:
+        <span class="serenityBlue">{{
+          balance(
+            cost?.items?.subtotal || "",
+            cost?.work_order?.quote?.total_value || ""
+          )
+        }}</span>
+      </p>
+    </div>
+  </div>
+</p-dialog>
