@@ -122,7 +122,6 @@ export default class FormAccountComponent implements OnInit {
     };
     this.financeService.createAccounts(data).subscribe({
       next: (response) => {
-        console.log();
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
@@ -132,7 +131,6 @@ export default class FormAccountComponent implements OnInit {
         this.actionFinished.emit();
       },
       error: (err) => {
-        console.log(err);
       },
     });
   }
@@ -168,18 +166,15 @@ export default class FormAccountComponent implements OnInit {
         .updateAccount(data, this.accountToEdit?.id || 0)
         .subscribe({
           next: (response) => {
-            console.log();
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
               detail: 'Cuenta editada exitosamente',
             });
             this.loadingAction = false;
-            console.log(response);
             this.actionFinished.emit();
           },
           error: (err) => {
-            console.log(err);
           },
         });
     } else {

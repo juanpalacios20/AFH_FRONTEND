@@ -83,7 +83,6 @@ export default class ManagementCostsComponent {
         this.loadingCost = false;
       },
     });
-    console.log('los fackin costos', this.costs);
   }
 
   showCreateNewCost() {

@@ -30,6 +30,7 @@ export default class ViewMaintenanceComponent implements OnInit {
   @Output() closeDialog = new EventEmitter<void>();
   loadingPDF: boolean = false;
   itsComplete: boolean = false;
+  auto: boolean = false;
 
   constructor(
     private maintenanceService: ToolsMaintenanceService,
@@ -60,8 +61,12 @@ export default class ViewMaintenanceComponent implements OnInit {
       if (maintenanceDate < today || this.maintenance.tool.state !== 5) {
         this.itsComplete = true;
       }
+      if (maintenanceDate < today && this.maintenance.tool.state === 5) {
+        this.auto = true;
+        this.finishMaintenance();
+        this.itsComplete = true;
+      }
     }
-    console.log(this.itsComplete);
   }
 
   confirmationComplete() {
@@ -98,7 +103,9 @@ export default class ViewMaintenanceComponent implements OnInit {
           this.localStorage.removeItem('maintenances');
           this.localStorage.removeItem('tools');
           this.localStorage.removeItem('toolsAvailable');
-          this.closeDialog.emit();
+          if (!this.auto) {
+            this.closeDialog.emit();
+          }
         },
         error: (err) => {
           this.messageService.add({

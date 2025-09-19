@@ -144,7 +144,6 @@ export default class ReportsComponent implements OnInit {
           this.initChart();
         },
         error: (err) => {
-          console.log(err);
         },
       });
   }
@@ -161,7 +160,6 @@ export default class ReportsComponent implements OnInit {
           this.localStorageService.setItem('accounts', this.accounts);
         },
         error: (err) => {
-          console.log(err);
         },
       });
     }
@@ -440,7 +438,6 @@ export default class ReportsComponent implements OnInit {
         this.initChart();
       },
       error: (err) => {
-        console.log(err);
       },
     });
   }
@@ -479,7 +476,6 @@ export default class ReportsComponent implements OnInit {
             }
           },
           error(err) {
-            console.log(err);
           },
         });
     }
@@ -542,7 +538,6 @@ export default class ReportsComponent implements OnInit {
             this.initChart();
           },
           error: (err) => {
-            console.log(err);
           },
         });
     }
@@ -562,7 +557,6 @@ export default class ReportsComponent implements OnInit {
       );
       const start = new Date(this.year);
       const end = new Date(lastDay);
-      console.log('entramos4');
       this.getBalanceMonths(
         start.toISOString().split('T')[0],
         end.toISOString().split('T')[0],
@@ -572,7 +566,6 @@ export default class ReportsComponent implements OnInit {
   }
 
   onYearChange() {
-    console.log('entramos3');
     this.moreInfoVisible = false;
     this.nameMonth = '';
     this.month = new Date();
@@ -609,12 +602,6 @@ export default class ReportsComponent implements OnInit {
       this.elements[1].value = this.expense;
       this.elements[2].value = this.balance;
     }
-    console.log(
-      this.income,
-      this.expense,
-      this.balance,
-      this.balanceMonths.length
-    );
   }
 
   //Por methodo de pago y cuenta
@@ -627,7 +614,6 @@ export default class ReportsComponent implements OnInit {
         this.initChartMethodPayment();
       },
       error: (err) => {
-        console.log(err);
       },
     });
     this.financeService.getBalanceMoreInfo(2).subscribe({
@@ -637,7 +623,6 @@ export default class ReportsComponent implements OnInit {
         this.initChartAccount();
       },
       error: (err) => {
-        console.log(err);
       },
     });
   }

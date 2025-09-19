@@ -43,9 +43,10 @@ export class SendCodeComponent {
         this.cookieService.set('resetToken', response.Token, 1, '/');
         this.router.navigate(['/validation-code']);
       },
-      error: (err) =>
-        (this.errorMessage =
-          'Error de inicio de sesión. Por favor, verifica tu correo.'),
+      error: (err) => {
+        this.errorMessage =
+          'Error de inicio de sesión. Por favor, verifica tu correo.';
+      },
     });
   }
 }

@@ -100,7 +100,6 @@ export class FinanceService extends BaseHttpService {
       .set('start', start)
       .set('end', end)
       .set('account_id', id_account);
-    console.log(id_account);
     return this.http
       .get<BalanceMonth[]>(`${this.apiUrl}balans/get_balans_monthly/`, {
         headers: headers,

@@ -34,7 +34,7 @@
               class="w-full"
             />
           </p-iconfield>
-          <label for="on_label" class="serenityBlue">Buscar herramienta</label>
+          <label for="on_label" class="serenityBlue/10">Buscar herramienta</label>
         </p-floatlabel>
       </div>
 
@@ -69,7 +69,7 @@
             <th class="table-header">Nombre</th>
             <th class="table-header">Imagen</th>
             <th class="table-header">Tipo</th>
-            <th class="table-header">Encargado</th>
+            <th class="table-header">Fecha</th>
             <th class="table-header">Opciones</th>
           </tr>
         </ng-template>
@@ -110,7 +110,7 @@
               class="cursor-pointer serenityBlue"
               (click)="showViewDialog(tool)"
             >
-              <p class="text-center">{{ tool.maintenance_technician_name }}</p>
+              <p class="text-center">{{ tool.date }}</p>
             </td>
             <td>
               <div class="card flex justify-center gap-2">

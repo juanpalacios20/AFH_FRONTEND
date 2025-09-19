@@ -113,7 +113,6 @@ export default class FormComponent {
     formData.append('reason', this.reason);
     formData.append('payment_method', this.selectedPaymentMethod);
     formData.append('observations', this.observations);
-    console.log('id de la cuenta', this.selectedTargetAccount?.id);
     formData.append(
       this.type === 'ingreso' ? 'destination_account' : 'origin_account',
       this.selectedTargetAccount?.id.toString() || '0'
@@ -132,7 +131,6 @@ export default class FormComponent {
         },
         error: (err) => {
           this.loading = false;
-          console.log(err);
         },
       });
     }
@@ -146,7 +144,6 @@ export default class FormComponent {
         },
         error: (err) => {
           this.loading = false;
-          console.log(err);
         },
       });
     }
@@ -199,7 +196,6 @@ export default class FormComponent {
               this.loading = false;
             },
             error: (err) => {
-              console.log(err);
               this.loading = false;
             },
           });
@@ -214,7 +210,6 @@ export default class FormComponent {
               this.loading = false;
             },
             error: (err) => {
-              console.log(err);
               this.loading = false;
             },
           });

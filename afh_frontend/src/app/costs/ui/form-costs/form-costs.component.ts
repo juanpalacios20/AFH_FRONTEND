@@ -189,7 +189,6 @@ export default class FormCostsComponent {
         amount: item.amount,
         unit_value: item.unit_value,
       };
-      console.log('item', itemData);
       return this.quoteService.createItem(itemData);
     });
 
@@ -202,7 +201,6 @@ export default class FormCostsComponent {
             description: 'Items del costo',
             items: itemIds,
           };
-          console.log('option', optionData);
           return this.quoteService.createOption(optionData).pipe(
             switchMap((optionResponse) => {
               const optionId = optionResponse.option_id;
@@ -211,7 +209,6 @@ export default class FormCostsComponent {
                 items: optionId,
                 work_order_id: this.selectedOrderWork?.id,
               };
-              console.log('cost', dataCost);
               return this.costService.createCosts(dataCost);
             })
           );
@@ -319,10 +316,8 @@ export default class FormCostsComponent {
           if (Object.keys(itemData).length > 0) {
             this.quoteService.updateItem(editedItem.id, itemData).subscribe({
               next: (response) => {
-                console.log('');
               },
               error: (error) => {
-                console.error('Error al actualizar item', error);
               },
             });
           }
@@ -345,7 +340,6 @@ export default class FormCostsComponent {
     this.costService.editCost(costQuote, this.costToEdit?.id || 0).subscribe({
       next: (response) => {},
       error: (err) => {
-        console.log(err);
       },
     });
     //cerrar el form

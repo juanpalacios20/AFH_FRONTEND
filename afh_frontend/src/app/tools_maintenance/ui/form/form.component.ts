@@ -89,7 +89,6 @@ export default class FormComponent implements OnInit {
 
   ngOnInit() {
     this.email = this.cookieService.get('email');
-    console.log(this.selectedType);
     this.loadTools();
   }
 
@@ -126,7 +125,6 @@ export default class FormComponent implements OnInit {
       type: this.selectedType[0].key,
       user_email: this.email,
     };
-    console.log('data', data);
     this.maintenanceService.createToolMaintenance(data).subscribe({
       next: (response) => {
         this.localStorageService.removeItem('maintenances');
@@ -252,6 +250,7 @@ export default class FormComponent implements OnInit {
     this.duration = null;
     this.observations = '';
     this.selectedType = [];
+    this.tools = [];
   }
 
   close() {
@@ -262,6 +261,9 @@ export default class FormComponent implements OnInit {
   loadEditData() {
     if (this.toolMaintenance) {
       this.selectedTool = this.toolMaintenance.tool;
+      if (this.tools && this.selectedTool) {
+        this.tools.push(this.selectedTool);
+      }
       this.responsible = this.toolMaintenance.maintenance_technician_name;
       this.next_date = this.toolMaintenance.next_maintenance_date
         ? new Date(this.toolMaintenance.next_maintenance_date + 'T00:00:00')
@@ -290,7 +292,6 @@ export default class FormComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['visible'] && this.visible === true) {
-      console.log('action', this.action);
       if (this.action === 0) {
         this.actionTittle = 'Ingresar nuevo mantenimiento';
         this.selectedTool = this.tool;

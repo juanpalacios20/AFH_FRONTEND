@@ -80,7 +80,6 @@ export class EditToolsComponent implements OnInit {
   }
 
   showSuccess() {
-    console.log('herramienta a editar', this.tool);
     this.verify();
     if (this.errorMessage !== '') {
       this.messageService.add({

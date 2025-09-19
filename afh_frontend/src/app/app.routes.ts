@@ -41,7 +41,6 @@ export const routes: Routes = [
   {
     path: 'change-password',
     component: ChangePasswordComponent,
-    canActivate: [TokenGuard],
   },
   {
     path: 'management-tools',
