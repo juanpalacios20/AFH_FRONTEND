@@ -115,7 +115,6 @@ export default class ManagementComponent implements OnInit {
           this.localStorageService.setItem('incomes', this.incomes);
         },
         error: (err) => {
-          console.log(err);
         },
       });
     }
@@ -128,7 +127,6 @@ export default class ManagementComponent implements OnInit {
           this.localStorageService.setItem('expenses', this.expenses);
         },
         error: (err) => {
-          console.log(err.error);
         },
       });
     }
@@ -141,7 +139,6 @@ export default class ManagementComponent implements OnInit {
           this.localStorageService.setItem('accounts', this.accounts);
         },
         error: (err) => {
-          console.log(err);
         },
       });
     }

@@ -69,7 +69,6 @@ export default class ViewOrdersWorkComponent {
       },
       error: (error) => {
         this.loadingDownload = false;
-        console.log(error);
       },
     });
   }

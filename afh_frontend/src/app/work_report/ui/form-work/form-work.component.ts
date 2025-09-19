@@ -236,8 +236,8 @@ export default class FormWorkComponent {
     // 2. Actualizar acta si hay cambios
     if (Object.keys(data).length > 0) {
       this.workReportService.updateWorkReport(data, reportId).subscribe({
-        next: () => console.log(''),
-        error: (err) => console.error('Error al actualizar el acta:', err),
+        next: () => {},
+        error: (err) => {},
       });
     }
 
@@ -288,9 +288,7 @@ export default class FormWorkComponent {
           // 4. Actualizar o crear anexo
           if (anexo.id !== 0) {
             this.workReportService.updateExhibit(formData, anexo.id).subscribe({
-              next: (res) => console.log(''),
-              error: (err) =>
-                console.error(anexo.id, 'Error al actualizar anexo:', err),
+              error: (err) => {},
             });
           } else {
             this.workReportService.createExhibit(formData).subscribe({
@@ -299,9 +297,9 @@ export default class FormWorkComponent {
                 this.workReportService
                   .addExhibitToWorkReport(reportId, exhibitId)
                   .subscribe({
-                    next: (res) => console.log(''),
+                    next: (res) => {},
                     error: (err) =>
-                      console.error('Error al asociar anexo:', err),
+                     {},
                   });
               },
               error: (err) => console.error('Error al crear nuevo anexo:', err),
@@ -315,9 +313,9 @@ export default class FormWorkComponent {
     // 5. Eliminar anexos completos
     this.anexosEliminados.forEach((anexoId) => {
       this.workReportService.deleteExhibit(anexoId).subscribe({
-        next: () => console.log(''),
+        next: () => {},
         error: (err) =>
-          console.error(`Error al eliminar anexo ${anexoId}:`, err),
+          {},
       });
     });
 

@@ -167,7 +167,6 @@ export default class ProgressInfoComponent implements OnInit {
               summary: 'Error',
               detail: `Ha ocurrido un error, intentelo más tarde`,
             });
-            console.log(err);
           },
         });
     }

@@ -116,10 +116,8 @@ export class QuoteService extends BaseHttpService {
       .delete<any>(`${this.apiUrl}option/delete/${optionId}`)
       .subscribe({
         next: (response) => {
-          console.log('');
         },
         error: (err) => {
-          console.log(err);
         },
       });
   }
@@ -141,10 +139,8 @@ export class QuoteService extends BaseHttpService {
       )
       .subscribe({
         next: (response) => {
-          console.log('');
         },
         error: (err) => {
-          console.log('error al crear nuevo item', err);
         },
       });
   }
@@ -159,10 +155,8 @@ export class QuoteService extends BaseHttpService {
       )
       .subscribe({
         next: (response) => {
-          console.log('');
         },
         error: (err) => {
-          console.log('error al crear nueva opcion', err);
         },
       });
   }

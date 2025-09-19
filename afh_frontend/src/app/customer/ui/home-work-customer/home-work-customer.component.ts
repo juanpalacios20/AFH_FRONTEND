@@ -160,7 +160,6 @@ export class HomeWorkCustomerComponent implements OnInit {
        
       },
       error: (error) => {
-        console.log(error);
         this.messageService.add({
           severity: 'info',
           summary: 'Acta aun no disponible',

@@ -265,7 +265,6 @@ export default class FormOrderWorksComponent {
         this.close();
       },
       error: (err) => {
-        console.log('error', err);
       },
     });
   }
@@ -340,7 +339,6 @@ export default class FormOrderWorksComponent {
           },
           error: (err) => {
             this.loading = false;
-            console.log(err);
           },
         });
     } else {

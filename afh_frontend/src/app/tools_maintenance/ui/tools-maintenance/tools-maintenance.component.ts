@@ -102,13 +102,11 @@ export default class ToolsMaintenanceComponent implements OnInit {
       this.localStorageService.getItem('maintenances');
     if (maintenanceLS !== null) {
       this.tools = maintenanceLS;
-      console.log('maintenance', this.tools);
       return;
     }
     this.maintenanceService.getToolsMainenance().subscribe({
       next: (response) => {
         this.tools = response;
-        console.log('respuesta', response);
         this.localStorageService.setItem('maintenances', this.tools);
         this.loadingTools = false;
       },
@@ -121,7 +119,6 @@ export default class ToolsMaintenanceComponent implements OnInit {
         this.loadingTools = false;
       },
     });
-    console.log('las fackin herramientas', this.tools);
   }
 
   getSeverity(
