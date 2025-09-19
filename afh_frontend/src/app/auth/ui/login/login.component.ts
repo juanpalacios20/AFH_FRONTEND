@@ -56,6 +56,7 @@ export class LoginComponent {
         });
       },
       error: (err) => {
+        console.error(err);
         this.errorMessage = "Error de inicio de sesión. Por favor, verifica tus credenciales.";
         this.loading = false;
       },
