@@ -161,5 +161,13 @@
     [tool]="this.tool"
     [state]="this.state"
     (closeDialog)="viewDialogVisible = false"
+    (createMaintencance)="handleNewMaintenance(this.tool)"
   ></app-view-tool>
+  <app-form
+    [visible]="showCreateMaintenanceDialog"
+    [action]="0"
+    [tool]="toolToMaintenance"
+    (closeDialog)="showCreateMaintenanceDialog = false"
+    (onToolCreated)="handleMaintenanceCreated()"
+  ></app-form>
 </div>

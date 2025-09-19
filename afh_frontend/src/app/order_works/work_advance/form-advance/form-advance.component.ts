@@ -183,7 +183,6 @@ export class FormAdvanceComponent {
         .subscribe({
           next: (response) => {},
           error: (err) => {
-            console.log(err);
           },
         });
     }
@@ -339,10 +338,8 @@ export class FormAdvanceComponent {
               .changePercentage(this.progressToEdit?.id, data)
               .subscribe({
                 next: (response) => {
-                  console.log(" ");
                 },
                 error: (err) => {
-                  console.log(err);
                 },
               });
           }

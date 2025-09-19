@@ -53,7 +53,6 @@ export class ViewWorkReportComponent {
       },
       error: (error) => {
         this.loadingDownload = false;
-        console.log(error);
       },
     });
   }

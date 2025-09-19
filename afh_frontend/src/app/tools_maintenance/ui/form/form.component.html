@@ -1,0 +1,248 @@
+<p-dialog
+  header="{{ actionTittle }}"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '30rem' }"
+  [closable]="true"
+  (onHide)="close()"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="icondisplay" class="font-bold block">
+        Herramienta a realizar el mantenimiento
+      </label>
+      <div class="w-full">
+        <p-select
+          [options]="tools"
+          [(ngModel)]="selectedTool"
+          optionLabel="name"
+          [filter]="true"
+          filterBy="name"
+          [showClear]="true"
+          [disabled]="action === 1"
+          placeholder="Seleccione la herramienta"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && selectedTool === undefined
+          }"
+          class="w-full"
+          fluid="true"
+        >
+          <ng-template #selectedItem let-selectedOption>
+            <div class="flex items-center gap-2">
+              <img
+                src="{{ selectedTool?.image }}"
+                [class]="'flag flag-' + selectedTool?.name?.toLowerCase()"
+                style="width: 18px"
+              />
+              <div>{{ selectedOption.name }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-tool #item>
+            <div class="flex items-center gap-2">
+              <img
+                src="{{ tool.image }}"
+                [class]="'flag flag-' + tool.name.toLowerCase()"
+                style="width: 18px"
+              />
+              <div>{{ tool.name }}</div>
+            </div>
+          </ng-template>
+        </p-select>
+      </div>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && selectedTool === undefined"
+      >
+        {{ errorMessage }}
+      </small>
+    </div>
+    <div class="flex flex-col gap-4">
+      <label for="icondisplay" class="font-bold block">
+        Tipo de mantenimiento
+      </label>
+      <div class="flex flex-grap gap-30">
+        <div *ngFor="let type of types" class="flex items-center">
+          <p-checkbox
+            [inputId]="type.key"
+            name="group"
+            [value]="type"
+            [(ngModel)]="selectedType"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && selectedType.length === 0
+            }"
+            (ngModelChange)="ngTypesChanges()"
+          />
+          <label [for]="type.key" class="ml-2"> {{ type.name }} </label>
+        </div>
+      </div>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && selectedType.length === 0"
+      >
+        {{ errorMessage }}
+      </small>
+    </div>
+    <div class="justify-center">
+      <label for="marca" class="font-bold block"
+        >Correo de quien entrega la herramienta</label
+      >
+      <input
+        pInputText
+        id="email"
+        [(ngModel)]="email"
+        [ngModelOptions]="{ standalone: true }"
+        class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
+        autocomplete="on"
+        required="true"
+      />
+    </div>
+    <div class="flex flex-col gap-4 md:flex-grap">
+      <div class="justify-center">
+        <div class="flex-auto">
+          <label for="icondisplay" class="font-bold block mb-2">
+            Fecha de mantenimiento
+          </label>
+          <p-datepicker
+            [(ngModel)]="start_date"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            [ngClass]="{
+              'ng-invalid ng-dirty border-red-500':
+                errorMessage && start_date === undefined
+            }"
+            inputId="icondisplay"
+            fluid="true"
+            dateFormat="dd/mm/yy"
+          />
+        </div>
+        <small
+          id="email-help"
+          class="text-red-600"
+          *ngIf="errorMessage && start_date === undefined"
+        >
+          {{ errorMessage }}
+        </small>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="duration" class="font-bold block"
+          >Duración en dias aprox.</label
+        >
+        <p-inputnumber
+          [(ngModel)]="duration"
+          inputId="minmax"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && (duration === null || duration === 0)
+          }"
+          mode="decimal"
+          [min]="0"
+          [max]="100"
+        />
+      </div>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && (duration === null  || duration === 0)"
+      >
+        {{ errorMessage }}
+      </small>
+    </div>
+
+    <div class="justify-center">
+      <label for="marca" class="font-bold block"
+        >Nombre del tecnico que realiza el mantenimiento</label
+      >
+      <input
+        pInputText
+        id="responsible"
+        [(ngModel)]="responsible"
+        [ngModelOptions]="{ standalone: true }"
+        [ngClass]="{
+          'ng-invalid ng-dirty border-red-500':
+            errorMessage && responsible === ''
+        }"
+        class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
+        autocomplete="on"
+        required="true"
+      />
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && responsible === ''"
+      >
+        {{ errorMessage }}
+      </small>
+    </div>
+    <div class="justify-center">
+      <div class="flex-auto">
+        <label for="icondisplay" class="font-bold block mb-2">
+          Fecha del proximo mantenimiento
+        </label>
+        <p-datepicker
+          [(ngModel)]="next_date"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && next_date === undefined
+          }"
+          inputId="icondisplay"
+          fluid="true"
+          dateFormat="dd/mm/yy"
+        />
+      </div>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && next_date === undefined"
+      >
+        {{ errorMessage }}
+      </small>
+    </div>
+    <div class="justify-center">
+      <div class="flex-auto">
+        <label for="icondisplay" class="font-bold block mb-2">
+          Observaciones adicionales
+        </label>
+        <textarea
+          rows="5"
+          cols="30"
+          pTextarea
+          [ngClass]="{
+            'ng-invalid ng-dirty border-red-500':
+              errorMessage && observations === ''
+          }"
+          [(ngModel)]="observations"
+          fluid="true"
+        ></textarea>
+      </div>
+      <small
+        id="email-help"
+        class="text-red-600"
+        *ngIf="errorMessage && observations === ''"
+      >
+        {{ errorMessage }}
+      </small>
+    </div>
+
+    <div class="flex justify-end gap-2">
+      <p-button
+        (click)="close()"
+        styleClass="w-32 bg-white text-black border-gray-300 font-medium py-2 rounded-lg transition hover:bg-gray-400 cursor-pointer"
+      >
+        Cancelar
+      </p-button>
+      <p-button
+        [loading]="loadingTool"
+        (click)="onSubmit()"
+        styleClass="w-32 createButton-lightSerenityGreen font-medium py-2 rounded-lg transition hover:bg-primary-600 cursor-pointer"
+      >
+        Guardar
+      </p-button>
+    </div>
+  </div>
+</p-dialog>

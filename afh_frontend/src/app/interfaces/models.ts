@@ -1,3 +1,10 @@
+export interface User {
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
 export interface Item {
   id: number;
   description: string;
@@ -96,7 +103,8 @@ export interface income {
   amount: number;
   reason: string;
   payment_method: string;
-  destination_account: number;
+  destination_account: account;
+  destination_account_info: account;
   observations: string;
   date: string;
   voucher: string;
@@ -109,11 +117,22 @@ export interface expense {
   amount: number;
   reason: string;
   payment_method: string;
-  origin_account: number;
+  origin_account: account;
+  origin_account_info: account;
   observations: string;
   date: string;
   voucher: string;
   amount_formatted: string;
+}
+
+export interface account {
+  id: number;
+  name: string;
+  type: number;
+  type_display: string;
+  initial_amount: number;
+  initial_amount_formatted: string;
+  created_at: string;
 }
 
 export interface element {
@@ -178,3 +197,84 @@ export interface Notification {
   title: string;
   content: string;
 }
+
+export interface Tool {
+  id: number;
+  name: string;
+  code: string;
+  state: number;
+  image: string;
+  marca: string;
+}
+
+export interface ToolsMaintenance {
+  id: number;
+  tool: Tool;
+  tool_id: number;
+  date: string;
+  maintenance_days: number;
+  next_maintenance_date: string;
+  observations: string;
+  maintenance_technician_name: string;
+  type: number;
+  email_user: string;
+  user_delivery: userDelivery;
+  delivery_date: string;
+}
+
+export interface userDelivery {
+  id: number;
+  user: User;
+  role: number;
+}
+
+export interface MaintenanceData {
+  maintenance_technician_name: string;
+  tool_id: number;
+  date?: string; // opcional si usas auto_now_add
+  maintenance_days: number;
+  observations?: string;
+  next_maintenance_date: string;
+}
+
+
+// Interfaces para el Home
+export interface HomeAccount {
+  id: number;
+  name: string;
+  type: string;
+  balance: number;
+  balanceFormatted: string;
+}
+
+export interface HomeWorkProgress {
+  id: number;
+  workOrder: OrderWork;
+  progressPercentage: number;
+  state: number;
+  description: string;
+}
+
+export interface HomeTool {
+  id: number;
+  name: string;
+  code: string;
+  marca: string;
+  image: string;
+  state: number;
+}
+
+export interface HomeData {
+  accounts: HomeAccount[];
+  workProgress: HomeWorkProgress[];
+  tools: HomeTool[];
+}
+
+export interface Costs {
+  id: number;
+  items: Option
+  work_order: OrderWork
+  total_value: number
+  get_total_value_formatted: string;
+}
+

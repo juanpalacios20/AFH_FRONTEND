@@ -1,0 +1,102 @@
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '60rem' }"
+  [closable]="false"
+>
+  <p-toast />
+  <p-confirmdialog />
+  <ng-template pTemplate="header">
+    <div class="flex justify-between serenityGreen items-center w-full">
+      <span>{{ this.actionTitle }}</span>
+      <button
+        type="button"
+        class="p-dialog-header-icon p-dialog-header-close p-link cursor-pointer"
+        (click)="confirmationClose()"
+      >
+        <span class="pi pi-times"></span>
+      </button>
+    </div>
+  </ng-template>
+  <div class="w-full mx-auto rounded-xl serenityBlue justify-center mt-2">
+    <div class="mb-4">
+      <p-floatlabel class="mt-2" variant="on" required="true">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="nameAccount"
+          [ngClass]="{
+            'border-red-500 ng-invalid ng-dirty':
+              errorMessage && nameAccount === undefined
+          }"
+          class="w-full bg-white serenityBlue font-medium py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
+        />
+        <label class="serenityBlue/10">Nombre de la cuenta </label>
+      </p-floatlabel>
+      <small class="text-red-600" *ngIf="errorMessage && nameAccount === undefined">
+        {{ errorMessage }}
+      </small>
+    </div>
+    <div class="mb-4">
+      <p-autocomplete
+        [(ngModel)]="selectedTargetAccount"
+        [suggestions]="filteredTargetAccount"
+        (completeMethod)="filterTargetAccount($event)"
+        [dropdown]="true"
+        (keydown)="blockTyping($event)"
+        [ngClass]="{
+          'border-red-500 ng-invalid ng-dirty':
+            errorMessage && selectedTargetAccount === ''
+        }"
+        fluid="true"
+        size="large"
+        placeholder="Tipo de cuenta"
+        class="w-full bg-white serenityBlue font-normal py-3 rounded-lg transition focus:ring-2 focus:ring-primary-900"
+      ></p-autocomplete>
+      <small
+        class="text-red-600"
+        *ngIf="errorMessage && selectedTargetAccount === ''"
+      >
+        {{ errorMessage }}
+      </small>
+    </div>
+    <div class="mb-4" *ngIf="action === 0">
+      <p-floatlabel variant="on">
+        <p-inputnumber
+          inputId="integeronly"
+          fluid="true"
+          [(ngModel)]="initial_amount"
+          [ngClass]="{
+            'border-red-500 ng-invalid ng-dirty':
+              errorMessage && (initial_amount ?? 0) < 1
+          }"
+          class="'w-full bg-white serenityBlue font-medium rounded-lg transition focus:ring-2 focus:ring-primary-900'"
+          size="large"
+        />
+        <label for="on_label" class="serenityBlue/10">Monto inicial</label>
+      </p-floatlabel>
+      <small class="text-darkBlue font-medium" *ngIf="errorMessage === ''">
+        Atención: el monto inicial no se puede cambiar posteriormente a la
+        creacion de la cuenta.
+      </small>
+      <small
+        class="text-red-600"
+        *ngIf="errorMessage && (initial_amount ?? 0) < 1"
+      >
+        {{ errorMessage }}
+      </small>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-10">
+      <p-button styleClass="p-button-secondary" (onClick)="close()">
+        Cancelar
+      </p-button>
+      <p-button
+        styleClass="bg-lightSerenityGreen font-medium"
+        (onClick)="onSubmit()"
+      >
+        {{ actionTitle }}
+      </p-button>
+    </div>
+  </div>
+</p-dialog>

@@ -109,7 +109,6 @@ export default class ViewQuotesComponent {
       },
       error: (error) => {
         this.loadingDownload = false;
-        console.log(error);
       },
     });
   }
@@ -143,7 +142,6 @@ export default class ViewQuotesComponent {
       },
       error: (error) => {
         this.loadingDownload = false;
-        console.log(error);
       },
     });
   }

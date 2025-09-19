@@ -70,6 +70,9 @@ export class HomeWorkCustomerComponent implements OnInit {
     const progressLs: WorkProgress | null = this.localStorageService.getItem('work_progress');
     if (progressLs !== null) {
       this.work_progress = progressLs;
+      this.value = [
+        { label: 'Porcentaje de avance', value: this.work_progress?.progress_percentage, color: 'var(--p-primary-color)' }
+      ];
       this.setStatus()
       return;
     }
@@ -145,6 +148,27 @@ export class HomeWorkCustomerComponent implements OnInit {
     return this.events.indexOf(event) === this.events.length - 1;
   }
 
+  downloadActa() {
+    this.customerService.getActa(this.work_progress?.work_order?.id || 0).subscribe({
+      next: (pdf: Blob) => {
+        const fileURL = URL.createObjectURL(pdf);
+  
+        const a = document.createElement('a');
+        a.href = fileURL;
+        a.download = 'acta_entrega.pdf'; // nombre del archivo
+        a.click();
+       
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Acta aun no disponible',
+          detail: 'El acta de entrega aún no está disponible, próximamente se podrá descargar.'
+        });
+      }
+    });
+  }
+  
 
 }
 

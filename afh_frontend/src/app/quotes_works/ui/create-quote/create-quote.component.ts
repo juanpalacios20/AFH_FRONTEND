@@ -473,7 +473,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
           if (Object.keys(itemData).length > 0) {
             this.quoteService.updateItem(editedItem.id, itemData).subscribe({
               next: (response) => {
-                console.log('');
               },
               error: (error) => {
                 console.error('Error al actualizar item', error);
@@ -499,7 +498,6 @@ export default class CreateQuoteComponent implements OnChanges, OnInit {
     this.quoteService.updateQuote(this.quoteToEdit!.id, quoteData).subscribe({
       next: (response) => {},
       error: (err) => {
-        console.log(err);
       },
     });
     //cerrar el form

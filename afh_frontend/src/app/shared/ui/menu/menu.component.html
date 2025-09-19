@@ -5,7 +5,9 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-6 pt-4 shrink-0">
           <span class="inline-flex items-center gap-2">
-            <img src="resource/logo4.png" alt="AFH Logo" class="w-8 h-8" />
+            <a [routerLink]="'/home'">
+              <img src="resource/logo4.png" alt="AFH Logo" class="w-8 h-8" />
+            </a>
             <span class="font-semibold text-2xl">AFH</span>
           </span>
           <p-button
@@ -44,6 +46,18 @@
                   >
                     <i class="pi pi-hammer mr-2"></i>
                     <span class="font-medium">Herramientas</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/management-tools-maintenance'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 rounded-border hover:bg-white/10 duration-150 transition-colors p-ripple"
+                  >
+                    <i class="pi pi-hammer mr-2"></i>
+                    <span class="font-medium"
+                      >Herramientas en mantenimiento</span
+                    >
                   </a>
                 </li>
                 <li>
@@ -164,6 +178,16 @@
                   >
                     <i class="pi pi-clipboard mr-2"></i>
                     <span class="font-medium">Órdenes de Trabajo</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    [routerLink]="'/management-costs'"
+                    pRipple
+                    class="flex items-center cursor-pointer p-4 hover:bg-white/10 rounded-border duration-150"
+                  >
+                    <i class="pi pi-clipboard mr-2"></i>
+                    <span class="font-medium">Costos</span>
                   </a>
                 </li>
                 <li>

@@ -133,11 +133,11 @@ export default class ProgressInfoComponent implements OnInit {
         this.statesOption = ['Completado'];
       }
       if (this.selectedStates === 'Completado') {
-        if (this.progressAdvance?.work_advance.length === 0) {
+        if (this.progressAdvance?.progress_percentage < 100) {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: `No puede completar el progreso de una orden sin al menos un avance`,
+            detail: `No puede completar el progreso de una orden sino está al 100%`,
           });
           this.loading = false;
           return;
@@ -167,7 +167,6 @@ export default class ProgressInfoComponent implements OnInit {
               summary: 'Error',
               detail: `Ha ocurrido un error, intentelo más tarde`,
             });
-            console.log(err);
           },
         });
     }
