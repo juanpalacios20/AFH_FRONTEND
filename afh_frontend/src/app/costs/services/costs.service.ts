@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseHttpService } from '../../shared/data_access/base_http.service';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +42,12 @@ export class CostService extends BaseHttpService {
     const headers = this.getHeaders();
     return this.http.patch(`${this.apiUrl}/costs/update/${id}/`, data, {
       headers: headers,
+    });
+  }
+
+  downloadPDF(id: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/costs/generate-pdf/${id}/`, {
+      responseType: 'blob',
     });
   }
 }
