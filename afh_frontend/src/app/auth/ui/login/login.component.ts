@@ -45,7 +45,7 @@ export class LoginComponent {
         const role = this.cookiesService.get('role');
   
         if (role === '1') {
-          this.navigateTo = '/management-tools';
+          this.navigateTo = '/home';
         } else {
           this.navigateTo = '/management-vales';
         }

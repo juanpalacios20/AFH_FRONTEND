@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="flex flex-col gap-4"></div>
-    <h2 class="serenityBlue font-bold text-xl">Items del costo</h2>
+    <h2 class="serenityBlue font-bold text-xl">Información de los items</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div
         *ngFor="let item of cost?.items?.items; let j = index"
@@ -96,5 +96,9 @@
         }}</span>
       </p>
     </div>
+  </div>
+
+  <div>
+    <p-button label="Descargar PDF" (onClick)="downloadPDF()" />
   </div>
 </p-dialog>

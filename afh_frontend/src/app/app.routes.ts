@@ -24,7 +24,9 @@ import { LoginCustomerComponent } from './customer/ui/login/login-customer/login
 import { HomeWorkCustomerComponent } from './customer/ui/home-work-customer/home-work-customer.component';
 import { AdvancesComponent } from './customer/ui/advances/advances.component';
 import ToolsMaintenanceComponent from './tools_maintenance/ui/tools-maintenance/tools-maintenance.component';
+import { HomeComponent } from './home/ui/home/home.component';
 import ManagementCostsComponent from './costs/ui/management-costs/management-costs.component';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [AdminGuard] },
@@ -89,7 +91,7 @@ export const routes: Routes = [
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: 'agenteai', component: ChatComponent, canActivate: [AuthGuard] },
   { path: 'login-customer', component: LoginCustomerComponent },
-  { path: 'home-customer', component: HomeWorkCustomerComponent },
+  { path: 'home-customer', component: HomeWorkCustomerComponent, canActivate: [AuthGuard] },
   { path: 'work-advances', component: AdvancesComponent },
   {
     path: 'progressOrder',
@@ -104,6 +106,10 @@ export const routes: Routes = [
   {
     path: 'progressOrder/info/create/:id',
     component: FormAdvanceComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'home', 
+    component: HomeComponent,
     canActivate: [AuthGuard],
   },
   {
