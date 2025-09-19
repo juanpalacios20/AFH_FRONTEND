@@ -92,7 +92,7 @@ export const routes: Routes = [
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: 'agenteai', component: ChatComponent, canActivate: [AuthGuard] },
   { path: 'login-customer', component: LoginCustomerComponent },
-  { path: 'home-customer', component: HomeWorkCustomerComponent },
+  { path: 'home-customer', component: HomeWorkCustomerComponent, canActivate: [AuthGuard] },
   { path: 'work-advances', component: AdvancesComponent },
   {
     path: 'progressOrder',
@@ -109,7 +109,10 @@ export const routes: Routes = [
     component: FormAdvanceComponent,
     canActivate: [AuthGuard],
   },
-  { path: 'home', component: HomeComponent },
+  { path: 'home', 
+    component: HomeComponent,
+    canActivate: [AuthGuard],
+  },
   {
     path: 'management-costs',
     component: ManagementCostsComponent,
