@@ -16,8 +16,6 @@ RUN npm ci --include=dev
 # Copiar el código fuente
 COPY . .
 
-# Ejecutar el script de prebuild si existe
-RUN if [ -f "generate-env.js" ]; then node generate-env.js; fi
 
 # Construir la aplicación para producción
 RUN npm run build
