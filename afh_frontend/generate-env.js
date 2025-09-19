@@ -7,14 +7,14 @@ const targetPath = path.join(
   "./src/app/environments/environment.ts"
 );
 
-// Construir el contenido con las variables de Vercel
+// Construir el contenido con las variables de entorno de Docker
 const envConfig = `
 export const environment = {
   production: true,
-  API_URL: '${process.env.NG_APP_API_URL}',
-  API_KEY: '${process.env.NG_APP_API_KEY}',
-  APP_KEY: '${process.env.NG_APP_APP_KEY}',
-  CLUSTER: '${process.env.NG_APP_CLUSTER}'
+  API_URL: '${process.env.API_URL || 'http://72.60.125.23:8000/'}',
+  API_KEY: '${process.env.API_KEY || ''}',
+  APP_KEY: '${process.env.APP_KEY || ''}',
+  CLUSTER: '${process.env.CLUSTER || ''}'
 };
 `;
 

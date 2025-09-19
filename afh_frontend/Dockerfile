@@ -16,6 +16,7 @@ RUN npm ci --include=dev
 # Copiar el código fuente
 COPY . .
 
+# No ejecutar generate-env.js, usar directamente environment.ts
 
 # Construir la aplicación para producción
 RUN npm run build
