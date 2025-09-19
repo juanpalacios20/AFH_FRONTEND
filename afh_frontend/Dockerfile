@@ -31,7 +31,7 @@ COPY --from=build /app/dist/afh_frontend/browser/ /usr/share/nginx/html/
 
 # Crear configuración básica de nginx para SPA
 RUN echo 'server { \
-    listen 30; \
+    listen 80; \
     server_name localhost; \
     root /usr/share/nginx/html; \
     index index.html; \
@@ -57,7 +57,7 @@ RUN echo 'server { \
 }' > /etc/nginx/conf.d/default.conf
 
 # Exponer el puerto 80
-EXPOSE 30
+EXPOSE 80
 
 # Comando por defecto
 CMD ["nginx", "-g", "daemon off;"]
